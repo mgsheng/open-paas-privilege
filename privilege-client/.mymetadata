@@ -3,7 +3,7 @@
   type="WEB"
   name="privilege-client"
   id="myeclipse.1432777839616"
-  context-root="/pay-service-client"
+  context-root="/privilege-client"
   j2ee-spec="1.7"
   archive="privilege-client.war">
   <attributes>
