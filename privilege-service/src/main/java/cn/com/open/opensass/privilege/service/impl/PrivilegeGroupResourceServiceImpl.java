@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeGroupResourceRepository;
 import cn.com.open.opensass.privilege.model.PrivilegeGroup;
 import cn.com.open.opensass.privilege.service.PrivilegeGroupResourceService;
-import cn.com.open.opensass.privilege.service.PrivilegeGroupService;
 
 /**
  * 

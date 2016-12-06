@@ -40,20 +40,6 @@
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
-  <servlet>
-    <servlet-name>fucilu</servlet-name>
-    <servlet-class>com.andaily.forLoad.web.TestLoadServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>initKafkaMessage</servlet-name>
-    <servlet-class>cn.com.open.user.platform.manager.web.DelegatingServletProxy</servlet-class>
-       <load-on-startup>2</load-on-startup>   
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>fucilu</servlet-name>
-    <url-pattern>/a</url-pattern>
-  </servlet-mapping>
   <servlet-mapping>
     <servlet-name>default</servlet-name>
     <url-pattern>*.png</url-pattern>
@@ -69,10 +55,6 @@
   <servlet-mapping>
     <servlet-name>default</servlet-name>
     <url-pattern>*.js</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>initKafkaMessage</servlet-name>
-    <url-pattern>/servlet/initKafkaMessage</url-pattern>
   </servlet-mapping>
   <session-config>
     <session-timeout>30</session-timeout>

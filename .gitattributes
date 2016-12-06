@@ -171,7 +171,6 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeResou
 privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeRoleVo.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeUserVo.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/TestPrivilege.java -text
-privilege-service/src/main/java/cn/com/open/opensass/privilege/web/DelegatingServletProxy.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/web/InitJob.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/web/InitKafkaMessage.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/web/PrivilegeGroupResourceController.java -text

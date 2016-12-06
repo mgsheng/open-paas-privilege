@@ -1,9 +1,9 @@
 package cn.com.open.opensass.privilege.infrastructure.mybatis;
 
-import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeGroupRepository;
+import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeGroupResourceRepository;
 
 /**
  * 
  */
-public interface PrivilegeGroupResourceRepositoryMyBatis extends PrivilegeGroupRepository {
+public interface PrivilegeGroupResourceRepositoryMyBatis extends PrivilegeGroupResourceRepository {
 }
