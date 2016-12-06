@@ -2,13 +2,12 @@ package cn.com.open.opensass.privilege.vo;
 
 import java.util.Date;
 
-public class PrivilegeGroupVo {
+public class PrivilegeGroupResourceVo {
 	private String groupId;
-	private String groupName;
+	private String resourceId;
 	private Date createTime;
 	private String createUser;
 	private String createUserId;
-	private String appId;
 	private int status;
 	
 	public int getStatus() {
@@ -22,13 +21,6 @@ public class PrivilegeGroupVo {
 	}
 	public void setGroupId(String groupId) {
 		this.groupId = groupId;
-	}
-	
-	public String getGroupName() {
-		return groupName;
-	}
-	public void setGroupName(String groupName) {
-		this.groupName = groupName;
 	}
 	public Date getCreateTime() {
 		return createTime;
@@ -48,11 +40,12 @@ public class PrivilegeGroupVo {
 	public void setCreateUserId(String createUserId) {
 		this.createUserId = createUserId;
 	}
-	public String getAppId() {
-		return appId;
+	public String getResourceId() {
+		return resourceId;
 	}
-	public void setAppId(String appId) {
-		this.appId = appId;
+	public void setResourceId(String resourceId) {
+		this.resourceId = resourceId;
 	}
+	
 	
 }

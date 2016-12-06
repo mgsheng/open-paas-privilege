@@ -10,6 +10,6 @@
 		  http://www.springframework.org/schema/context/spring-context-3.1.xsd ">
 
 	<!-- 当Spring容器启动完成后执行下面的这个Bean -->
-    <bean class="cn.com.open.user.platform.manager.web.InitJob"/>
+   <!--  <bean class="cn.com.open.user.platform.manager.web.InitJob"/> -->
 	
 </beans>

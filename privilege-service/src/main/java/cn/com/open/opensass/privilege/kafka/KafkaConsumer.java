@@ -1,32 +1,27 @@
 package cn.com.open.opensass.privilege.kafka;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
-import org.apache.log4j.Logger;
 
 import kafka.consumer.Consumer;
 import kafka.consumer.ConsumerConfig;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
-import net.sf.json.JSONObject;
-import cn.com.open.opensass.privilege.dev.UserManagerDev;
-import cn.com.open.opensass.privilege.service.UserAccountBalanceService;
-import cn.com.open.opensass.privilege.web.InitJob;
-import cn.com.open.user.platform.manager.user.model.UserAccountBalance;
+
+import org.apache.log4j.Logger;
+
+import cn.com.open.opensass.privilege.dev.PrivilegeServiceDev;
 public class KafkaConsumer extends Thread{  
 	private static final Logger log = Logger.getLogger(KafkaConsumer.class);
-    private UserAccountBalanceService userAccountBalanceService;
-    private UserManagerDev userManagerDev; 
-    public KafkaConsumer(UserAccountBalanceService userAccountBalanceService,UserManagerDev userManagerDev){  
+    private PrivilegeServiceDev userManagerDev; 
+ /*   public KafkaConsumer(UserAccountBalanceService userAccountBalanceService,PrivilegeServiceDev userManagerDev){  
         super();  
         this.userAccountBalanceService=userAccountBalanceService;
         this.userManagerDev=userManagerDev;
         
-    }  
+    }  */
       
       
     @Override  
@@ -48,7 +43,7 @@ public class KafkaConsumer extends Thread{
 				 //保存账户表中
 				 //message: {"appId":1,"userId":80012553,"userName":"testsendpay11","type":"1","sourceId":"21292111111"}
 				
-				 if(!nullEmptyBlankJudge(message)){
+				 if(!nullEmptyBlankJudge(message)){/*
 				    	 JSONObject reqjson = JSONObject.fromObject(message);
 				         String userId = reqjson.getString("userId");
 				         String appId = reqjson.getString("appId");
@@ -74,7 +69,7 @@ public class KafkaConsumer extends Thread{
 				             // userAccountBalance.setStatus(status);
 				              userAccountBalanceService.saveUserAccountBalance(userAccountBalance); 
 				         }
-				 }
+				 */}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

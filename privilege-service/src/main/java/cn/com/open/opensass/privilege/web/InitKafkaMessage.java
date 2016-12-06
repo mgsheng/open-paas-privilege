@@ -1,7 +1,6 @@
 package cn.com.open.opensass.privilege.web;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -11,16 +10,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import cn.com.open.opensass.privilege.dev.UserManagerDev;
-import cn.com.open.opensass.privilege.kafka.KafkaConsumer;
-import cn.com.open.opensass.privilege.service.UserAccountBalanceService;
+import cn.com.open.opensass.privilege.dev.PrivilegeServiceDev;
 
 @Component
 public class InitKafkaMessage extends HttpServlet {
 	@Autowired
-	private UserAccountBalanceService userAccountBalanceService;
-	@Autowired
-	private UserManagerDev userManagerDev;
+	private PrivilegeServiceDev userManagerDev;
 	/**
 	 * Constructor of the object.
 	 */
@@ -51,8 +46,8 @@ public class InitKafkaMessage extends HttpServlet {
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		Thread thread = new Thread( new KafkaConsumer(userAccountBalanceService,userManagerDev));
-		thread.run();
+	/*	Thread thread = new Thread( new KafkaConsumer(userAccountBalanceService,userManagerDev));
+		thread.run();*/
 
 	}
 

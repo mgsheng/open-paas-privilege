@@ -66,15 +66,15 @@ public class TestPrivilege {
     PrivilegeGroupVo group =new PrivilegeGroupVo();
     group.setAppId("10001");
     group.setGroupId("g0001");
-    group.setGroupPrivilege("123,101,111");
+   // group.setGroupPrivilege("123,101,111");
     PrivilegeGroupVo group2 =new PrivilegeGroupVo();
     group2.setAppId("10001");
     group2.setGroupId("g0002");
-    group2.setGroupPrivilege("130,101,111");
+   // group2.setGroupPrivilege("130,101,111");
     PrivilegeGroupVo group3 =new PrivilegeGroupVo();
     group3.setAppId("10001");
     group3.setGroupId("g0002");
-    group3.setGroupPrivilege("140,111,121");
+   // group3.setGroupPrivilege("140,111,121");
     
     List<PrivilegeGroupVo> groupList=new ArrayList<PrivilegeGroupVo>();
     groupList.add(group);

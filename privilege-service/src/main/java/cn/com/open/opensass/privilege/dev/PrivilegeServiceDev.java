@@ -1,6 +1,6 @@
 package cn.com.open.opensass.privilege.dev;
 
-public class UserManagerDev {
+public class PrivilegeServiceDev {
 	private String server_host;
 	public String kafka_topic;
 	public String kafka_group;

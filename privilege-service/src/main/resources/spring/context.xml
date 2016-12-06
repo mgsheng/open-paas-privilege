@@ -15,14 +15,16 @@
     <context:component-scan base-package="cc.wdcy.redis"/>
     <context:component-scan base-package="cc.wdcy.logic"/>
     <context:component-scan base-package="cc.wdcy.job"/> -->
-        <context:component-scan base-package="cn.com.open.user.platform.manager.web"/>
-    <context:component-scan base-package="cn.com.open.user.platform.manager.redis"/>
-    <context:component-scan base-package="cn.com.open.user.platform.manager.user.service"/>
+       <context:component-scan base-package="cn.com.open.opensass.privilege.infrastructure.repository"/>
+    <context:component-scan base-package="cn.com.open.opensass.privilege.service"/>
+    <context:component-scan base-package="cn.com.open.opensass.privilege.redis"/>
+ 
+   <!--  <context:component-scan base-package="cn.com.open.opensass.privilege.kafka"/> -->
     <!-- property configuration -->
     <bean id="properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="locations">
             <list>
-                <value>classpath:pay-service-message.properties</value>
+                <value>classpath:privilege-service.properties</value>
             </list>
         </property>
     </bean>
@@ -90,7 +92,7 @@
         </property>  
         <property name="defaultTargetDataSource" ref="masterDataSource" />  
     </bean> -->  
-    <bean id="dataSource" class="cn.com.open.user.platform.manager.datasource.DynamicDataSource">  
+    <bean id="dataSource" class="cn.com.open.opensass.privilege.datasource.DynamicDataSource">  
         <property name="targetDataSources">  
             <map key-type="java.lang.String">  
                 <entry key="slave" value-ref="slaveDataSource" />  
@@ -121,7 +123,7 @@
     </bean>
 
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="cn.com.open.user.platform.manager.infrastructure.mybatis"/>
+        <property name="basePackage" value="cn.com.open.opensass.privilege.infrastructure.mybatis"/>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
     </bean>
     <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
@@ -155,7 +157,7 @@
             </list>
         </constructor-arg>
     </bean>
-       <bean id="userManagerDev" class="cn.com.open.user.platform.manager.dev.UserManagerDev">
+       <bean id="privilegeserviceDev" class="cn.com.open.opensass.privilege.dev.PrivilegeServiceDev">
             <property name="server_host" value="${server_host}"></property>
             <property name="kafka_topic" value="${kafka_topic}"></property>
             <property name="kafka_group" value="${kafka_group}"></property>

@@ -2,11 +2,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.statistics</groupId>
-	<artifactId>pay-service-message</artifactId>
+	<artifactId>privilege-service</artifactId>
 	<packaging>war</packaging>
 	<version>1.0</version>
-	<name>pay-service-message</name>
-	<description>Pay service message</description>
+	<name>privilege-service</name>
+	<description>privilege service </description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -24,7 +24,7 @@
 		<test.skip>false</test.skip>
 	</properties>
 	<build>
-		<finalName>pay-service-message</finalName>
+		<finalName>privilege-service</finalName>
 
 		<plugins>
 			<plugin>
@@ -42,7 +42,7 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.0.2</version>
 				<configuration>
-					<warSourceExcludes>*/classes/pay-service-message.properties</warSourceExcludes>
+					<warSourceExcludes>*/classes/privilege-service.properties</warSourceExcludes>
 					<archive>
 						<manifestEntries>
 							<Implementation-BuildNumber>
