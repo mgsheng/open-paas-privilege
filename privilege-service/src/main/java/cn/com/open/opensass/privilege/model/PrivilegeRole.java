@@ -1,19 +1,22 @@
 package cn.com.open.opensass.privilege.model;
 
+import java.util.Date;
+
 public class PrivilegeRole {
 	private String privilegeRoleId;
-	private String roleId;
 	private String roleName;
 	private String appId;
 	private String deptId;
 	private String groupId;
-	private String roleLevel;
+	private Integer roleLevel;
+	private String parentRoleId;
 	private String remark;
 	private String createUser;
-	private String createUserid;
-	private String createTime;
+	private String createUserId;
+	private Date createTime;
 	private String deptName;
 	private String groupName;
+	private Integer status;
 	private String rolePrivilege;
 	
 	public String getRolePrivilege() {
@@ -27,12 +30,6 @@ public class PrivilegeRole {
 	}
 	public void setPrivilegeRoleId(String privilegeRoleId) {
 		this.privilegeRoleId = privilegeRoleId;
-	}
-	public String getRoleId() {
-		return roleId;
-	}
-	public void setRoleId(String roleId) {
-		this.roleId = roleId;
 	}
 	public String getRoleName() {
 		return roleName;
@@ -58,12 +55,6 @@ public class PrivilegeRole {
 	public void setGroupId(String groupId) {
 		this.groupId = groupId;
 	}
-	public String getRoleLevel() {
-		return roleLevel;
-	}
-	public void setRoleLevel(String roleLevel) {
-		this.roleLevel = roleLevel;
-	}
 	public String getRemark() {
 		return remark;
 	}
@@ -75,18 +66,6 @@ public class PrivilegeRole {
 	}
 	public void setCreateUser(String createUser) {
 		this.createUser = createUser;
-	}
-	public String getCreateUserid() {
-		return createUserid;
-	}
-	public void setCreateUserid(String createUserid) {
-		this.createUserid = createUserid;
-	}
-	public String getCreateTime() {
-		return createTime;
-	}
-	public void setCreateTime(String createTime) {
-		this.createTime = createTime;
 	}
 	public String getDeptName() {
 		return deptName;
@@ -100,5 +79,34 @@ public class PrivilegeRole {
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;
 	}
-	
+	public Integer getRoleLevel() {
+		return roleLevel;
+	}
+	public void setRoleLevel(Integer roleLevel) {
+		this.roleLevel = roleLevel;
+	}
+	public String getParentRoleId() {
+		return parentRoleId;
+	}
+	public void setParentRoleId(String parentRoleId) {
+		this.parentRoleId = parentRoleId;
+	}
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+	public Date getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+	public String getCreateUserId() {
+		return createUserId;
+	}
+	public void setCreateUserId(String createUserId) {
+		this.createUserId = createUserId;
+	}	
 }

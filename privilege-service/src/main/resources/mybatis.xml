@@ -10,10 +10,12 @@
     </settings>
     <typeAliases>
         <typeAlias alias="UserAccountBalance" type="cn.com.open.user.platform.manager.user.model.UserAccountBalance"/>
+        <typeAlias alias="PrivilegeRole" type="cn.com.open.opensass.privilege.model.PrivilegeRole"/>
     </typeAliases>
 
     <mappers>
         <mapper resource="cc/wdcy/infrastructure/mybatis/UserAccountBalanceMapper.xml"/>
+        <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeRoleMapper.xml"/>
     </mappers>
 
 </configuration>

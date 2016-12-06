@@ -13,6 +13,8 @@ public class PrivilegeRoleVo {
 	private String groupName;
 	private String rolePrivilege;
 	private int status;
+	private String createUser;
+	private String createUserId;
 	
 	public int getStatus() {
 		return status;
@@ -85,6 +87,18 @@ public class PrivilegeRoleVo {
 	}
 	public void setRolePrivilege(String rolePrivilege) {
 		this.rolePrivilege = rolePrivilege;
+	}
+	public String getCreateUser() {
+		return createUser;
+	}
+	public void setCreateUser(String createUser) {
+		this.createUser = createUser;
+	}
+	public String getCreateUserId() {
+		return createUserId;
+	}
+	public void setCreateUserId(String createUserId) {
+		this.createUserId = createUserId;
 	}
 	
 }
