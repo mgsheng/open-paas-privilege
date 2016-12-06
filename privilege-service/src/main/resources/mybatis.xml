@@ -9,12 +9,14 @@
         <setting name="useGeneratedKeys" value="true"/>
     </settings>
     <typeAliases>
-        <typeAlias alias="UserAccountBalance" type="cn.com.open.user.platform.manager.user.model.UserAccountBalance"/>
+        <typeAlias alias="PrivilegeGroup" type="cn.com.open.opensass.privilege.model.PrivilegeGroup"/>
+        <typeAlias alias="PrivilegeGroupResource" type="cn.com.open.opensass.privilege.model.PrivilegeGroupResource"/>
         <typeAlias alias="PrivilegeRole" type="cn.com.open.opensass.privilege.model.PrivilegeRole"/>
     </typeAliases>
 
     <mappers>
-        <mapper resource="cc/wdcy/infrastructure/mybatis/UserAccountBalanceMapper.xml"/>
+        <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeGroupMapper.xml"/>
+        <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeGroupResourceMapper.xml"/>
         <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeRoleMapper.xml"/>
     </mappers>
 

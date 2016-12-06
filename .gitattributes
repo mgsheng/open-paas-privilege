@@ -176,14 +176,14 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/web/InitJob.java 
 privilege-service/src/main/java/cn/com/open/opensass/privilege/web/InitKafkaMessage.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/web/PrivilegeGroupResourceController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/web/privilegeRoleController.java -text
-privilege-service/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantOrderInfoMapper.xml -text
+privilege-service/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeGroupMapper.xml -text
+privilege-service/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeGroupResourceMapper.xml -text
 privilege-service/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeRoleMapper.xml -text
-privilege-service/src/main/resources/cc/wdcy/infrastructure/mybatis/UserAccountBalanceMapper.xml -text
 privilege-service/src/main/resources/disconf.properties -text
 privilege-service/src/main/resources/log4j.properties -text
 privilege-service/src/main/resources/logging.properties -text
 privilege-service/src/main/resources/mybatis.xml -text
-privilege-service/src/main/resources/pay-service-message.properties -text
+privilege-service/src/main/resources/privilege-service.properties -text
 privilege-service/src/main/resources/spring/appCtx-disconf.xml -text
 privilege-service/src/main/resources/spring/context.xml -text
 privilege-service/src/main/resources/spring/job.xml -text
