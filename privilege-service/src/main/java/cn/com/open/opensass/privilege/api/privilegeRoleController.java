@@ -1,4 +1,4 @@
-package cn.com.open.opensass.privilege.web;
+package cn.com.open.opensass.privilege.api;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

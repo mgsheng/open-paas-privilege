@@ -12,7 +12,8 @@
 
     <!--annotation configuration -->
     <context:annotation-config/>
-    <context:component-scan base-package="cn.com.open.opensass.privilege.web"/>
+    <!-- <context:component-scan base-package="cn.com.open.opensass.privilege.web"/> -->
+    <context:component-scan base-package="cn.com.open.opensass.privilege.api"/>
 
     <!--static resource-->
     <mvc:resources mapping="/index.jsp*" location="/index.jsp"/>

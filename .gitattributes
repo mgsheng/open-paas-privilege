@@ -111,6 +111,8 @@ privilege-service/.settings/org.eclipse.wst.common.project.facet.core.xml -text
 privilege-service/.settings/org.eclipse.wst.jsdt.ui.superType.container -text
 privilege-service/.settings/org.eclipse.wst.jsdt.ui.superType.name -text
 privilege-service/pom.xml -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/api/PrivilegeGroupResourceController.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/api/privilegeRoleController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/constant/ConstantMessage.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/datasource/DataSourceAdvice.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/datasource/DataSourceSwitcher.java -text
@@ -175,8 +177,6 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeUserV
 privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/TestPrivilege.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/web/InitJob.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/web/InitKafkaMessage.java -text
-privilege-service/src/main/java/cn/com/open/opensass/privilege/web/PrivilegeGroupResourceController.java -text
-privilege-service/src/main/java/cn/com/open/opensass/privilege/web/privilegeRoleController.java -text
 privilege-service/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeGroupMapper.xml -text
 privilege-service/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeGroupResourceMapper.xml -text
 privilege-service/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeRoleMapper.xml -text

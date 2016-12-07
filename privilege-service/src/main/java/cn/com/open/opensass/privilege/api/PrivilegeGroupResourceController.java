@@ -1,4 +1,4 @@
-package cn.com.open.opensass.privilege.web;
+package cn.com.open.opensass.privilege.api;
 
 import java.util.Arrays;
 import java.util.Date;
