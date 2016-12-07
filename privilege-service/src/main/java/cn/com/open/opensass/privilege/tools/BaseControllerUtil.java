@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,6 +25,11 @@ import net.sf.json.JSONObject;
 
 
 public class BaseControllerUtil {
+	
+	public String getGuid(){
+		   // 创建 GUID 对象
+		  return UUID.randomUUID().toString().replace("-", "");
+	}
 	
 	/**
 	 * 

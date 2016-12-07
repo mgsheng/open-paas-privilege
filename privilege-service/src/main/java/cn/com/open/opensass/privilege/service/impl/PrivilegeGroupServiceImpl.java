@@ -17,8 +17,15 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
     private PrivilegeGroupRepository privilegeGroupRepository;
 
 	@Override
-	public void savePrivilegeGroup(PrivilegeGroup privilegeGroup) {
-		privilegeGroupRepository.savePrivilegeGroup(privilegeGroup);
+	public Boolean savePrivilegeGroup(PrivilegeGroup privilegeGroup) {
+	  try {
+		  privilegeGroupRepository.savePrivilegeGroup(privilegeGroup);
+		  return true;
+	  } catch (Exception e) {
+		// TODO: handle exception
+		  return false;
+	  }
+		
 		
 	}
 

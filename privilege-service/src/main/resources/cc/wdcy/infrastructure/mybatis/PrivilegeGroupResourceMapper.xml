@@ -4,37 +4,36 @@
 	<resultMap type="PrivilegeGroupResource" id="privilegeGroupResourceMap">
 		<id column="id" property="id" jdbcType="VARCHAR" />
 		<result column="group_id" property="groupId" jdbcType="VARCHAR" />
-		<result column="resource_id" property="groupName" jdbcType="VARCHAR" />
+		<result column="resource_id" property="resourceId" jdbcType="VARCHAR" />
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
 		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
 		<result column="create_userid" property="createUserId" jdbcType="VARCHAR" />
 		<result column="status" property="status" jdbcType="INTEGER" />
-	
 	</resultMap>
-	<sql id="Insert_Column_List">
-	  id,
-	  group_id,
-	  group_name,
-	  app_id,
-	  create_time,
-	  create_user,
-	  create_userid,
-	  status
+		<sql id="Base_Column_List">
+		  id,
+		  group_id,
+		  resource_id,
+		  create_time,
+		  create_user,
+		  create_userid,
+		  status
+		<include refid="Insert_Column_List" />
 	</sql>
-	<select id="findByGroupId" resultMap="privilegeGroupResourceMap" flushCache="true">
-         select * from privilege_group
+	<select id="findByGroupIdAndResourceId" resultMap="privilegeGroupResourceMap" flushCache="true">
+         select 
+           <include refid="Base_Column_List" />
+           from privilege_group
          where  group_id = #{groupId}
+         and resource_id=#{"resourceId"}
 	</select>
     <update id="updatePrivilegeGroup" parameterType="PrivilegeGroupResource" flushCache="true">
         update privilege_group set
         <if test="groupId != null and groupId !=''">
         group_id = #{groupId},
         </if>
-         <if test="groupName != null and groupName !=''" >
-        group_name = #{groupName},
-        </if>
-         <if test="appId != null and appId !=''" >
-        app_id = #{appId},
+         <if test="resourceId != null and resourceId !=''" >
+        resource_id = #{resourceId},
         </if>
          <if test="createTime != null" >
         create_time = #{createTime},
@@ -45,16 +44,13 @@
          <if test="createUserId != null and createUserId !=''" >
         create_userid = #{createUserId},
         </if>
-         <if test="status != null " >
-        status = #{status},
-        </if>
         where id = #{id}
     </update>
-	<insert id="savePrivilegeGroup" parameterType="PrivilegeGroupResource" flushCache="true">
+	<insert id="saveprivilegeGroupResource" parameterType="PrivilegeGroupResource" useGeneratedKeys="true" keyProperty="id">
         insert into privilege_group
-        (id,group_id,group_name,app_id,create_time,create_user,create_userid,status)
+        (group_id,resource_id,create_time,create_user,create_userid,status)
         values
-        (#{id},#{groupId},#{groupName},#{appId},#{createTime},#{createUser},#{createUserId},#{status})
+        (#{resourceId},#{groupName},#{createTime},#{createUser},#{createUserId},#{status})
     </insert>
 	
 </mapper>

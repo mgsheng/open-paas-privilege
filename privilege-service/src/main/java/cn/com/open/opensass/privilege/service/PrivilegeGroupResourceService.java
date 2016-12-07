@@ -1,12 +1,12 @@
 package cn.com.open.opensass.privilege.service;
 
-import cn.com.open.opensass.privilege.model.PrivilegeGroup;
+import cn.com.open.opensass.privilege.model.PrivilegeGroupResource;
 
 /**
  * 
  */
 public interface PrivilegeGroupResourceService {
-	void savePrivilegeGroup(PrivilegeGroup privilegeGroup);
-	PrivilegeGroup findBygroupId(String groupId);
+	Boolean saveprivilegeGroupResource(PrivilegeGroupResource privilegeGroupResource);
+	PrivilegeGroupResource getPrivilegeGroupResource(String groupId,String resourceId);
 
 }

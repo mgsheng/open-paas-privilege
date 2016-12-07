@@ -6,7 +6,7 @@ import cn.com.open.opensass.privilege.model.PrivilegeGroup;
  * 
  */
 public interface PrivilegeGroupService {
-	void savePrivilegeGroup(PrivilegeGroup privilegeGroup);
+	Boolean savePrivilegeGroup(PrivilegeGroup privilegeGroup);
 	PrivilegeGroup findBygroupId(String groupId);
 
 }

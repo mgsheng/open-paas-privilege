@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeGroupResourceRepository;
 import cn.com.open.opensass.privilege.model.PrivilegeGroup;
+import cn.com.open.opensass.privilege.model.PrivilegeGroupResource;
 import cn.com.open.opensass.privilege.service.PrivilegeGroupResourceService;
 
 /**
@@ -16,20 +17,26 @@ public class PrivilegeGroupResourceServiceImpl implements PrivilegeGroupResource
     @Autowired
     private PrivilegeGroupResourceRepository privilegeGroupResourceRepository;
 
+
 	@Override
-	public void savePrivilegeGroup(PrivilegeGroup privilegeGroup) {
-		// TODO Auto-generated method stub
+	public PrivilegeGroupResource getPrivilegeGroupResource(String groupId,
+			String resourceId) {
+		return privilegeGroupResourceRepository.findByGroupIdAndResourceId(groupId, resourceId);
+	}
+
+
+	@Override
+	public Boolean saveprivilegeGroupResource(
+			PrivilegeGroupResource privilegeGroupResource) {
+		try {
+			privilegeGroupResourceRepository.saveprivilegeGroupResource(privilegeGroupResource);
+			return true;
+		} catch (Exception e) {
+			// TODO: handle exception
+			return false;
+		}
 		
 	}
 
-	@Override
-	public PrivilegeGroup findBygroupId(String groupId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-
-  
 
 }

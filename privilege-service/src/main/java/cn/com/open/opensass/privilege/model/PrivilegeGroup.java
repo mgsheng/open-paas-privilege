@@ -2,7 +2,14 @@ package cn.com.open.opensass.privilege.model;
 
 import java.util.Date;
 
-public class PrivilegeGroup {
+public class PrivilegeGroup extends AbstractDomain {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
 	private String groupId;
 	private String groupName;
 	private Date createTime;
@@ -10,6 +17,7 @@ public class PrivilegeGroup {
 	private String createUserId;
 	private String appId;
 	private int status;
+	
 	public String getGroupId() {
 		return groupId;
 	}
