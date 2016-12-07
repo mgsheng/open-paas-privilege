@@ -1,5 +1,8 @@
 package cn.com.open.opensass.privilege.infrastructure.repository;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import cn.com.open.opensass.privilege.model.PrivilegeGroupResource;
@@ -11,6 +14,9 @@ import cn.com.open.opensass.privilege.model.PrivilegeGroupResource;
 public interface PrivilegeGroupResourceRepository extends Repository {
 
 	
-	Boolean saveprivilegeGroupResource(PrivilegeGroupResource privilegeGroupResource);
-	PrivilegeGroupResource findByGroupIdAndResourceId(String groupId,String resourceId);
+	void saveprivilegeGroupResource(PrivilegeGroupResource privilegeGroupResource);
+	PrivilegeGroupResource findByGroupIdAndResourceId(@Param("groupId")String groupId,@Param("resourceId")String resourceId,@Param("appId")String appId);
+	List<PrivilegeGroupResource> findGprs(@Param("groupId")String groupId,@Param("appId")String appId);
+	void deleteResource(@Param("groupId")String groupId ,@Param("resourceId")String resourceId,@Param("appId")String appId);
+	void deleteByGroup(@Param("groupId")String groupId ,@Param("appId")String appId);
 }

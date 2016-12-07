@@ -23,12 +23,15 @@
 	<select id="findByGroupIdAndResourceId" resultMap="privilegeGroupResourceMap" flushCache="true">
          select 
            <include refid="Base_Column_List" />
-           from privilege_group
+           from privilege_group_resource
          where  group_id = #{groupId}
-         and resource_id=#{"resourceId"}
+         <if test="resourceId != null and resourceId !=''">
+         and resource_id=#{resourceId}
+         </if>
+         and app_id=#{appId}
 	</select>
     <update id="updatePrivilegeGroup" parameterType="PrivilegeGroupResource" flushCache="true">
-        update privilege_group set
+        update privilege_group_resource set
         <if test="groupId != null and groupId !=''">
         group_id = #{groupId},
         </if>
@@ -47,10 +50,21 @@
         where id = #{id}
     </update>
 	<insert id="saveprivilegeGroupResource" parameterType="PrivilegeGroupResource" useGeneratedKeys="true" keyProperty="id">
-        insert into privilege_group
+        insert into privilege_group_resource
         (group_id,resource_id,create_time,create_user,create_userid,status)
         values
         (#{resourceId},#{groupName},#{createTime},#{createUser},#{createUserId},#{status})
     </insert>
+      <delete id="deleteResource">
+        delete from privilege_group_resource where group_id=#{groupId} and resource_id = #{resourceId} and app_id=#{appId}
+    </delete>
+    
+    <select id="findGprs" parameterType="String" resultMap="privilegeGroupResourceMap">
+          select 
+           <include refid="Base_Column_List" />
+           from privilege_group_resource
+         where  group_id = #{groupId}
+         and app_id=#{appId}
+	</select>
 	
 </mapper>

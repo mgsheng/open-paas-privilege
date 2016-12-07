@@ -25,6 +25,13 @@
 	<select id="findByGroupId" resultMap="privilegeGroupMap" flushCache="true">
          select * from privilege_group
          where  group_id = #{groupId}
+         and app_id=#{appId}
+	</select>
+	<select id="findGroupPage" resultMap="privilegeGroupMap" flushCache="true">
+         select * from privilege_group
+         where  group_id = #{groupId}
+         and app_id=#{appId}
+         limit #{startRow},#{pageSize} 
 	</select>
     <update id="updatePrivilegeGroup" parameterType="PrivilegeGroup" flushCache="true">
         update privilege_group set

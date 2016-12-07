@@ -1,5 +1,7 @@
 package cn.com.open.opensass.privilege.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +22,8 @@ public class PrivilegeGroupResourceServiceImpl implements PrivilegeGroupResource
 
 	@Override
 	public PrivilegeGroupResource getPrivilegeGroupResource(String groupId,
-			String resourceId) {
-		return privilegeGroupResourceRepository.findByGroupIdAndResourceId(groupId, resourceId);
+			String resourceId ,String appId) {
+		return privilegeGroupResourceRepository.findByGroupIdAndResourceId(groupId, resourceId,appId);
 	}
 
 
@@ -30,6 +32,38 @@ public class PrivilegeGroupResourceServiceImpl implements PrivilegeGroupResource
 			PrivilegeGroupResource privilegeGroupResource) {
 		try {
 			privilegeGroupResourceRepository.saveprivilegeGroupResource(privilegeGroupResource);
+			return true;
+		} catch (Exception e) {
+			// TODO: handle exception
+			return false;
+		}
+		
+	}
+
+
+	@Override
+	public Boolean deleteResource(String groupId, String resourceId,String appId) {
+		try {
+			privilegeGroupResourceRepository.deleteResource(groupId, resourceId,appId);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+		
+	}
+
+
+	@Override
+	public List<PrivilegeGroupResource> getPgrs(String groupId, String appId) {
+		// TODO Auto-generated method stub
+		return privilegeGroupResourceRepository.findGprs(groupId, appId);
+	}
+
+
+	@Override
+	public Boolean deleteByGroupId(String groupId, String appId) {
+		try {
+			privilegeGroupResourceRepository.deleteByGroup(groupId, appId);
 			return true;
 		} catch (Exception e) {
 			// TODO: handle exception

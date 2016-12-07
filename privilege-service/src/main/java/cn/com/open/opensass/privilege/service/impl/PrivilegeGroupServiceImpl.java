@@ -1,5 +1,7 @@
 package cn.com.open.opensass.privilege.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,9 +32,16 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 	}
 
 	@Override
-	public PrivilegeGroup findBygroupId(String groupId) {
+	public PrivilegeGroup findBygroupId(String groupId,String appId) {
 		// TODO Auto-generated method stub
-		return privilegeGroupRepository.findByGroupId(groupId);
+		return privilegeGroupRepository.findByGroupId(groupId,appId);
+	}
+
+	@Override
+	public List<PrivilegeGroup> findGroupPage(String groupId, String appId,
+			String startRow, String pageSize) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
   

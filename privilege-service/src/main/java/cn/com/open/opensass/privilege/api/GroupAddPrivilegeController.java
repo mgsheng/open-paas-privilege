@@ -21,12 +21,12 @@ import cn.com.open.opensass.privilege.service.PrivilegeGroupService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 
 /**
- *  用户信息绑定接口
+ *  组织机构权限初始创建接口
  */
 @Controller
 @RequestMapping("/group/")
-public class PrivilegeGroupResourceController extends BaseControllerUtil{
-	private static final Logger log = LoggerFactory.getLogger(PrivilegeGroupResourceController.class);
+public class GroupAddPrivilegeController extends BaseControllerUtil{
+	private static final Logger log = LoggerFactory.getLogger(GroupAddPrivilegeController.class);
 	@Autowired
 	private PrivilegeGroupService privilegeGroupService;
 	@Autowired
@@ -60,7 +60,7 @@ public class PrivilegeGroupResourceController extends BaseControllerUtil{
     			map.put("status","0");
         		map.put("error_code","10002");
     		}else{
-    			PrivilegeGroupResource pgr=privilegeGroupResourceService.getPrivilegeGroupResource(groupId, resourceId);
+    			PrivilegeGroupResource pgr=privilegeGroupResourceService.getPrivilegeGroupResource(groupId, resourceId,appId);
     			if(pgr!=null){
     	    		map.put("status","0");
     	    		map.put("error_code","10002");
@@ -81,7 +81,7 @@ public class PrivilegeGroupResourceController extends BaseControllerUtil{
     		}
     	}
     	
-    	PrivilegeGroup pg=privilegeGroupService.findBygroupId(groupId);
+    	PrivilegeGroup pg=privilegeGroupService.findBygroupId(groupId,appId);
     	if(pg!=null){
     		map.put("status","0");
     		map.put("error_code","10001");
