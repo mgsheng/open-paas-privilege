@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.opensass.privilege.infrastructure.mybatis.PrivilegeGroupResourceRepositoryMyBatis">
+	<resultMap type="PrivilegeGroupResource" id="privilegeGroupResourceMap">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="group_id" property="groupId" jdbcType="VARCHAR" />
+		<result column="resource_id" property="resourceId" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
+		<result column="create_userid" property="createUserId" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+	</resultMap>
+		<sql id="Base_Column_List">
+		  id,
+		  group_id,
+		  resource_id,
+		  create_time,
+		  create_user,
+		  create_userid,
+		  status
+		<include refid="Insert_Column_List" />
+	</sql>
+	<select id="findByGroupIdAndResourceId" resultMap="privilegeGroupResourceMap" flushCache="true">
+         select 
+           <include refid="Base_Column_List" />
+           from privilege_group
+         where  group_id = #{groupId}
+         and resource_id=#{"resourceId"}
+	</select>
+    <update id="updatePrivilegeGroup" parameterType="PrivilegeGroupResource" flushCache="true">
+        update privilege_group set
+        <if test="groupId != null and groupId !=''">
+        group_id = #{groupId},
+        </if>
+         <if test="resourceId != null and resourceId !=''" >
+        resource_id = #{resourceId},
+        </if>
+         <if test="createTime != null" >
+        create_time = #{createTime},
+        </if>
+         <if test="createUser != null and createUser !=''" >
+        create_user = #{createUser},
+        </if>
+         <if test="createUserId != null and createUserId !=''" >
+        create_userid = #{createUserId},
+        </if>
+        where id = #{id}
+    </update>
+	<insert id="saveprivilegeGroupResource" parameterType="PrivilegeGroupResource" useGeneratedKeys="true" keyProperty="id">
+        insert into privilege_group
+        (group_id,resource_id,create_time,create_user,create_userid,status)
+        values
+        (#{resourceId},#{groupName},#{createTime},#{createUser},#{createUserId},#{status})
+    </insert>
+	
+</mapper>

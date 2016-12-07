@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.com.open.user.platform.manager.infrastructure.mybatis.UserAccuntBalanceRepositoryMyBatis">
-	<resultMap type="UserAccountBalance" id="userAccountBalanceMap">
-		<id column="Id" property="id" jdbcType="INTEGER" />
-		<result column="USER_ID" property="userId" jdbcType="VARCHAR" />
-		<result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
-		<result column="BALANCE" property="balance" jdbcType="DECIMAL" />
-		<result column="STATUS" property="status" jdbcType="INTEGER" />
-		<result column="VERSION" property="version" jdbcType="INTEGER" />
-		<result column="TYPE" property="type" jdbcType="INTEGER" />
-		<result column="APP_ID" property="appId" jdbcType="INTEGER" />
-		<result column="SOURCE_ID" property="sourceId" jdbcType="VARCHAR" />
-		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
-		
+<mapper namespace="cn.com.open.user.platform.manager.infrastructure.mybatis.PrivilegeRoleRepositoryMyBatis">
+	<resultMap type="PrivilegeRole" id="privilegeRoleMap">
+		<id column="privilege_roleid" property="privilegeRoleId" jdbcType="VARCHAR" />
+		<result column="role_name" property="roleName" jdbcType="VARCHAR" />
+		<result column="app_id" property="appId" jdbcType="VARCHAR" />
+		<result column="dept_id" property="deptId" jdbcType="VARCHAR" />
+		<result column="group_id" property="groupId" jdbcType="VARCHAR" />
+		<result column="role_level" property="roleLevel" jdbcType="INTEGER" />
+		<result column="parent_roleId" property="parentRoleId" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
+		<result column="create_userid" property="createUserId" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
 	</resultMap>
-	<sql id="Insert_Column_List">
+	<!-- <sql id="Insert_Column_List">
 	  USER_ID,
 	  USER_NAME,
 	  BALANCE,
@@ -50,9 +50,9 @@
 			#{version, jdbcType=INTEGER}
 			
 		)
-	</insert>
+	</insert> -->
 	
-	<select id="findByUserId" resultMap="userAccountBalanceMap">
+	<!-- <select id="findByUserId" resultMap="userAccountBalanceMap">
          select * from USER_ACCOUNT_BALANCE
          where  SOURCE_ID = #{userId}
 	</select>
@@ -68,11 +68,11 @@
         STATUS=#{status}
         </if>
         where Id = #{id}
-    </update>
+    </update> -->
  
-	<insert id="saveUserAccountBalance" parameterType="UserAccountBalance" useGeneratedKeys="true" keyProperty="id">
-        insert into USER_ACCOUNT_BALANCE(Id,USER_ID,USER_NAME,TYPE,CREATE_TIME,APP_ID,SOURCE_ID)
+	<insert id="savePrivilegeRole" parameterType="PrivilegeRole" useGeneratedKeys="true" keyProperty="privilegeRoleId">
+        insert into privilege_role(privilege_roleid,role_name,app_id,dept_id,group_id,group_name,dept_name,role_level,remark,create_user,create_userid,status,create_time)
         values
-        (#{id},#{userId},#{userName},#{type},#{createTime},#{appId},#{sourceId})
+        (#{privilegeRoleId},#{roleName},#{appId},#{deptId},#{groupId},#{groupName},#{deptName},#{roleLevel},#{remark},#{createUser},#{createUserId},#{status},#{createTime})
     </insert>
 </mapper>
