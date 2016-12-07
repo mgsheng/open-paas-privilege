@@ -15,7 +15,7 @@ public class TestPrivilege {
     role.setRemark("助理角色");
     role.setParentRoleId("10001");
     role.setRoleLevel(2);
-    role.setRolePrivilege("123,1241,451");
+    //role.setRolePrivilege("123,1241,451");
     role.setRoleName("助理");
     PrivilegeRole role2=new PrivilegeRole();
     role2.setAppId("1");
@@ -25,7 +25,7 @@ public class TestPrivilege {
     role2.setRemark("管理员");
     role2.setParentRoleId("10001");
     role2.setRoleLevel(2);
-    role2.setRolePrivilege("123,1241,451");
+    //role2.setRolePrivilege("123,1241,451");
     role2.setRoleName("管理员");
     
     PrivilegeRole role3=new PrivilegeRole();
@@ -36,7 +36,7 @@ public class TestPrivilege {
     role3.setRemark("产品经理角色");
     role3.setParentRoleId("10001");
     role3.setRoleLevel(2);
-    role3.setRolePrivilege("123,1241,451");
+    //role3.setRolePrivilege("123,1241,451");
     role3.setRoleName("产品经理");
     
     PrivilegeUser user=new PrivilegeUser();

@@ -1,13 +1,12 @@
 package cn.com.open.opensass.privilege.vo;
 
-public class PrivilegeRoleVo {
+public class PrivilegeRoleVo{
 	private String privilegeRoleId;
-	private String roleId;
 	private String roleName;
 	private String appId;
 	private String deptId;
 	private String groupId;
-	private String roleLevel;
+	private Integer roleLevel;
 	private String remark;
 	private String deptName;
 	private String groupName;
@@ -27,12 +26,6 @@ public class PrivilegeRoleVo {
 	}
 	public void setPrivilegeRoleId(String privilegeRoleId) {
 		this.privilegeRoleId = privilegeRoleId;
-	}
-	public String getRoleId() {
-		return roleId;
-	}
-	public void setRoleId(String roleId) {
-		this.roleId = roleId;
 	}
 	public String getRoleName() {
 		return roleName;
@@ -58,10 +51,10 @@ public class PrivilegeRoleVo {
 	public void setGroupId(String groupId) {
 		this.groupId = groupId;
 	}
-	public String getRoleLevel() {
+	public Integer getRoleLevel() {
 		return roleLevel;
 	}
-	public void setRoleLevel(String roleLevel) {
+	public void setRoleLevel(Integer roleLevel) {
 		this.roleLevel = roleLevel;
 	}
 	public String getRemark() {

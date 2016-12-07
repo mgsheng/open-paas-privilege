@@ -1,56 +1,57 @@
 package cn.com.open.opensass.privilege.model;
 
+import java.util.Date;
+
 public class PrivilegeRoleResource {
 
-	private String id;
-	private String privilegeRoleid;
-	private String roleId;
-	private String resourceRule;
+	private Integer id;
+	private String privilegeRoleId;
+	private String resourceId;
 	private String createUser;
-	private String createUserid;
-	private String createTime;
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getPrivilegeRoleid() {
-		return privilegeRoleid;
-	}
-	public void setPrivilegeRoleid(String privilegeRoleid) {
-		this.privilegeRoleid = privilegeRoleid;
-	}
-	public String getRoleId() {
-		return roleId;
-	}
-	public void setRoleId(String roleId) {
-		this.roleId = roleId;
-	}
-	public String getResourceRule() {
-		return resourceRule;
-	}
-	public void setResourceRule(String resourceRule) {
-		this.resourceRule = resourceRule;
-	}
+	private String createUserId;
+	private Date createTime;
+	private Integer status;
+	
 	public String getCreateUser() {
 		return createUser;
 	}
 	public void setCreateUser(String createUser) {
 		this.createUser = createUser;
 	}
-	public String getCreateUserid() {
-		return createUserid;
+	public Integer getId() {
+		return id;
 	}
-	public void setCreateUserid(String createUserid) {
-		this.createUserid = createUserid;
+	public void setId(Integer id) {
+		this.id = id;
 	}
-	public String getCreateTime() {
+	public String getPrivilegeRoleId() {
+		return privilegeRoleId;
+	}
+	public void setPrivilegeRoleId(String privilegeRoleId) {
+		this.privilegeRoleId = privilegeRoleId;
+	}
+	public String getResourceId() {
+		return resourceId;
+	}
+	public void setResourceId(String resourceId) {
+		this.resourceId = resourceId;
+	}
+	public String getCreateUserId() {
+		return createUserId;
+	}
+	public void setCreateUserId(String createUserId) {
+		this.createUserId = createUserId;
+	}
+	public Date getCreateTime() {
 		return createTime;
 	}
-	public void setCreateTime(String createTime) {
+	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-	
-	
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 }

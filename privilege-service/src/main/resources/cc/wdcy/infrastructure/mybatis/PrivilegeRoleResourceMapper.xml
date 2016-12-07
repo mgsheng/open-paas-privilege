@@ -1,45 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.com.open.opensass.privilege.infrastructure.mybatis.PrivilegeRoleRepositoryMyBatis">
-	<resultMap type="PrivilegeRole" id="privilegeRoleMap">
-		<id column="privilege_roleid" property="privilegeRoleId" jdbcType="VARCHAR" />
-		<result column="role_name" property="roleName" jdbcType="VARCHAR" />
-		<result column="app_id" property="appId" jdbcType="VARCHAR" />
-		<result column="dept_id" property="deptId" jdbcType="VARCHAR" />
-		<result column="group_id" property="groupId" jdbcType="VARCHAR" />
-		<result column="role_level" property="roleLevel" jdbcType="INTEGER" />
-		<result column="parent_roleId" property="parentRoleId" jdbcType="VARCHAR" />
-		<result column="remark" property="remark" jdbcType="VARCHAR" />
+<mapper namespace="cn.com.open.user.platform.manager.infrastructure.mybatis.PrivilegeRoleResourceRepositoryMyBatis">
+	<resultMap type="PrivilegeRoleResource" id="privilegeRoleResourceMap">
+		<id column="Id" property="id" jdbcType="INTEGER" />
+		<result column="privilege_roleid" property="privilegeRoleId" jdbcType="VARCHAR" />
+		<result column="resource_id" property="resourceId" jdbcType="VARCHAR" />
 		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
 		<result column="create_userid" property="createUserId" jdbcType="VARCHAR" />
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-		<result column="dept_name" property="deptName" jdbcType="VARCHAR" />
-		<result column="group_name" property="groupName" jdbcType="VARCHAR" />
 		<result column="status" property="status" jdbcType="INTEGER" />
 	</resultMap>
 	<sql id="Insert_Column_List">
+	  Id,
 	  privilege_roleid,
-	  role_name,
-	  app_id,
-	  dept_id,
-	  group_id,
-	  role_level,
-	  parent_roleId,
-	  remark,
+	  resource_id,
 	  create_user,
 	  create_userid,
 	  create_time,
-	  dept_name,
-	  group_name,
 	  status
 	</sql>
 	
-	<select id="findByRoleId" resultMap="privilegeRoleMap" flushCache="true">
-         select * from privilege_role
+	<select id="findByRoleId" resultMap="privilegeRoleResourceMap" flushCache="true">
+         select * from privilege_role_resource
          where  privilege_roleid = #{privilegeRoleId}
 	</select>
 	
-    <update id="updatePrivilegeRole" parameterType="PrivilegeRole" flushCache="true">
+    <!-- <update id="updatePrivilegeRole" parameterType="PrivilegeRole" flushCache="true">
         update privilege_role set
          <if test="roleName != null and roleName !=''" >
         role_name = #{roleName},
@@ -84,8 +70,8 @@
     </update>
  
 	<insert id="savePrivilegeRole" parameterType="PrivilegeRole" useGeneratedKeys="true" keyProperty="privilegeRoleId">
-        insert into privilege_role (privilege_roleid,role_name,app_id,dept_id,group_id,group_name,dept_name,role_level,remark,create_user,create_userid,status,create_time)
+        insert into privilege_role(privilege_roleid,role_name,app_id,dept_id,group_id,group_name,dept_name,role_level,remark,create_user,create_userid,status,create_time)
         values
         (#{privilegeRoleId},#{roleName},#{appId},#{deptId},#{groupId},#{groupName},#{deptName},#{roleLevel},#{remark},#{createUser},#{createUserId},#{status},#{createTime})
-    </insert>
+    </insert> -->
 </mapper>

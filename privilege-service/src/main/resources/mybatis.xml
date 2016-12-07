@@ -7,17 +7,21 @@
     <settings>
         <setting name="lazyLoadingEnabled" value="false"/>
         <setting name="useGeneratedKeys" value="true"/>
+        <!-- 打印查询语句 -->
+        <setting name="logImpl" value="STDOUT_LOGGING" />
     </settings>
     <typeAliases>
         <typeAlias alias="PrivilegeGroup" type="cn.com.open.opensass.privilege.model.PrivilegeGroup"/>
         <typeAlias alias="PrivilegeGroupResource" type="cn.com.open.opensass.privilege.model.PrivilegeGroupResource"/>
         <typeAlias alias="PrivilegeRole" type="cn.com.open.opensass.privilege.model.PrivilegeRole"/>
+        <typeAlias alias="PrivilegeRoleResource" type="cn.com.open.opensass.privilege.model.PrivilegeRoleResource"/>
     </typeAliases>
 
     <mappers>
         <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeGroupMapper.xml"/>
         <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeGroupResourceMapper.xml"/>
         <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeRoleMapper.xml"/>
+        <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeRoleResourceMapper.xml"/>
     </mappers>
 
 </configuration>

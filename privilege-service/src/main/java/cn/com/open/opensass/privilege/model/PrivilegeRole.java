@@ -1,9 +1,10 @@
 package cn.com.open.opensass.privilege.model;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class PrivilegeRole {
-	private String privilegeRoleId;
+	private String privilegeRoleId=UUID.randomUUID().toString().replace("-", "");
 	private String roleName;
 	private String appId;
 	private String deptId;
@@ -13,18 +14,11 @@ public class PrivilegeRole {
 	private String remark;
 	private String createUser;
 	private String createUserId;
-	private Date createTime;
+	private Date createTime = new Date();
 	private String deptName;
 	private String groupName;
 	private Integer status;
-	private String rolePrivilege;
 	
-	public String getRolePrivilege() {
-		return rolePrivilege;
-	}
-	public void setRolePrivilege(String rolePrivilege) {
-		this.rolePrivilege = rolePrivilege;
-	}
 	public String getPrivilegeRoleId() {
 		return privilegeRoleId;
 	}

@@ -18,7 +18,7 @@
 		  create_user,
 		  create_userid,
 		  status
-		<include refid="Insert_Column_List" />
+		<!-- <include refid="Insert_Column_List" /> -->
 	</sql>
 	<select id="findByGroupIdAndResourceId" resultMap="privilegeGroupResourceMap" flushCache="true">
          select 
