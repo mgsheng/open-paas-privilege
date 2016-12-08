@@ -26,7 +26,7 @@ public class LoadPopertiesFile {
         }  */
   
         //filePath = filePath.trim();  
-    	String filePath="spring-oauth-client.properties";
+    	String filePath="privilege-client.properties";
         // 获取资源文件  
         InputStream is = LoadPopertiesFile.class.getClassLoader().getResourceAsStream(filePath);  
   

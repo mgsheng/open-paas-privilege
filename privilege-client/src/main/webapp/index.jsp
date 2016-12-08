@@ -98,6 +98,11 @@
         <!-- <li>
             <p><a href="alipayCallBack">alipayCallBack</a> <br/>支付回调接口</p>
         </li> -->
+        
+        
+        <li>
+            <p><a href="addPrivilegeRole">角色初始创建</a> <br/>角色初始创建接口测试</p>
+        </li>
     </ul>
 </div>
 </body>
