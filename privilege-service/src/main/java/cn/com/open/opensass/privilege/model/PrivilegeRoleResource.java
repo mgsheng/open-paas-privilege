@@ -9,7 +9,7 @@ public class PrivilegeRoleResource {
 	private String resourceId;
 	private String createUser;
 	private String createUserId;
-	private Date createTime;
+	private Date createTime = new Date();
 	private Integer status;
 	
 	public String getCreateUser() {

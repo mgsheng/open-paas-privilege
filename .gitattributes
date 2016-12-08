@@ -120,7 +120,9 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/api/GroupAddPrivi
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/GroupDelPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/GroupGetPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/GroupModifyPrivilegeController.java -text
-privilege-service/src/main/java/cn/com/open/opensass/privilege/api/PrivilegeRoleController.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/api/RoleAddPrivilegeController.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/api/RoleDelPrivilegeController.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/api/RoleModifyPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/constant/ConstantMessage.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/datasource/DataSourceAdvice.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/datasource/DataSourceSwitcher.java -text
@@ -150,9 +152,11 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/redis/impl/RedisC
 privilege-service/src/main/java/cn/com/open/opensass/privilege/redis/impl/RedisDataSourceImpl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeGroupResourceService.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeGroupService.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeRoleResourceService.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeRoleService.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeGroupResourceServiceImpl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeGroupServiceImpl.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeRoleResourceServiceImpl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeRoleServiceImpl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/AbstractDomain.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/BaseControllerUtil.java -text

@@ -2,15 +2,16 @@ package cn.com.open.opensass.privilege.vo;
 
 public class PrivilegeRoleVo{
 	private String privilegeRoleId;
-	private String roleName;
 	private String appId;
-	private String deptId;
-	private String groupId;
-	private Integer roleLevel;
-	private String remark;
-	private String deptName;
-	private String groupName;
+	private String method;
+	private String roleName;
 	private String rolePrivilege;
+	private String groupId;
+	private String groupName;
+	private String deptId;
+	private String deptName;
+	private String parentRoleId;
+	private String remark;
 	private int status;
 	private String createUser;
 	private String createUserId;
@@ -20,12 +21,6 @@ public class PrivilegeRoleVo{
 	}
 	public void setStatus(int status) {
 		this.status = status;
-	}
-	public String getPrivilegeRoleId() {
-		return privilegeRoleId;
-	}
-	public void setPrivilegeRoleId(String privilegeRoleId) {
-		this.privilegeRoleId = privilegeRoleId;
 	}
 	public String getRoleName() {
 		return roleName;
@@ -50,12 +45,6 @@ public class PrivilegeRoleVo{
 	}
 	public void setGroupId(String groupId) {
 		this.groupId = groupId;
-	}
-	public Integer getRoleLevel() {
-		return roleLevel;
-	}
-	public void setRoleLevel(Integer roleLevel) {
-		this.roleLevel = roleLevel;
 	}
 	public String getRemark() {
 		return remark;
@@ -93,5 +82,22 @@ public class PrivilegeRoleVo{
 	public void setCreateUserId(String createUserId) {
 		this.createUserId = createUserId;
 	}
-	
+	public String getParentRoleId() {
+		return parentRoleId;
+	}
+	public void setParentRoleId(String parentRoleId) {
+		this.parentRoleId = parentRoleId;
+	}
+	public String getPrivilegeRoleId() {
+		return privilegeRoleId;
+	}
+	public void setPrivilegeRoleId(String privilegeRoleId) {
+		this.privilegeRoleId = privilegeRoleId;
+	}
+	public String getMethod() {
+		return method;
+	}
+	public void setMethod(String method) {
+		this.method = method;
+	}
 }

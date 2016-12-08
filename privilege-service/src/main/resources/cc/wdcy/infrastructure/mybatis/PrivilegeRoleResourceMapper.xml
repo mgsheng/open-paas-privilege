@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.com.open.user.platform.manager.infrastructure.mybatis.PrivilegeRoleResourceRepositoryMyBatis">
+<mapper namespace="cn.com.open.opensass.privilege.infrastructure.mybatis.PrivilegeRoleResourceRepositoryMyBatis">
 	<resultMap type="PrivilegeRoleResource" id="privilegeRoleResourceMap">
 		<id column="Id" property="id" jdbcType="INTEGER" />
 		<result column="privilege_roleid" property="privilegeRoleId" jdbcType="VARCHAR" />
@@ -20,58 +20,27 @@
 	  status
 	</sql>
 	
-	<select id="findByRoleId" resultMap="privilegeRoleResourceMap" flushCache="true">
+	<select id="findByPrivilegeRoleId" resultMap="privilegeRoleResourceMap" flushCache="true">
          select * from privilege_role_resource
          where  privilege_roleid = #{privilegeRoleId}
 	</select>
-	
-    <!-- <update id="updatePrivilegeRole" parameterType="PrivilegeRole" flushCache="true">
-        update privilege_role set
-         <if test="roleName != null and roleName !=''" >
-        role_name = #{roleName},
-        </if>
-         <if test="appId != null and appId !=''" >
-        app_id = #{appId},
-        </if>
-         <if test="deptId != null and deptId !=''" >
-        dept_id = #{deptId},
-        </if>
-         <if test="groupId != null and groupId !=''" >
-        group_id = #{groupId},
-        </if>
-         <if test="roleLevel != null" >
-        role_level = #{roleLevel},
-        </if>
-         <if test="parentRoleId != null and parentRoleId !=''" >
-        parent_roleId = #{parentRoleId},
-        </if>
-         <if test="remark != null and remark !=''" >
-        remark = #{remark},
-        </if>
-         <if test="createUser != null and createUser !=''" >
-        create_user = #{createUser},
-        </if>
-         <if test="createUserId != null and createUserId !=''" >
-        create_serid = #{createUserId},
-        </if>
-         <if test="createTime != null" >
-        create_time = #{createTime},
-        </if>
-         <if test="deptName != null and deptName !=''" >
-        dept_name = #{deptName},
-        </if>
-         <if test="groupName != null and groupName !=''" >
-        group_name = #{groupName},
-        </if>
-         <if test="status != null " >
-        status = #{status},
-        </if>
-        where privilege_roleid = #{privilegeRoleId}
-    </update>
- 
-	<insert id="savePrivilegeRole" parameterType="PrivilegeRole" useGeneratedKeys="true" keyProperty="privilegeRoleId">
-        insert into privilege_role(privilege_roleid,role_name,app_id,dept_id,group_id,group_name,dept_name,role_level,remark,create_user,create_userid,status,create_time)
+
+	<insert id="savePrivilegeRoleResource" parameterType="PrivilegeRoleResource" useGeneratedKeys="true" keyProperty="Id">
+        insert into privilege_role_resource (privilege_roleid,resource_id,create_user,create_userid,status,create_time)
         values
-        (#{privilegeRoleId},#{roleName},#{appId},#{deptId},#{groupId},#{groupName},#{deptName},#{roleLevel},#{remark},#{createUser},#{createUserId},#{status},#{createTime})
-    </insert> -->
+        (#{privilegeRoleId},#{resourceId},#{createUser},#{createUserId},#{status},#{createTime})
+    </insert>
+    
+    <delete id="delPrivilegeRoleResource" parameterType="PrivilegeRoleResource">
+        delete from privilege_role_resource where id=#{id}
+    </delete>
+    
+    <delete id="delRoleResourceByRoleId">
+    	delete from privilege_role_resource where privilege_roleid=#{privilegeRoleId}
+    </delete>
+    
+    <select id="findByRoleIdAndResourceId" resultMap="privilegeRoleResourceMap" flushCache="true">
+    	select * from privilege_role_resource 
+    	where privilege_roleid = #{0} and resource_id = #{1}
+    </select>
 </mapper>

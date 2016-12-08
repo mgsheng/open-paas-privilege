@@ -88,4 +88,7 @@
         values
         (#{privilegeRoleId},#{roleName},#{appId},#{deptId},#{groupId},#{groupName},#{deptName},#{roleLevel},#{remark},#{createUser},#{createUserId},#{status},#{createTime})
     </insert>
+    <delete id="delPrivilegeRoleById">
+        delete from privilege_role where privilege_roleid=#{privilegeRoleId}
+    </delete>
 </mapper>

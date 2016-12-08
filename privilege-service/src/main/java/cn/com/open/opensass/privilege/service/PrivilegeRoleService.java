@@ -7,5 +7,9 @@ import cn.com.open.opensass.privilege.model.PrivilegeRole;
  */
 public interface PrivilegeRoleService {
 
-	void savePrivilegeRole(PrivilegeRole privilegeRole);
+	Boolean savePrivilegeRole(PrivilegeRole privilegeRole);
+
+	PrivilegeRole findRoleById(String pararentRoleId);
+
+	Boolean delPrivilegeRoleById(String privilegeRoleId);
 }
