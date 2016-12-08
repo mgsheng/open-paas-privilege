@@ -56,52 +56,14 @@
 <div>
     <strong>菜单</strong>
     <ul>
-       <!--  <li>
-            <p><a href="dirctPay">dirctPay</a> <br/>用户信息绑定接口</p>
-        </li> -->
-        <li>
-            <p><a href="unifyPay">统一支付请求</a> <br/>统一支付请求接口</p>
-        </li>
-        <li>
-            <p><a href="orderManualSend">订单手动补发</a> <br/>订单手动补发接口</p>
-        </li>
-         <li>
-            <p><a href="orderQuery">订单查询状态</a> <br/>订单查询接口</p>
-        </li>
-        <li>
-            <p><a href="orderRefund">订单退款</a> <br/>订单退款接口</p>
-        </li>
-        <li>
-            <p><a href="getOrderQuery">汇银通订单查询</a> <br/>汇银通订单查询</p>
-        </li>
-        <li>
-            <p><a href="unifyCosts">统一扣费</a> <br/>统一扣费接口</p>
-        </li>
-        <li>
-            <p><a href="fileDownlond">对账文件下载申请</a> <br/>对账文件下载申请</p>
-        </li>
-        <li>
-            <p><a href="payDitch">支付渠道接口</a> <br/>支付渠道接口</p>
-        </li>
-        <li>
-            <p><a href="queryOrderInfo">查询订单信息</a> <br/>查询订单信息</p>
-        </li>
-        <li>
-            <p><a href="querySerialRecord">查询流水记录</a> <br/>查询流水记录</p>
-        </li>
-        <li>
-            <p><a href="ehkCallBack">ehkCallBack</a> <br/>支付回调接口测试</p>
-        </li> 
-        <li>
-            <p><a href="accountDownlond">对账单下载</a> <br/>导出接口测试</p>
-        </li> 
-        <!-- <li>
-            <p><a href="alipayCallBack">alipayCallBack</a> <br/>支付回调接口</p>
-        </li> -->
-        
-        
         <li>
             <p><a href="addPrivilegeRole">角色初始创建</a> <br/>角色初始创建接口测试</p>
+        </li>
+        <li>
+            <p><a href="delPrivilegeRole">角色删除</a> <br/>角色删除接口测试</p>
+        </li>
+        <li>
+            <p><a href="modifyPrivilegeRole">角色权限修改</a> <br/>角色权限修改接口测试</p>
         </li>
     </ul>
 </div>

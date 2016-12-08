@@ -5,38 +5,29 @@ import java.io.UnsupportedEncodingException;
 
 public class PrivilegeRoleDto  implements Serializable{
 	private String privilegeRoleId;
-	private String roleId;
-	private String roleName;
 	private String appId;
-	private String deptId;
-	private String groupId;
-	private String roleLevel;
-	private String remark;
-	private String deptName;
-	private String groupName;
+	private String method;//0-添加权限，1-删除权限
+	private String roleName;
 	private String rolePrivilege;
+	private String groupId;
+	private String groupName;
+	private String deptId;
+	private String deptName;
+	private String parentRoleId;
+	private String remark;
 	private int status;
 	private String createUser;
 	private String createUserId;
+	
 	private String addPrivilegeRoleUri;
+	private String delPrivilegeRoleUri;
+	private String modiPrivilegeRoleUri;
 	
 	public int getStatus() {
 		return status;
 	}
 	public void setStatus(int status) {
 		this.status = status;
-	}
-	public String getPrivilegeRoleId() {
-		return privilegeRoleId;
-	}
-	public void setPrivilegeRoleId(String privilegeRoleId) {
-		this.privilegeRoleId = privilegeRoleId;
-	}
-	public String getRoleId() {
-		return roleId;
-	}
-	public void setRoleId(String roleId) {
-		this.roleId = roleId;
 	}
 	public String getRoleName() {
 		return roleName;
@@ -61,12 +52,6 @@ public class PrivilegeRoleDto  implements Serializable{
 	}
 	public void setGroupId(String groupId) {
 		this.groupId = groupId;
-	}
-	public String getRoleLevel() {
-		return roleLevel;
-	}
-	public void setRoleLevel(String roleLevel) {
-		this.roleLevel = roleLevel;
 	}
 	public String getRemark() {
 		return remark;
@@ -109,9 +94,48 @@ public class PrivilegeRoleDto  implements Serializable{
 	}
 	public void setAddPrivilegeRoleUri(String addPrivilegeRoleUri) {
 		this.addPrivilegeRoleUri = addPrivilegeRoleUri;
+	}		
+	public String getParentRoleId() {
+		return parentRoleId;
+	}
+	public void setParentRoleId(String parentRoleId) {
+		this.parentRoleId = parentRoleId;
 	}	
-	public String getFullUri() throws UnsupportedEncodingException {
-        return String.format("%s?appId=%s&roleName=%s&rolePrivilege=%s&groupId=%s&groupName=%s&deptId=%s&deptName=%s&roleLevel=%s&remark=%s&createUser=%s&createUserId=%s&status=%s",
-        		addPrivilegeRoleUri,appId,roleName,rolePrivilege,groupId,groupName,deptId,deptName,roleLevel,remark,createUser,createUserId,status);  
+	public String getPrivilegeRoleId() {
+		return privilegeRoleId;
+	}
+	public void setPrivilegeRoleId(String privilegeRoleId) {
+		this.privilegeRoleId = privilegeRoleId;
+	}
+	public String getDelPrivilegeRoleUri() {
+		return delPrivilegeRoleUri;
+	}
+	public void setDelPrivilegeRoleUri(String delPrivilegeRoleUri) {
+		this.delPrivilegeRoleUri = delPrivilegeRoleUri;
+	}
+	public String getMethod() {
+		return method;
+	}
+	public void setMethod(String method) {
+		this.method = method;
+	}
+	public String getModiPrivilegeRoleUri() {
+		return modiPrivilegeRoleUri;
+	}
+	public void setModiPrivilegeRoleUri(String modiPrivilegeRoleUri) {
+		this.modiPrivilegeRoleUri = modiPrivilegeRoleUri;
+	}
+	
+	public String getAddFullUri() throws UnsupportedEncodingException {
+        return String.format("%s?appId=%s&roleName=%s&rolePrivilege=%s&groupId=%s&groupName=%s&deptId=%s&deptName=%s&parentRoleId=%s&remark=%s&createUser=%s&createUserId=%s&status=%s",
+        		addPrivilegeRoleUri,appId,roleName,rolePrivilege,groupId,groupName,deptId,deptName,parentRoleId,remark,createUser,createUserId,status);  
+    }
+	public String getDelFullUri() throws UnsupportedEncodingException {
+        return String.format("%s?appId=%s&privilegeRoleId=%s&createUser=%s&createUserId=%s",
+        		delPrivilegeRoleUri,appId,privilegeRoleId,createUser,createUserId);  
+    }
+	public String getModiFullUri() throws UnsupportedEncodingException {
+		return String.format("%s?privilegeRoleId=%s&appId=%s&method=%s&roleName=%s&rolePrivilege=%s&groupId=%s&groupName=%s&deptId=%s&deptName=%s&parentRoleId=%s&remark=%s&createUser=%s&createUserId=%s&status=%s",
+        		modiPrivilegeRoleUri,privilegeRoleId,appId,method,roleName,rolePrivilege,groupId,groupName,deptId,deptName,parentRoleId,remark,createUser,createUserId,status);  
     }
 }

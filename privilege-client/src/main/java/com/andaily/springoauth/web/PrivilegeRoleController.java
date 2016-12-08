@@ -1,11 +1,6 @@
 package com.andaily.springoauth.web;
 
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,11 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.andaily.springoauth.service.dto.PrivilegeRoleDto;
-import com.andaily.springoauth.tools.AESUtil;
-import com.andaily.springoauth.tools.DateTools;
-import com.andaily.springoauth.tools.HMacSha1;
 import com.andaily.springoauth.tools.LoadPopertiesFile;
-import com.andaily.springoauth.tools.WebUtils;
 /**
  * Handle 'authorization_code'  type actions
  *
@@ -33,6 +24,10 @@ public class PrivilegeRoleController {
 
     @Value("#{properties['add-privilege-role-uri']}")
     private String addPrivilegeRoleUri;
+    @Value("#{properties['del-privilege-role-uri']}")
+    private String delPrivilegeRoleUri;
+    @Value("#{properties['modi-privilege-role-uri']}")
+    private String modiPrivilegeRoleUri;
     
     final static String  SEPARATOR = "&";
     private Map<String,String> map=LoadPopertiesFile.loadProperties();
@@ -49,10 +44,45 @@ public class PrivilegeRoleController {
      * */
     @RequestMapping(value = "addPrivilegeRole", method = RequestMethod.POST)
      public String addPrivilegeRole(PrivilegeRoleDto privilegeRoleDto) throws Exception {
-         final String fullUri = privilegeRoleDto.getFullUri();
+         final String fullUri = privilegeRoleDto.getAddFullUri();
          LOG.debug("Send to Oauth-Server URL: {}", fullUri);
          return "redirect:" + fullUri;
      }
+    /*
+     *  Entrance:   step-1
+     * */
+	@RequestMapping(value = "delPrivilegeRole", method = RequestMethod.GET)
+	public String delPrivilegeRole(Model model) {
+		model.addAttribute("delPrivilegeRoleUri", delPrivilegeRoleUri);
+		return "privilege/del_privilege_role";
+	}
+	/* 
+    * Redirect to oauth-server bind page:   step-2
+    * */
+   @RequestMapping(value = "delPrivilegeRole", method = RequestMethod.POST)
+    public String delPrivilegeRole(PrivilegeRoleDto privilegeRoleDto) throws Exception {
+        final String fullUri = privilegeRoleDto.getDelFullUri();
+        LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+        return "redirect:" + fullUri;
+    }
+   /*
+    *  Entrance:   step-1
+    * */
+	@RequestMapping(value = "modifyPrivilegeRole", method = RequestMethod.GET)
+	public String modifyPrivilegeRole(Model model) {
+		model.addAttribute("modiPrivilegeRoleUri", modiPrivilegeRoleUri);
+		return "privilege/modi_privilege_role";
+	}
+	/* 
+   * Redirect to oauth-server bind page:   step-2
+   * */
+  @RequestMapping(value = "modifyPrivilegeRole", method = RequestMethod.POST)
+   public String modifyPrivilegeRole(PrivilegeRoleDto privilegeRoleDto) throws Exception {
+       final String fullUri = privilegeRoleDto.getModiFullUri();
+       LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+       return "redirect:" + fullUri;
+   }
+    
     
     /**
 	   * 获取 HMAC-SHA1 签名方法对对encryptText进行签名 值
@@ -61,7 +91,7 @@ public class PrivilegeRoleController {
 	   * @param clientId
 	   * @param accessToken
 	   */
-	    @RequestMapping(value = "getSignature1",method = RequestMethod.POST)
+	   /* @RequestMapping(value = "getSignature1",method = RequestMethod.POST)
 	    public void getSignature(HttpServletRequest request,HttpServletResponse response,String clientId,String accessToken,String password,String oldPassword){
 	    	//返回数据
 	    	boolean flag = false;
@@ -95,5 +125,5 @@ public class PrivilegeRoleController {
 	      	returnMap.put("timestamp",timestamp);
 	      	returnMap.put("signatureNonce",signatureNonce);
 	    	WebUtils.writeJsonToMap(response, returnMap);
-	    }
+	    }*/
 }

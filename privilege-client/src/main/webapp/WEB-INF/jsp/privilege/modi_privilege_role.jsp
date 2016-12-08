@@ -8,7 +8,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>add-privilege-role(interface)</title>
+    <title>modi-privilege-role(interface)</title>
     <script src="<%=request.getContextPath()%>/js/jquery-1.7.1.min.js"></script>
 </head>
 
@@ -20,11 +20,21 @@
     <div class="panel-body">
         <div ng-controller="AuthorizationCodeCtrl" class="col-md-10">
 
-            <form action="addPrivilegeRole" method="post" class="form-horizontal">
-                <input type="hidden" name="addPrivilegeRoleUri" id="addPrivilegeRoleUri" value="${addPrivilegeRoleUri}"/>
+            <form action="modiPrivilegeRole" method="post" class="form-horizontal">
+                <input type="hidden" name="modiPrivilegeRoleUri" id="modiPrivilegeRoleUri" value="${modiPrivilegeRoleUri}"/>
                 <a href="javascript:void(0);" ng-click="showParams()">显示请求参数</a>
 
                 <div ng-show="visible">
+                	<div class="form-group">
+                        <label class="col-sm-2 control-label">privilegeRoleId</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" name="privilegeRoleId" id="privilegeRoleId"
+                                   class="form-control" ng-model="privilegeRoleId"/>
+
+                            <p class="help-block">角色Id（必传）</p>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">appId</label>
 
@@ -35,6 +45,17 @@
                             <p class="help-block">应用Id（必传）</p>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">method</label>
+
+                        <div class="col-sm-10">
+                            <select name="method" id="method" class="form-control" ng-mode="method">
+								<option value="0">添加权限</option>
+								<option value="1">删除权限</option>
+							</select>
+                            <p class="help-block">操作：0-添加权限，1-删除权限（必传）</p>
+                        </div>
+                    </div>
                     <div class="form-group">  
                         <label class="col-sm-2 control-label">roleName</label>
 
@@ -42,7 +63,7 @@
                             <input type="text" name="roleName" size="50" id="roleName" class="form-control"
                                    ng-model="roleName"/>
 
-                            <p class="help-block">角色名（必传）</p>
+                            <p class="help-block">角色名</p>
                         </div>
                     </div>
                     
@@ -153,12 +174,12 @@
                          <span class="text-muted">最终发给 privilege-service的 URL:</span>
                         <br/>
 
-                        <div class="text-primary" id="addPrivilegeRole"></div> 
+                        <div class="text-primary" id="modiPrivilegeRole"></div> 
                     </div>
                 </div>
                 <br/>
                 <br/>
-                <button type="submit" class="btn btn-primary">调用角色初始创建接口</button>
+                <button type="submit" class="btn btn-primary">调用角色权限修改接口</button>
                 <button type="button"  class="btn btn-primary" onclick="btnSubmit();">获取接口调用地址</button>
             </form>
 
@@ -168,6 +189,7 @@
 <script>
     var AuthorizationCodeCtrl = ['$scope', function ($scope) {
         $scope.parentRoleId='0';
+        $scope.method=0;
         $scope.status=0;
         $scope.visible=false;
 
@@ -178,7 +200,9 @@
 </script>
 <script type="text/javascript">
 	function btnSubmit(){
+		var privilegeRoleId=$("#privilegeRoleId").val();
 		var appId=$("#appId").val();
+		var method=$("#method").val();
 		var roleName=$("#roleName").val();
 		var rolePrivilege=$("#rolePrivilege").val();
 	    var groupId=$("#groupId").val();
@@ -190,14 +214,14 @@
 	    var createUser=$("#createUser").val();
 	    var createUserId=$("#createUserId").val();
 	    var status=$("#status").val();
-	    var addPrivilegeRoleUri=$("#addPrivilegeRoleUri").val();
-		if(appId=='' || roleName==''){
+	    var modiPrivilegeRoleUri=$("#modiPrivilegeRoleUri").val();
+		if(appId=='' || privilegeRoleId=='' || method==''){
 		    alert("请输入必传参数");
 			return;
 		}
-		var uri=addPrivilegeRoleUri+"?"+"appId="+appId+"&roleName="+roleName+"&rolePrivilege="+rolePrivilege+"&groupId="+groupId+"&groupName="+groupName
+		var uri=modiPrivilegeRoleUri+"?"+"privilegeRoleId="+privilegeRoleId+"&appId="+appId+"&method="+method+"&roleName="+roleName+"&rolePrivilege="+rolePrivilege+"&groupId="+groupId+"&groupName="+groupName
 				+"&deptId="+deptId+"&deptName="+deptName+"&parentRoleId="+parentRoleId+"&remark="+remark+"&createUser="+createUser+"&createUserId="+createUserId+"&status="+status;
-		$("#addPrivilegeRole").html(uri);
+		$("#modiPrivilegeRole").html(uri);
 	}
 </script>
 
