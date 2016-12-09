@@ -29,7 +29,7 @@ public class RoleDelPrivilegeController extends BaseControllerUtil{
 	 * 角色删除接口
 	 */
 	@RequestMapping(value = "delRole")
-    public void userCenterReg(HttpServletRequest request,HttpServletResponse response,PrivilegeRoleVo privilegeRoleVo) {
+    public void delRole(HttpServletRequest request,HttpServletResponse response,PrivilegeRoleVo privilegeRoleVo) {
     	Map<String, Object> map=new HashMap<String, Object>();
     	log.info("====================del role start======================");
     	if(!paraMandatoryCheck(Arrays.asList(privilegeRoleVo.getAppId(),privilegeRoleVo.getPrivilegeRoleId()))){

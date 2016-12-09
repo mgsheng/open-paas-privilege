@@ -16,6 +16,9 @@ public class PrivilegeRoleVo{
 	private String createUser;
 	private String createUserId;
 	
+	private String start;
+	private String limit;
+	
 	public int getStatus() {
 		return status;
 	}
@@ -99,5 +102,17 @@ public class PrivilegeRoleVo{
 	}
 	public void setMethod(String method) {
 		this.method = method;
+	}
+	public String getStart() {
+		return start;
+	}
+	public void setStart(String start) {
+		this.start = start;
+	}
+	public String getLimit() {
+		return limit;
+	}
+	public void setLimit(String limit) {
+		this.limit = limit;
 	}
 }

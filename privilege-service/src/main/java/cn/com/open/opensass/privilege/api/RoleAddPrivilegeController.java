@@ -36,7 +36,7 @@ public class RoleAddPrivilegeController extends BaseControllerUtil{
 	 * 角色初始创建接口
 	 */
 	@RequestMapping(value = "addRole")
-    public void userCenterReg(HttpServletRequest request,HttpServletResponse response,PrivilegeRoleVo privilegeRoleVo) {
+    public void addRole(HttpServletRequest request,HttpServletResponse response,PrivilegeRoleVo privilegeRoleVo) {
     	Map<String, Object> map=new HashMap<String, Object>();
     	log.info("====================add role start======================");
     	if(!paraMandatoryCheck(Arrays.asList(privilegeRoleVo.getAppId(),privilegeRoleVo.getRoleName()))){

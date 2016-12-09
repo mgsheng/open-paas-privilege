@@ -32,7 +32,7 @@ public class RoleModifyPrivilegeController extends BaseControllerUtil{
 	 * 角色权限修改接口
 	 */
 	@RequestMapping(value = "modifyPrivilege")
-    public void userCenterReg(HttpServletRequest request,HttpServletResponse response,PrivilegeRoleVo privilegeRoleVo) {
+    public void modifyPrivilege(HttpServletRequest request,HttpServletResponse response,PrivilegeRoleVo privilegeRoleVo) {
     	Map<String, Object> map=new HashMap<String, Object>();
     	log.info("===================modify rolePrivilege start======================");
     	if(!paraMandatoryCheck(Arrays.asList(privilegeRoleVo.getAppId(),privilegeRoleVo.getPrivilegeRoleId(),privilegeRoleVo.getMethod()))){
