@@ -19,9 +19,13 @@ public class PrivilegeRoleDto  implements Serializable{
 	private String createUser;
 	private String createUserId;
 	
+	private String start;//开始记录数
+	private String limit;//每页记录数
+	
 	private String addPrivilegeRoleUri;
 	private String delPrivilegeRoleUri;
 	private String modiPrivilegeRoleUri;
+	private String getPrivilegeRoleUri;
 	
 	public int getStatus() {
 		return status;
@@ -125,6 +129,24 @@ public class PrivilegeRoleDto  implements Serializable{
 	public void setModiPrivilegeRoleUri(String modiPrivilegeRoleUri) {
 		this.modiPrivilegeRoleUri = modiPrivilegeRoleUri;
 	}
+	public String getStart() {
+		return start;
+	}
+	public void setStart(String start) {
+		this.start = start;
+	}
+	public String getLimit() {
+		return limit;
+	}
+	public void setLimit(String limit) {
+		this.limit = limit;
+	}
+	public String getGetPrivilegeRoleUri() {
+		return getPrivilegeRoleUri;
+	}
+	public void setGetPrivilegeRoleUri(String getPrivilegeRoleUri) {
+		this.getPrivilegeRoleUri = getPrivilegeRoleUri;
+	}
 	
 	public String getAddFullUri() throws UnsupportedEncodingException {
         return String.format("%s?appId=%s&roleName=%s&rolePrivilege=%s&groupId=%s&groupName=%s&deptId=%s&deptName=%s&parentRoleId=%s&remark=%s&createUser=%s&createUserId=%s&status=%s",
@@ -137,5 +159,9 @@ public class PrivilegeRoleDto  implements Serializable{
 	public String getModiFullUri() throws UnsupportedEncodingException {
 		return String.format("%s?privilegeRoleId=%s&appId=%s&method=%s&roleName=%s&rolePrivilege=%s&groupId=%s&groupName=%s&deptId=%s&deptName=%s&parentRoleId=%s&remark=%s&createUser=%s&createUserId=%s&status=%s",
         		modiPrivilegeRoleUri,privilegeRoleId,appId,method,roleName,rolePrivilege,groupId,groupName,deptId,deptName,parentRoleId,remark,createUser,createUserId,status);  
+    }
+	public String getGetFullUri() throws UnsupportedEncodingException {
+		return String.format("%s?privilegeRoleId=%s&appId=%s&groupId=%s&deptId=%s&start=%s&limit=%s",
+        		getPrivilegeRoleUri,privilegeRoleId,appId,groupId,deptId,start,limit);  
     }
 }

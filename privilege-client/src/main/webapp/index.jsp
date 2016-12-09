@@ -76,6 +76,9 @@
           <li>
             <p><a href="delPrivilegeRole">角色删除</a> <br/>角色删除接口测试</p>
         </li>
+        <li>
+            <p><a href="getPrivilegeRole">角色权限查询</a> <br/>角色权限查询接口测试</p>
+        </li>
     </ul>
 </div>
 </body>
