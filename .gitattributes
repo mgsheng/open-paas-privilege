@@ -73,6 +73,10 @@ privilege-client/src/main/webapp/WEB-INF/jsp/password.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/add_privilege_role.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/del_privilege_role.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/modi_privilege_role.jsp -text
+privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_group_add.jsp -text
+privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_group_del.jsp -text
+privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_group_modify.jsp -text
+privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_group_query.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/refresh_token.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/register.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/resources/user_user_info.jsp -text
