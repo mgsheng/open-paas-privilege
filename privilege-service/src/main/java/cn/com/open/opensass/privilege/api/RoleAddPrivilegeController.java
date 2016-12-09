@@ -1,5 +1,6 @@
 package cn.com.open.opensass.privilege.api;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -38,12 +39,11 @@ public class RoleAddPrivilegeController extends BaseControllerUtil{
 	@RequestMapping(value = "addRole")
     public void addRole(HttpServletRequest request,HttpServletResponse response,PrivilegeRoleVo privilegeRoleVo) {
     	Map<String, Object> map=new HashMap<String, Object>();
-    	log.info("====================add role start======================");
+    	log.info("====================add role start======================");    	
     	if(!paraMandatoryCheck(Arrays.asList(privilegeRoleVo.getAppId(),privilegeRoleVo.getRoleName()))){
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
               return;
     	}    	
-    	
     	PrivilegeRole privilegeRole=new PrivilegeRole();
     	privilegeRole.setAppId(privilegeRoleVo.getAppId());
     	privilegeRole.setRoleName(privilegeRoleVo.getRoleName());

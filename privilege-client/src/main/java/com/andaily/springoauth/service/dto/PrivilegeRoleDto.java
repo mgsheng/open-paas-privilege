@@ -1,9 +1,8 @@
 package com.andaily.springoauth.service.dto;
 
-import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 
-public class PrivilegeRoleDto  implements Serializable{
+public class PrivilegeRoleDto{
 	private String privilegeRoleId;
 	private String appId;
 	private String method;//0-添加权限，1-删除权限
@@ -37,7 +36,12 @@ public class PrivilegeRoleDto  implements Serializable{
 		return roleName;
 	}
 	public void setRoleName(String roleName) {
-		this.roleName = roleName;
+		try {
+			this.roleName = java.net.URLEncoder.encode(roleName,"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} ;
 	}
 	public String getAppId() {
 		return appId;
@@ -61,19 +65,34 @@ public class PrivilegeRoleDto  implements Serializable{
 		return remark;
 	}
 	public void setRemark(String remark) {
-		this.remark = remark;
+		try {
+			this.remark = java.net.URLEncoder.encode(remark,"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} ;
 	}
 	public String getDeptName() {
 		return deptName;
 	}
 	public void setDeptName(String deptName) {
-		this.deptName = deptName;
+		try {
+			this.deptName = java.net.URLEncoder.encode(deptName,"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} ;
 	}
 	public String getGroupName() {
 		return groupName;
 	}
 	public void setGroupName(String groupName) {
-		this.groupName = groupName;
+		try {
+			this.groupName = java.net.URLEncoder.encode(groupName,"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} ;
 	}
 	public String getRolePrivilege() {
 		return rolePrivilege;
@@ -85,7 +104,12 @@ public class PrivilegeRoleDto  implements Serializable{
 		return createUser;
 	}
 	public void setCreateUser(String createUser) {
-		this.createUser = createUser;
+		try {
+			this.createUser = java.net.URLEncoder.encode(createUser,"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} ;
 	}
 	public String getCreateUserId() {
 		return createUserId;
