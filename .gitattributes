@@ -29,6 +29,8 @@ privilege-client/src/main/java/com/andaily/springoauth/service/dto/AuthCallbackD
 privilege-client/src/main/java/com/andaily/springoauth/service/dto/AuthorizationCodeDto.java -text
 privilege-client/src/main/java/com/andaily/springoauth/service/dto/DirctPayDto.java -text
 privilege-client/src/main/java/com/andaily/springoauth/service/dto/OrderRefund.java -text
+privilege-client/src/main/java/com/andaily/springoauth/service/dto/PrivilegeGroupDto.java -text
+privilege-client/src/main/java/com/andaily/springoauth/service/dto/PrivilegeGroupResourceDto.java -text
 privilege-client/src/main/java/com/andaily/springoauth/service/dto/PrivilegeRoleDto.java -text
 privilege-client/src/main/java/com/andaily/springoauth/service/dto/RefreshAccessTokenDto.java -text
 privilege-client/src/main/java/com/andaily/springoauth/service/dto/UnifyPayDto.java -text
@@ -46,8 +48,8 @@ privilege-client/src/main/java/com/andaily/springoauth/tools/WebUtils.java -text
 privilege-client/src/main/java/com/andaily/springoauth/tools/aa.java -text
 privilege-client/src/main/java/com/andaily/springoauth/web/AlipayCallbackConfig.java -text
 privilege-client/src/main/java/com/andaily/springoauth/web/EhkCallbackConfig.java -text
+privilege-client/src/main/java/com/andaily/springoauth/web/PrivilegeInterfaceController.java -text
 privilege-client/src/main/java/com/andaily/springoauth/web/PrivilegeRoleController.java -text
-privilege-client/src/main/java/com/andaily/springoauth/web/UserInterfaceController.java -text
 privilege-client/src/main/resources/logging.properties -text
 privilege-client/src/main/resources/privilege-client.properties -text
 privilege-client/src/main/resources/spring/context.xml -text

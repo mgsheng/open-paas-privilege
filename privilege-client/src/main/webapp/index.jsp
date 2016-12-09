@@ -56,14 +56,25 @@
 <div>
     <strong>菜单</strong>
     <ul>
+          <li>
+          <p><a href="addPrivilege">组织机构权限初始创建接口</a> <br/>组织机构权限初始创建接口</p>
+          </li>
+         <li>
+            <p><a href="modifyPrivilege">组织机构权限授权接口</a> <br/>组织机构权限授权接口</p>
+         <li>
+            <p><a href="delPrivilege">组织机构权限删除接口</a> <br/>组织机构权限删除接口（删除当前组织机构所有权限）</p>
+        </li>
+         <li>
+            <p><a href="getGroupPrivilege">组织机构权限查询接口</a> <br/>组织机构权限查询接口</p>
+            </li>
         <li>
             <p><a href="addPrivilegeRole">角色初始创建</a> <br/>角色初始创建接口测试</p>
         </li>
-        <li>
-            <p><a href="delPrivilegeRole">角色删除</a> <br/>角色删除接口测试</p>
-        </li>
-        <li>
+         <li>
             <p><a href="modifyPrivilegeRole">角色权限修改</a> <br/>角色权限修改接口测试</p>
+        </li>
+          <li>
+            <p><a href="delPrivilegeRole">角色删除</a> <br/>角色删除接口测试</p>
         </li>
     </ul>
 </div>
