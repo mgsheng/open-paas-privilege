@@ -3,6 +3,7 @@ package cn.com.open.opensass.privilege.model;
 import java.util.Date;
 
 public class PrivilegeGroupResource {
+	private int id;
 	private String groupId;
 	private String resourceId;
 	private Date createTime;
@@ -10,6 +11,12 @@ public class PrivilegeGroupResource {
 	private String createUserId;
 	private int status;
 	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	public int getStatus() {
 		return status;
 	}

@@ -49,6 +49,9 @@ public class GroupGetPrivilegeController extends BaseControllerUtil{
     	}
     	List<PrivilegeGroup>lists=privilegeGroupService.findGroupPage(groupId, appId, start, limit);
     	if(lists!=null&&lists.size()>0){
+    		for(int i=0;i<lists.size();i++){
+    			
+    		}
     		map.put("status", "1");
     		map.put("count", lists.size());
     		map.put("groupList",lists);

@@ -1,5 +1,6 @@
 package cn.com.open.opensass.privilege.api;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -39,10 +40,21 @@ public class GroupAddPrivilegeController extends BaseControllerUtil{
     @RequestMapping("addPrivilege")
     public void addPrivilege(HttpServletRequest request,HttpServletResponse response) {
     	String groupId=request.getParameter("groupId");
-    	String groupName=request.getParameter("groupName");
+    	String groupName = "";
+    	String createUser="";
+    	try {
+    	if(!nullEmptyBlankJudge(request.getParameter("groupName"))){
+    		groupName = new String(request.getParameter("groupName").getBytes("iso-8859-1"),"utf-8");	
+    	}
+    	if(!nullEmptyBlankJudge(request.getParameter("createUser"))){
+    		createUser = new String(request.getParameter("createUser").getBytes("iso-8859-1"),"utf-8");	
+    	}
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	String appId=request.getParameter("appId");
     	String groupPrivilege=request.getParameter("groupPrivilege");
-    	String createUser=request.getParameter("createUser");
     	String createUserid=request.getParameter("createUserid");
     	String status=request.getParameter("status");
     	Map<String, Object> map=new HashMap<String, Object>();
@@ -60,7 +72,7 @@ public class GroupAddPrivilegeController extends BaseControllerUtil{
     			map.put("status","0");
         		map.put("error_code","10002");
     		}else{
-    			PrivilegeGroupResource pgr=privilegeGroupResourceService.getPrivilegeGroupResource(groupId, resourceId,appId);
+    			PrivilegeGroupResource pgr=privilegeGroupResourceService.getPrivilegeGroupResource(groupId, resourceId);
     			if(pgr!=null){
     	    		map.put("status","0");
     	    		map.put("error_code","10002");
@@ -87,7 +99,7 @@ public class GroupAddPrivilegeController extends BaseControllerUtil{
     		map.put("error_code","10001");
     	}else{
     		pg=new PrivilegeGroup();
-    		pg.setAppId(groupId);
+    		pg.setGroupId(groupId);
     		pg.setGroupName(groupName);
     		pg.setAppId(appId);
     		pg.setCreateUser(createUser);
@@ -99,7 +111,7 @@ public class GroupAddPrivilegeController extends BaseControllerUtil{
     			pg.setStatus(1);	
     		}
     		privilegeGroupService.savePrivilegeGroup(pg);
-    		
+    		map.put("status","1");
     	}
     	if(map.get("status")=="0"){
     		writeErrorJson(response,map);

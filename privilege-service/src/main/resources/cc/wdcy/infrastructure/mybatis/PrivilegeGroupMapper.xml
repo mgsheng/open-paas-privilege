@@ -10,7 +10,6 @@
 		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
 		<result column="create_userid" property="createUserId" jdbcType="VARCHAR" />
 		<result column="status" property="status" jdbcType="INTEGER" />
-	
 	</resultMap>
 	<sql id="Insert_Column_List">
 	  id,

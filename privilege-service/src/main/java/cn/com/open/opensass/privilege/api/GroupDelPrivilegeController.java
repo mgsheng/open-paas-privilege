@@ -45,9 +45,9 @@ public class GroupDelPrivilegeController extends BaseControllerUtil{
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
               return;	
     	}
-    	List<PrivilegeGroupResource> lists=privilegeGroupResourceService.getPgrs(groupId, appId);
+    	List<PrivilegeGroupResource> lists=privilegeGroupResourceService.getPgrs(groupId);
     	if(lists!=null&&lists.size()>0){
-    		privilegeGroupResourceService.deleteByGroupId(groupId, appId);
+    		privilegeGroupResourceService.deleteByGroupId(groupId);
     		map.put("status","1");
     	}else{
     		map.put("status","0");

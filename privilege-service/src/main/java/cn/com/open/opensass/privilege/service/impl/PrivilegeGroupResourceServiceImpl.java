@@ -22,8 +22,8 @@ public class PrivilegeGroupResourceServiceImpl implements PrivilegeGroupResource
 
 	@Override
 	public PrivilegeGroupResource getPrivilegeGroupResource(String groupId,
-			String resourceId ,String appId) {
-		return privilegeGroupResourceRepository.findByGroupIdAndResourceId(groupId, resourceId,appId);
+			String resourceId ) {
+		return privilegeGroupResourceRepository.findByGroupIdAndResourceId(groupId, resourceId);
 	}
 
 
@@ -42,9 +42,9 @@ public class PrivilegeGroupResourceServiceImpl implements PrivilegeGroupResource
 
 
 	@Override
-	public Boolean deleteResource(String groupId, String resourceId,String appId) {
+	public Boolean deleteResource(String groupId, String resourceId) {
 		try {
-			privilegeGroupResourceRepository.deleteResource(groupId, resourceId,appId);
+			privilegeGroupResourceRepository.deleteResource(groupId, resourceId);
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -54,22 +54,35 @@ public class PrivilegeGroupResourceServiceImpl implements PrivilegeGroupResource
 
 
 	@Override
-	public List<PrivilegeGroupResource> getPgrs(String groupId, String appId) {
+	public List<PrivilegeGroupResource> getPgrs(String groupId) {
 		// TODO Auto-generated method stub
-		return privilegeGroupResourceRepository.findGprs(groupId, appId);
+		return privilegeGroupResourceRepository.findGprs(groupId);
 	}
 
 
 	@Override
-	public Boolean deleteByGroupId(String groupId, String appId) {
+	public Boolean deleteByGroupId(String groupId) {
 		try {
-			privilegeGroupResourceRepository.deleteByGroup(groupId, appId);
+			privilegeGroupResourceRepository.deleteByGroup(groupId);
 			return true;
 		} catch (Exception e) {
 			// TODO: handle exception
 			return false;
 		}
 		
+	}
+
+
+	@Override
+	public Boolean updatePrivilegeGroupResource(
+			PrivilegeGroupResource privilegeGroupResource) {
+		try {
+			privilegeGroupResourceRepository.updatePrivilegeGroupResource(privilegeGroupResource);
+			return true;
+		} catch (Exception e) {
+			// TODO: handle exception
+			return false;
+		}
 	}
 
 

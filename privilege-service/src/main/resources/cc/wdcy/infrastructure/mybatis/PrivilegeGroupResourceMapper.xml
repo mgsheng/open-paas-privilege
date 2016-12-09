@@ -18,7 +18,6 @@
 		  create_user,
 		  create_userid,
 		  status
-		<!-- <include refid="Insert_Column_List" /> -->
 	</sql>
 	<select id="findByGroupIdAndResourceId" resultMap="privilegeGroupResourceMap" flushCache="true">
          select 
@@ -28,9 +27,8 @@
          <if test="resourceId != null and resourceId !=''">
          and resource_id=#{resourceId}
          </if>
-         and app_id=#{appId}
 	</select>
-    <update id="updatePrivilegeGroup" parameterType="PrivilegeGroupResource" flushCache="true">
+    <update id="updatePrivilegeGroupResource" parameterType="cn.com.open.opensass.privilege.model.PrivilegeGroupResource" flushCache="true">
         update privilege_group_resource set
         <if test="groupId != null and groupId !=''">
         group_id = #{groupId},
@@ -38,33 +36,33 @@
          <if test="resourceId != null and resourceId !=''" >
         resource_id = #{resourceId},
         </if>
-         <if test="createTime != null" >
-        create_time = #{createTime},
-        </if>
+     
          <if test="createUser != null and createUser !=''" >
         create_user = #{createUser},
         </if>
          <if test="createUserId != null and createUserId !=''" >
         create_userid = #{createUserId},
         </if>
+        create_time = #{createTime}
         where id = #{id}
     </update>
 	<insert id="saveprivilegeGroupResource" parameterType="PrivilegeGroupResource" useGeneratedKeys="true" keyProperty="id">
         insert into privilege_group_resource
         (group_id,resource_id,create_time,create_user,create_userid,status)
         values
-        (#{resourceId},#{groupName},#{createTime},#{createUser},#{createUserId},#{status})
+        (#{groupId},#{resourceId},#{createTime},#{createUser},#{createUserId},#{status})
     </insert>
       <delete id="deleteResource">
-        delete from privilege_group_resource where group_id=#{groupId} and resource_id = #{resourceId} and app_id=#{appId}
+        delete from privilege_group_resource where group_id=#{groupId} and resource_id = #{resourceId} 
     </delete>
-    
+      <delete id="deleteByGroup">
+        delete from privilege_group_resource where group_id=#{groupId}
+    </delete>
     <select id="findGprs" parameterType="String" resultMap="privilegeGroupResourceMap">
           select 
            <include refid="Base_Column_List" />
            from privilege_group_resource
          where  group_id = #{groupId}
-         and app_id=#{appId}
 	</select>
 	
 </mapper>
