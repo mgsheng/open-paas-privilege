@@ -1,6 +1,7 @@
 package cn.com.open.opensass.privilege.model;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 public class PrivilegeRole {

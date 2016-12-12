@@ -1,41 +1,34 @@
 package cn.com.open.opensass.privilege.vo;
 
-import java.util.List;
-
-import cn.com.open.opensass.privilege.model.PrivilegeRole;
-
 public class PrivilegeUserVo {
+	private String privilegeRoleId;
 	private String appId;
-	private String appUserid;
+	private String appUserId;
 	private String appUsername;
-	private String roleId;
 	private String deptId;
 	private String groupId;
-	private String privilegeFunid;
-	private List<PrivilegeRoleVo> roleList;
+	private String privilegeFunId;
+	private String resourceId;
+	private String createUser;
+	private String createUserId;
+
 	public String getAppId() {
 		return appId;
 	}
 	public void setAppId(String appId) {
 		this.appId = appId;
 	}
-	public String getAppUserid() {
-		return appUserid;
+	public String getAppUserId() {
+		return appUserId;
 	}
-	public void setAppUserid(String appUserid) {
-		this.appUserid = appUserid;
+	public void setAppUserId(String appUserId) {
+		this.appUserId = appUserId;
 	}
 	public String getAppUsername() {
 		return appUsername;
 	}
 	public void setAppUsername(String appUsername) {
 		this.appUsername = appUsername;
-	}
-	public String getRoleId() {
-		return roleId;
-	}
-	public void setRoleId(String roleId) {
-		this.roleId = roleId;
 	}
 	public String getDeptId() {
 		return deptId;
@@ -49,17 +42,34 @@ public class PrivilegeUserVo {
 	public void setGroupId(String groupId) {
 		this.groupId = groupId;
 	}
-	public String getPrivilegeFunid() {
-		return privilegeFunid;
+	public String getPrivilegeRoleId() {
+		return privilegeRoleId;
 	}
-	public void setPrivilegeFunid(String privilegeFunid) {
-		this.privilegeFunid = privilegeFunid;
+	public void setPrivilegeRoleId(String privilegeRoleId) {
+		this.privilegeRoleId = privilegeRoleId;
 	}
-	public List<PrivilegeRoleVo> getRoleList() {
-		return roleList;
+	public String getPrivilegeFunId() {
+		return privilegeFunId;
 	}
-	public void setRoleList(List<PrivilegeRoleVo> roleList) {
-		this.roleList = roleList;
+	public void setPrivilegeFunId(String privilegeFunId) {
+		this.privilegeFunId = privilegeFunId;
 	}
-	
+	public String getResourceId() {
+		return resourceId;
+	}
+	public void setResourceId(String resourceId) {
+		this.resourceId = resourceId;
+	}
+	public String getCreateUser() {
+		return createUser;
+	}
+	public void setCreateUser(String createUser) {
+		this.createUser = createUser;
+	}
+	public String getCreateUserId() {
+		return createUserId;
+	}
+	public void setCreateUserId(String createUserId) {
+		this.createUserId = createUserId;
+	}
 }

@@ -32,6 +32,7 @@ privilege-client/src/main/java/com/andaily/springoauth/service/dto/OrderRefund.j
 privilege-client/src/main/java/com/andaily/springoauth/service/dto/PrivilegeGroupDto.java -text
 privilege-client/src/main/java/com/andaily/springoauth/service/dto/PrivilegeGroupResourceDto.java -text
 privilege-client/src/main/java/com/andaily/springoauth/service/dto/PrivilegeRoleDto.java -text
+privilege-client/src/main/java/com/andaily/springoauth/service/dto/PrivilegeUserRoleDto.java -text
 privilege-client/src/main/java/com/andaily/springoauth/service/dto/RefreshAccessTokenDto.java -text
 privilege-client/src/main/java/com/andaily/springoauth/service/dto/UnifyPayDto.java -text
 privilege-client/src/main/java/com/andaily/springoauth/service/dto/UserSerialRecord.java -text
@@ -50,6 +51,7 @@ privilege-client/src/main/java/com/andaily/springoauth/web/AlipayCallbackConfig.
 privilege-client/src/main/java/com/andaily/springoauth/web/EhkCallbackConfig.java -text
 privilege-client/src/main/java/com/andaily/springoauth/web/PrivilegeInterfaceController.java -text
 privilege-client/src/main/java/com/andaily/springoauth/web/PrivilegeRoleController.java -text
+privilege-client/src/main/java/com/andaily/springoauth/web/PrivilegeUserController.java -text
 privilege-client/src/main/resources/logging.properties -text
 privilege-client/src/main/resources/privilege-client.properties -text
 privilege-client/src/main/resources/spring/context.xml -text
@@ -71,6 +73,7 @@ privilege-client/src/main/webapp/WEB-INF/jsp/implicit.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/oauth_error.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/password.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/add_privilege_role.jsp -text
+privilege-client/src/main/webapp/WEB-INF/jsp/privilege/add_privilege_user_role.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/del_privilege_role.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/get_privilege_role.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/modi_privilege_role.jsp -text
@@ -131,6 +134,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/api/RoleAddPrivil
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/RoleDelPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/RoleGetPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/RoleModifyPrivilegeController.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UserRoleAddPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/constant/ConstantMessage.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/datasource/DataSourceAdvice.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/datasource/DataSourceSwitcher.java -text
@@ -140,10 +144,14 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/my
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/mybatis/PrivilegeGroupResourceRepositoryMyBatis.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/mybatis/PrivilegeRoleRepositoryMyBatis.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/mybatis/PrivilegeRoleResourceRepositoryMyBatis.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/mybatis/PrivilegeUserRepositoryMyBatis.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/mybatis/PrivilegeUserRoleRepositoryMyBatis.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/repository/PrivilegeGroupRepository.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/repository/PrivilegeGroupResourceRepository.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/repository/PrivilegeRoleRepository.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/repository/PrivilegeRoleResourceRepository.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/repository/PrivilegeUserRepository.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/repository/PrivilegeUserRoleRepository.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/kafka/KafkaConsumer.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/kafka/KafkaProducer.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/model/AbstractDomain.java -text
@@ -153,6 +161,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/model/PrivilegeGr
 privilege-service/src/main/java/cn/com/open/opensass/privilege/model/PrivilegeRole.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/model/PrivilegeRoleResource.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/model/PrivilegeUser.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/model/PrivilegeUserRole.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/model/TestPrivilege.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/redis/RedisDataSource.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/redis/impl/RedisClientTemplate.java -text
@@ -162,10 +171,14 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/service/Privilege
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeGroupService.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeRoleResourceService.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeRoleService.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeUserRoleService.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeUserService.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeGroupResourceServiceImpl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeGroupServiceImpl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeRoleResourceServiceImpl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeRoleServiceImpl.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeUserRoleServiceImpl.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeUserServiceImpl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/AbstractDomain.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/BaseControllerUtil.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/CommonUtils.java -text
@@ -203,6 +216,8 @@ privilege-service/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeGro
 privilege-service/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeGroupResourceMapper.xml -text
 privilege-service/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeRoleMapper.xml -text
 privilege-service/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeRoleResourceMapper.xml -text
+privilege-service/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeUserMapper.xml -text
+privilege-service/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeUserRoleMapper.xml -text
 privilege-service/src/main/resources/disconf.properties -text
 privilege-service/src/main/resources/log4j.properties -text
 privilege-service/src/main/resources/logging.properties -text

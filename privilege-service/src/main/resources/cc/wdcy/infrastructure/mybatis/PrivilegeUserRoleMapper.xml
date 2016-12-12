@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.opensass.privilege.infrastructure.mybatis.PrivilegeUserRoleRepositoryMyBatis">
+	<resultMap type="PrivilegeUser" id="privilegeUserRoleMap">
+		<id column="id" property="id" jdbcType="Integer" />
+		<result column="user_id" property="user_id" jdbcType="VARCHAR" />
+		<result column="privilege_roleid" property="privilegeRoleId" jdbcType="VARCHAR" />
+		<result column="create_user" property="appUserId" jdbcType="VARCHAR" />
+		<result column="create_userid" property="appUserName" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Insert_Column_List">
+	  id,
+	  user_id,
+	  privilege_roleid,
+	  create_user,
+	  create_userid,
+	  create_time,
+	  status
+	</sql>
+	
+	<select id="findById" resultMap="privilegeUserMap" flushCache="true">
+         select * from privilege_user_role
+         where  id = #{id}
+	</select>
+	
+<!--     <update id="updatePrivilegeRole" parameterType="PrivilegeRole" flushCache="true">
+        update privilege_role set
+         <if test="roleName != null and roleName !=''" >
+        role_name = #{roleName},
+        </if>
+         <if test="appId != null and appId !=''" >
+        app_id = #{appId},
+        </if>
+         <if test="deptId != null and deptId !=''" >
+        dept_id = #{deptId},
+        </if>
+         <if test="groupId != null and groupId !=''" >
+        group_id = #{groupId},
+        </if>
+         <if test="roleLevel != null" >
+        role_level = #{roleLevel},
+        </if>
+         <if test="roleType != null" >
+        role_type = #{roleType},
+        </if>
+         <if test="parentRoleId != null and parentRoleId !=''" >
+        parent_roleId = #{parentRoleId},
+        </if>
+         <if test="remark != null and remark !=''" >
+        remark = #{remark},
+        </if>
+         <if test="createUser != null and createUser !=''" >
+        create_user = #{createUser},
+        </if>
+         <if test="createUserId != null and createUserId !=''" >
+        create_serid = #{createUserId},
+        </if>
+         <if test="createTime != null" >
+        create_time = #{createTime},
+        </if>
+         <if test="deptName != null and deptName !=''" >
+        dept_name = #{deptName},
+        </if>
+         <if test="groupName != null and groupName !=''" >
+        group_name = #{groupName},
+        </if>
+         <if test="status != null " >
+        status = #{status},
+        </if>
+        where privilege_roleid = #{privilegeRoleId}
+    </update> -->
+ 
+	<insert id="savePrivilegeUserRole" parameterType="PrivilegeUserRole" useGeneratedKeys="true" keyProperty="id">
+        insert into privilege_user_role (user_id,privilege_roleid,create_userid,create_user,create_time,status)
+        values
+        (#{userId},#{privilegeRoleId},#{createUser},#{createUserId},#{createTime},#{status})
+    </insert>
+    <delete id="delPrivilegeUserRoleById">
+        delete from privilege_user_role where id=#{id}
+    </delete>
+</mapper>

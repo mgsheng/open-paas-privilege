@@ -53,14 +53,14 @@ public class TestPrivilege {
     user.setAppUsername("zhangsan");
     user.setDeptId("1");
     user.setGroupId("2");
-    user.setPrivilegeFunid("1,2,34");
-    user.setAppUserid("89324522");
-    user.setRoleId("10001,10003,10005");
+    //user.setPrivilegeFunid("1,2,34");
+    //user.setAppUserid("89324522");
+    //user.setRoleId("10001,10003,10005");
     List<PrivilegeRoleVo> roleList=new ArrayList<PrivilegeRoleVo>();
     roleList.add(role);
     roleList.add(role2);
     roleList.add(role3);
-    user.setRoleList(roleList);
+    //user.setRoleList(roleList);
     String data=JSONObject.fromObject(user).toString();
     System.out.println(data);
     PrivilegeGroupVo group =new PrivilegeGroupVo();
