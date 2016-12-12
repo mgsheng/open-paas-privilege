@@ -15,4 +15,6 @@ public interface PrivilegeRoleRepository extends Repository {
 	PrivilegeRole findByRoleId(String pararentRoleId);
 
 	void delPrivilegeRoleById(String privilegeRoleId);
+
+	void updatePrivilegeRole(PrivilegeRole privilegeRole);
 }

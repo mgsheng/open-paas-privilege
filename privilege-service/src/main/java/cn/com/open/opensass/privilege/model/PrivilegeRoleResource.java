@@ -7,6 +7,7 @@ public class PrivilegeRoleResource {
 	private Integer id;
 	private String privilegeRoleId;
 	private String resourceId;
+	private String privilegeFunId;
 	private String createUser;
 	private String createUserId;
 	private Date createTime = new Date();
@@ -54,4 +55,10 @@ public class PrivilegeRoleResource {
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
+	public String getPrivilegeFunId() {
+		return privilegeFunId;
+	}
+	public void setPrivilegeFunId(String privilegeFunId) {
+		this.privilegeFunId = privilegeFunId;
+	}	
 }

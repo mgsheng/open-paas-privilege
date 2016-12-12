@@ -10,6 +10,7 @@ public class PrivilegeRole {
 	private String deptId;
 	private String groupId;
 	private Integer roleLevel;
+	private Integer roleType;
 	private String parentRoleId;
 	private String remark;
 	private String createUser;
@@ -102,5 +103,11 @@ public class PrivilegeRole {
 	}
 	public void setCreateUserId(String createUserId) {
 		this.createUserId = createUserId;
+	}
+	public Integer getRoleType() {
+		return roleType;
+	}
+	public void setRoleType(Integer roleType) {
+		this.roleType = roleType;
 	}	
 }

@@ -8,6 +8,7 @@
 		<result column="dept_id" property="deptId" jdbcType="VARCHAR" />
 		<result column="group_id" property="groupId" jdbcType="VARCHAR" />
 		<result column="role_level" property="roleLevel" jdbcType="INTEGER" />
+		<result column="role_type" property="roleLevel" jdbcType="INTEGER" />
 		<result column="parent_roleId" property="parentRoleId" jdbcType="VARCHAR" />
 		<result column="remark" property="remark" jdbcType="VARCHAR" />
 		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
@@ -24,6 +25,7 @@
 	  dept_id,
 	  group_id,
 	  role_level,
+	  role_type,
 	  parent_roleId,
 	  remark,
 	  create_user,
@@ -56,6 +58,9 @@
          <if test="roleLevel != null" >
         role_level = #{roleLevel},
         </if>
+         <if test="roleType != null" >
+        role_type = #{roleType},
+        </if>
          <if test="parentRoleId != null and parentRoleId !=''" >
         parent_roleId = #{parentRoleId},
         </if>
@@ -84,9 +89,9 @@
     </update>
  
 	<insert id="savePrivilegeRole" parameterType="PrivilegeRole" useGeneratedKeys="true" keyProperty="privilegeRoleId">
-        insert into privilege_role (privilege_roleid,role_name,app_id,dept_id,group_id,group_name,dept_name,role_level,remark,create_user,create_userid,status,create_time)
+        insert into privilege_role (privilege_roleid,role_name,app_id,dept_id,group_id,group_name,dept_name,role_level,role_type,remark,create_user,create_userid,status,create_time)
         values
-        (#{privilegeRoleId},#{roleName},#{appId},#{deptId},#{groupId},#{groupName},#{deptName},#{roleLevel},#{remark},#{createUser},#{createUserId},#{status},#{createTime})
+        (#{privilegeRoleId},#{roleName},#{appId},#{deptId},#{groupId},#{groupName},#{deptName},#{roleLevel},#{role_type},#{remark},#{createUser},#{createUserId},#{status},#{createTime})
     </insert>
     <delete id="delPrivilegeRoleById">
         delete from privilege_role where privilege_roleid=#{privilegeRoleId}

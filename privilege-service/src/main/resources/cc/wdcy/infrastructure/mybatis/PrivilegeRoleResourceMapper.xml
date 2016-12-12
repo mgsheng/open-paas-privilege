@@ -5,6 +5,7 @@
 		<id column="Id" property="id" jdbcType="INTEGER" />
 		<result column="privilege_roleid" property="privilegeRoleId" jdbcType="VARCHAR" />
 		<result column="resource_id" property="resourceId" jdbcType="VARCHAR" />
+		<result column="privilege_funid" property="privilegeFunId" jdbcType="VARCHAR" />
 		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
 		<result column="create_userid" property="createUserId" jdbcType="VARCHAR" />
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
@@ -14,6 +15,7 @@
 	  Id,
 	  privilege_roleid,
 	  resource_id,
+	  privilege_funid,
 	  create_user,
 	  create_userid,
 	  create_time,
@@ -26,9 +28,9 @@
 	</select>
 
 	<insert id="savePrivilegeRoleResource" parameterType="PrivilegeRoleResource" useGeneratedKeys="true" keyProperty="Id">
-        insert into privilege_role_resource (privilege_roleid,resource_id,create_user,create_userid,status,create_time)
+        insert into privilege_role_resource (privilege_roleid,resource_id,privilege_funid,create_user,create_userid,status,create_time)
         values
-        (#{privilegeRoleId},#{resourceId},#{createUser},#{createUserId},#{status},#{createTime})
+        (#{privilegeRoleId},#{resourceId},#{privilegeFunId},#{createUser},#{createUserId},#{status},#{createTime})
     </insert>
     
     <delete id="delPrivilegeRoleResource" parameterType="PrivilegeRoleResource">

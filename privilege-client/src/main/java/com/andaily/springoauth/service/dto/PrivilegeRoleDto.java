@@ -8,10 +8,13 @@ public class PrivilegeRoleDto{
 	private String method;//0-添加权限，1-删除权限
 	private String roleName;
 	private String rolePrivilege;
+	private String privilegeFunId;//所拥有的功能（多个功能以“，”分隔）
 	private String groupId;
 	private String groupName;
 	private String deptId;
 	private String deptName;
+	private int roleLevel;//0-无层级  1-有层级
+	private int roleType;//1-普通用户  2-系统管理员
 	private String parentRoleId;
 	private String remark;
 	private int status;
@@ -170,19 +173,37 @@ public class PrivilegeRoleDto{
 	}
 	public void setGetPrivilegeRoleUri(String getPrivilegeRoleUri) {
 		this.getPrivilegeRoleUri = getPrivilegeRoleUri;
+	}	
+	public String getPrivilegeFunId() {
+		return privilegeFunId;
+	}
+	public void setPrivilegeFunId(String privilegeFunId) {
+		this.privilegeFunId = privilegeFunId;
+	}
+	public int getRoleLevel() {
+		return roleLevel;
+	}
+	public void setRoleLevel(int roleLevel) {
+		this.roleLevel = roleLevel;
+	}
+	public int getRoleType() {
+		return roleType;
+	}
+	public void setRoleType(int roleType) {
+		this.roleType = roleType;
 	}
 	
 	public String getAddFullUri() throws UnsupportedEncodingException {
-        return String.format("%s?appId=%s&roleName=%s&rolePrivilege=%s&groupId=%s&groupName=%s&deptId=%s&deptName=%s&parentRoleId=%s&remark=%s&createUser=%s&createUserId=%s&status=%s",
-        		addPrivilegeRoleUri,appId,roleName,rolePrivilege,groupId,groupName,deptId,deptName,parentRoleId,remark,createUser,createUserId,status);  
+        return String.format("%s?appId=%s&roleName=%s&rolePrivilege=%s&groupId=%s&groupName=%s&deptId=%s&deptName=%s&parentRoleId=%s&remark=%s&createUser=%s&createUserId=%s&status=%s&privilegeFunId=%s&roleLevel=%s&roleType=%s",
+        		addPrivilegeRoleUri,appId,roleName,rolePrivilege,groupId,groupName,deptId,deptName,parentRoleId,remark,createUser,createUserId,status,privilegeFunId,roleLevel,roleType);  
     }
 	public String getDelFullUri() throws UnsupportedEncodingException {
         return String.format("%s?appId=%s&privilegeRoleId=%s&createUser=%s&createUserId=%s",
         		delPrivilegeRoleUri,appId,privilegeRoleId,createUser,createUserId);  
     }
 	public String getModiFullUri() throws UnsupportedEncodingException {
-		return String.format("%s?privilegeRoleId=%s&appId=%s&method=%s&roleName=%s&rolePrivilege=%s&groupId=%s&groupName=%s&deptId=%s&deptName=%s&parentRoleId=%s&remark=%s&createUser=%s&createUserId=%s&status=%s",
-        		modiPrivilegeRoleUri,privilegeRoleId,appId,method,roleName,rolePrivilege,groupId,groupName,deptId,deptName,parentRoleId,remark,createUser,createUserId,status);  
+		return String.format("%s?privilegeRoleId=%s&appId=%s&method=%s&roleName=%s&rolePrivilege=%s&privilegeFunId=%s&groupId=%s&groupName=%s&deptId=%s&deptName=%s&roleLevel=%s&roleType=%s&parentRoleId=%s&remark=%s&createUser=%s&createUserId=%s&status=%s",
+        		modiPrivilegeRoleUri,privilegeRoleId,appId,method,roleName,rolePrivilege,privilegeFunId,groupId,groupName,deptId,deptName,roleLevel,roleType,parentRoleId,remark,createUser,createUserId,status);  
     }
 	public String getGetFullUri() throws UnsupportedEncodingException {
 		return String.format("%s?privilegeRoleId=%s&appId=%s&groupId=%s&deptId=%s&start=%s&limit=%s",

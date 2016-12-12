@@ -57,6 +57,16 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="col-sm-2 control-label">privilegeFunId</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" name="privilegeFunId" id="privilegeFunId"
+                                   class="form-control" ng-model="privilegeFunId"/>
+
+                            <p class="help-block">所拥有功能（多个功能用“，”分隔）</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="col-sm-2 control-label">groupId</label>
 
                         <div class="col-sm-10">
@@ -97,6 +107,28 @@
                         </div>
                     </div>
                     
+                     <div class="form-group">
+                        <label class="col-sm-2 control-label">roleLevel</label>
+
+                        <div class="col-sm-10">
+							<select name="roleLevel" id="roleLevel" class="form-control" ng-mode="roleLevel">
+								<option value="0">无层级</option>
+								<option value="1">有层级</option>
+							</select>
+                            <p class="help-block">角色层级（0-无层级，1-有层级）</p>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-sm-2 control-label">roleType</label>
+
+                        <div class="col-sm-10">
+							<select name="roleType" id="roleType" class="form-control" ng-mode="roleType">
+								<option value="1">普通用户</option>
+								<option value="2">系统管理员</option>
+							</select>
+                            <p class="help-block">角色类型（1-普通用户，2-系统管理员）</p>
+                        </div>
+                    </div>
                      <div class="form-group">
                         <label class="col-sm-2 control-label">parentRoleId</label>
 
@@ -169,6 +201,8 @@
     var AuthorizationCodeCtrl = ['$scope', function ($scope) {
         $scope.parentRoleId='0';
         $scope.status=0;
+        $scope.roleLevel=0;
+        $scope.roleType=1;
         $scope.visible=false;
 
         $scope.showParams = function () {
@@ -181,10 +215,13 @@
 		var appId=$("#appId").val();
 		var roleName=$("#roleName").val();
 		var rolePrivilege=$("#rolePrivilege").val();
+		var privilegeFunId=$("#privilegeFunId").val();
 	    var groupId=$("#groupId").val();
 	    var groupName=$("#groupName").val();
 	    var deptId=$("#deptId").val();
 	    var deptName=$("#deptName").val();
+	    var roleLevel=$("#roleLevel").val();
+	    var roleType=$("#roleType").val();
 	    var parentRoleId=$("#parentRoleId").val();
 	    var remark=$("#remark").val();
 	    var createUser=$("#createUser").val();
@@ -195,9 +232,27 @@
 		    alert("请输入必传参数");
 			return;
 		}
-		var uri=addPrivilegeRoleUri+"?"+"appId="+appId+"&roleName="+roleName+"&rolePrivilege="+rolePrivilege+"&groupId="+groupId+"&groupName="+groupName
-				+"&deptId="+deptId+"&deptName="+deptName+"&parentRoleId="+parentRoleId+"&remark="+remark+"&createUser="+createUser+"&createUserId="+createUserId+"&status="+status;
-		$("#addPrivilegeRole").html(uri);
+		
+		$.post("${contextPath}/getSignature",
+			{
+				appId:appId
+			},
+			function(data){
+				if(data.flag){
+				    var signature=data.signature;
+				    var timestamp=data.timestamp;
+				    var signatureNonce=data.signatureNonce; 				    
+					var uri=addPrivilegeRoleUri+"?"+"appId="+appId+"&roleName="+roleName+"&rolePrivilege="+rolePrivilege
+							+"&privilegeFunId="+privilegeFunId+"&groupId="+groupId+"&groupName="+groupName
+							+"&deptId="+deptId+"&deptName="+deptName+"&roleLevel="+roleLevel+"&roleType="+roleType
+							+"&parentRoleId="+parentRoleId+"&remark="+remark+"&createUser="+createUser+"&createUserId="+createUserId
+							+"&status="+status+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
+					$("#addPrivilegeRole").html(uri);
+				}else{
+				    jQuery("#addPrivilegeRole").html('无效数据，请重新申请');
+				}
+			}
+ 		); 
 	}
 </script>
 

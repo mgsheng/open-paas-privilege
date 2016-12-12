@@ -1,8 +1,6 @@
 package cn.com.open.opensass.privilege.api;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import cn.com.open.opensass.privilege.model.PrivilegeGroup;
 import cn.com.open.opensass.privilege.model.PrivilegeGroupResource;
@@ -51,17 +48,21 @@ public class RoleAddPrivilegeController extends BaseControllerUtil{
     	privilegeRole.setGroupName(privilegeRoleVo.getGroupName());
     	privilegeRole.setDeptId(privilegeRoleVo.getDeptId());
     	privilegeRole.setDeptName(privilegeRoleVo.getDeptName());
-    	privilegeRole.setParentRoleId(privilegeRoleVo.getParentRoleId());
-    	if(("0").equals(privilegeRoleVo.getParentRoleId())){
-        	privilegeRole.setRoleLevel(0);//无层级
-    	}else{
-    		PrivilegeRole privilegeRole1=privilegeRoleService.findRoleById(privilegeRoleVo.getParentRoleId());
-    		if(privilegeRole1 == null){
-    			paraMandaChkAndReturn(10001, response,"父角色id不存在");
-                return;
+    	privilegeRole.setRoleLevel(privilegeRoleVo.getRoleLevel());
+    	privilegeRole.setRoleType(privilegeRoleVo.getRoleType());
+    	if(("1").equals(privilegeRoleVo.getRoleLevel())){//有层级、判断父角色id是否存在
+    		if(privilegeRoleVo.getParentRoleId()!=null && !("0").equals(privilegeRoleVo.getParentRoleId())){
+	    		PrivilegeRole privilegeRole1=privilegeRoleService.findRoleById(privilegeRoleVo.getParentRoleId());
+	    		if(privilegeRole1 == null){
+	    			paraMandaChkAndReturn(10001, response,"父角色id不存在");
+	                return;
+	    		}
+	        	privilegeRole.setParentRoleId(privilegeRoleVo.getParentRoleId());
+    		}else{
+    	    	privilegeRole.setParentRoleId("0");
     		}
-    		privilegeRole.setRoleLevel(1);//有层级
     	}
+    	privilegeRole.setRoleType(privilegeRoleVo.getRoleType());
     	privilegeRole.setRemark(privilegeRoleVo.getRemark());
     	privilegeRole.setCreateUser(privilegeRoleVo.getCreateUser());
     	privilegeRole.setCreateUserId(privilegeRoleVo.getCreateUserId());
@@ -75,6 +76,7 @@ public class RoleAddPrivilegeController extends BaseControllerUtil{
 	    			PrivilegeRoleResource privilegeRoleResource = new PrivilegeRoleResource();
 	    			privilegeRoleResource.setPrivilegeRoleId(privilegeRole.getPrivilegeRoleId());
 	    			privilegeRoleResource.setResourceId(roleResource);
+	    			privilegeRoleResource.setPrivilegeFunId(privilegeRoleVo.getPrivilegeFunId());
 	    			privilegeRoleResource.setCreateUser(privilegeRoleVo.getCreateUser());
 	    			privilegeRoleResource.setCreateUserId(privilegeRoleVo.getCreateUserId());
 	    			privilegeRoleResource.setStatus(privilegeRoleVo.getStatus());

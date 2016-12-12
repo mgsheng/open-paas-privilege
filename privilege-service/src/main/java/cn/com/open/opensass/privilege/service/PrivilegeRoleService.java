@@ -12,4 +12,6 @@ public interface PrivilegeRoleService {
 	PrivilegeRole findRoleById(String pararentRoleId);
 
 	Boolean delPrivilegeRoleById(String privilegeRoleId);
+
+	void updatePrivilegeRole(PrivilegeRole privilegeRole);
 }

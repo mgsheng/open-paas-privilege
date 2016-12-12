@@ -39,7 +39,34 @@ public class RoleModifyPrivilegeController extends BaseControllerUtil{
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
               return;
     	}    	
+    	//修改privilegeRole
     	PrivilegeRole privilegeRole = privilegeRoleService.findRoleById(privilegeRoleVo.getPrivilegeRoleId());
+    	privilegeRole.setRoleName(privilegeRoleVo.getRoleName());
+    	privilegeRole.setGroupId(privilegeRoleVo.getGroupId());
+    	privilegeRole.setGroupName(privilegeRoleVo.getGroupName());
+    	privilegeRole.setDeptId(privilegeRoleVo.getDeptId());
+    	privilegeRole.setDeptName(privilegeRoleVo.getDeptName());
+    	privilegeRole.setRoleLevel(privilegeRoleVo.getRoleLevel());
+    	privilegeRole.setRoleType(privilegeRoleVo.getRoleType());
+    	if(("1").equals(privilegeRoleVo.getRoleLevel())){//有层级、判断父角色id是否存在
+    		if(privilegeRoleVo.getParentRoleId()!=null && !("0").equals(privilegeRoleVo.getParentRoleId())){
+	    		PrivilegeRole privilegeRole1=privilegeRoleService.findRoleById(privilegeRoleVo.getParentRoleId());
+	    		if(privilegeRole1 == null){
+	    			paraMandaChkAndReturn(10001, response,"父角色id不存在");
+	                return;
+	    		}
+	        	privilegeRole.setParentRoleId(privilegeRoleVo.getParentRoleId());
+    		}else{
+    	    	privilegeRole.setParentRoleId("0");
+    		}
+    	}
+    	privilegeRole.setRoleType(privilegeRoleVo.getRoleType());
+    	privilegeRole.setRemark(privilegeRoleVo.getRemark());
+    	privilegeRole.setCreateUser(privilegeRoleVo.getCreateUser());
+    	privilegeRole.setCreateUserId(privilegeRoleVo.getCreateUserId());
+    	privilegeRole.setStatus(privilegeRoleVo.getStatus()); 
+    	privilegeRoleService.updatePrivilegeRole(privilegeRole);
+    	
     	String method = privilegeRoleVo.getMethod();
     	if(privilegeRoleVo.getRolePrivilege()!=null){
     		String[] roleResources = privilegeRoleVo.getRolePrivilege().split(",");
@@ -54,6 +81,7 @@ public class RoleModifyPrivilegeController extends BaseControllerUtil{
 						roleResource1.setCreateUser(privilegeRoleVo.getCreateUser());
 						roleResource1.setCreateUserId(privilegeRoleVo.getCreateUserId());
 						roleResource1.setStatus(privilegeRoleVo.getStatus());
+						roleResource1.setPrivilegeFunId(privilegeRoleVo.getPrivilegeFunId());
 						Boolean f = privilegeRoleResourceService.savePrivilegeRoleResource(roleResource1);
 						if(!f){
 							paraMandaChkAndReturn(10001, response,"添加权限失败");

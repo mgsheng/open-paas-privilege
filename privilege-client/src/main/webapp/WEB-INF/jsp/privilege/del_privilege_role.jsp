@@ -102,8 +102,24 @@
 		    alert("请输入必传参数");
 			return;
 		}
-		var uri=delPrivilegeRoleUri+"?"+"appId="+appId+"&privilegeRoleId="+privilegeRoleId+"&createUser="+createUser+"&createUserId="+createUserId;
-		$("#delPrivilegeRole").html(uri);
+		
+		$.post("${contextPath}/getSignature",
+			{
+				appId:appId
+			},
+			function(data){
+				if(data.flag){
+				    var signature=data.signature;
+				    var timestamp=data.timestamp;
+				    var signatureNonce=data.signatureNonce; 				    
+					var uri=delPrivilegeRoleUri+"?"+"appId="+appId+"&privilegeRoleId="+privilegeRoleId+"&createUser="+createUser+"&createUserId="+createUserId
+							+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
+					$("#delPrivilegeRole").html(uri);
+				}else{
+				    jQuery("#delPrivilegeRole").html('无效数据，请重新申请');
+				}
+			}
+ 		); 
 	}
 </script>
 

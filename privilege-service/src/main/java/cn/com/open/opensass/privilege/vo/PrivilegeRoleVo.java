@@ -6,10 +6,13 @@ public class PrivilegeRoleVo{
 	private String method;
 	private String roleName;
 	private String rolePrivilege;
+	private String privilegeFunId;
 	private String groupId;
 	private String groupName;
 	private String deptId;
 	private String deptName;
+	private Integer roleLevel;
+	private Integer roleType;
 	private String parentRoleId;
 	private String remark;
 	private int status;
@@ -115,4 +118,22 @@ public class PrivilegeRoleVo{
 	public void setLimit(String limit) {
 		this.limit = limit;
 	}
+	public String getPrivilegeFunId() {
+		return privilegeFunId;
+	}
+	public void setPrivilegeFunId(String privilegeFunId) {
+		this.privilegeFunId = privilegeFunId;
+	}
+	public Integer getRoleLevel() {
+		return roleLevel;
+	}
+	public void setRoleLevel(Integer roleLevel) {
+		this.roleLevel = roleLevel;
+	}
+	public Integer getRoleType() {
+		return roleType;
+	}
+	public void setRoleType(Integer roleType) {
+		this.roleType = roleType;
+	}	
 }
