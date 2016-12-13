@@ -79,6 +79,12 @@
         <li>
             <p><a href="getPrivilegeRole">角色权限查询</a> <br/>角色权限查询接口测试</p>
         </li>
+        <li>
+            <p><a href="addPrivilegeUserRole">用户角色初始创建</a> <br/>用户角色初始创建接口测试</p>
+        </li>
+        <li>
+            <p><a href="delPrivilegeUserRole">用户角色删除</a> <br/>用户角色删除接口测试</p>
+        </li>
     </ul>
 </div>
 </body>

@@ -21,7 +21,7 @@
         <div ng-controller="AuthorizationCodeCtrl" class="col-md-10">
 
             <form action="addPrivilegeUserRole" method="post" class="form-horizontal">
-                <input type="hidden" name="addPrivilegeUserUri" id="addPrivilegeUserUri" value="${addPrivilegeUserRoleUri}"/>
+                <input type="hidden" name="addPrivilegeUserUri" id="addPrivilegeUserUri" value="${addPrivilegeUserUri}"/>
                 <a href="javascript:void(0);" ng-click="showParams()">显示请求参数</a>
 
                 <div ng-show="visible">

@@ -73,7 +73,12 @@ public class PrivilegeUserRoleDto{
 		return appUserName;
 	}
 	public void setAppUserName(String appUserName) {
-		this.appUserName = appUserName;
+		try {
+			this.appUserName = java.net.URLEncoder.encode(appUserName,"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} ;
 	}
 	public String getResourceId() {
 		return resourceId;
@@ -95,7 +100,11 @@ public class PrivilegeUserRoleDto{
 	}
 	
 	public String getAddFullUri() throws UnsupportedEncodingException {
-        return String.format("%s?appId=%s&appUserId=%s&appUserName=%s&deptId=%s&groupId=%s&privilegeFunId=%s&resourceId=%s&createUser=%s&createUserId=%s",
-        		addPrivilegeUserUri,appId,appUserId,appUserName,deptId,groupId,privilegeFunId,resourceId,createUser,createUserId);  
+        return String.format("%s?privilegeRoleId=%s&appId=%s&appUserId=%s&appUserName=%s&deptId=%s&groupId=%s&privilegeFunId=%s&resourceId=%s&createUser=%s&createUserId=%s",
+        		addPrivilegeUserUri,privilegeRoleId,appId,appUserId,appUserName,deptId,groupId,privilegeFunId,resourceId,createUser,createUserId);  
     }
+	public String getdelFullUri() {
+		return String.format("%s?appId=%s&appUserId=%s&createUser=%s&createUserId=%s",
+				delPrivilegeUserUri,appId,appUserId,createUser,createUserId);  
+	}
 }

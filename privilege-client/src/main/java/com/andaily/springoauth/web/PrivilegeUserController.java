@@ -25,8 +25,8 @@ public class PrivilegeUserController {
 
     @Value("#{properties['add-privilege-user-uri']}")
     private String addPrivilegeUserUri;
-   /* @Value("#{properties['del-privilege-user-uri']}")
-    private String delPrivilegeUserUri;*/
+    @Value("#{properties['del-privilege-user-uri']}")
+    private String delPrivilegeUserUri;
     
     final static String  SEPARATOR = "&";
     private Map<String,String> map=LoadPopertiesFile.loadProperties();
@@ -50,53 +50,18 @@ public class PrivilegeUserController {
     /*
      *  Entrance:   step-1
      * */
-	/*@RequestMapping(value = "delPrivilegeUserRole", method = RequestMethod.GET)
+	@RequestMapping(value = "delPrivilegeUserRole", method = RequestMethod.GET)
 	public String delPrivilegeUserRole(Model model) {
-		model.addAttribute("delPrivilegeUserRoleUri", delPrivilegeUserUri);
+		model.addAttribute("delPrivilegeUserUri", delPrivilegeUserUri);
 		return "privilege/del_privilege_user_role";
-	}*/
+	}
 	/* 
     * Redirect to oauth-server bind page:   step-2
     * */
-   /*@RequestMapping(value = "delPrivilegeUserRole", method = RequestMethod.POST)
+   @RequestMapping(value = "delPrivilegeUserRole", method = RequestMethod.POST)
     public String delPrivilegeUserRole(PrivilegeUserRoleDto privilegeUserRoleDto) throws Exception {
-        final String fullUri = privilegeUserRoleDto.getDelFullUri();
+        final String fullUri = privilegeUserRoleDto.getdelFullUri();
         LOG.debug("Send to Oauth-Server URL: {}", fullUri);
         return "redirect:" + fullUri;
-    }*/
-   /*
-    *  Entrance:   step-1
-    * */
-	/*@RequestMapping(value = "modifyPrivilegeRole", method = RequestMethod.GET)
-	public String modifyPrivilegeRole(Model model) {
-		model.addAttribute("modiPrivilegeRoleUri", modiPrivilegeRoleUri);
-		return "privilege/modi_privilege_role";
-	}*/
-	/* 
-   * Redirect to oauth-server bind page:   step-2
-   * */
-  /*@RequestMapping(value = "modifyPrivilegeRole", method = RequestMethod.POST)
-   public String modifyPrivilegeRole(PrivilegeRoleDto privilegeRoleDto) throws Exception {
-       final String fullUri = privilegeRoleDto.getModiFullUri();
-       LOG.debug("Send to Oauth-Server URL: {}", fullUri);
-       return "redirect:" + fullUri;
-   }*/
-  /*
-   *  Entrance:   step-1
-   * */
-	/*@RequestMapping(value = "getPrivilegeRole", method = RequestMethod.GET)
-	public String getPrivilegeRole(Model model) {
-		model.addAttribute("getPrivilegeRoleUri", getPrivilegeRoleUri);
-		return "privilege/get_privilege_role";
-	}*/
-	/* 
-  * Redirect to oauth-server bind page:   step-2
-  * */
- /*@RequestMapping(value = "getPrivilegeRole", method = RequestMethod.POST)
-  public String getfyPrivilegeRole(PrivilegeRoleDto privilegeRoleDto) throws Exception {
-      final String fullUri = privilegeRoleDto.getGetFullUri();
-      LOG.debug("Send to Oauth-Server URL: {}", fullUri);
-      return "redirect:" + fullUri;
-  }*/
-
+    }
 }
