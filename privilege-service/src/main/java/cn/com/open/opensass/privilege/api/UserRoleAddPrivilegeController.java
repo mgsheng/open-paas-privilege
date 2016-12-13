@@ -35,31 +35,46 @@ public class UserRoleAddPrivilegeController extends BaseControllerUtil{
     public void addRole(HttpServletRequest request,HttpServletResponse response,PrivilegeUserVo privilegeUserVo) {
     	Map<String, Object> map=new HashMap<String, Object>();
     	log.info("====================add user role start======================");    	
-    	if(!paraMandatoryCheck(Arrays.asList(privilegeUserVo.getPrivilegeRoleId(),privilegeUserVo.getAppId(),privilegeUserVo.getAppUserId(),privilegeUserVo.getAppUsername()))){
+    	if(!paraMandatoryCheck(Arrays.asList(privilegeUserVo.getPrivilegeRoleId(),privilegeUserVo.getAppId(),privilegeUserVo.getAppUserId(),privilegeUserVo.getAppUserName()))){
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
               return;
     	}  
+    	PrivilegeUser user=null;
+    	//查询是否业务用户是否已存在
+    	user = privilegeUserService.findByAppIdAndAppUserId(privilegeUserVo.getAppId(),privilegeUserVo.getAppUserId());
+    	if(user!=null){
+    		 paraMandaChkAndReturn(10001, response,"该业务用户已存在");
+             return;
+    	}
     	
-    	PrivilegeUser user=new PrivilegeUser();
+    	user=new PrivilegeUser();
     	user.setAppId(privilegeUserVo.getAppId());
     	user.setPrivilegeRoleId(privilegeUserVo.getPrivilegeRoleId());
-    	user.setAppUserid(privilegeUserVo.getAppUserId());
-    	user.setAppUsername(privilegeUserVo.getAppUsername());
+    	user.setAppUserId(privilegeUserVo.getAppUserId());
+    	user.setAppUserName(privilegeUserVo.getAppUserName());
     	user.setDeptId(privilegeUserVo.getDeptId());
     	user.setGroupId(privilegeUserVo.getGroupId());
     	user.setResourceId(privilegeUserVo.getResourceId());
     	user.setPrivilegeFunId(privilegeUserVo.getResourceId());
     	
-    	privilegeUserService.savePrivilegeUser(user);
-    	
-    	String[] roles=privilegeUserVo.getPrivilegeRoleId().split(",");
-    	for(String role : roles){
-    		PrivilegeUserRole userRole=new PrivilegeUserRole();
-    		userRole.setUserId(user.getuId());
-    		userRole.setPrivilegeRoleId(role);
-    		userRole.setCreateUser(privilegeUserVo.getCreateUser());
-    		userRole.setCreateUserId(privilegeUserVo.getCreateUserId());
-    		privilegeUserRoleService.savePrivilegeUserRole(userRole);
+    	Boolean f = privilegeUserService.savePrivilegeUser(user);
+    	if(f){
+	    	String[] roles=privilegeUserVo.getPrivilegeRoleId().split(",");
+	    	for(String role : roles){
+	    		PrivilegeUserRole userRole=new PrivilegeUserRole();
+	    		userRole.setUserId(user.getuId());
+	    		userRole.setPrivilegeRoleId(role);
+	    		userRole.setCreateUser(privilegeUserVo.getCreateUser());
+	    		userRole.setCreateUserId(privilegeUserVo.getCreateUserId());
+	    		Boolean f1 = privilegeUserRoleService.savePrivilegeUserRole(userRole);
+	    		if(!f1){
+	    			paraMandaChkAndReturn(10003, response,"用户角色关系添加失败");
+	                return;
+	    		}
+	    	}
+    	}else{
+    		paraMandaChkAndReturn(10002, response,"用户添加失败");
+            return;
     	}
     	
     	map.put("status", 1);

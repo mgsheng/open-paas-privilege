@@ -143,6 +143,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/api/RoleDelPrivil
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/RoleGetPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/RoleModifyPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UserRoleAddPrivilegeController.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UserRoleDelPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/constant/ConstantMessage.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/datasource/DataSourceAdvice.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/datasource/DataSourceSwitcher.java -text
