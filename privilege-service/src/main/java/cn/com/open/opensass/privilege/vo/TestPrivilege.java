@@ -50,7 +50,7 @@ public class TestPrivilege {
     role3.setStatus(0);
     PrivilegeUserVo user=new PrivilegeUserVo();
     user.setAppId("10001");
-    user.setAppUsername("zhangsan");
+    //user.setAppUsername("zhangsan");
     user.setDeptId("1");
     user.setGroupId("2");
     //user.setPrivilegeFunid("1,2,34");

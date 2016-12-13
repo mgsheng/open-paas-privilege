@@ -30,13 +30,20 @@
          select * from privilege_user
          where  uid = #{uId}
 	</select>
+ 	<select id="findByAppIdAndAppUserId" resultMap="privilegeUserMap" flushCache="true">
+ 		select * from privilege_user where app_id=#{appId} and app_userid=#{appUserId}
+ 	</select>
  
 	<insert id="savePrivilegeUser" parameterType="PrivilegeUser" useGeneratedKeys="true" keyProperty="uId">
-        insert into privilege_user (app_id,privilege_roleid,app_userid,app_username,group_id,dept_id,create_time,resource_id,privilege_funid)
+        insert into privilege_user (uid,app_id,privilege_roleid,app_userid,app_username,group_id,dept_id,create_time,resource_id,privilege_funid)
         values
-        (#{appId},#{privilegeRoleId},#{appUserId},#{appUserName},#{groupId},#{deptId},#{createTime},#{resourceId},#{privilegeFunId})
+        (#{uId},#{appId},#{privilegeRoleId},#{appUserId},#{appUserName},#{groupId},#{deptId},#{createTime},#{resourceId},#{privilegeFunId})
     </insert>
-    <delete id="delPrivilegeUserById">
+    <delete id="delUserByAppIdAndAppUserId">
+    	delete from privilege_user where app_id=#{appId} and app_userid=#{appUserId}
+    </delete>
+    
+    <delete id="delPrivilegeUserByUid">
         delete from privilege_user where uid=#{uId}
     </delete>
 </mapper>

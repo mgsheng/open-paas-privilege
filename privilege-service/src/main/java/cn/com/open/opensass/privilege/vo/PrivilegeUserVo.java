@@ -4,7 +4,7 @@ public class PrivilegeUserVo {
 	private String privilegeRoleId;
 	private String appId;
 	private String appUserId;
-	private String appUsername;
+	private String appUserName;
 	private String deptId;
 	private String groupId;
 	private String privilegeFunId;
@@ -24,11 +24,11 @@ public class PrivilegeUserVo {
 	public void setAppUserId(String appUserId) {
 		this.appUserId = appUserId;
 	}
-	public String getAppUsername() {
-		return appUsername;
+	public String getAppUserName() {
+		return appUserName;
 	}
-	public void setAppUsername(String appUsername) {
-		this.appUsername = appUsername;
+	public void setAppUserName(String appUserName) {
+		this.appUserName = appUserName;
 	}
 	public String getDeptId() {
 		return deptId;

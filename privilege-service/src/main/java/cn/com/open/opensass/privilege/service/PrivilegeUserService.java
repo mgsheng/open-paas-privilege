@@ -7,5 +7,11 @@ import cn.com.open.opensass.privilege.model.PrivilegeUser;
  */
 public interface PrivilegeUserService {
 
-	void savePrivilegeUser(PrivilegeUser privilegeUser);
+	Boolean savePrivilegeUser(PrivilegeUser privilegeUser);
+
+	Boolean delPrivilegeUserByUid(String uId);
+
+	PrivilegeUser findByAppIdAndAppUserId(String appId, String appUserId);
+
+	Boolean delUserByAppIdAndAppUserId(String appId, String appUserId);
 }

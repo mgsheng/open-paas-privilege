@@ -20,7 +20,7 @@
 	  status
 	</sql>
 	
-	<select id="findById" resultMap="privilegeUserMap" flushCache="true">
+	<select id="findById" resultMap="privilegeUserRoleMap" flushCache="true">
          select * from privilege_user_role
          where  id = #{id}
 	</select>
@@ -77,7 +77,7 @@
         values
         (#{userId},#{privilegeRoleId},#{createUser},#{createUserId},#{createTime},#{status})
     </insert>
-    <delete id="delPrivilegeUserRoleById">
-        delete from privilege_user_role where id=#{id}
+    <delete id="delPrivilegeUserRoleByUid">
+        delete from privilege_user_role where user_id=#{userId}
     </delete>
 </mapper>

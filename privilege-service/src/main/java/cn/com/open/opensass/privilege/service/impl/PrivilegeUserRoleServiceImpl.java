@@ -20,8 +20,23 @@ public class PrivilegeUserRoleServiceImpl implements PrivilegeUserRoleService {
     private PrivilegeUserRoleRepository privilegeUserRoleRepository;
 
 	@Override
-	public void savePrivilegeUserRole(PrivilegeUserRole privilegeUserRole) {
-		privilegeUserRoleRepository.savePrivilegeUserRole(privilegeUserRole);
+	public Boolean savePrivilegeUserRole(PrivilegeUserRole privilegeUserRole) {
+		try{
+			privilegeUserRoleRepository.savePrivilegeUserRole(privilegeUserRole);
+			return true;
+		}catch(Exception e){
+			return false;
+		}
+	}
+
+	@Override
+	public Boolean delPrivilegeUserRoleByUid(String appUserId) {
+		try{
+			privilegeUserRoleRepository.delPrivilegeUserRoleByUid(appUserId);
+			return true;
+		}catch(Exception e){
+			return false;
+		}
 	}
 
 }

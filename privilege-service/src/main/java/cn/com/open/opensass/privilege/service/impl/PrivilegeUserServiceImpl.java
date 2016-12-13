@@ -20,7 +20,40 @@ public class PrivilegeUserServiceImpl implements PrivilegeUserService {
     private PrivilegeUserRepository privilegeUserRepository;
 
 	@Override
-	public void savePrivilegeUser(PrivilegeUser privilegeUser) {
-		privilegeUserRepository.savePrivilegeUser(privilegeUser);
+	public Boolean savePrivilegeUser(PrivilegeUser privilegeUser) {
+		try{
+			privilegeUserRepository.savePrivilegeUser(privilegeUser);
+			return true;
+		}catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
+	public Boolean delPrivilegeUserByUid(String uId) {
+		try{
+			privilegeUserRepository.delPrivilegeUserByUid(uId);
+			return true;
+		}catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
+	public PrivilegeUser findByAppIdAndAppUserId(String appId, String appUserId) {
+		return privilegeUserRepository.findByAppIdAndAppUserId(appId, appUserId);
+	}
+
+	@Override
+	public Boolean delUserByAppIdAndAppUserId(String appId, String appUserId) {
+		try{
+			privilegeUserRepository.delUserByAppIdAndAppUserId(appId,appUserId);
+			return true;
+		}catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
 	}
 }

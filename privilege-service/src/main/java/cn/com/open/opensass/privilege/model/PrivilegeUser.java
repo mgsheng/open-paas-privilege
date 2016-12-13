@@ -7,8 +7,8 @@ public class PrivilegeUser {
 	private String uId=UUID.randomUUID().toString().replace("-", "");
 	private String appId;
 	private String privilegeRoleId;
-	private String appUserid;
-	private String appUsername;
+	private String appUserId;
+	private String appUserName;
 	private String deptId;
 	private String groupId;
 	private String privilegeFunId;
@@ -21,17 +21,17 @@ public class PrivilegeUser {
 	public void setAppId(String appId) {
 		this.appId = appId;
 	}
-	public String getAppUserid() {
-		return appUserid;
+	public String getAppUserId() {
+		return appUserId;
 	}
-	public void setAppUserid(String appUserid) {
-		this.appUserid = appUserid;
+	public void setAppUserId(String appUserId) {
+		this.appUserId = appUserId;
 	}
-	public String getAppUsername() {
-		return appUsername;
+	public String getAppUserName() {
+		return appUserName;
 	}
-	public void setAppUsername(String appUsername) {
-		this.appUsername = appUsername;
+	public void setAppUserName(String appUserName) {
+		this.appUserName = appUserName;
 	}
 	public String getDeptId() {
 		return deptId;

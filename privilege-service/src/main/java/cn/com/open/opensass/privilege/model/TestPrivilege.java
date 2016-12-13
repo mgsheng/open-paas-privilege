@@ -41,11 +41,11 @@ public class TestPrivilege {
     
     PrivilegeUser user=new PrivilegeUser();
     user.setAppId("10001");
-    user.setAppUsername("zhangsan");
+    //user.setAppUsername("zhangsan");
     user.setDeptId("1");
     user.setGroupId("2");
     //user.setPrivilegeFunid("1,2,34");
-    user.setAppUserid("89324522");
+    //user.setAppUserid("89324522");
     //user.setId("10012");
     //user.setRoleId("10001,10003,10005");
     List<PrivilegeRole> roleList=new ArrayList<PrivilegeRole>();

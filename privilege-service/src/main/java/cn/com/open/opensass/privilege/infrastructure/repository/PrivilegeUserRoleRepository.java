@@ -12,4 +12,6 @@ import cn.com.open.opensass.privilege.model.PrivilegeUserRole;
 public interface PrivilegeUserRoleRepository extends Repository {
 
 	void savePrivilegeUserRole(PrivilegeUserRole privilegeUserRole);
+
+	void delPrivilegeUserRoleByUid(String appUserId);
 }
