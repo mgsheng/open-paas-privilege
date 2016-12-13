@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.opensass.privilege.infrastructure.mybatis.PrivilegeResourceRepositoryMyBatis">
+	<resultMap type="PrivilegeResource" id="privilegeResourceMap">
+		<id column="resource_id" property="id" jdbcType="VARCHAR" />
+		<result column="menu_id" property="menuId" jdbcType="VARCHAR" />
+		<result column="resource_name" property="resourceName" jdbcType="VARCHAR" />
+		<result column="app_id" property="appId" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
+		<result column="create_userid" property="createUserId" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="resource_rule" property="resourcerule" jdbcType="VARCHAR" />
+		<result column="resource_level" property="resourceLevel" jdbcType="INTEGER" />
+		<result column="display_order" property="displayOrder" jdbcType="INTEGER" />
+		<result column="base_url" property="baseUrl" jdbcType="VARCHAR" />
+		
+	</resultMap>
+	<sql id="Insert_Column_List">
+	  resource_id,
+	  menu_id,
+	  resource_name,
+	  app_id,
+	  create_time,
+	  create_user,
+	  create_userid,
+	  status,
+	  resource_rule,
+	  resource_level,
+	  base_url
+	</sql>
+	<select id="findByResourceCode" resultMap="privilegeResourceMap" flushCache="true">
+         select * from privilege_resource
+         where  resource_id = #{resourceLd}
+         and app_id=#{appId}
+	</select>
+	<select id="findResourcePage" resultMap="privilegeResourceMap" flushCache="true">
+         select * from privilege_resource
+         where  resource_id = #{resourceId}
+         and app_id=#{appId}
+         limit #{startRow},#{pageSize} 
+	</select>
+    <update id="updatePrivilegeResource" parameterType="PrivilegeResource" flushCache="true">
+        update privilege_resource set
+        <if test="menuId != null and menuId !=''">
+        menu_id = #{menuId},
+        </if>
+         <if test="resourceName != null and resourceName !=''" >
+        resource_name = #{resourceName},
+        </if>
+         <if test="appId != null and appId !=''" >
+        app_id = #{appId},
+        </if>
+         <if test="createTime != null" >
+        create_time = #{createTime},
+        </if>
+         <if test="createUser != null and createUser !=''" >
+        create_user = #{createUser},
+        </if>
+         <if test="resourceLevel != null " >
+        resource_level = #{resourceLevel},
+        </if>
+         <if test="createUserId != null and createUserId !=''" >
+        create_userid = #{createUserId},
+        </if>
+         <if test="resourceRule != null and resourceRule !=''" >
+        resource_rule = #{resourceRule},
+        </if>
+         <if test="status != null " >
+        status = #{status},
+        </if>
+        where id = #{id}
+    </update>
+	<insert id="savePrivilegeResource" parameterType="PrivilegeResource" flushCache="true">
+        insert into privilege_resource
+        (resource_id,resource_name,app_id,create_time,create_user,create_userid,resourceRule,resource_level)
+        values
+        (#{resourceId},#{resourceName},#{appId},#{createTime},#{createUser},#{createUserId},#{resourceRule},#{resourceLevel})
+    </insert>
+     <delete id="deleteByResourceId">
+        delete from privilege_resource where id=#{resourceId}
+    </delete>
+	
+</mapper>

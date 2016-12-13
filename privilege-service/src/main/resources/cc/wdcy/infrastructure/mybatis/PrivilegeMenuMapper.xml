@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.opensass.privilege.infrastructure.mybatis.PrivilegeMenuRepositoryMyBatis">
+	<resultMap type="PrivilegeMenu" id="privilegeMenuMap">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="menu_code" property="menuCode" jdbcType="VARCHAR" />
+		<result column="menu_name" property="menuName" jdbcType="VARCHAR" />
+		<result column="app_id" property="appId" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
+		<result column="create_userid" property="createUserId" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="menu_rule" property="menuRule" jdbcType="VARCHAR" />
+		<result column="menu_level" property="menuLevel" jdbcType="INTEGER" />
+		<result column="display_order" property="displayOrder" jdbcType="INTEGER" />
+		<result column="parent_id" property="parentId" jdbcType="INTEGER" />
+		<result column="resource_type" property="resourceType" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Insert_Column_List">
+	  id,
+	  menu_code,
+	  menu_name,
+	  app_id,
+	  create_time,
+	  create_user,
+	  create_userid,
+	  status,
+	  menu_rule,
+	  menu_level,
+	  display_order,
+	  parent_id,
+	  resource_type
+	</sql>
+	<select id="findBymenuCode" resultMap="privilegeMenuMap" flushCache="true">
+         select * from privilege_menu
+         where  menu_code = #{menuCode}
+         and app_id=#{appId}
+	</select>
+	<select id="findMenuPage" resultMap="privilegeMenuMap" flushCache="true">
+         select * from privilege_menu
+         where  menu_code = #{menuCode}
+         and app_id=#{appId}
+         limit #{startRow},#{pageSize} 
+	</select>
+    <update id="updatePrivilegeMenu" parameterType="PrivilegeMenu" flushCache="true">
+        update privilege_menu set
+        <if test="menuCode != null and menuCode !=''">
+        menu_code = #{menuCode},
+        </if>
+         <if test="menuName != null and MenuName !=''" >
+        menu_name = #{menuName},
+        </if>
+         <if test="appId != null and appId !=''" >
+        app_id = #{appId},
+        </if>
+         <if test="createTime != null" >
+        create_time = #{createTime},
+        </if>
+         <if test="createUser != null and createUser !=''" >
+        create_user = #{createUser},
+        </if>
+         <if test="createUserId != null and createUserId !=''" >
+        create_userid = #{createUserId},
+        </if>
+         <if test="status != null " >
+        status = #{status},
+        </if>
+        where id = #{id}
+    </update>
+	<insert id="savePrivilegeMenu" parameterType="PrivilegeMenu" flushCache="true">
+        insert into privilege_menu
+        (id,menu_code,menu_name,app_id,create_time,create_user,create_userid,status)
+        values
+        (#{id},#{menuCode},#{menuName},#{appId},#{createTime},#{createUser},#{createUserId},#{status})
+    </insert>
+	 <delete id="deleteByMenuId">
+        delete from privilege_menu where id=#{menuId}
+    </delete>
+</mapper>
