@@ -22,21 +22,21 @@ import cn.com.open.opensass.privilege.service.PrivilegeGroupService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 
 /**
- *  组织机构权限查询接口
+ *  菜单查询接口
  */
 @Controller
-@RequestMapping("/group/")
-public class GroupGetPrivilegeController extends BaseControllerUtil{
-	private static final Logger log = LoggerFactory.getLogger(GroupGetPrivilegeController.class);
+@RequestMapping("/menu/")
+public class MenuGetPrivilegeController extends BaseControllerUtil{
+	private static final Logger log = LoggerFactory.getLogger(MenuGetPrivilegeController.class);
 	@Autowired
 	private PrivilegeGroupService privilegeGroupService;
 
     /**
-     * 组织机构权限查询接口
+     * 菜单查询接口
      * @return Json
      */
-    @RequestMapping("getGroupPrivilege")
-    public void getGroupPrivilege(HttpServletRequest request,HttpServletResponse response) {
+    @RequestMapping("getMenus")
+    public void getMenus(HttpServletRequest request,HttpServletResponse response) {
     	String groupId=request.getParameter("groupId");
     	String appId=request.getParameter("appId");
     	String start=request.getParameter("start");

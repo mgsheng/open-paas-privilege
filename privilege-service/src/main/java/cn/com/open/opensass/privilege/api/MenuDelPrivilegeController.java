@@ -17,47 +17,48 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.opensass.privilege.model.PrivilegeGroup;
 import cn.com.open.opensass.privilege.model.PrivilegeGroupResource;
+import cn.com.open.opensass.privilege.model.PrivilegeMenu;
 import cn.com.open.opensass.privilege.service.PrivilegeGroupResourceService;
 import cn.com.open.opensass.privilege.service.PrivilegeGroupService;
+import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 
 /**
- *  组织机构权限查询接口
+ * 菜单删除接口
  */
 @Controller
-@RequestMapping("/group/")
-public class GroupGetPrivilegeController extends BaseControllerUtil{
-	private static final Logger log = LoggerFactory.getLogger(GroupGetPrivilegeController.class);
+@RequestMapping("/menu/")
+public class MenuDelPrivilegeController extends BaseControllerUtil{
+	private static final Logger log = LoggerFactory.getLogger(MenuDelPrivilegeController.class);
 	@Autowired
-	private PrivilegeGroupService privilegeGroupService;
+	private PrivilegeMenuService privilegeMenuService;
 
     /**
-     * 组织机构权限查询接口
+     * 菜单删除接口
      * @return Json
      */
-    @RequestMapping("getGroupPrivilege")
-    public void getGroupPrivilege(HttpServletRequest request,HttpServletResponse response) {
-    	String groupId=request.getParameter("groupId");
+    @RequestMapping("delMenu")
+    public void delMenu(HttpServletRequest request,HttpServletResponse response) {
+    	String menuId=request.getParameter("menuId");
     	String appId=request.getParameter("appId");
-    	String start=request.getParameter("start");
-    	String limit=request.getParameter("Limit");
     	Map<String, Object> map=new HashMap<String, Object>();
-    	log.info("====================query start======================");
-    	if(!paraMandatoryCheck(Arrays.asList(groupId,start,appId,limit))){
+    	log.info("====================delete start======================");
+    	if(!paraMandatoryCheck(Arrays.asList(menuId,appId))){
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
               return;	
     	}
-    	List<PrivilegeGroup>lists=privilegeGroupService.findGroupPage(groupId, appId, start, limit);
-    	if(lists!=null&&lists.size()>0){
-    		for(int i=0;i<lists.size();i++){
-    			
+    	PrivilegeMenu pm=privilegeMenuService.findByMenuId(menuId, appId);
+    	if(pm!=null){
+    		Boolean f= privilegeMenuService.deleteByMenuId(menuId);
+    		if(f){
+    			map.put("status","1");
+    		}else{
+    			map.put("status","0");
+        		map.put("error_code","10002");	
     		}
-    		map.put("status", "1");
-    		map.put("count", lists.size());
-    		map.put("groupList",lists);
     	}else{
-    		map.put("status", "0");
-    		map.put("error_code", "10001");
+    		map.put("status","0");
+    		map.put("error_code","10001");
     	}
     	if(map.get("status")=="0"){
     		writeErrorJson(response,map);

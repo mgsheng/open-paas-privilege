@@ -15,12 +15,12 @@ public abstract class AbstractDomain implements Serializable {
 
     public AbstractDomain() {
     }
-    public String guid() {
+    public String id() {
         return id;
     }
 
-    public void id(String guid) {
-        this.id = guid;
+    public void id(String id) {
+        this.id = id;
     }
     @Override
     public boolean equals(Object o) {

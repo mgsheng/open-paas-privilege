@@ -38,7 +38,7 @@ public class GroupModifyPrivilegeController extends BaseControllerUtil{
      * @return Json
      */
     @RequestMapping("modifyPrivilege")
-    public void modifyResource(HttpServletRequest request,HttpServletResponse response) {
+    public void modifyPrivilege(HttpServletRequest request,HttpServletResponse response) {
     	String groupId=request.getParameter("groupId");
     	String groupName = "";
     	String createUser="";
