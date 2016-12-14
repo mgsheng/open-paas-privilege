@@ -64,7 +64,7 @@ public class MenuAddPrivilegeController extends BaseControllerUtil{
               return;	
     	}
     	PrivilegeMenu pm=new PrivilegeMenu();
-    	pm.setAppId(Integer.parseInt(appId));
+    	pm.setAppId(appId);
     	pm.setMenuName(menuName);
     	if(nullEmptyBlankJudge(menuLevel)){
     		pm.setMenuLevel(0);

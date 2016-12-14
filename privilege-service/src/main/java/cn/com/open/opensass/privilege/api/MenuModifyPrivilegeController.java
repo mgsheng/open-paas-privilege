@@ -66,7 +66,7 @@ public class MenuModifyPrivilegeController extends BaseControllerUtil{
     	}
     	PrivilegeMenu pm=privilegeMenuService.findByMenuId(menuId, appId);
     	if(pm!=null){
-    		pm.setAppId(Integer.parseInt(appId));
+    		pm.setAppId(appId);
         	pm.setMenuName(menuName);
         	if(nullEmptyBlankJudge(menuLevel)){
         		pm.setMenuLevel(0);
