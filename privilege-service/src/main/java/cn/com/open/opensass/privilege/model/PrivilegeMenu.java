@@ -10,7 +10,7 @@ public class PrivilegeMenu extends AbstractDomain {
 	/**
 	 * 
 	 */
-	private int appId;
+	private String appId;
 	private String menuName;
 	private String menuCode;
 	private String menuRule;
@@ -22,10 +22,11 @@ public class PrivilegeMenu extends AbstractDomain {
 	private String createUserId;
 	private int resourceType;
 	private int status;
-	public int getAppId() {
+	
+	public String getAppId() {
 		return appId;
 	}
-	public void setAppId(int appId) {
+	public void setAppId(String appId) {
 		this.appId = appId;
 	}
 	public String getMenuName() {
