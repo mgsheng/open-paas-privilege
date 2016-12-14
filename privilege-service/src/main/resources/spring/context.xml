@@ -157,6 +157,14 @@
             </list>
         </constructor-arg>
     </bean>
+
+    <bean id="redisDao" class="cn.com.open.opensass.privilege.dao.cache.RedisDao">
+        <constructor-arg index="0" ref="jedisPoolConfig"/>
+        <constructor-arg index="1" value="${redis.host}"/>
+        <constructor-arg index="2" value="${redis.port}"/>
+        <constructor-arg index="3" value="${redis.timeout}"/>
+        <constructor-arg index="4" value="${redis.password}"/>
+    </bean>
        <bean id="privilegeserviceDev" class="cn.com.open.opensass.privilege.dev.PrivilegeServiceDev">
             <property name="server_host" value="${server_host}"></property>
             <property name="kafka_topic" value="${kafka_topic}"></property>
