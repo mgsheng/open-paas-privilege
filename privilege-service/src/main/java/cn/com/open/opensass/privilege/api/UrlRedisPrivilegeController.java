@@ -26,6 +26,7 @@ import java.util.*;
 
 /**
  * Created by jh on 2016/12/12.
+ *
  */
 @Controller
 @RequestMapping("/url/")
@@ -42,6 +43,15 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
     @Autowired
     private PrivilegeGroupService privilegeGroupService;
 
+
+    /**
+     * 测试地址
+     * http://localhost:8080/url/deleteDataPrivilege/0bb6f4bfc0d711e6a6df0050568c069a?appId=appcbfb25e6c0d611e6a6df0050568c069m&appKey=appcbfb25e6c0d611e6a6df0050568c069m&signature=appcbfb25e6c0d611e6a6df0050568c069m&timestamp=2014-05-26T12:00:00Z&signatureNonce=ss
+     * @param request
+     * @param response
+     * @param appUserId
+     * @param pivilegeToken
+     */
     @RequestMapping(value = "getDataPrivilege/{appUserId}", method = RequestMethod.POST)
     public void putdata(HttpServletRequest request, HttpServletResponse response, @PathVariable("appUserId") String appUserId, PivilegeToken pivilegeToken) {
 
