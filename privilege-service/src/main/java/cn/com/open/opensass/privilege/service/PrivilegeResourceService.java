@@ -13,5 +13,5 @@ public interface PrivilegeResourceService {
 	PrivilegeResource findByResourceId(String resourceId,String appId);
 	List<PrivilegeResource>findResourcePage(String resourceId,String appId,String startRow,String pageSize);
 	Boolean updatePrivilegeResource(PrivilegeResource privilegeResource);
-	Boolean deleteByResourceId(String  menuId);
+	Boolean deleteByResourceId(String  resourceId);
 }

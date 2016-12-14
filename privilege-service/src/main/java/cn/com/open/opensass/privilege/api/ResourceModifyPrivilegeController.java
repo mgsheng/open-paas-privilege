@@ -62,7 +62,7 @@ public class ResourceModifyPrivilegeController extends BaseControllerUtil{
     	String resourceLevel=request.getParameter("resourceLevel");
     	String menuId=request.getParameter("menuId");
     	String baseUrl=request.getParameter("baseUrl");
-    	String createUserId=request.getParameter("createUserId");
+    	String createUserId=request.getParameter("createUserid");
     	String resourceId=request.getParameter("resourceId");
     	Map<String, Object> map=new HashMap<String, Object>();
     	log.info("====================add start======================");

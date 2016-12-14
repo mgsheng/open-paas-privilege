@@ -5,12 +5,12 @@
 		<id column="resource_id" property="id" jdbcType="VARCHAR" />
 		<result column="menu_id" property="menuId" jdbcType="VARCHAR" />
 		<result column="resource_name" property="resourceName" jdbcType="VARCHAR" />
-		<result column="app_id" property="appId" jdbcType="INTEGER" />
+		<result column="app_id" property="appId" jdbcType="VARCHAR" />
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
 		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
 		<result column="create_userid" property="createUserId" jdbcType="VARCHAR" />
 		<result column="status" property="status" jdbcType="INTEGER" />
-		<result column="resource_rule" property="resourcerule" jdbcType="VARCHAR" />
+		<result column="resource_rule" property="resourceRule" jdbcType="VARCHAR" />
 		<result column="resource_level" property="resourceLevel" jdbcType="INTEGER" />
 		<result column="display_order" property="displayOrder" jdbcType="INTEGER" />
 		<result column="base_url" property="baseUrl" jdbcType="VARCHAR" />
@@ -29,9 +29,9 @@
 	  resource_level,
 	  base_url
 	</sql>
-	<select id="findByResourceCode" resultMap="privilegeResourceMap" flushCache="true">
+	<select id="findByResourceId" resultMap="privilegeResourceMap" flushCache="true">
          select * from privilege_resource
-         where  resource_id = #{resourceLd}
+         where  resource_id = #{resourceId}
          and app_id=#{appId}
 	</select>
 	<select id="findResourcePage" resultMap="privilegeResourceMap" flushCache="true">
@@ -51,9 +51,6 @@
          <if test="appId != null and appId !=''" >
         app_id = #{appId},
         </if>
-         <if test="createTime != null" >
-        create_time = #{createTime},
-        </if>
          <if test="createUser != null and createUser !=''" >
         create_user = #{createUser},
         </if>
@@ -66,19 +63,23 @@
          <if test="resourceRule != null and resourceRule !=''" >
         resource_rule = #{resourceRule},
         </if>
+        <if test="baseUrl != null and baseUrl !=''" >
+        base_url = #{baseUrl},
+        </if>
          <if test="status != null " >
         status = #{status},
         </if>
-        where id = #{id}
+        create_time = #{createTime}
+        where resource_id = #{id}
     </update>
 	<insert id="savePrivilegeResource" parameterType="PrivilegeResource" flushCache="true">
         insert into privilege_resource
-        (resource_id,resource_name,app_id,create_time,create_user,create_userid,resourceRule,resource_level)
+        (resource_id,resource_name,app_id,create_time,create_user,create_userid,resource_rule,resource_level,menu_id,base_url)
         values
-        (#{resourceId},#{resourceName},#{appId},#{createTime},#{createUser},#{createUserId},#{resourceRule},#{resourceLevel})
+        (#{id},#{resourceName},#{appId},#{createTime},#{createUser},#{createUserId},#{resourceRule},#{resourceLevel},#{menuId},#{baseUrl})
     </insert>
      <delete id="deleteByResourceId">
-        delete from privilege_resource where id=#{resourceId}
+        delete from privilege_resource where resource_id=#{resourceId}
     </delete>
 	
 </mapper>

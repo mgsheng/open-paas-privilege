@@ -60,10 +60,12 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 		// TODO Auto-generated method stub
 		try {
 			privilegeResourceRepository.deleteByResourceId(resourceId);
+			return true;
+			
 		} catch (Exception e) {
 			// TODO: handle exception
+			return false;
 		}
-		return null;
 	}
 
 }
