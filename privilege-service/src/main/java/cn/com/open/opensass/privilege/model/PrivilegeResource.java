@@ -8,7 +8,17 @@ public class PrivilegeResource extends AbstractDomain {
 	 */
 	private static final long serialVersionUID = 1L;
 	/**
-	 * 
+	 * <result column="menu_id" property="menuId" jdbcType="VARCHAR" />
+		<result column="resource_name" property="resourceName" jdbcType="VARCHAR" />
+		<result column="app_id" property="appId" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
+		<result column="create_userid" property="createUserId" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="resource_rule" property="resourcerule" jdbcType="VARCHAR" />
+		<result column="resource_level" property="resourceLevel" jdbcType="INTEGER" />
+		<result column="display_order" property="displayOrder" jdbcType="INTEGER" />
+		<result column="base_url" property="baseUrl" jdbcType="VARCHAR" />
 	 */
 	private String appId;
 	private String menuId;
@@ -16,13 +26,19 @@ public class PrivilegeResource extends AbstractDomain {
 	private String resourceRule;
 	private int resourceLevel;
 	private String baseUrl;
-	private int dislayOrder;
 	private Date createTime;
 	private String createUser;
 	private String createUserId;
 	private int status;
 	private String resourcerule;
+	private int displayOrder;
 	
+	public int getDisplayOrder() {
+		return displayOrder;
+	}
+	public void setDisplayOrder(int displayOrder) {
+		this.displayOrder = displayOrder;
+	}
 	public String getResourcerule() {
 		return resourcerule;
 	}
@@ -64,12 +80,6 @@ public class PrivilegeResource extends AbstractDomain {
 	}
 	public void setBaseUrl(String baseUrl) {
 		this.baseUrl = baseUrl;
-	}
-	public int getDislayOrder() {
-		return dislayOrder;
-	}
-	public void setDislayOrder(int dislayOrder) {
-		this.dislayOrder = dislayOrder;
 	}
 	public Date getCreateTime() {
 		return createTime;
