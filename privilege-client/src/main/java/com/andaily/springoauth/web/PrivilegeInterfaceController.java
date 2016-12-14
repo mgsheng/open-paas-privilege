@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.andaily.springoauth.service.dto.PrivilegeGroupDto;
+import com.andaily.springoauth.service.dto.PrivilegeMenuDto;
+import com.andaily.springoauth.service.dto.PrivilegeResourceDto;
 import com.andaily.springoauth.tools.DateTools;
 import com.andaily.springoauth.tools.HMacSha1;
 import com.andaily.springoauth.tools.LoadPopertiesFile;
@@ -34,18 +36,41 @@ public class PrivilegeInterfaceController {
 
 	private static final Logger LOG = LoggerFactory
 			.getLogger(PrivilegeInterfaceController.class);
-	@Value("#{properties['privilege-group-add']}")
+	@Value("#{properties['privilege-group-add-uri']}")
 	private String privilegeGroupAddUrl;
 
-	@Value("#{properties['privilege-group-modify']}")
+	@Value("#{properties['privilege-group-modify-uri']}")
 	private String privilegeGroupModifyUrl;
 
-	@Value("#{properties['privilege-group-del']}")
+	@Value("#{properties['privilege-group-del-uri']}")
 	private String privilegeGroupDelUrl;
 
-	@Value("#{properties['privilege-group-query']}")
+	@Value("#{properties['privilege-group-query-uri']}")
 	private String privilegeGroupQueryUrl;
-
+	
+	@Value("#{properties['privilege-menu-add-uri']}")
+	private String privilegeMenuAddUrl;
+	
+	@Value("#{properties['privilege-menu-modify-uri']}")	
+	private String privilegeMenuModifyUrl;
+	
+	@Value("#{properties['privilege-menu-query-uri']}")
+	private String privilegeMenuQueryUrl;
+	
+	@Value("#{properties['privilege-menu-del-uri']}")
+	private String privilegeMenuDelUrl;
+	
+	@Value("#{properties['privilege-resource-add-uri']}")
+	private String privilegeResourceAddUrl;
+	
+	@Value("#{properties['privilege-resource-modify-uri']}")	
+	private String privilegeResourceModifyUrl;
+	
+	@Value("#{properties['privilege-resource-query-uri']}")
+	private String privilegeResourceQueryUrl;
+	
+	@Value("#{properties['privilege-resource-del-uri']}")
+	private String privilegeResourceDelUrl;
 	final static String SEPARATOR = "&";
 	private Map<String, String> map = LoadPopertiesFile.loadProperties();
 
@@ -124,6 +149,120 @@ public class PrivilegeInterfaceController {
 	public String getGroupPrivilege(PrivilegeGroupDto privilegeGroupDto)
 			throws Exception {
 		final String fullUri = privilegeGroupDto.getQueryUri();
+		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+		return "redirect:" + fullUri;
+	}
+	/**
+	 *菜单添加接口
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "addMenu", method = RequestMethod.GET)
+	public String addMenu(Model model) {
+		model.addAttribute("privilegeMenuAddUrl", privilegeMenuAddUrl);
+		return "privilege/privilege_menu_add";
+	}
+
+	@RequestMapping(value = "addMenu", method = RequestMethod.POST)
+	public String addMenu(PrivilegeMenuDto privilegeMenuDto)
+			throws Exception {
+		final String fullUri = privilegeMenuDto.getFullUri();
+		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+		return "redirect:" + fullUri;
+	}
+	/**
+	 *菜单编辑接口
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "modifyMenu", method = RequestMethod.GET)
+	public String modifyMenu(Model model) {
+		model.addAttribute("privilegeMenuModifyUrl", privilegeMenuModifyUrl);
+		return "privilege/privilege_menu_modify";
+	}
+
+	@RequestMapping(value = "modifyMenu", method = RequestMethod.POST)
+	public String modifyMenu(PrivilegeMenuDto privilegeMenuDto)
+			throws Exception {
+		final String fullUri = privilegeMenuDto.getModifyUri();
+		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+		return "redirect:" + fullUri;
+	}
+	/**
+	 *菜单删除接口
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "delMenu", method = RequestMethod.GET)
+	public String delMenu(Model model) {
+		model.addAttribute("privilegeMenuDelUrl", privilegeMenuDelUrl);
+		return "privilege/privilege_menu_del";
+	}
+
+	@RequestMapping(value = "delMenu", method = RequestMethod.POST)
+	public String delMenu(PrivilegeMenuDto privilegeMenuDto)
+			throws Exception {
+		final String fullUri = privilegeMenuDto.getDelUri();
+		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+		return "redirect:" + fullUri;
+	}
+
+	/**
+	 *资源添加接口
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "addResource", method = RequestMethod.GET)
+	public String addResource(Model model) {
+		model.addAttribute("privilegeResourceAddUrl", privilegeResourceAddUrl);
+		return "privilege/privilege_resource_add";
+	}
+
+	@RequestMapping(value = "addResource", method = RequestMethod.POST)
+	public String addResource(PrivilegeResourceDto privilegeResourceDto)
+			throws Exception {
+		final String fullUri = privilegeResourceDto.getFullUri();
+		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+		return "redirect:" + fullUri;
+	}
+	/**
+	 *资源编辑接口
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "modifyResource", method = RequestMethod.GET)
+	public String modifyResource(Model model) {
+		model.addAttribute("privilegeResourceModifyUrl", privilegeResourceModifyUrl);
+		return "privilege/privilege_resource_modify";
+	}
+	@RequestMapping(value = "modifyResource", method = RequestMethod.POST)
+	public String modifyResource(PrivilegeResourceDto privilegeResourceDto)
+			throws Exception {
+		final String fullUri = privilegeResourceDto.getModifyUri();
+		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+		return "redirect:" + fullUri;
+	}
+	/**
+	 *资源删除接口
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "delResource", method = RequestMethod.GET)
+	public String delResource(Model model) {
+		model.addAttribute("privilegeResourceDelUrl", privilegeResourceDelUrl);
+		return "privilege/privilege_resource_del";
+	}
+
+	@RequestMapping(value = "delResource", method = RequestMethod.POST)
+	public String delResource(PrivilegeResourceDto privilegeResourceDto)
+			throws Exception {
+		final String fullUri = privilegeResourceDto.getDelUri();
 		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
 		return "redirect:" + fullUri;
 	}

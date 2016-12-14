@@ -31,6 +31,8 @@ privilege-client/src/main/java/com/andaily/springoauth/service/dto/DirctPayDto.j
 privilege-client/src/main/java/com/andaily/springoauth/service/dto/OrderRefund.java -text
 privilege-client/src/main/java/com/andaily/springoauth/service/dto/PrivilegeGroupDto.java -text
 privilege-client/src/main/java/com/andaily/springoauth/service/dto/PrivilegeGroupResourceDto.java -text
+privilege-client/src/main/java/com/andaily/springoauth/service/dto/PrivilegeMenuDto.java -text
+privilege-client/src/main/java/com/andaily/springoauth/service/dto/PrivilegeResourceDto.java -text
 privilege-client/src/main/java/com/andaily/springoauth/service/dto/PrivilegeRoleDto.java -text
 privilege-client/src/main/java/com/andaily/springoauth/service/dto/PrivilegeUserRoleDto.java -text
 privilege-client/src/main/java/com/andaily/springoauth/service/dto/RefreshAccessTokenDto.java -text
@@ -82,6 +84,12 @@ privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_group_add.jsp -
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_group_del.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_group_modify.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_group_query.jsp -text
+privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_menu_add.jsp -text
+privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_menu_del.jsp -text
+privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_menu_modify.jsp -text
+privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_resource_add.jsp -text
+privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_resource_del.jsp -text
+privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_resource_modify.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/refresh_token.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/register.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/resources/user_user_info.jsp -text

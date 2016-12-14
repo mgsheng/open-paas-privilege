@@ -79,12 +79,31 @@
         <li>
             <p><a href="getPrivilegeRole">角色权限查询</a> <br/>角色权限查询接口测试</p>
         </li>
-        <li>
+          <li>
             <p><a href="addPrivilegeUserRole">用户角色初始创建</a> <br/>用户角色初始创建接口测试</p>
         </li>
         <li>
             <p><a href="delPrivilegeUserRole">用户角色删除</a> <br/>用户角色删除接口测试</p>
         </li>
+          <li>
+            <p><a href="addMenu">菜单创建</a> <br/>菜单创建接口</p>
+        </li>
+         <li>
+            <p><a href="modifyMenu">菜单修改</a> <br/>菜单修改接口</p>
+        </li>
+          <li>
+            <p><a href="delMenu">菜单删除</a> <br/>菜单删除接口</p>
+        </li>
+          <li>
+            <p><a href="addResource">资源创建</a> <br/>资源创建接口</p>
+        </li>
+         <li>
+            <p><a href="modifyResource">资源修改</a> <br/>资源修改接口</p>
+        </li>
+          <li>
+            <p><a href="delResource">资源删除</a> <br/>资源删除接口</p>
+        </li>
+      
     </ul>
 </div>
 </body>
