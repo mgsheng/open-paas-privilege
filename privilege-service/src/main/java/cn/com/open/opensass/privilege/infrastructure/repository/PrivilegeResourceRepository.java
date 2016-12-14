@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface PrivilegeResourceRepository extends Repository {
     
-	List<PrivilegeResource> findByUidAppIdAndUserId(String appId, String appUserId);
+	PrivilegeResource findByResourceCode(@Param("resourceId")String resourceId,@Param("appId")String appId);
 	void savePrivilegeResource(PrivilegeResource privilegeResource);
 	PrivilegeResource findByResourceId(@Param("resourceId")String resourceId,@Param("appId")String appId);
 	void updatePrivilegeResource(PrivilegeResource privilegeResource);
