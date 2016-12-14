@@ -10,7 +10,7 @@ public class PrivilegeResource extends AbstractDomain {
 	/**
 	 * 
 	 */
-	private int appId;
+	private String appId;
 	private String menuId;
 	private String resourceName;
 	private String resourceRule;
@@ -21,10 +21,11 @@ public class PrivilegeResource extends AbstractDomain {
 	private String createUser;
 	private String createUserId;
 	private int status;
-	public int getAppId() {
+	
+	public String getAppId() {
 		return appId;
 	}
-	public void setAppId(int appId) {
+	public void setAppId(String appId) {
 		this.appId = appId;
 	}
 	public String getMenuId() {
