@@ -181,6 +181,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/kafka/KafkaConsum
 privilege-service/src/main/java/cn/com/open/opensass/privilege/kafka/KafkaProducer.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/model/AbstractDomain.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/model/GuidGenerator.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/model/PivilegeToken.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/model/PrivilegeGroup.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/model/PrivilegeGroupResource.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/model/PrivilegeMenu.java -text
