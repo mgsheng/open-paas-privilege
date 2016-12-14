@@ -61,10 +61,11 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 		// TODO Auto-generated method stub
 		try {
 			privilegeMenuRepository.deleteByMenuId(menuId);
+			return true;
 		} catch (Exception e) {
 			// TODO: handle exception
+			return false;
 		}
-		return null;
 	}
 
   

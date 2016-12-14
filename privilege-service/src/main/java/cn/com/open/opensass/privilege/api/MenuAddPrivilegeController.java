@@ -54,6 +54,7 @@ public class MenuAddPrivilegeController extends BaseControllerUtil{
 		}
     	String appId=request.getParameter("appId");
     	String menuLevel=request.getParameter("menuLevel");
+    	String menuCode=request.getParameter("menuCode");
     	String parentId=request.getParameter("parentId");
     	String dislayOrder=request.getParameter("dislayOrder");
     	String status=request.getParameter("status");
@@ -78,15 +79,17 @@ public class MenuAddPrivilegeController extends BaseControllerUtil{
     		pm.setParentId(Integer.parseInt(parentId));
     	}
     	if(nullEmptyBlankJudge(dislayOrder)){
-    		pm.setDislayOrder(0);
+    		pm.setDisplayOrder(0);
     	}else{
-    		pm.setDislayOrder(Integer.parseInt(dislayOrder));
+    		pm.setDisplayOrder(Integer.parseInt(dislayOrder));
     	}
     	if(nullEmptyBlankJudge(status)){
     		pm.setStatus(0);
     	}else{
     		pm.setStatus(Integer.parseInt(status));
     	}
+    	pm.setMenuCode(menuCode);
+    	pm.setCreateTime(new Date());
     	Boolean f =privilegeMenuService.savePrivilegeMenu(pm);
     	if(f){
     		map.put("status","1");

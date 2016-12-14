@@ -16,7 +16,7 @@ public class PrivilegeMenu extends AbstractDomain {
 	private String menuRule;
 	private int menuLevel;
 	private int parentId;
-	private int dislayOrder;
+	private int displayOrder;
 	private Date createTime;
 	private String createUser;
 	private String createUserId;
@@ -59,11 +59,12 @@ public class PrivilegeMenu extends AbstractDomain {
 	public void setParentId(int parentId) {
 		this.parentId = parentId;
 	}
-	public int getDislayOrder() {
-		return dislayOrder;
+	
+	public int getDisplayOrder() {
+		return displayOrder;
 	}
-	public void setDislayOrder(int dislayOrder) {
-		this.dislayOrder = dislayOrder;
+	public void setDisplayOrder(int displayOrder) {
+		this.displayOrder = displayOrder;
 	}
 	public Date getCreateTime() {
 		return createTime;

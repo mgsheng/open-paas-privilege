@@ -5,7 +5,7 @@
 		<id column="id" property="id" jdbcType="VARCHAR" />
 		<result column="menu_code" property="menuCode" jdbcType="VARCHAR" />
 		<result column="menu_name" property="menuName" jdbcType="VARCHAR" />
-		<result column="app_id" property="appId" jdbcType="INTEGER" />
+		<result column="app_id" property="appId" jdbcType="VARCHAR" />
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
 		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
 		<result column="create_userid" property="createUserId" jdbcType="VARCHAR" />
@@ -31,9 +31,9 @@
 	  parent_id,
 	  resource_type
 	</sql>
-	<select id="findBymenuCode" resultMap="privilegeMenuMap" flushCache="true">
+	<select id="findByMenuId" resultMap="privilegeMenuMap" flushCache="true">
          select * from privilege_menu
-         where  menu_code = #{menuCode}
+         where  id = #{menuId}
          and app_id=#{appId}
 	</select>
 	<select id="findMenuPage" resultMap="privilegeMenuMap" flushCache="true">
@@ -47,31 +47,38 @@
         <if test="menuCode != null and menuCode !=''">
         menu_code = #{menuCode},
         </if>
-         <if test="menuName != null and MenuName !=''" >
+         <if test="menuName != null and menuName !=''" >
         menu_name = #{menuName},
         </if>
          <if test="appId != null and appId !=''" >
         app_id = #{appId},
         </if>
+         <if test="menuRule != null and menuRule !=''" >
+        menu_rule = #{menuRule},
+        </if>
+         <if test="menuLevel != null" >
+        menu_level = #{menuLevel},
+        </if>
          <if test="createTime != null" >
         create_time = #{createTime},
         </if>
-         <if test="createUser != null and createUser !=''" >
-        create_user = #{createUser},
+         <if test="parentId != null" >
+        parent_id = #{parentId},
         </if>
-         <if test="createUserId != null and createUserId !=''" >
-        create_userid = #{createUserId},
+         <if test="displayOrder != null " >
+        display_order = #{displayOrder},
         </if>
          <if test="status != null " >
         status = #{status},
         </if>
+        create_time=#{createTime}
         where id = #{id}
     </update>
 	<insert id="savePrivilegeMenu" parameterType="PrivilegeMenu" flushCache="true">
         insert into privilege_menu
-        (id,menu_code,menu_name,app_id,create_time,create_user,create_userid,status)
+        (id,menu_code,menu_name,app_id,create_time,parent_id,display_order,status,menu_level,menu_rule)
         values
-        (#{id},#{menuCode},#{menuName},#{appId},#{createTime},#{createUser},#{createUserId},#{status})
+        (#{id},#{menuCode},#{menuName},#{appId},#{createTime},#{parentId},#{displayOrder},#{status},#{menuLevel},#{menuRule})
     </insert>
 	 <delete id="deleteByMenuId">
         delete from privilege_menu where id=#{menuId}
