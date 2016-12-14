@@ -21,7 +21,14 @@ public class PrivilegeResource extends AbstractDomain {
 	private String createUser;
 	private String createUserId;
 	private int status;
+	private String resourcerule;
 	
+	public String getResourcerule() {
+		return resourcerule;
+	}
+	public void setResourcerule(String resourcerule) {
+		this.resourcerule = resourcerule;
+	}
 	public String getAppId() {
 		return appId;
 	}
