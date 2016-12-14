@@ -13,9 +13,11 @@ public class PrivilegeUserRoleDto{
 	private String createUser;
 	private String createUserId;
 	private String resourceId;//所拥有的权限（多个限用“，”分隔）
+	private String method;//操作（0-添加角色 1-删除角色）
 	
 	private String addPrivilegeUserUri;
 	private String delPrivilegeUserUri;
+	private String modiPrivilegeUserUri;
 	
 	public String getAppId() {
 		return appId;
@@ -97,6 +99,18 @@ public class PrivilegeUserRoleDto{
 	}
 	public void setDelPrivilegeUserUri(String delPrivilegeUserUri) {
 		this.delPrivilegeUserUri = delPrivilegeUserUri;
+	}	
+	public String getModiPrivilegeUserUri() {
+		return modiPrivilegeUserUri;
+	}
+	public void setModiPrivilegeUserUri(String modiPrivilegeUserUri) {
+		this.modiPrivilegeUserUri = modiPrivilegeUserUri;
+	}
+	public String getMethod() {
+		return method;
+	}
+	public void setMethod(String method) {
+		this.method = method;
 	}
 	
 	public String getAddFullUri() throws UnsupportedEncodingException {
@@ -106,5 +120,9 @@ public class PrivilegeUserRoleDto{
 	public String getdelFullUri() {
 		return String.format("%s?appId=%s&appUserId=%s&createUser=%s&createUserId=%s",
 				delPrivilegeUserUri,appId,appUserId,createUser,createUserId);  
+	}
+	public String getModiFullUri() {
+		return String.format("%s?appUserId=%s&appId=%s&method=%s&privilegeRoleId=%s&resourceId=%s&privilegeFunId=%s&deptId=%s&groupId=%s&createUser=%s&createUserId=%s",
+        		modiPrivilegeUserUri,appUserId,appId,method,privilegeRoleId,resourceId,privilegeFunId,deptId,groupId,createUser,createUserId);  
 	}
 }

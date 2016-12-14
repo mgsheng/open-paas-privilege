@@ -3,10 +3,10 @@
 <mapper namespace="cn.com.open.opensass.privilege.infrastructure.mybatis.PrivilegeUserRoleRepositoryMyBatis">
 	<resultMap type="PrivilegeUserRole" id="privilegeUserRoleMap">
 		<id column="id" property="id" jdbcType="INTEGER" />
-		<result column="user_id" property="user_id" jdbcType="VARCHAR" />
+		<result column="user_id" property="userId" jdbcType="VARCHAR" />
 		<result column="privilege_roleid" property="privilegeRoleId" jdbcType="VARCHAR" />
-		<result column="create_user" property="appUserId" jdbcType="VARCHAR" />
-		<result column="create_userid" property="appUserName" jdbcType="VARCHAR" />
+		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
+		<result column="create_userid" property="createUserId" jdbcType="VARCHAR" />
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
 		<result column="status" property="status" jdbcType="INTEGER" />
 	</resultMap>
@@ -24,54 +24,9 @@
          select * from privilege_user_role
          where  id = #{id}
 	</select>
-	
-<!--     <update id="updatePrivilegeRole" parameterType="PrivilegeRole" flushCache="true">
-        update privilege_role set
-         <if test="roleName != null and roleName !=''" >
-        role_name = #{roleName},
-        </if>
-         <if test="appId != null and appId !=''" >
-        app_id = #{appId},
-        </if>
-         <if test="deptId != null and deptId !=''" >
-        dept_id = #{deptId},
-        </if>
-         <if test="groupId != null and groupId !=''" >
-        group_id = #{groupId},
-        </if>
-         <if test="roleLevel != null" >
-        role_level = #{roleLevel},
-        </if>
-         <if test="roleType != null" >
-        role_type = #{roleType},
-        </if>
-         <if test="parentRoleId != null and parentRoleId !=''" >
-        parent_roleId = #{parentRoleId},
-        </if>
-         <if test="remark != null and remark !=''" >
-        remark = #{remark},
-        </if>
-         <if test="createUser != null and createUser !=''" >
-        create_user = #{createUser},
-        </if>
-         <if test="createUserId != null and createUserId !=''" >
-        create_serid = #{createUserId},
-        </if>
-         <if test="createTime != null" >
-        create_time = #{createTime},
-        </if>
-         <if test="deptName != null and deptName !=''" >
-        dept_name = #{deptName},
-        </if>
-         <if test="groupName != null and groupName !=''" >
-        group_name = #{groupName},
-        </if>
-         <if test="status != null " >
-        status = #{status},
-        </if>
-        where privilege_roleid = #{privilegeRoleId}
-    </update> -->
- 
+	<select id="findByUidAndRoleId" resultMap="privilegeUserRoleMap" flushCache="true">
+		select * from privilege_user_role where privilege_roleid = #{privilegeRoleId} and user_id = #{userId} 
+	</select>
 	<insert id="savePrivilegeUserRole" parameterType="PrivilegeUserRole" useGeneratedKeys="true" keyProperty="id">
         insert into privilege_user_role (user_id,privilege_roleid,create_userid,create_user,create_time,status)
         values
@@ -79,5 +34,8 @@
     </insert>
     <delete id="delPrivilegeUserRoleByUid">
         delete from privilege_user_role where user_id=#{userId}
+    </delete>
+    <delete id="delPrivilegeUserRole">
+    	delete from privilege_user_role where id=#{id}
     </delete>
 </mapper>

@@ -40,7 +40,7 @@ public class UserRoleDelPrivilegeController extends BaseControllerUtil{
               return;
     	}  
     	
-    	PrivilegeUser user = privilegeUserService.findByAppIdAndAppUserId(privilegeUserVo.getAppId(),privilegeUserVo.getAppUserId());
+    	PrivilegeUser user = privilegeUserService.findByAppIdAndUserId(privilegeUserVo.getAppId(),privilegeUserVo.getAppUserId());
     	if(user==null){
     		paraMandaChkAndReturn(10001, response,"用户不存在");
             return;

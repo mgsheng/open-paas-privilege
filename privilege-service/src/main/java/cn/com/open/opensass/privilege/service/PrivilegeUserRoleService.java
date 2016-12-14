@@ -10,4 +10,8 @@ public interface PrivilegeUserRoleService {
 	Boolean savePrivilegeUserRole(PrivilegeUserRole privilegeUserRole);
 
 	Boolean delPrivilegeUserRoleByUid(String appUserId);
+
+	PrivilegeUserRole findByUidAndRoleId(String uId, String roleId);
+
+	Boolean delPrivilegeUserRole(PrivilegeUserRole userRole);
 }

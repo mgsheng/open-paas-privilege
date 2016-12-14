@@ -42,7 +42,8 @@
 	</select>
 	
     <update id="updatePrivilegeRole" parameterType="PrivilegeRole" flushCache="true">
-        update privilege_role set
+        update privilege_role
+        <trim prefix="set" suffixOverrides=",">
          <if test="roleName != null and roleName !=''" >
         role_name = #{roleName},
         </if>
@@ -85,6 +86,7 @@
          <if test="status != null " >
         status = #{status},
         </if>
+        </trim>
         where privilege_roleid = #{privilegeRoleId}
     </update>
  

@@ -41,7 +41,7 @@ public class UserRoleAddPrivilegeController extends BaseControllerUtil{
     	}  
     	PrivilegeUser user=null;
     	//查询是否业务用户是否已存在
-    	user = privilegeUserService.findByAppIdAndAppUserId(privilegeUserVo.getAppId(),privilegeUserVo.getAppUserId());
+    	user = privilegeUserService.findByAppIdAndUserId(privilegeUserVo.getAppId(),privilegeUserVo.getAppUserId());
     	if(user!=null){
     		 paraMandaChkAndReturn(10001, response,"该业务用户已存在");
              return;

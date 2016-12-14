@@ -34,6 +34,27 @@
  		select * from privilege_user where app_id=#{appId} and app_userid=#{appUserId}
  	</select>
  
+    <update id="updatePrivilegeUser" parameterType="PrivilegeUser" flushCache="true">
+        update privilege_user
+        <trim prefix="set" suffixOverrides=",">
+        <if test="privilegeRoleId != null and privilegeRoleId !=''" >
+        privilege_roleid = #{privilegeRoleId},
+        </if>
+         <if test="resourceId != null and resourceId !=''" >
+        resource_id = #{resourceId},
+        </if>
+         <if test="privilegeFunId != null and privilegeFunId !=''" >
+        privilege_funid = #{privilegeFunId},
+        </if>
+         <if test="deptId != null and deptId !=''" >
+        dept_id = #{deptId},
+        </if>
+         <if test="groupId != null and groupId !=''" >
+        group_id = #{groupId},
+        </if>
+        </trim>
+        where uid = #{uId}
+    </update>
 	<insert id="savePrivilegeUser" parameterType="PrivilegeUser" useGeneratedKeys="true" keyProperty="uId">
         insert into privilege_user (uid,app_id,privilege_roleid,app_userid,app_username,group_id,dept_id,create_time,resource_id,privilege_funid)
         values

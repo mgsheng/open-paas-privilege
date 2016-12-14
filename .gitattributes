@@ -80,6 +80,7 @@ privilege-client/src/main/webapp/WEB-INF/jsp/privilege/del_privilege_role.jsp -t
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/del_privilege_user_role.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/get_privilege_role.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/modi_privilege_role.jsp -text
+privilege-client/src/main/webapp/WEB-INF/jsp/privilege/modi_privilege_user_role.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_group_add.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_group_del.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_group_modify.jsp -text
@@ -153,6 +154,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/api/RoleModifyPri
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UrlRedisPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UserRoleAddPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UserRoleDelPrivilegeController.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UserRoleModifyPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/constant/ConstantMessage.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/dao/ResourceUrl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/dao/ResourceUrlData.java -text

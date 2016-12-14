@@ -12,9 +12,10 @@ public interface PrivilegeUserService {
 
 	Boolean delPrivilegeUserByUid(String uId);
 
-	PrivilegeUser findByAppIdAndAppUserId(String appId, String appUserId);
-
 	Boolean delUserByAppIdAndAppUserId(String appId, String appUserId);
+	
 	PrivilegeUser findByAppIdAndUserId(String appUserId, String appId);
+
+	void updatePrivilegeUser(PrivilegeUser user);
 
 }

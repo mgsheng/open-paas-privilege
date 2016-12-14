@@ -40,12 +40,7 @@ public class PrivilegeUserServiceImpl implements PrivilegeUserService {
 			return false;
 		}
 	}
-
-	@Override
-	public PrivilegeUser findByAppIdAndAppUserId(String appId, String appUserId) {
-		return privilegeUserRepository.findByAppIdAndAppUserId(appId, appUserId);
-	}
-
+	
 	@Override
 	public Boolean delUserByAppIdAndAppUserId(String appId, String appUserId) {
 		try{
@@ -58,9 +53,13 @@ public class PrivilegeUserServiceImpl implements PrivilegeUserService {
 	}
 
 	@Override
-	public PrivilegeUser findByAppIdAndUserId(String appUserId, String appId) {
-		// TODO Auto-generated method stub
+	public PrivilegeUser findByAppIdAndUserId(String appId, String appUserId) {
 		return privilegeUserRepository.findByAppIdAndAppUserId(appId, appUserId);
+	}
+
+	@Override
+	public void updatePrivilegeUser(PrivilegeUser user) {
+		privilegeUserRepository.updatePrivilegeUser(user);
 	}
 
 }

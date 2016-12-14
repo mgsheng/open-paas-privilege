@@ -25,6 +25,7 @@ public class PrivilegeUserRoleServiceImpl implements PrivilegeUserRoleService {
 			privilegeUserRoleRepository.savePrivilegeUserRole(privilegeUserRole);
 			return true;
 		}catch(Exception e){
+			e.printStackTrace();
 			return false;
 		}
 	}
@@ -35,6 +36,23 @@ public class PrivilegeUserRoleServiceImpl implements PrivilegeUserRoleService {
 			privilegeUserRoleRepository.delPrivilegeUserRoleByUid(appUserId);
 			return true;
 		}catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
+	public PrivilegeUserRole findByUidAndRoleId(String uId, String roleId) {
+		return privilegeUserRoleRepository.findByUidAndRoleId(uId,roleId);
+	}
+
+	@Override
+	public Boolean delPrivilegeUserRole(PrivilegeUserRole userRole) {
+		try{
+			privilegeUserRoleRepository.delPrivilegeUserRole(userRole);
+			return true;
+		}catch(Exception e){
+			e.printStackTrace();
 			return false;
 		}
 	}
