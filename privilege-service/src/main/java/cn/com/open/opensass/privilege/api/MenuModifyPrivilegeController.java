@@ -53,6 +53,7 @@ public class MenuModifyPrivilegeController extends BaseControllerUtil{
 			e.printStackTrace();
 		}
     	String menuId=request.getParameter("menuId");
+    	String menuCode=request.getParameter("menuCode");
     	String appId=request.getParameter("appId");
     	String menuLevel=request.getParameter("menuLevel");
     	String parentId=request.getParameter("parentId");
@@ -60,7 +61,7 @@ public class MenuModifyPrivilegeController extends BaseControllerUtil{
     	String status=request.getParameter("status");
     	Map<String, Object> map=new HashMap<String, Object>();
     	log.info("====================modify start======================");
-    	if(!paraMandatoryCheck(Arrays.asList(menuName,appId))){
+    	if(!paraMandatoryCheck(Arrays.asList(menuId,appId))){
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
               return;	
     	}
@@ -80,15 +81,17 @@ public class MenuModifyPrivilegeController extends BaseControllerUtil{
         		pm.setParentId(Integer.parseInt(parentId));
         	}
         	if(nullEmptyBlankJudge(dislayOrder)){
-        		pm.setDislayOrder(0);
+        		pm.setDisplayOrder(0);
         	}else{
-        		pm.setDislayOrder(Integer.parseInt(dislayOrder));
+        		pm.setDisplayOrder(Integer.parseInt(dislayOrder));
         	}
         	if(nullEmptyBlankJudge(status)){
         		pm.setStatus(0);
         	}else{
         		pm.setStatus(Integer.parseInt(status));
         	}
+        	pm.setMenuCode(menuCode);
+        	pm.setCreateTime(new Date());
         	Boolean f =privilegeMenuService.updatePrivilegeMenu(pm);
         	if(f){
         		map.put("status", 1);
