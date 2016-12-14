@@ -1,5 +1,6 @@
 package com.andaily.springoauth.service.dto;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 public class PrivilegeGroupResourceDto {
@@ -32,7 +33,12 @@ public class PrivilegeGroupResourceDto {
 		return createUser;
 	}
 	public void setCreateUser(String createUser) {
-		this.createUser = createUser;
+		try {
+			this.createUser = java.net.URLEncoder.encode(createUser,"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	public String getCreateUserId() {
 		return createUserId;

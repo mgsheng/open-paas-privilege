@@ -69,7 +69,7 @@
                 </div>
                 <br/>
                 <br/>
-                <button type="submit" class="btn btn-primary">组织机构权限删除接口</button>
+                <button type="submit" class="btn btn-primary">权限资源删除接口</button>
                 <button type="button"  class="btn btn-primary" onclick="btnSubmit();">获取接口调用地址</button>
             </form>
 

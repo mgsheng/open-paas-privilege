@@ -43,8 +43,8 @@ public class PrivilegeMenuDto {
         		privilegeMenuAddUrl,appId,menuName,menuCode, menuRule, menuLevel,parentId, dislayOrder,status);  
     }
 	public String getModifyUri() throws UnsupportedEncodingException {
-		  return String.format("%s?appId=%s&menuName=%s&menuCode=%s&menuRule=%s&menuLevel=%s&parentId=%s&dislayOrder=%s&status=%s",
-				  privilegeMenuModifyUrl,appId,menuName,menuCode, menuRule, menuLevel,parentId, dislayOrder,status);  
+		  return String.format("%s?appId=%s&menuId=%s&menuName=%s&menuCode=%s&menuRule=%s&menuLevel=%s&parentId=%s&dislayOrder=%s&status=%s",
+				  privilegeMenuModifyUrl,appId,menuId,menuName,menuCode, menuRule, menuLevel,parentId, dislayOrder,status);  
     }
 	public String getQueryUri() throws UnsupportedEncodingException {
         return String.format("%s?appId=%s&menuId=%s&limit=%s&start=%s",
@@ -100,7 +100,12 @@ public class PrivilegeMenuDto {
 		return menuName;
 	}
 	public void setMenuName(String menuName) {
-		this.menuName = menuName;
+		try {
+			this.menuName = java.net.URLEncoder.encode(menuName,"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	public String getMenuCode() {
 		return menuCode;
@@ -112,7 +117,12 @@ public class PrivilegeMenuDto {
 		return menuRule;
 	}
 	public void setMenuRule(String menuRule) {
-		this.menuRule = menuRule;
+		try {
+			this.menuRule =java.net.URLEncoder.encode(menuRule,"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	public int getMenuLevel() {
 		return menuLevel;
@@ -142,7 +152,12 @@ public class PrivilegeMenuDto {
 		return createUser;
 	}
 	public void setCreateUser(String createUser) {
-		this.createUser = createUser;
+		try {
+			this.createUser = java.net.URLEncoder.encode(createUser,"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	public String getCreateUserId() {
 		return createUserId;

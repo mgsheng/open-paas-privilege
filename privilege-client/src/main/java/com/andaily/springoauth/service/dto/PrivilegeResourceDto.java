@@ -100,13 +100,23 @@ public class PrivilegeResourceDto {
 		return resourceName;
 	}
 	public void setResourceName(String resourceName) {
-		this.resourceName = resourceName;
+		try {
+			this.resourceName =java.net.URLEncoder.encode(resourceName,"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	public String getResourceRule() {
 		return resourceRule;
 	}
 	public void setResourceRule(String resourceRule) {
-		this.resourceRule = resourceRule;
+		try {
+			this.resourceRule = java.net.URLEncoder.encode(resourceRule,"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	public int getResourceLevel() {
 		return resourceLevel;
@@ -136,7 +146,12 @@ public class PrivilegeResourceDto {
 		return createUser;
 	}
 	public void setCreateUser(String createUser) {
-		this.createUser = createUser;
+		try {
+			this.createUser = java.net.URLEncoder.encode(createUser,"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	public String getCreateUserId() {
 		return createUserId;

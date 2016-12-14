@@ -116,7 +116,7 @@
                 </div>
                 <br/>
                 <br/>
-                <button type="submit" class="btn btn-primary">调用角色初始创建接口</button>
+                <button type="submit" class="btn btn-primary">调用权限资源添加接口</button>
                 <button type="button"  class="btn btn-primary" onclick="btnSubmit();">获取接口调用地址</button>
             </form>
 

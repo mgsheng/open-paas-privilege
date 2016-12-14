@@ -35,17 +35,26 @@
 	                            <p class="help-block">应用Id（必传）</p>
 	                        </div>
 	                    </div>
-                     <div class="form-group">
+                      <div class="form-group">
+                        <label class="col-sm-2 control-label">menuId</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" name="menuId" id="menuId"
+                                   class="form-control" ng-model="menuId"/>
+
+                            <p class="help-block">菜单id（必传）</p>
+                        </div>
+                    </div>
+                       <div class="form-group">
                         <label class="col-sm-2 control-label">menuName</label>
 
                         <div class="col-sm-10">
-                            <input type="text" name="groupName" id="menuName"
+                            <input type="text" name="menuName" id="menuName"
                                    class="form-control" ng-model="menuName"/>
 
-                            <p class="help-block">菜单名称（必传）</p>
+                            <p class="help-block">菜单名称</p>
                         </div>
                     </div>
-                    
                     <div class="form-group">
                         <label class="col-sm-2 control-label">menuCode</label>
 
@@ -90,10 +99,10 @@
                         <label class="col-sm-2 control-label">dislayOrder</label>
 
                         <div class="col-sm-10">
-                            <input type="text" name="menuLevel" id="dislayOrder"
+                            <input type="text" name="dislayOrder" id="dislayOrder"
                                    class="form-control" ng-model="dislayOrder"/>
 
-                            <p class="help-block">:菜单排序(默认为0)</p>
+                            <p class="help-block">菜单排序(默认为0)</p>
                         </div>
                     </div>
                      <div class="form-group">
@@ -117,7 +126,7 @@
                 </div>
                 <br/>
                 <br/>
-                <button type="submit" class="btn btn-primary">调用角色初始创建接口</button>
+                <button type="submit" class="btn btn-primary">调用菜单修改接口接口</button>
                 <button type="button"  class="btn btn-primary" onclick="btnSubmit();">获取接口调用地址</button>
             </form>
 
@@ -137,6 +146,7 @@
 <script type="text/javascript">
 	function btnSubmit(){
 		var appId=$("#appId").val();
+		var menuId=$("#menuId").val();
 		var menuName=$("#menuName").val();
 	    var menuCode=$("#menuCode").val();
 	    var menuRule=$("#menuRule").val();
@@ -145,7 +155,7 @@
 	    var dislayOrder=$("#dislayOrder").val();
 	    var status=$("#status").val();
 	    var privilegeMenuModifyUrl=$("#privilegeMenuModifyUrl").val();
-		if(appId=='' || menuName==''){
+		if(appId=='' || menuId==''){
 		    alert("请输入必传参数");
 			return;
 		}
@@ -158,7 +168,7 @@
 				    var signature=data.signature;
 				    var timestamp=data.timestamp;
 				    var signatureNonce=data.signatureNonce; 				    
-					var uri=privilegeMenuModifyUrl+"?"+"appId="+appId+"&menuName="+menuName+"&menuCode="+menuCode+"&menuRule="+menuRule
+					var uri=privilegeMenuModifyUrl+"?"+"appId="+appId+"&menuName="+menuName+"&menuCode="+menuCode+"&menuRule="+menuRule+"&menuId="+menuId
 							"&menuLevel="+menuLevel+"&parentId="+parentId+"&dislayOrder="+dislayOrder+"&status="+status
 							+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
 					$("#modifyPrivilegeMenu").html(uri);
