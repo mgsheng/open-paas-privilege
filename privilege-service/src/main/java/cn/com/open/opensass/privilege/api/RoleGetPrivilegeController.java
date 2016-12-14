@@ -41,9 +41,9 @@ public class RoleGetPrivilegeController extends BaseControllerUtil{
     	}    
     	
     	map.put("status", 1);
+		writeErrorJson(response,map);
     	
     	if(map.get("status")=="0"){
-    		writeErrorJson(response,map);
     	}else{
     		writeSuccessJson(response,map);
     	}

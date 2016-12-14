@@ -6,4 +6,5 @@ import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeUserRol
  * 
  */
 public interface PrivilegeUserRoleRepositoryMyBatis extends PrivilegeUserRoleRepository {
+
 }
