@@ -56,4 +56,11 @@ public class PrivilegeUserServiceImpl implements PrivilegeUserService {
 			return false;
 		}
 	}
+
+	@Override
+	public PrivilegeUser findByAppIdAndUserId(String appUserId, String appId) {
+		// TODO Auto-generated method stub
+		return privilegeUserRepository.findByAppIdAndAppUserId(appId, appUserId);
+	}
+
 }
