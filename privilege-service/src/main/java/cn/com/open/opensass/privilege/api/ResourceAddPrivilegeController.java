@@ -70,7 +70,7 @@ public class ResourceAddPrivilegeController extends BaseControllerUtil{
               return;	
     	}
     	PrivilegeResource pr=new PrivilegeResource();
-    	pr.setAppId(Integer.parseInt(appId));
+    	pr.setAppId(appId);
     	pr.setResourceName(resourceName);
     	if(!nullEmptyBlankJudge(resourceLevel)){
     		pr.setResourceLevel(Integer.parseInt(resourceLevel));

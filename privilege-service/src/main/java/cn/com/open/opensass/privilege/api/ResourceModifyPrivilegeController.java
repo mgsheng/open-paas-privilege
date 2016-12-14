@@ -72,7 +72,7 @@ public class ResourceModifyPrivilegeController extends BaseControllerUtil{
     	}
     	PrivilegeResource pr=privilegeResourceService.findByResourceId(resourceId, appId);
     	if(pr!=null){
-    		pr.setAppId(Integer.parseInt(appId));
+    		pr.setAppId(appId);
         	pr.setResourceName(resourceName);
         	if(!nullEmptyBlankJudge(resourceLevel)){
         		pr.setResourceLevel(Integer.parseInt(resourceLevel));
