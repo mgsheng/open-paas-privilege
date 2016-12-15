@@ -85,7 +85,7 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
             ResourceUrlData resourceUrlData = new ResourceUrlData();
 
         /*url地址列表*/
-            List<ResourceUrl> resourceUrls = new ArrayList<>();
+            List<ResourceUrl> resourceUrls = new ArrayList<ResourceUrl>();
 
         /*获取url数据*/
             /*角色ID*/
@@ -235,7 +235,7 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
             ResourceUrlData resourceUrlData = new ResourceUrlData();
 
         /*url地址列表*/
-            List<ResourceUrl> resourceUrls = new ArrayList<>();
+            List<ResourceUrl> resourceUrls = new ArrayList<ResourceUrl>();
 
         /*获取url数据*/
             /*角色ID*/
