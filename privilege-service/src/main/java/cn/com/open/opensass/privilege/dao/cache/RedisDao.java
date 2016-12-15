@@ -56,6 +56,7 @@ public class RedisDao {
                 return result;
             }
             finally {
+                jedis.flushDB();
                 jedis.quit();
             }
         }
@@ -64,64 +65,6 @@ public class RedisDao {
             log.error(e.getMessage(),e);
         }
         return null;
-    }
-
-    /**
-     * 修改jedis
-     * @param resourceUrlData
-     * @param appid
-     * @param uid
-     * @return
-     */
-    public String updateUrlRedis(ResourceUrlData resourceUrlData, String appid, String uid)
-    {
-        try{
-            Jedis jedis = jedisPool.getResource();
-            try{
-                String key = RedisConstant.USERPRIVILEGES_CACHE+appid+ RedisConstant.SIGN+uid;
-                jedis.del(key);
-                byte[] bytes = ProtostuffIOUtil.toByteArray(resourceUrlData,schema,
-                        LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE));
-                /*超时缓存*/
-                int timeout = jedis.getClient().getTimeout();
-                String result = jedis.setex(key.getBytes(),timeout,bytes);
-                return result;
-            }
-            finally {
-                jedis.quit();
-            }
-        }
-        catch (Exception e)
-        {
-            log.error(e.getMessage(),e);
-        }
-        return null;
-    }
-
-    /**
-     * 删除jedis
-     * @param appid
-     * @param uid
-     * @return
-     */
-    public boolean deleteUrlRedis(String appid, String uid)
-    {
-        try{
-            Jedis jedis = jedisPool.getResource();
-            try{
-                String key = RedisConstant.USERPRIVILEGES_CACHE+appid+ RedisConstant.SIGN+uid;
-                jedis.del(key);
-                return true;
-            }
-            finally {
-                jedis.quit();
-            }
-        }
-        catch (Exception e)
-        {
-            log.error(e.getMessage(),e);
-        }
-        return false;
     }
 
     /**
@@ -161,35 +104,132 @@ public class RedisDao {
         return null;
     }
 
+    /**
+     * 修改jedis
+     * @param resourceUrlData
+     * @param appid
+     * @param uid
+     * @return
+     */
+    public String updateUrlRedis(ResourceUrlData resourceUrlData, String appid, String uid)
+    {
+        try{
+            Jedis jedis = jedisPool.getResource();
+            try{
+                String key = RedisConstant.USERPRIVILEGES_CACHE+appid+ RedisConstant.SIGN+uid;
+                jedis.del(key);
+                byte[] bytes = ProtostuffIOUtil.toByteArray(resourceUrlData,schema,
+                        LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE));
+                /*超时缓存*/
+                int timeout = jedis.getClient().getTimeout();
+                String result = jedis.setex(key.getBytes(),timeout,bytes);
+                return result;
+            }
+            finally {
+                jedis.flushDB();
+                jedis.quit();
+            }
+        }
+        catch (Exception e)
+        {
+            log.error(e.getMessage(),e);
+        }
+        return null;
+    }
 
     /**
-     * 判断用户是否存在
+     * 删除jedis
+     * @param appid
+     * @param uid
+     * @return
+     */
+    public boolean deleteUrlRedis(String appid, String uid)
+    {
+        try{
+            Jedis jedis = jedisPool.getResource();
+            try{
+                String key = RedisConstant.USERPRIVILEGES_CACHE+appid+ RedisConstant.SIGN+uid;
+                jedis.del(key);
+                return true;
+            }
+            finally {
+                jedis.flushDB();
+                jedis.quit();
+            }
+        }
+        catch (Exception e)
+        {
+            log.error(e.getMessage(),e);
+        }
+        return false;
+    }
+
+    /**
+     * 判断值是否存在jedis
+     * @param appid
+     * @param uid
+     * @return
+     */
+    public boolean existUrlRedis(String url,String appid, String uid)
+    {
+        try{
+            Jedis jedis = jedisPool.getResource();
+            try{
+                String key = RedisConstant.USERPRIVILEGES_CACHE+appid+ RedisConstant.SIGN+uid;
+                byte[] bytes = jedis.get(key.getBytes());
+                /*从缓存中获取到*/
+                if (null != bytes)
+                {
+                    ResourceUrlData resourceUrlData = (ResourceUrlData) schema.newMessage();
+                    ProtostuffIOUtil.mergeFrom(bytes,resourceUrlData,schema);
+
+                    List<ResourceUrl> resourceUrlList = resourceUrlData.getResourceUrls();
+                    for (ResourceUrl resourceUrl : resourceUrlList)
+                    {
+                        if(resourceUrl.getUrl().indexOf(url)>-1 || url.indexOf(resourceUrl.getUrl())>-1)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            finally {
+                jedis.quit();
+            }
+        }
+        catch (Exception e)
+        {
+            log.error(e.getMessage(),e);
+        }
+        return false;
+    }
+
+
+    /**
+     * 判断key是否存在
      * @param appid
      * @param uid
      * @return
      */
 
-    public boolean isExistUserKey(String appid, String uid)
+    public boolean existKeyRedis(String appid, String uid)
     {
-        boolean exist = false;
-        ResourceUrlData resourceUrlData =  null
-                /*getUrlRedis(appid,uid)*/;
-        if(null != resourceUrlData)
-        {
-            exist = true;
+        try{
+            Jedis jedis = jedisPool.getResource();
+            try{
+                String key = RedisConstant.USERPRIVILEGES_CACHE+appid+ RedisConstant.SIGN+uid;
 
-            /*final String key = RedisConstant.USERPRIVILEGES_CACHE+appid+ RedisConstant.SIGN+uid;
-            List<ResourceUrl> resourceUrlList = resourceUrlData.getResourceUrls();
-
-            for (ResourceUrl resourceUrl : resourceUrlList)
-            {
-                if(resourceUrl.getKey().equals(key.trim()))
-                {
-                    exist = true;
-                }
-            }*/
+                return jedis.exists(key);
+            }
+            finally {
+                jedis.quit();
+            }
         }
-        return exist;
+        catch (Exception e)
+        {
+            log.error(e.getMessage(),e);
+        }
+        return false;
     }
 
 
