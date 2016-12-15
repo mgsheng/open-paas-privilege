@@ -1,7 +1,9 @@
 package cn.com.open.opensass.privilege.api;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,8 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.opensass.privilege.model.PrivilegeMenu;
+import cn.com.open.opensass.privilege.model.PrivilegeResource;
 import cn.com.open.opensass.privilege.model.PrivilegeRole;
 import cn.com.open.opensass.privilege.model.PrivilegeRoleResource;
+import cn.com.open.opensass.privilege.service.PrivilegeResourceService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleResourceService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
@@ -28,6 +33,8 @@ public class RoleGetPrivilegeController extends BaseControllerUtil{
 	private PrivilegeRoleService privilegeRoleService;
 	@Autowired 
 	private PrivilegeRoleResourceService privilegeRoleResourceService;
+	@Autowired 
+	private PrivilegeResourceService privilegeResourceService;
 	/**
 	 * 角色权限查询接口
 	 */
@@ -40,6 +47,27 @@ public class RoleGetPrivilegeController extends BaseControllerUtil{
               return;
     	}    
     	
+    	List<PrivilegeRole> roles = new ArrayList<PrivilegeRole>();
+    	List<PrivilegeResource> resources = new ArrayList<PrivilegeResource>();
+    	if(privilegeRoleVo.getPrivilegeRoleId() != null){
+    		String[] roleIds = privilegeRoleVo.getPrivilegeRoleId().split(",");
+    		PrivilegeRole role = null;
+    		for(String roleId : roleIds){
+    			role = privilegeRoleService.findRoleById(roleId);
+    			List<PrivilegeRoleResource> roleResources = privilegeRoleResourceService.findByPrivilegeRoleId(roleId);
+    			if(roleResources!=null){
+        			PrivilegeResource resource = null;
+    				for(PrivilegeRoleResource roleResource : roleResources){
+    					resource = privilegeResourceService.findByResourceId(roleResource.getResourceId(), privilegeRoleVo.getAppId());
+    					resources.add(resource);
+    				}
+    				role.setResourceList(resources);
+    			}    			    			
+    			roles.add(role);
+    		}
+    	}
+    	map.put("roleList", roles);
+    	map.put("count", roles.size());
     	map.put("status", 1);
 		writeErrorJson(response,map);
     	
