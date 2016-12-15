@@ -19,6 +19,7 @@
         <typeAlias alias="PrivilegeUser" type="cn.com.open.opensass.privilege.model.PrivilegeUser"/>
         <typeAlias alias="PrivilegeUserRole" type="cn.com.open.opensass.privilege.model.PrivilegeUserRole"/>
          <typeAlias alias="PrivilegeResource" type="cn.com.open.opensass.privilege.model.PrivilegeResource"/>
+        <typeAlias alias="PrivilegeFunction" type="cn.com.open.opensass.privilege.model.PrivilegeFunction"/>
     </typeAliases>
     <mappers>
         <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeGroupMapper.xml"/>
@@ -29,6 +30,7 @@
         <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeUserMapper.xml"/>
         <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeUserRoleMapper.xml"/>
         <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeResourceMapper.xml"/>
+        <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeFunctionMapper.xml"/>
     </mappers>
 
 </configuration>
