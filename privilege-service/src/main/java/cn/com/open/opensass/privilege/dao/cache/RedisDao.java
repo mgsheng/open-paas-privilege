@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
-import scala.util.parsing.combinator.testing.Str;
 
 import java.util.HashMap;
 import java.util.List;
