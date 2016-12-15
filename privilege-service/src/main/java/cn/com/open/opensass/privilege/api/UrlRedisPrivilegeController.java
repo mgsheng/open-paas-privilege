@@ -161,7 +161,7 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
         for (PrivilegeRoleResource roleResource : privilegeRoleResourceList) {
                  /*获取url地址*/
             try {
-                PrivilegeResource privilegeResourcedatat = privilegeResourceService.findByResourceCode(roleResource.getResourceId(), appId);
+                PrivilegeResource privilegeResourcedatat = privilegeResourceService.findByResourceId(roleResource.getResourceId(), appId);
                 if (null != privilegeResourcedatat) {
                     StringBuffer stringBuffer = new StringBuffer(50);
                     for (PrivilegeRoleResource privilegeRoleResource : privilegeRoleResourceList) {
@@ -214,7 +214,7 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
             return;
         }
         /*获取用户UID*/
-        PrivilegeUser privilegeUser = privilegeUserService.findByAppIdAndUserId(appUserId, pivilegeToken.getAppId());
+        PrivilegeUser privilegeUser = privilegeUserService.findByAppIdAndUserId(pivilegeToken.getAppId(), appUserId);
         if (null == privilegeUser) {
 
             map.put("status", 0);
@@ -227,6 +227,7 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
         String key = RedisConstant.USERPRIVILEGES_CACHE + pivilegeToken.getAppId() + RedisConstant.SIGN + privilegeUser.getuId();
 
         /*缓存中是否存在*/
+        redisDao.deleteUrlRedis(pivilegeToken.getAppId(), privilegeUser.getuId());
         String urlJedis = redisDao.getUrlRedis(pivilegeToken.getAppId(), privilegeUser.getuId());
 
         if (null == urlJedis && "" != urlJedis) {
@@ -247,7 +248,7 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
             /**
              * 通过用户表的角色Id直接获取资源
              */
-            PrivilegeResource privilegeResource = privilegeResourceService.findByResourceCode(privilegeUser.getResourceId(), appId);
+            PrivilegeResource privilegeResource = privilegeResourceService.findByResourceId(privilegeUser.getResourceId(), appId);
             ResourceUrl resourceUrl = new ResourceUrl();
             resourceUrl.setPrivilegeUrl(privilegeResource.getBaseUrl());
             //resourceUrl.setUrlFun(privilegeUser.getPrivilegeFunId());
@@ -297,7 +298,7 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
             return;
         }
         /*获取用户UID*/
-        PrivilegeUser privilegeUser = privilegeUserService.findByAppIdAndUserId(appUserId, pivilegeToken.getAppId());
+        PrivilegeUser privilegeUser = privilegeUserService.findByAppIdAndUserId(pivilegeToken.getAppId(), appUserId);
         if (null == privilegeUser) {
 
             map.put("status", 1);
@@ -337,7 +338,7 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
             return;
         }
         /*获取用户UID*/
-        PrivilegeUser privilegeUser = privilegeUserService.findByAppIdAndUserId(appUserId, pivilegeToken.getAppId());
+        PrivilegeUser privilegeUser = privilegeUserService.findByAppIdAndUserId(pivilegeToken.getAppId(), appUserId);
         if (null == privilegeUser) {
 
             map.put("status", 1);
@@ -366,7 +367,7 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
             return;
         }
         /*获取用户UID*/
-        PrivilegeUser privilegeUser = privilegeUserService.findByAppIdAndUserId(appUserId, pivilegeToken.getAppId());
+        PrivilegeUser privilegeUser = privilegeUserService.findByAppIdAndUserId(pivilegeToken.getAppId(), appUserId);
         if (null == privilegeUser) {
 
             map.put("status", 1);
