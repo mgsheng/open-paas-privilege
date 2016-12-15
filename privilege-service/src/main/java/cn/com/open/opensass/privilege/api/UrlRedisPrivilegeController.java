@@ -5,10 +5,7 @@ import cn.com.open.opensass.privilege.dao.ResourceUrlData;
 import cn.com.open.opensass.privilege.dao.cache.RedisDao;
 import cn.com.open.opensass.privilege.model.*;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
-import cn.com.open.opensass.privilege.service.PrivilegeGroupService;
-import cn.com.open.opensass.privilege.service.PrivilegeResourceService;
-import cn.com.open.opensass.privilege.service.PrivilegeRoleResourceService;
-import cn.com.open.opensass.privilege.service.PrivilegeUserService;
+import cn.com.open.opensass.privilege.service.*;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.WebUtils;
 import net.sf.json.JSONObject;
@@ -42,6 +39,8 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
     private PrivilegeResourceService privilegeResourceService;
     @Autowired
     private PrivilegeGroupService privilegeGroupService;
+    @Autowired
+    private PrivilegeFunctionService privilegeFunctionService;
 
 
     /**
@@ -67,7 +66,7 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
             return;
         }
         /*获取用户UID*/
-        PrivilegeUser privilegeUser = privilegeUserService.findByAppIdAndUserId(appUserId, pivilegeToken.getAppId());
+        PrivilegeUser privilegeUser = privilegeUserService.findByAppIdAndUserId(pivilegeToken.getAppId(),appUserId);
         if (null == privilegeUser) {
 
             map.put("status", 0);
@@ -100,9 +99,37 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
             /**
              * 通过用户表的角色Id直接获取资源
              */
-            PrivilegeResource privilegeResource = privilegeResourceService.findByResourceCode(privilegeUser.getResourceId(),appId);
+            PrivilegeResource privilegeResource = privilegeResourceService.findByResourceId(privilegeUser.getResourceId(),appId);
+            /*获取funid列表url*/
+            StringBuffer stringBuffer = new StringBuffer(50);
+            /*获取funid列表*/
+            String funIdList = privilegeUser.getPrivilegeFunId();
+            if(null != funIdList && "" != funIdList)
+            {
+                String[] strFunIds = funIdList.split(",");
+                for (String funId : strFunIds)
+                {
+
+                            /*获取function中的opt_url*/
+                    PrivilegeFunction privilegeFunction = privilegeFunctionService.findByFunctionId(funId);
+                    if(null != stringBuffer && null != privilegeFunction.getOptUrl() && "" != privilegeFunction.getOptUrl())
+                    {
+                        stringBuffer.append(privilegeFunction.getOptUrl()).append(",");
+                    }
+                }
+            }
+
             ResourceUrl resourceUrl = new ResourceUrl();
-            resourceUrl.setUrl(privilegeResource.getBaseUrl());
+            if(stringBuffer.length()>0)
+            {
+                stringBuffer.deleteCharAt(stringBuffer.length()-1);
+                resourceUrl.setUrl(privilegeResource.getBaseUrl()+","+stringBuffer.toString());
+            }
+            else
+            {
+                resourceUrl.setUrl(privilegeResource.getBaseUrl());
+            }
+            //resourceUrl.setUrl(privilegeResource.getBaseUrl());
             //resourceUrl.setUrlFun(privilegeUser.getPrivilegeFunId());
             resourceUrls.add(resourceUrl);
             /*通过groupId获取资源*/
@@ -124,7 +151,16 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
         //map.put("",urlJedis);
         //map.put("key", key);
         //writeSuccessJson(response, map);
-        WebUtils.writeJson(response,urlJedis);
+        if(null != urlJedis)
+        {
+            WebUtils.writeJson(response,urlJedis);
+        }
+        else
+        {
+            map.put("status", 0);
+            map.put("error_code", "10002");/*数据不存在*/
+            writeErrorJson(response, map);
+        }
         return;
     }
 
@@ -145,17 +181,24 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
                     {
                         if(null != privilegeRoleResource.getPrivilegeFunId())
                         {
-                            stringBuffer.append(privilegeRoleResource.getPrivilegeFunId()).append(",");
+                            /*获取function中的opt_url*/
+                            PrivilegeFunction privilegeFunction = privilegeFunctionService.findByFunctionId(privilegeRoleResource.getPrivilegeFunId());
+                            if(null != stringBuffer && null != privilegeFunction.getOptUrl() && "" != privilegeFunction.getOptUrl())
+                            {
+                                stringBuffer.append(privilegeFunction.getOptUrl()).append(",");
+                            }
                         }
                     }
+                    ResourceUrl resourceUrl = new ResourceUrl();
                     if(stringBuffer.length()>0)
                     {
-                        stringBuffer.substring(0,stringBuffer.length()-1);
+                        stringBuffer.deleteCharAt(stringBuffer.length()-1);
+                        resourceUrl.setUrl(privilegeResourcedatat.getBaseUrl()+","+stringBuffer.toString());
                     }
-
-                    ResourceUrl resourceUrl = new ResourceUrl();
-                    resourceUrl.setUrl(privilegeResourcedatat.getBaseUrl());
-                    //resourceUrl.setUrlFun(stringBuffer.toString());
+                    else
+                    {
+                        resourceUrl.setUrl(privilegeResourcedatat.getBaseUrl());
+                    }
                     resourceUrlList.add(resourceUrl);
 
                 }

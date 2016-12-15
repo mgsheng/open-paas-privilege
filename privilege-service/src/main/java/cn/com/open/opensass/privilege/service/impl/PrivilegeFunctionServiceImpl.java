@@ -4,10 +4,12 @@ import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeFunctio
 import cn.com.open.opensass.privilege.model.PrivilegeFunction;
 import cn.com.open.opensass.privilege.service.PrivilegeFunctionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by jh on 2016/12/15.
  */
+@Service("privilegeFunctionService")
 public class PrivilegeFunctionServiceImpl implements PrivilegeFunctionService {
     @Autowired
     private PrivilegeFunctionRepository privilegeFunctionRepository;

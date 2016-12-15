@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+import scala.util.parsing.combinator.testing.Str;
 
 import java.util.HashMap;
 import java.util.List;
@@ -56,7 +57,6 @@ public class RedisDao {
                 return result;
             }
             finally {
-                jedis.flushDB();
                 jedis.quit();
             }
         }
@@ -126,7 +126,6 @@ public class RedisDao {
                 return result;
             }
             finally {
-                jedis.flushDB();
                 jedis.quit();
             }
         }
@@ -153,7 +152,6 @@ public class RedisDao {
                 return true;
             }
             finally {
-                jedis.flushDB();
                 jedis.quit();
             }
         }
@@ -186,9 +184,16 @@ public class RedisDao {
                     List<ResourceUrl> resourceUrlList = resourceUrlData.getResourceUrls();
                     for (ResourceUrl resourceUrl : resourceUrlList)
                     {
-                        if(resourceUrl.getUrl().indexOf(url)>-1 || url.indexOf(resourceUrl.getUrl())>-1)
+                        if(null != resourceUrl.getUrl())
                         {
-                            return true;
+                            String[] strings =resourceUrl.getUrl().split(",");
+                            for (String str : strings)
+                            {
+                                if(str.indexOf(url)>-1 || url.indexOf(str)>-1)
+                                {
+                                    return true;
+                                }
+                            }
                         }
                     }
                 }
