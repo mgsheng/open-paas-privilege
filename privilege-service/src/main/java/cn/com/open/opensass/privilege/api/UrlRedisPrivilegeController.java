@@ -342,7 +342,7 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
      * @param pivilegeToken
      */
 
-    @RequestMapping(value = "deleteDataPrivilege/{appUserId}/{durl}", method = RequestMethod.POST)
+    @RequestMapping(value = "existUrlPrivilege/{appUserId}/{durl}", method = RequestMethod.POST)
     public void existUrlData(HttpServletRequest request, HttpServletResponse response, @PathVariable("appUserId") String appUserId,@PathVariable("durl") String durl, PivilegeToken pivilegeToken)
     {
 
@@ -372,7 +372,7 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
         return;
     }
 
-    @RequestMapping(value = "deleteDataPrivilege/{appUserId}", method = RequestMethod.POST)
+    @RequestMapping(value = "existKeyPrivilege/{appUserId}", method = RequestMethod.POST)
     public void existkeyData(HttpServletRequest request, HttpServletResponse response, @PathVariable("appUserId") String appUserId ,PivilegeToken pivilegeToken)
     {
 
