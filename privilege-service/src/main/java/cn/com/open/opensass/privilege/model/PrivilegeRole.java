@@ -21,6 +21,8 @@ public class PrivilegeRole {
 	private String groupName;
 	private Integer status;
 	
+	private List<PrivilegeResource> resourceList;
+	
 	public String getPrivilegeRoleId() {
 		return privilegeRoleId;
 	}
@@ -110,5 +112,11 @@ public class PrivilegeRole {
 	}
 	public void setRoleType(Integer roleType) {
 		this.roleType = roleType;
-	}	
+	}
+	public List<PrivilegeResource> getResourceList() {
+		return resourceList;
+	}
+	public void setResourceList(List<PrivilegeResource> resourceList) {
+		this.resourceList = resourceList;
+	}		
 }
