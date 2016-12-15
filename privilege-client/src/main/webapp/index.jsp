@@ -88,6 +88,9 @@
         <li>
             <p><a href="delPrivilegeUserRole">用户角色删除</a> <br/>用户角色删除接口测试</p>
         </li>
+        <li>
+            <p><a href="getPrivilegeUserRole">用户权限查询</a> <br/>用户权限查询接口测试</p>
+        </li>
           <li>
             <p><a href="addMenu">菜单创建</a> <br/>菜单创建接口</p>
         </li>

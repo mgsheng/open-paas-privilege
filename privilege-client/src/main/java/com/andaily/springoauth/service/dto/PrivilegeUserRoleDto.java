@@ -18,6 +18,7 @@ public class PrivilegeUserRoleDto{
 	private String addPrivilegeUserUri;
 	private String delPrivilegeUserUri;
 	private String modiPrivilegeUserUri;
+	private String getPrivilegeUserUri;
 	
 	public String getAppId() {
 		return appId;
@@ -111,6 +112,12 @@ public class PrivilegeUserRoleDto{
 	}
 	public void setMethod(String method) {
 		this.method = method;
+	}	
+	public String getGetPrivilegeUserUri() {
+		return getPrivilegeUserUri;
+	}
+	public void setGetPrivilegeUserUri(String getPrivilegeUserUri) {
+		this.getPrivilegeUserUri = getPrivilegeUserUri;
 	}
 	
 	public String getAddFullUri() throws UnsupportedEncodingException {
@@ -124,5 +131,9 @@ public class PrivilegeUserRoleDto{
 	public String getModiFullUri() {
 		return String.format("%s?appUserId=%s&appId=%s&method=%s&privilegeRoleId=%s&resourceId=%s&privilegeFunId=%s&deptId=%s&groupId=%s&createUser=%s&createUserId=%s",
         		modiPrivilegeUserUri,appUserId,appId,method,privilegeRoleId,resourceId,privilegeFunId,deptId,groupId,createUser,createUserId);  
+	}
+	public String getGetFullUri() {
+		return String.format("%s?appUserId=%s&appId=%s",
+        		getPrivilegeUserUri,appUserId,appId);  
 	}
 }

@@ -29,6 +29,8 @@ public class PrivilegeUserController {
     private String delPrivilegeUserUri;
     @Value("#{properties['modi-privilege-user-uri']}")
     private String modiPrivilegeUserUri;
+    @Value("#{properties['get-privilege-user-uri']}")
+    private String getPrivilegeUserUri;
     
     final static String  SEPARATOR = "&";
     private Map<String,String> map=LoadPopertiesFile.loadProperties();
@@ -83,4 +85,22 @@ public class PrivilegeUserController {
         LOG.debug("Send to Oauth-Server URL: {}", fullUri);
         return "redirect:" + fullUri;
     }
+
+   /*
+    *  Entrance:   step-1
+    * */
+	@RequestMapping(value = "getPrivilegeUserRole", method = RequestMethod.GET)
+	public String getPrivilegeUserRole(Model model) {
+		model.addAttribute("getPrivilegeUserUri", getPrivilegeUserUri);
+		return "privilege/get_privilege_user_role";
+	}
+	/* 
+   * Redirect to oauth-server bind page:   step-2
+   * */
+  @RequestMapping(value = "getPrivilegeUserRole", method = RequestMethod.POST)
+   public String getPrivilegeUserRole(PrivilegeUserRoleDto privilegeUserRoleDto) throws Exception {
+       final String fullUri = privilegeUserRoleDto.getGetFullUri();
+       LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+       return "redirect:" + fullUri;
+   }
 }

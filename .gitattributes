@@ -79,6 +79,7 @@ privilege-client/src/main/webapp/WEB-INF/jsp/privilege/add_privilege_user_role.j
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/del_privilege_role.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/del_privilege_user_role.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/get_privilege_role.jsp -text
+privilege-client/src/main/webapp/WEB-INF/jsp/privilege/get_privilege_user_role.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/modi_privilege_role.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/modi_privilege_user_role.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_group_add.jsp -text
