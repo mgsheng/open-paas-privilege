@@ -200,6 +200,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/redis/RedisDataSo
 privilege-service/src/main/java/cn/com/open/opensass/privilege/redis/impl/RedisClientTemplate.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/redis/impl/RedisConstant.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/redis/impl/RedisDataSourceImpl.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeFunctionService.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeGroupResourceService.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeGroupService.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeMenuService.java -text
@@ -208,6 +209,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/service/Privilege
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeRoleService.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeUserRoleService.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeUserService.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeFunctionServiceImpl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeGroupResourceServiceImpl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeGroupServiceImpl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeMenuServiceImpl.java -text
