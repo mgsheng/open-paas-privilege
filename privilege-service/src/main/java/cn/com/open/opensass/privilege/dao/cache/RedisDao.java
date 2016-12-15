@@ -28,7 +28,7 @@ public class RedisDao {
     private static final Logger log = LoggerFactory.getLogger(RedisDao.class);
     /*redis连接池*/
     private JedisPool jedisPool;
-    /*构造函数初始化*/
+    /*构造函数初始化 不过期需要设置 privilege-service.properties redis.timeout=0 即可*/
     public RedisDao(JedisPoolConfig poolConfig, String host, int port, int timeout, String password)
     {
         jedisPool = new JedisPool(poolConfig, host, port, timeout, password);
