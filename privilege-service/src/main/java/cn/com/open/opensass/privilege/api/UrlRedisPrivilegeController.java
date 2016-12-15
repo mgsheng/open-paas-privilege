@@ -118,9 +118,9 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
             ResourceUrl resourceUrl = new ResourceUrl();
             if (stringBuffer.length() > 0) {
                 stringBuffer.deleteCharAt(stringBuffer.length() - 1);
-                resourceUrl.setUrl(privilegeResource.getBaseUrl() + "," + stringBuffer.toString());
+                resourceUrl.setPrivilegeUrl(privilegeResource.getBaseUrl() + "," + stringBuffer.toString());
             } else {
-                resourceUrl.setUrl(privilegeResource.getBaseUrl());
+                resourceUrl.setPrivilegeUrl(privilegeResource.getBaseUrl());
             }
             //resourceUrl.setUrl(privilegeResource.getBaseUrl());
             //resourceUrl.setUrlFun(privilegeUser.getPrivilegeFunId());
@@ -176,9 +176,9 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
                     ResourceUrl resourceUrl = new ResourceUrl();
                     if (stringBuffer.length() > 0) {
                         stringBuffer.deleteCharAt(stringBuffer.length() - 1);
-                        resourceUrl.setUrl(privilegeResourcedatat.getBaseUrl() + "," + stringBuffer.toString());
+                        resourceUrl.setPrivilegeUrl(privilegeResourcedatat.getBaseUrl() + "," + stringBuffer.toString());
                     } else {
-                        resourceUrl.setUrl(privilegeResourcedatat.getBaseUrl());
+                        resourceUrl.setPrivilegeUrl(privilegeResourcedatat.getBaseUrl());
                     }
                     resourceUrlList.add(resourceUrl);
 
@@ -249,7 +249,7 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
              */
             PrivilegeResource privilegeResource = privilegeResourceService.findByResourceCode(privilegeUser.getResourceId(), appId);
             ResourceUrl resourceUrl = new ResourceUrl();
-            resourceUrl.setUrl(privilegeResource.getBaseUrl());
+            resourceUrl.setPrivilegeUrl(privilegeResource.getBaseUrl());
             //resourceUrl.setUrlFun(privilegeUser.getPrivilegeFunId());
             resourceUrls.add(resourceUrl);
             /*通过groupId获取资源*/

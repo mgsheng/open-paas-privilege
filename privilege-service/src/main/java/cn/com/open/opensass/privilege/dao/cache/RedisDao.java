@@ -88,7 +88,7 @@ public class RedisDao {
                     ProtostuffIOUtil.mergeFrom(bytes,resourceUrlData,schema);
 
                     Map b=new HashMap();
-                    b.put("menuList", resourceUrlData.getResourceUrls());
+                    b.put("urlList", resourceUrlData.getResourceUrls());
                     String menuList= JSONObject.fromObject(b).toString();
                     return  menuList;
                 }
@@ -184,9 +184,9 @@ public class RedisDao {
                     List<ResourceUrl> resourceUrlList = resourceUrlData.getResourceUrls();
                     for (ResourceUrl resourceUrl : resourceUrlList)
                     {
-                        if(null != resourceUrl.getUrl())
+                        if(null != resourceUrl.getPrivilegeUrl())
                         {
-                            String[] strings =resourceUrl.getUrl().split(",");
+                            String[] strings =resourceUrl.getPrivilegeUrl().split(",");
                             for (String str : strings)
                             {
                                 if(str.indexOf(url)>-1 || url.indexOf(str)>-1)
