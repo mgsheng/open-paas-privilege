@@ -52,7 +52,7 @@ public class RedisDao {
                         LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE));
                 /*超时缓存*/
                 int timeout = jedis.getClient().getTimeout();
-                String result = jedis.setex(key.getBytes(),timeout,bytes);
+                String result = jedis.set(key.getBytes(),bytes);
                 return result;
             }
             finally {
