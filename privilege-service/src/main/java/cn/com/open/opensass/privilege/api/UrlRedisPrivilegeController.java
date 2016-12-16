@@ -131,7 +131,7 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
                     if (null != fid && fid.length() > 0) {
 
                         PrivilegeFunction privilegeFunction = privilegeFunctionService.findByFunctionId(fid);
-                        if(null != privilegeFunction.getOptUrl() && privilegeFunction.getOptUrl().length()>0)
+                        if(null != privilegeFunction &&  null != privilegeFunction.getOptUrl() && privilegeFunction.getOptUrl().length()>0)
                         {
                             setUrl.add(privilegeFunction.getOptUrl());
                         }
@@ -145,7 +145,10 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
             for (String resourceId : resourceIds) {
                 if (null != resourceId && resourceId.length() > 0) {
                     PrivilegeResource privilegeResource = privilegeResourceService.findByResourceId(privilegeUser.getResourceId(), appId);
-                    setUrl.add(privilegeResource.getBaseUrl());
+                    if(null != privilegeResource && null != privilegeResource.getBaseUrl() && privilegeResource.getBaseUrl().length()>0)
+                    {
+                        setUrl.add(privilegeResource.getBaseUrl());
+                    }
                 }
             }
         }
@@ -155,7 +158,9 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
             for (String functionId : functionIds) {
                 if (null != functionId && functionId.length() > 0) {
                     PrivilegeFunction privilegeFunction = privilegeFunctionService.findByFunctionId(functionId);
-                    setUrl.add(privilegeFunction.getOptUrl());
+                    if(null != privilegeFunction && null != privilegeFunction.getOptUrl() && privilegeFunction.getOptUrl().length()>0) {
+                        setUrl.add(privilegeFunction.getOptUrl());
+                    }
                 }
             }
         }
