@@ -130,9 +130,17 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
         ArrayList<String> functionIdList = privilegeRoleResourceService.findUserResourcesFunId(appId, appUserId);
         if (null != functionIdList && functionIdList.size() > 0) {
             for (String functionId : functionIdList) {
-                if (null != functionId && functionId.length() > 0) {
-                    PrivilegeFunction privilegeFunction = privilegeFunctionService.findByFunctionId(functionId);
-                    setUrl.add(privilegeFunction.getOptUrl());
+                String[] functionIds = functionId.split(",");
+                for (String fid : functionIds)
+                {
+                    if (null != fid && fid.length() > 0) {
+
+                        PrivilegeFunction privilegeFunction = privilegeFunctionService.findByFunctionId(fid);
+                        if(null != privilegeFunction.getOptUrl() && privilegeFunction.getOptUrl().length()>0)
+                        {
+                            setUrl.add(privilegeFunction.getOptUrl());
+                        }
+                    }
                 }
             }
         }
