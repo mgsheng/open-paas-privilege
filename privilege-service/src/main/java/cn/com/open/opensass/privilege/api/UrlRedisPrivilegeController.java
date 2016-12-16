@@ -1,5 +1,6 @@
 package cn.com.open.opensass.privilege.api;
 
+import cn.com.open.opensass.privilege.dao.PrivilegeUrl;
 import cn.com.open.opensass.privilege.dao.ResourceUrl;
 import cn.com.open.opensass.privilege.dao.ResourceUrlData;
 import cn.com.open.opensass.privilege.dao.cache.RedisDao;
@@ -79,68 +80,36 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
 
         /*缓存中是否存在*/
         String urlJedis = redisDao.getUrlRedis(pivilegeToken.getAppId(), privilegeUser.getuId());
-
+        System.out.println("是否为空（过期）："+urlJedis);
         if (null == urlJedis && "" != urlJedis) {
+
              /*封装list类*/
-            ResourceUrlData resourceUrlData = new ResourceUrlData();
+            PrivilegeUrl privilegeUrl = new PrivilegeUrl();
 
         /*url地址列表*/
             List<ResourceUrl> resourceUrls = new ArrayList<ResourceUrl>();
 
-        /*获取url数据*/
-            /*角色ID*/
-            String privilegeRoleId = privilegeUser.getPrivilegeRoleId();
-            /*资源列表*/
-            List<PrivilegeRoleResource> privilegeRoleResourceList = privilegeRoleResourceService.findByPrivilegeRoleId(privilegeRoleId);
-            List<PrivilegeResource> privilegeResourceList = new ArrayList<PrivilegeResource>();
-            /*角色获取资源*/
-            resourceUrls = getPrivilegeResourceByUserRoleId(resourceUrls, privilegeRoleResourceList, appId);
-            /**
-             * 通过用户表的角色Id直接获取资源
-             */
-            PrivilegeResource privilegeResource = privilegeResourceService.findByResourceId(privilegeUser.getResourceId(), appId);
-            /*获取funid列表url*/
-            StringBuffer stringBuffer = new StringBuffer(50);
-            /*获取funid列表*/
-            String funIdList = privilegeUser.getPrivilegeFunId();
-            if (null != funIdList && "" != funIdList) {
-                String[] strFunIds = funIdList.split(",");
-                for (String funId : strFunIds) {
+            /*资源获取通过UserId*/
+            PrivilegeResource privilegeResourcesss = privilegeResourceService.findResourceByAppUserId(privilegeUser.getAppUserId());
+            privilegeUrl.setPrivilegeUrl(privilegeResourcesss.getBaseUrl());
 
-                            /*获取function中的opt_url*/
-                    PrivilegeFunction privilegeFunction = privilegeFunctionService.findByFunctionId(funId);
-                    if (null != stringBuffer && null != privilegeFunction.getOptUrl() && "" != privilegeFunction.getOptUrl()) {
-                        stringBuffer.append(privilegeFunction.getOptUrl()).append(",");
-                    }
-                }
-            }
+            /*角色*/
+           /* PrivilegeRoleResource privilegeRoleResource = privilegeRoleResourceService.findByRoleIdAndResourceId(privilegeUser.getPrivilegeRoleId(),"123");
 
+            List<PrivilegeUrl> privilegeUrlListOne =  getPrivilegeFunctionList(privilegeRoleResource.getPrivilegeFunId());
+
+            List<ResourceUrl> resourceUrlsdata = new ArrayList<>();
             ResourceUrl resourceUrl = new ResourceUrl();
-            if (stringBuffer.length() > 0) {
-                stringBuffer.deleteCharAt(stringBuffer.length() - 1);
-                resourceUrl.setPrivilegeUrl(privilegeResource.getBaseUrl() + "," + stringBuffer.toString());
-            } else {
-                resourceUrl.setPrivilegeUrl(privilegeResource.getBaseUrl());
-            }
-            //resourceUrl.setUrl(privilegeResource.getBaseUrl());
-            //resourceUrl.setUrlFun(privilegeUser.getPrivilegeFunId());
-            resourceUrls.add(resourceUrl);
-            /*通过groupId获取资源*/
-           /* String groupId = privilegeUser.getGroupId();
-            PrivilegeGroup privilegeGroup = privilegeGroupService.findBygroupId(groupId,appId);*/
-             /*单条url数据*/
-           /* ResourceUrl resourceUrl = new ResourceUrl();
-            if(null != privilegeResourceList && privilegeResourceList.size()>0)
+            resourceUrl.setPrivilegeUrl(privilegeResourcesss.getBaseUrl());
+            if(null != privilegeUrlListOne && privilegeUrlListOne.size()>0)
             {
-                *//*resourceUrl.setPrivilegeResources(privilegeResourceList);*//*
-            }*/
-            resourceUrls.add(resourceUrl);
-            resourceUrls.add(resourceUrl);
-            resourceUrlData.setResourceUrls(resourceUrls);
-
-            redisDao.putUrlRedis(resourceUrlData, pivilegeToken.getAppId(), privilegeUser.getuId());
+               // resourceUrl.setChildUrl(privilegeUrlListOne);
+            }
+            resourceUrlsdata.add(resourceUrl);*/
+            redisDao.putUrlRedis(privilegeUrl, pivilegeToken.getAppId(), privilegeUser.getuId());
             urlJedis = redisDao.getUrlRedis(pivilegeToken.getAppId(), privilegeUser.getuId());
         }
+
         //map.put("",urlJedis);
         //map.put("key", key);
         //writeSuccessJson(response, map);
@@ -154,6 +123,48 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
         return;
     }
 
+
+    /*返回功能列表*/
+    private List<PrivilegeUrl> getPrivilegeFunctionList(String funIdList)
+    {
+        List<PrivilegeUrl> privilegeUrlList = new ArrayList<>();
+        PrivilegeFunction privilegeFunction = null;
+        PrivilegeUrl privilegeUrl = null;
+        if(null != funIdList && funIdList.length()>0)
+        {
+            String[] strings = funIdList.split(",");
+            StringBuffer stringBuffer = new StringBuffer(50);
+            for (String string : strings)
+            {
+                if(null != string && "" != string)
+                {
+                    privilegeFunction = privilegeFunctionService.findByFunctionId(string);
+                    if(null != privilegeFunction.getOptUrl() && "" != privilegeFunction.getOptUrl())
+                        privilegeUrl = new PrivilegeUrl();
+                        stringBuffer.append(privilegeFunction.getOptUrl());
+                }
+            }
+            privilegeUrlList.add(privilegeUrl);
+        }
+        if(privilegeUrlList.size()>0)
+            return privilegeUrlList;
+        return null;
+    }
+    /*综合查询*/
+
+    /**
+     *
+     * @param privilegeRoleId 角色ID
+     * @param resourceId 资源ID（多个）
+     * @param functionId funId （多个）
+     * @param appId
+     * @return
+     */
+    private List<ResourceUrl> getResourceIdAndFunId(String privilegeRoleId,String resourceId,String functionId, String appId,String UserId)
+    {
+        return null;
+    }
+
     /*
         获取url列表方法
      */
@@ -163,20 +174,23 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
             try {
                 PrivilegeResource privilegeResourcedatat = privilegeResourceService.findByResourceId(roleResource.getResourceId(), appId);
                 if (null != privilegeResourcedatat) {
-                    StringBuffer stringBuffer = new StringBuffer(50);
+                    List<PrivilegeUrl> privilegeUrlList = new ArrayList<>();
+                    PrivilegeUrl privilegeUrl = null;
                     for (PrivilegeRoleResource privilegeRoleResource : privilegeRoleResourceList) {
                         if (null != privilegeRoleResource.getPrivilegeFunId()) {
                             /*获取function中的opt_url*/
                             PrivilegeFunction privilegeFunction = privilegeFunctionService.findByFunctionId(privilegeRoleResource.getPrivilegeFunId());
-                            if (null != stringBuffer && null != privilegeFunction.getOptUrl() && "" != privilegeFunction.getOptUrl()) {
-                                stringBuffer.append(privilegeFunction.getOptUrl()).append(",");
+                            if (null != privilegeFunction && null != privilegeFunction.getOptUrl() && "" != privilegeFunction.getOptUrl()) {
+                                privilegeUrl = new PrivilegeUrl();
+                                privilegeUrl.setChildUrl(privilegeFunction.getOptUrl());
+                                privilegeUrlList.add(privilegeUrl);
                             }
                         }
                     }
                     ResourceUrl resourceUrl = new ResourceUrl();
-                    if (stringBuffer.length() > 0) {
-                        stringBuffer.deleteCharAt(stringBuffer.length() - 1);
-                        resourceUrl.setPrivilegeUrl(privilegeResourcedatat.getBaseUrl() + "," + stringBuffer.toString());
+                    if (privilegeUrlList.size() > 0) {
+                        resourceUrl.setPrivilegeUrl(privilegeResourcedatat.getBaseUrl());
+                        //resourceUrl.setChildUrl(privilegeUrlList);
                     } else {
                         resourceUrl.setPrivilegeUrl(privilegeResourcedatat.getBaseUrl());
                     }
@@ -272,7 +286,13 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
         //map.put("",urlJedis);
         //map.put("key", key);
         //writeSuccessJson(response, map);
-        WebUtils.writeJson(response, urlJedis);
+        if (null != urlJedis) {
+            WebUtils.writeJson(response, urlJedis);
+        } else {
+            map.put("status", 0);
+            map.put("error_code", "10002");/*数据不存在*/
+            writeErrorJson(response, map);
+        }
     }
 
     /**
