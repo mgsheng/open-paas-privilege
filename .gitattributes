@@ -209,6 +209,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/service/Privilege
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeResourceService.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeRoleResourceService.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeRoleService.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeUrlService.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeUserRoleService.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeUserService.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeFunctionServiceImpl.java -text
@@ -218,6 +219,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/Priv
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeResourceServiceImpl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeRoleResourceServiceImpl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeRoleServiceImpl.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeUrlServiceImpl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeUserRoleServiceImpl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeUserServiceImpl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/AbstractDomain.java -text
@@ -245,6 +247,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/WebUtils.ja
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/test.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/test1.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/testDemo.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeAjaxMessage.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeGroupResourceVo.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeGroupVo.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeResourceVo.java -text
