@@ -1,5 +1,6 @@
 package cn.com.open.opensass.privilege.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,15 @@ public class PrivilegeRoleResourceServiceImpl implements PrivilegeRoleResourceSe
 	@Override
 	public PrivilegeRoleResource findByRoleIdAndResourceId(String privilegeRoleId,String resourceId) {
 		return privilegeRoleResourceRepository.findByRoleIdAndResourceId(privilegeRoleId,resourceId);
+	}
+
+	@Override
+	public ArrayList<String> findUserResourcesFunId(String appId, String appUserId) {
+		try{
+			return privilegeRoleResourceRepository.findUserResourcesFunId(appId,appUserId);
+		}catch(Exception e){
+			return null;
+		}
 	}
 
 }

@@ -8,16 +8,17 @@ import com.dyuproject.protostuff.LinkedBuffer;
 import com.dyuproject.protostuff.ProtostuffIOUtil;
 import com.dyuproject.protostuff.Schema;
 import com.dyuproject.protostuff.runtime.RuntimeSchema;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+import scala.util.parsing.combinator.testing.Str;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by jh on 2016/12/13.
@@ -38,21 +39,21 @@ public class RedisDao {
 
     /**
      * 写入jedis
-     * @param resourceUrlData
+     * @param privilegeUrl
      * @param appid
      * @param uid
      * @return
      */
-    public String putUrlRedis(PrivilegeUrl resourceUrlData, String appid, String uid)
+    public String putUrlRedis(PrivilegeUrl privilegeUrl, String appid, String uid)
     {
         try{
             Jedis jedis = jedisPool.getResource();
             try{
                 String key = RedisConstant.USERPRIVILEGES_CACHE+appid+ RedisConstant.SIGN+uid;
-                byte[] bytes = ProtostuffIOUtil.toByteArray(resourceUrlData,schema,
+                byte[] bytes = ProtostuffIOUtil.toByteArray(privilegeUrl,schema,
                         LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE));
                 /*超时缓存*/
-                int timeout = jedis.getClient().getTimeout();
+                //int timeout = jedis.getClient().getTimeout();
                 String result = jedis.set(key.getBytes(),bytes);
                 return result;
             }
@@ -84,13 +85,9 @@ public class RedisDao {
                 /*从缓存中获取到*/
                 if (null != bytes)
                 {
-                    PrivilegeUrl resourceUrlData = (PrivilegeUrl) schema.newMessage();
-                    ProtostuffIOUtil.mergeFrom(bytes,resourceUrlData,schema);
-
-                    Map b=new HashMap();
-                    b.put("urlList", resourceUrlData.getPrivilegeUrl()+resourceUrlData.getChildUrl());
-                    String menuList= JSONObject.fromObject(b).toString();
-                    return  menuList;
+                    PrivilegeUrl privilegeUrl = (PrivilegeUrl) schema.newMessage();
+                    ProtostuffIOUtil.mergeFrom(bytes,privilegeUrl,schema);
+                    return  privilegeUrl.getPrivilegeUrl();
                 }
             }
             finally {
@@ -174,25 +171,28 @@ public class RedisDao {
             Jedis jedis = jedisPool.getResource();
             try{
                 String key = RedisConstant.USERPRIVILEGES_CACHE+appid+ RedisConstant.SIGN+uid;
+                if(!jedis.exists(key)) return false;
+
                 byte[] bytes = jedis.get(key.getBytes());
                 /*从缓存中获取到*/
                 if (null != bytes)
                 {
-                    ResourceUrlData resourceUrlData = (ResourceUrlData) schema.newMessage();
-                    ProtostuffIOUtil.mergeFrom(bytes,resourceUrlData,schema);
-
-                    List<ResourceUrl> resourceUrlList = resourceUrlData.getResourceUrls();
-                    for (ResourceUrl resourceUrl : resourceUrlList)
+                    PrivilegeUrl privilegeUrl = (PrivilegeUrl) schema.newMessage();
+                    ProtostuffIOUtil.mergeFrom(bytes,privilegeUrl,schema);
+                    String urlJson = privilegeUrl.getPrivilegeUrl();
+                    if(null != url && url.length()>0)
                     {
-                        if(null != resourceUrl.getPrivilegeUrl())
+                        url = url.toLowerCase();
+                        if(url.indexOf("?")>0)
                         {
-                            String[] strings =resourceUrl.getPrivilegeUrl().split(",");
-                            for (String str : strings)
+                            url = url.split("//u003F")[0];
+                        }
+                        ArrayList<String> stringArrayList = getStringFromJson(urlJson);
+                        for (String str : stringArrayList)
+                        {
+                            if(str.indexOf(url)>-1)
                             {
-                                if(str.indexOf(url)>-1 || url.indexOf(str)>-1)
-                                {
-                                    return true;
-                                }
+                                return true;
                             }
                         }
                     }
@@ -208,7 +208,42 @@ public class RedisDao {
         }
         return false;
     }
+    private ArrayList<String> getStringFromJson(String json)
+    {
+        ArrayList<String> arrayList = new ArrayList<>();
+        Map map=new HashMap();
+        JsonConfig jc=new JsonConfig();
+        jc.setClassMap(map);
+        jc.setRootClass(Map.class);
+        jc.setArrayMode(JsonConfig.MODE_LIST);
 
+        JSONObject jobj=JSONObject.fromObject(json,jc);
+        String obj = jobj.get("urlList").toString();
+        if(obj != null && obj.length()>0)
+        {
+            obj = obj.substring(1,obj.length()-1);
+            String[] strings = obj.split(",");
+            for (String string : strings)
+            {
+                arrayList.add(string);
+            }
+        }
+        return arrayList;
+    }
+    /**
+     * 将json数组转化为String型
+     * @param str
+     * @return
+     */
+    public static String[] getJsonToStringArray(String str) {
+        JSONArray jsonArray = JSONArray.fromObject(str);
+        String[] arr=new String[jsonArray.size()];
+        for(int i=0;i<jsonArray.size();i++){
+            arr[i]=jsonArray.getString(i);
+            System.out.println(arr[i]);
+        }
+        return arr;
+    }
 
     /**
      * 判断key是否存在

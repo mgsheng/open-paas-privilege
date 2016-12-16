@@ -5,9 +5,8 @@ import java.io.Serializable;
 /**
  * Created by jh on 2016/12/15.
  */
-public class PrivilegeUrl  {
+public class PrivilegeUrl implements Serializable  {
     private String privilegeUrl;
-    private String childUrl;
 
     public String getPrivilegeUrl() {
         return privilegeUrl;
@@ -17,12 +16,15 @@ public class PrivilegeUrl  {
         this.privilegeUrl = privilegeUrl;
     }
 
-    public String getChildUrl() {
-        return childUrl;
+    public boolean equals(Object obj){
+        if(obj instanceof PrivilegeUrl){ //
+            PrivilegeUrl p = (PrivilegeUrl)obj;
+            return(privilegeUrl.equals(p.privilegeUrl));
+        }
+        return super.equals(obj);
     }
-
-    public void setChildUrl(String childUrl) {
-        this.childUrl = childUrl;
+    public int HashCode()
+    {
+        return privilegeUrl.hashCode();
     }
-
 }
