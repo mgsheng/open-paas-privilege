@@ -1,5 +1,7 @@
 package cn.com.open.opensass.privilege.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +46,11 @@ public class PrivilegeRoleServiceImpl implements PrivilegeRoleService {
 	@Override
 	public void updatePrivilegeRole(PrivilegeRole privilegeRole) {
 		privilegeRoleRepository.updatePrivilegeRole(privilegeRole);
+	}
+
+	@Override
+	public List<String> findRoleByAppId(String appId) {
+		return privilegeRoleRepository.findRoleByAppId(appId);
 	}
 
 }

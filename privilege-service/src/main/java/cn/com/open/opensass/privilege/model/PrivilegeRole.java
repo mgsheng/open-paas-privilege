@@ -22,6 +22,7 @@ public class PrivilegeRole {
 	private Integer status;
 	
 	private List<PrivilegeResource> resourceList;
+	private List<PrivilegeFunction> functionList;
 	
 	public String getPrivilegeRoleId() {
 		return privilegeRoleId;
@@ -118,5 +119,11 @@ public class PrivilegeRole {
 	}
 	public void setResourceList(List<PrivilegeResource> resourceList) {
 		this.resourceList = resourceList;
-	}		
+	}
+	public List<PrivilegeFunction> getFunctionList() {
+		return functionList;
+	}
+	public void setFunctionList(List<PrivilegeFunction> functionList) {
+		this.functionList = functionList;
+	}	
 }

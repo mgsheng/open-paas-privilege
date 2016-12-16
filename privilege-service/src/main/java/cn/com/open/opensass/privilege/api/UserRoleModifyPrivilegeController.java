@@ -24,6 +24,7 @@ import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserRoleService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
+import cn.com.open.opensass.privilege.tools.StringTool;
 import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
 
 @Controller
@@ -90,7 +91,7 @@ public class UserRoleModifyPrivilegeController extends BaseControllerUtil{
     				}
     			}
     		} 
-    		privilegeRoleId = listToString(roleIdList);
+    		privilegeRoleId = StringTool.listToString(roleIdList);
 
         	user.setPrivilegeRoleId(privilegeRoleId);
         	user.setDeptId(privilegeUserVo.getDeptId());
@@ -109,22 +110,5 @@ public class UserRoleModifyPrivilegeController extends BaseControllerUtil{
     		writeSuccessJson(response,map);
     	}
         return;
-    }
-	
-	 public String listToString(List<String> stringList){
-        if (stringList==null) {
-            return null;
-        }
-        StringBuilder result=new StringBuilder();
-        boolean flag=false;
-        for (String string : stringList) {
-            if (flag) {
-                result.append(",");
-            }else {
-                flag=true;
-            }
-            result.append(string);
-        }
-        return result.toString();
     }
 }

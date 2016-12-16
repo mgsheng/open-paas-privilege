@@ -7,19 +7,8 @@ public class PrivilegeResource extends AbstractDomain {
 	 * 资源
 	 */
 	private static final long serialVersionUID = 1L;
-	/**
-	 * <result column="menu_id" property="menuId" jdbcType="VARCHAR" />
-		<result column="resource_name" property="resourceName" jdbcType="VARCHAR" />
-		<result column="app_id" property="appId" jdbcType="INTEGER" />
-		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
-		<result column="create_userid" property="createUserId" jdbcType="VARCHAR" />
-		<result column="status" property="status" jdbcType="INTEGER" />
-		<result column="resource_rule" property="resourcerule" jdbcType="VARCHAR" />
-		<result column="resource_level" property="resourceLevel" jdbcType="INTEGER" />
-		<result column="display_order" property="displayOrder" jdbcType="INTEGER" />
-		<result column="base_url" property="baseUrl" jdbcType="VARCHAR" />
-	 */
+	
+	private String resourceId;
 	private String appId;
 	private String menuId;
 	private String resourceName;
@@ -31,6 +20,8 @@ public class PrivilegeResource extends AbstractDomain {
 	private String createUserId;
 	private int status;
 	private int displayOrder;
+	
+	//private List<PrivilegeFunction> functionList;
 	
 	public int getDisplayOrder() {
 		return displayOrder;
@@ -98,5 +89,16 @@ public class PrivilegeResource extends AbstractDomain {
 	public void setStatus(int status) {
 		this.status = status;
 	}
-	
+	public String getResourceId() {
+		return resourceId;
+	}
+	public void setResourceId(String resourceId) {
+		this.resourceId = resourceId;
+	}
+	/*public List<PrivilegeFunction> getFunctionList() {
+		return functionList;
+	}
+	public void setFunctionList(List<PrivilegeFunction> functionList) {
+		this.functionList = functionList;
+	}*/	
 }

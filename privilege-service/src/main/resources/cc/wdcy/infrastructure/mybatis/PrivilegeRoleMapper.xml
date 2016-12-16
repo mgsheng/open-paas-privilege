@@ -41,6 +41,10 @@
          where  privilege_roleid = #{privilegeRoleId}
 	</select>
 	
+	<select id="findRoleByAppId" resultType="java.lang.String" flushCache="true">
+		select privilege_roleid from privilege_role where app_id = #{appId}
+	</select>
+	
     <update id="updatePrivilegeRole" parameterType="PrivilegeRole" flushCache="true">
         update privilege_role
         <trim prefix="set" suffixOverrides=",">
