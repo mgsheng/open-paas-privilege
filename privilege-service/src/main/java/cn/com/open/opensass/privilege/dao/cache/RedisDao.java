@@ -178,7 +178,7 @@ public class RedisDao {
     }
     private ArrayList<String> getStringFromJson(String json)
     {
-        ArrayList<String> arrayList = new ArrayList<>();
+        ArrayList<String> arrayList = new ArrayList<String>();
         Map map=new HashMap();
         JsonConfig jc=new JsonConfig();
         jc.setClassMap(map);
