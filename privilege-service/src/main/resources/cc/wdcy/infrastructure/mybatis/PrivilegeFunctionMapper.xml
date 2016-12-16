@@ -20,7 +20,7 @@
         create_time
     </sql>
     <select id="findByFunctionId" resultMap="privilegeFunctionMap" flushCache="true">
-        select * from privilge_function
+        SELECT * FROM  privilege_function
         where  id = #{functionId}
     </select>
 
