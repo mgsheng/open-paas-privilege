@@ -14,5 +14,5 @@ public class RedisConstant {
   */
  public static final String USERPRIVILEGES_CACHE="userUrl_";
  /*间隔符*/
- public static final String SIGN=" _";
+ public static final String SIGN="_";
 }
