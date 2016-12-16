@@ -3,6 +3,7 @@ package cn.com.open.opensass.privilege.tools;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -194,4 +195,22 @@ public class StringTool {
 //		System.out.println(decodeUnicode("\u5317\u4eac"));
 		System.out.println(getRandomNum(6));
 	}
+	
+	
+	 public static String listToString(List<String> stringList){
+       if (stringList==null) {
+           return null;
+       }
+       StringBuilder result=new StringBuilder();
+       boolean flag=false;
+       for (String string : stringList) {
+           if (flag) {
+               result.append(",");
+           }else {
+               flag=true;
+           }
+           result.append(string);
+       }
+       return result.toString();
+   }
 }
