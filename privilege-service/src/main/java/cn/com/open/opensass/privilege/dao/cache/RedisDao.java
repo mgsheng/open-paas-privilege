@@ -183,9 +183,11 @@ public class RedisDao {
                     if(null != url && url.length()>0)
                     {
                         url = url.toLowerCase();
+                        System.out.println(url);
                         if(url.indexOf("?")>0)
                         {
-                            url = url.split("//u003F")[0];
+                            url = url.split("\\?")[0];
+                            System.out.println(url);
                         }
                         ArrayList<String> stringArrayList = getStringFromJson(urlJson);
                         for (String str : stringArrayList)

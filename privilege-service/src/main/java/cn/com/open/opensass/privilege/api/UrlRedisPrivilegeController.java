@@ -27,12 +27,11 @@ import java.util.*;
 
 /**
  * redis url 接口
- * 必传参数：PivilegeToken
- * 获取数据：etDataPrivilege/{appUserId}
- * 修改数据：updateDataPrivilege/{appUserId}
- * 删除数据：deleteDataPrivilege/{appUserId}
- * 判断url是否存在：existUrlPrivilege/{durl}/{appUserId}
- * 判断key是否在redis中存在 ：existKeyPrivilege/{appUserId}
+ * 获取数据：getUrl?appId=&appUserId=
+ * 修改数据：updateUrl?appId=&appUserId=
+ * 删除数据：delUrl?appId=&appUserId=
+ * 判断url是否存在：existUrl?appId=&appUserId=&urladdr=
+ * 判断key是否在redis中存在 ：existKey?appId=&appUserId=
  */
 @Controller
 @RequestMapping("/url/")
@@ -51,17 +50,15 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
 
 
     /**
-     * 测试地址
-     * http://localhost:8080/url/deleteDataPrivilege/0bb6f4bfc0d711e6a6df0050568c069a?appId=appcbfb25e6c0d611e6a6df0050568c069m&appKey=appcbfb25e6c0d611e6a6df0050568c069m&signature=appcbfb25e6c0d611e6a6df0050568c069m&timestamp=2014-05-26T12:00:00Z&signatureNonce=ss
-     *
+     * 新增redis缓存
      * @param request
      * @param response
-     * @param appUserId
-     * @param pivilegeToken
      */
-    @RequestMapping(value = "getDataPrivilege/{appUserId}", method = RequestMethod.POST)
-    public void putdata(HttpServletRequest request, HttpServletResponse response, @PathVariable("appUserId") String appUserId, PivilegeToken pivilegeToken) {
-
+    @RequestMapping(value = "getUrl", method = RequestMethod.POST)
+    public void putdata(HttpServletRequest request, HttpServletResponse response) {
+        /*参数接收*/
+        String appUserId=request.getParameter("appUserId").trim();
+        String appId=request.getParameter("appId").trim();
         /**
          * 1. 判断传入参数是否正确
          * 2. 获取jedis数据，判断jedis是否为空
@@ -69,13 +66,13 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
          */
         Map<Object, Object> map = new HashMap<Object, Object>();
         log.info("===================get getDataPrivilege start======================");
-        if (!paraMandatoryCheck(Arrays.asList(pivilegeToken.getAppId(), pivilegeToken.getAppKey(), pivilegeToken.getSignature(), pivilegeToken.getSignatureNonce(), pivilegeToken.getTimestamp()))) {
+        if (!paraMandatoryCheck(Arrays.asList(appUserId, appId))) {
             paraMandaChkAndReturn(10000, response, "必传参数中有空值");
             return;
         }
         /*获取用户UID*/
-        PrivilegeUser privilegeUser = privilegeUserService.findByAppIdAndUserId(pivilegeToken.getAppId(), appUserId);
-        log.info("getDataPrivilege用户数据，appid="+pivilegeToken.getAppId()+",用户Id="+appUserId);
+        PrivilegeUser privilegeUser = privilegeUserService.findByAppIdAndUserId(appId, appUserId);
+        log.info("getDataPrivilege用户数据，appid="+appId+",用户Id="+appUserId);
         if (null == privilegeUser) {
 
             map.put("status", 0);
@@ -83,18 +80,16 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
             writeErrorJson(response, map);
             return;
         }
-        /*appid*/
-        String appId = pivilegeToken.getAppId().trim();
         /*缓存中是否存在*/
-        String urlJedis = redisDao.getUrlRedis(pivilegeToken.getAppId(), privilegeUser.getuId());
+        String urlJedis = redisDao.getUrlRedis(appId, privilegeUser.getuId());
         log.info("getDataPrivilege接口读取redis数据："+urlJedis);
         if (null == urlJedis && "" != urlJedis) {
             PrivilegeUrl privilegeUrl = getPrivilegeUrl(appId, appUserId, privilegeUser);
             /*写入redis*/
             log.info("getDataPrivilege接口获取数据并写入redis数据开始");
-            redisDao.putUrlRedis(privilegeUrl, pivilegeToken.getAppId(), privilegeUser.getuId());
+            redisDao.putUrlRedis(privilegeUrl, appId, privilegeUser.getuId());
             /*读取redis*/
-            urlJedis = redisDao.getUrlRedis(pivilegeToken.getAppId(), privilegeUser.getuId());
+            urlJedis = redisDao.getUrlRedis(appId, privilegeUser.getuId());
             log.info("getDataPrivilege接口获取数据并写入，读取redis数据开始："+urlJedis);
         }
         if (null != urlJedis) {
@@ -179,12 +174,12 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
      *
      * @param request
      * @param response
-     * @param appUserId
-     * @param pivilegeToken
      */
-    @RequestMapping(value = "updateDataPrivilege/{appUserId}", method = RequestMethod.POST)
-    public void updateData(HttpServletRequest request, HttpServletResponse response, @PathVariable("appUserId") String appUserId, PivilegeToken pivilegeToken) {
-
+    @RequestMapping(value = "updateUrl", method = RequestMethod.POST)
+    public void updateData(HttpServletRequest request, HttpServletResponse response) {
+        /*参数接收*/
+        String appUserId=request.getParameter("appUserId").trim();
+        String appId=request.getParameter("appId").trim();
 
         /**
          * 1. 判断传入参数是否正确
@@ -194,13 +189,13 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
         Map<Object, Object> map = new HashMap<Object, Object>();
         String data = "";
         log.info("===================get updateDataPrivilege start======================");
-        if (!paraMandatoryCheck(Arrays.asList(pivilegeToken.getAppId(), pivilegeToken.getAppKey(), pivilegeToken.getSignature(), pivilegeToken.getSignatureNonce(), pivilegeToken.getTimestamp()))) {
+        if (!paraMandatoryCheck(Arrays.asList(appUserId, appId))) {
             paraMandaChkAndReturn(10000, response, "必传参数中有空值");
             return;
         }
         /*获取用户UID*/
-        PrivilegeUser privilegeUser = privilegeUserService.findByAppIdAndUserId(pivilegeToken.getAppId(), appUserId);
-        log.info("updateDataPrivilege用户数据，appid="+pivilegeToken.getAppId()+",用户Id="+appUserId);
+        PrivilegeUser privilegeUser = privilegeUserService.findByAppIdAndUserId(appId, appUserId);
+        log.info("updateDataPrivilege用户数据，appid="+appId+",用户Id="+appUserId);
         if (null == privilegeUser) {
 
             map.put("status", 0);
@@ -208,18 +203,16 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
             writeErrorJson(response, map);
             return;
         }
-        /*appid*/
-        String appId = pivilegeToken.getAppId().trim();
         /*删除redis健值*/
         log.info("updateDataPrivilege删除redis数据");
-        redisDao.deleteUrlRedis(pivilegeToken.getAppId(), privilegeUser.getuId());
+        redisDao.deleteUrlRedis(appId, privilegeUser.getuId());
 
         log.info("updateDataPrivilege写入redis数据");
         PrivilegeUrl privilegeUrl = getPrivilegeUrl(appId, appUserId, privilegeUser);
         /*写入redis*/
-        redisDao.putUrlRedis(privilegeUrl, pivilegeToken.getAppId(), privilegeUser.getuId());
+        redisDao.putUrlRedis(privilegeUrl, appId, privilegeUser.getuId());
         /*读取redis*/
-        String urlJedis = redisDao.getUrlRedis(pivilegeToken.getAppId(), privilegeUser.getuId());
+        String urlJedis = redisDao.getUrlRedis(appId, privilegeUser.getuId());
         log.info("updateDataPrivilege读取redis数据====="+urlJedis);
         if (urlJedis != null && urlJedis.length() > 0) {
             WebUtils.writeJson(response, urlJedis);
@@ -235,12 +228,12 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
      *
      * @param request
      * @param response
-     * @param appUserId
-     * @param pivilegeToken
      */
-    @RequestMapping(value = "deleteDataPrivilege/{appUserId}", method = RequestMethod.POST)
-    public void deleteData(HttpServletRequest request, HttpServletResponse response, @PathVariable("appUserId") String appUserId, PivilegeToken pivilegeToken) {
-
+    @RequestMapping(value = "delUrl", method = RequestMethod.POST)
+    public void deleteData(HttpServletRequest request, HttpServletResponse response) {
+        /*参数接收*/
+        String appUserId=request.getParameter("appUserId").trim();
+        String appId=request.getParameter("appId").trim();
         /**
          * 1. 判断传入参数是否正确
          * 2. 获取jedis数据，判断jedis是否为空
@@ -248,13 +241,13 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
          */
         Map<Object, Object> map = new HashMap<Object, Object>();
         log.info("===================get deleteDataPrivilege start======================");
-        if (!paraMandatoryCheck(Arrays.asList(pivilegeToken.getAppId(), pivilegeToken.getAppKey(), pivilegeToken.getSignature(), pivilegeToken.getSignatureNonce(), pivilegeToken.getTimestamp()))) {
+        if (!paraMandatoryCheck(Arrays.asList(appId, appUserId))) {
             paraMandaChkAndReturn(10000, response, "必传参数中有空值");
             return;
         }
         /*获取用户UID*/
-        PrivilegeUser privilegeUser = privilegeUserService.findByAppIdAndUserId(pivilegeToken.getAppId(), appUserId);
-        log.info("deleteDataPrivilege用户数据，appid="+pivilegeToken.getAppId()+",用户Id="+appUserId);
+        PrivilegeUser privilegeUser = privilegeUserService.findByAppIdAndUserId(appId, appUserId);
+        log.info("deleteDataPrivilege用户数据，appid="+appId+",用户Id="+appUserId);
         if (null == privilegeUser) {
 
             map.put("status", 1);
@@ -263,7 +256,7 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
             return;
         }
         log.info("deleteDataPrivilege删除redis数据");
-        redisDao.deleteUrlRedis(pivilegeToken.getAppId(), privilegeUser.getuId());
+        redisDao.deleteUrlRedis(appId, privilegeUser.getuId());
         map.put("status", 0);
         writeSuccessJson(response, map);
         return;
@@ -272,18 +265,17 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
 
     /**
      * 判断url是否存在
-     * http://localhost:8080/url/existUrlPrivilege/baidu.com/0bb6f4bfc0d711e6a6df0050568c069a?appId=appcbfb25e6c0d611e6a6df0050568c069m&appKey=appcbfb25e6c0d611e6a6df0050568c069m&signature=appcbfb25e6c0d611e6a6df0050568c069m&timestamp=2014-05-26T12:00:00Z&signatureNonce=ss
      *
      * @param request
      * @param response
-     * @param appUserId
-     * @param durl
-     * @param pivilegeToken
      */
 
-    @RequestMapping(value = "existUrlPrivilege/{durl}/{appUserId}", method = RequestMethod.POST)
-    public void existUrlData(HttpServletRequest request, HttpServletResponse response, @PathVariable("durl") String durl, @PathVariable("appUserId") String appUserId, PivilegeToken pivilegeToken) {
-
+    @RequestMapping(value = "existUrl", method = RequestMethod.POST)
+    public void existUrlData(HttpServletRequest request, HttpServletResponse response) {
+        /*参数接收*/
+        String appUserId=request.getParameter("appUserId").trim();
+        String appId=request.getParameter("appId").trim();
+        String durl=request.getParameter("urladdr").trim();
         /**
          * 1. 判断传入参数是否正确
          * 2. 获取jedis数据，判断jedis是否为空
@@ -291,13 +283,13 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
          */
         Map<Object, Object> map = new HashMap<Object, Object>();
         log.info("===================get existUrlPrivilege start======================");
-        if (!paraMandatoryCheck(Arrays.asList(pivilegeToken.getAppId(), pivilegeToken.getAppKey(), pivilegeToken.getSignature(), pivilegeToken.getSignatureNonce(), pivilegeToken.getTimestamp()))) {
+        if (!paraMandatoryCheck(Arrays.asList(appUserId, appId, durl))) {
             paraMandaChkAndReturn(10000, response, "必传参数中有空值");
             return;
         }
         /*获取用户UID*/
-        PrivilegeUser privilegeUser = privilegeUserService.findByAppIdAndUserId(pivilegeToken.getAppId(), appUserId);
-        log.info("existUrlPrivilege用户数据，appid="+pivilegeToken.getAppId()+",用户Id="+appUserId+",url="+durl);
+        PrivilegeUser privilegeUser = privilegeUserService.findByAppIdAndUserId(appId, appUserId);
+        log.info("existUrlPrivilege用户数据，appid="+appId+",用户Id="+appUserId+",url="+durl);
         if (null == privilegeUser) {
 
             map.put("status", 1);
@@ -305,16 +297,23 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
             writeErrorJson(response, map);
             return;
         }
-        boolean exist = redisDao.existUrlRedis(durl, pivilegeToken.getAppId(), privilegeUser.getuId());
+        boolean exist = redisDao.existUrlRedis(durl, appId, privilegeUser.getuId());
         log.info("existUrlPrivilege==url是否存在："+exist);
         map.put("status", exist);
         writeSuccessJson(response, map);
         return;
     }
 
-    @RequestMapping(value = "existKeyPrivilege/{appUserId}", method = RequestMethod.POST)
-    public void existkeyData(HttpServletRequest request, HttpServletResponse response, @PathVariable("appUserId") String appUserId, PivilegeToken pivilegeToken) {
-
+    /**
+     * 判断key是否存在
+     * @param request
+     * @param response
+     */
+    @RequestMapping(value = "existKey", method = RequestMethod.POST)
+    public void existkeyData(HttpServletRequest request, HttpServletResponse response) {
+        /*参数接收*/
+        String appUserId=request.getParameter("appUserId").trim();
+        String appId=request.getParameter("appId").trim();
         /**
          * 1. 判断传入参数是否正确
          * 2. 获取jedis数据，判断jedis是否为空
@@ -322,13 +321,13 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
          */
         Map<Object, Object> map = new HashMap<Object, Object>();
         log.info("===================get existKeyPrivilege start======================");
-        if (!paraMandatoryCheck(Arrays.asList(pivilegeToken.getAppId(), pivilegeToken.getAppKey(), pivilegeToken.getSignature(), pivilegeToken.getSignatureNonce(), pivilegeToken.getTimestamp()))) {
+        if (!paraMandatoryCheck(Arrays.asList(appUserId, appId))) {
             paraMandaChkAndReturn(10000, response, "必传参数中有空值");
             return;
         }
         /*获取用户UID*/
-        PrivilegeUser privilegeUser = privilegeUserService.findByAppIdAndUserId(pivilegeToken.getAppId(), appUserId);
-        log.info("existKeyPrivilege用户数据，appid="+pivilegeToken.getAppId()+",用户Id="+appUserId+"");
+        PrivilegeUser privilegeUser = privilegeUserService.findByAppIdAndUserId(appId, appUserId);
+        log.info("existKeyPrivilege用户数据，appid="+appId+",用户Id="+appUserId+"");
         if (null == privilegeUser) {
 
             map.put("status", 1);
@@ -336,7 +335,7 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
             writeErrorJson(response, map);
             return;
         }
-        boolean exist = redisDao.existKeyRedis(pivilegeToken.getAppId(), privilegeUser.getuId());
+        boolean exist = redisDao.existKeyRedis(appId, privilegeUser.getuId());
         log.info("existKeyPrivilege==url是否存在："+exist);
         map.put("status", exist);
         writeSuccessJson(response, map);
