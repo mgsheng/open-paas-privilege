@@ -1,6 +1,7 @@
 package cn.com.open.opensass.privilege.model;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 public class PrivilegeUser {
@@ -14,6 +15,9 @@ public class PrivilegeUser {
 	private String privilegeFunId;
 	private String resourceId;
 	private Date createTime=new Date();
+	
+	private List<PrivilegeMenu> menuList;
+	private List<PrivilegeRole> roleList;
 	
 	public String getAppId() {
 		return appId;
@@ -74,5 +78,17 @@ public class PrivilegeUser {
 	}
 	public void setPrivilegeRoleId(String privilegeRoleId) {
 		this.privilegeRoleId = privilegeRoleId;
+	}
+	public List<PrivilegeMenu> getMenuList() {
+		return menuList;
+	}
+	public void setMenuList(List<PrivilegeMenu> menuList) {
+		this.menuList = menuList;
+	}
+	public List<PrivilegeRole> getRoleList() {
+		return roleList;
+	}
+	public void setRoleList(List<PrivilegeRole> roleList) {
+		this.roleList = roleList;
 	}
 }
