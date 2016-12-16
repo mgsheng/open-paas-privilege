@@ -35,7 +35,7 @@
  	</select>
    <select id="findUserResources"  resultType="java.lang.String" flushCache="true">
    SELECT d.base_url from privilege_user a,privilege_user_role b,privilege_role_resource c,privilege_resource d
-   where  app_id=#{appId} and app_userid=#{appUserId}
+   where  a.app_id=#{appId} and a.app_userid=#{appUserId}
    and a.uid=b.user_id and b.privilege_roleid=c.privilege_roleid and c.resource_id=d.resource_id 
  	</select>
     <update id="updatePrivilegeUser" parameterType="PrivilegeUser" flushCache="true">
