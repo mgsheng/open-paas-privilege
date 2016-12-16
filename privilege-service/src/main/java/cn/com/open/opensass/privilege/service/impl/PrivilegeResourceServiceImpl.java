@@ -73,4 +73,9 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 		}
 	}
 
+	@Override
+	public PrivilegeResource findResourceByAppUserId(String userId) {
+		return privilegeResourceRepository.findResourceByAppUserId(userId);
+	}
+
 }
