@@ -307,7 +307,7 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
         }
         boolean exist = redisDao.existUrlRedis(durl, pivilegeToken.getAppId(), privilegeUser.getuId());
         log.info("existUrlPrivilege==url是否存在："+exist);
-        map.put("exist", exist);
+        map.put("status", exist);
         writeSuccessJson(response, map);
         return;
     }
@@ -338,7 +338,7 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
         }
         boolean exist = redisDao.existKeyRedis(pivilegeToken.getAppId(), privilegeUser.getuId());
         log.info("existKeyPrivilege==url是否存在："+exist);
-        map.put("exist", exist);
+        map.put("status", exist);
         writeSuccessJson(response, map);
         return;
     }
