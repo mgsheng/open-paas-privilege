@@ -26,7 +26,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 /**
- * Created by jh on 2016/12/12.
+ * redis url 接口
+ * 必传参数：PivilegeToken
+ * 获取数据：etDataPrivilege/{appUserId}
+ * 修改数据：updateDataPrivilege/{appUserId}
+ * 删除数据：deleteDataPrivilege/{appUserId}
+ * 判断url是否存在：existUrlPrivilege/{durl}/{appUserId}
+ * 判断key是否在redis中存在 ：existKeyPrivilege/{appUserId}
  */
 @Controller
 @RequestMapping("/url/")
