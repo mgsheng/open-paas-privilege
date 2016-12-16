@@ -1,5 +1,6 @@
 package cn.com.open.opensass.privilege.dao.cache;
 
+import cn.com.open.opensass.privilege.dao.PrivilegeUrl;
 import cn.com.open.opensass.privilege.dao.ResourceUrl;
 import cn.com.open.opensass.privilege.dao.ResourceUrlData;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
@@ -32,7 +33,7 @@ public class RedisDao {
     {
         jedisPool = new JedisPool(poolConfig, host, port, timeout, password);
     }
-    private Schema schema  = RuntimeSchema.getSchema(ResourceUrlData.class);
+    private Schema schema  = RuntimeSchema.getSchema(PrivilegeUrl.class);
 
 
     /**
@@ -42,7 +43,7 @@ public class RedisDao {
      * @param uid
      * @return
      */
-    public String putUrlRedis(ResourceUrlData resourceUrlData, String appid, String uid)
+    public String putUrlRedis(PrivilegeUrl resourceUrlData, String appid, String uid)
     {
         try{
             Jedis jedis = jedisPool.getResource();
@@ -83,11 +84,11 @@ public class RedisDao {
                 /*从缓存中获取到*/
                 if (null != bytes)
                 {
-                    ResourceUrlData resourceUrlData = (ResourceUrlData) schema.newMessage();
+                    PrivilegeUrl resourceUrlData = (PrivilegeUrl) schema.newMessage();
                     ProtostuffIOUtil.mergeFrom(bytes,resourceUrlData,schema);
 
                     Map b=new HashMap();
-                    b.put("urlList", resourceUrlData.getResourceUrls());
+                    b.put("urlList", resourceUrlData.getPrivilegeUrl()+resourceUrlData.getChildUrl());
                     String menuList= JSONObject.fromObject(b).toString();
                     return  menuList;
                 }

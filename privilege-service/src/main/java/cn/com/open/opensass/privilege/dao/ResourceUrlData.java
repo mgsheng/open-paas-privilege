@@ -7,13 +7,13 @@ import java.util.List;
  */
 public class ResourceUrlData {
 
-    private List<ResourceUrl> resourceUrls;
+    private List<ResourceUrl> privilegeUrl;
 
     public List<ResourceUrl> getResourceUrls() {
-        return resourceUrls;
+        return privilegeUrl;
     }
 
     public void setResourceUrls(List<ResourceUrl> resourceUrls) {
-        this.resourceUrls = resourceUrls;
+        this.privilegeUrl = resourceUrls;
     }
 }

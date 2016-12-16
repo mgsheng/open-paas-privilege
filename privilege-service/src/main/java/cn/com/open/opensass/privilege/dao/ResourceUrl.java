@@ -12,6 +12,8 @@ public class ResourceUrl {
    /* private String key;*/
     /*url地址*/
     private String privilegeUrl;
+
+    private String childUrl;
     /*private String urlFun;*/
 
     /*private List<PrivilegeResource> privilegeResources;
@@ -54,5 +56,13 @@ public class ResourceUrl {
 
     public void setPrivilegeUrl(String privilegeUrl) {
         this.privilegeUrl = privilegeUrl;
+    }
+
+    public String getChildUrl() {
+        return childUrl;
+    }
+
+    public void setChildUrl(String childUrl) {
+        this.childUrl = childUrl;
     }
 }
