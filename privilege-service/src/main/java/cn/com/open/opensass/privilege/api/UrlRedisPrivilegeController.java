@@ -1,16 +1,18 @@
 package cn.com.open.opensass.privilege.api;
 
 import cn.com.open.opensass.privilege.dao.PrivilegeUrl;
-import cn.com.open.opensass.privilege.dao.ResourceUrl;
-import cn.com.open.opensass.privilege.dao.ResourceUrlData;
 import cn.com.open.opensass.privilege.dao.cache.RedisDao;
-import cn.com.open.opensass.privilege.model.*;
-import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
-import cn.com.open.opensass.privilege.service.*;
+import cn.com.open.opensass.privilege.model.PivilegeToken;
+import cn.com.open.opensass.privilege.model.PrivilegeFunction;
+import cn.com.open.opensass.privilege.model.PrivilegeResource;
+import cn.com.open.opensass.privilege.model.PrivilegeUser;
+import cn.com.open.opensass.privilege.service.PrivilegeFunctionService;
+import cn.com.open.opensass.privilege.service.PrivilegeResourceService;
+import cn.com.open.opensass.privilege.service.PrivilegeRoleResourceService;
+import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.WebUtils;
 import net.sf.json.JSONObject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +40,6 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
     private PrivilegeRoleResourceService privilegeRoleResourceService;
     @Autowired
     private PrivilegeResourceService privilegeResourceService;
-    @Autowired
-    private PrivilegeGroupService privilegeGroupService;
     @Autowired
     private PrivilegeFunctionService privilegeFunctionService;
 
