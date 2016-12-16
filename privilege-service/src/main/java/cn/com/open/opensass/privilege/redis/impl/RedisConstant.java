@@ -12,7 +12,7 @@ public class RedisConstant {
  /**
   * userPrivileges_appid_userid
   */
- public static final String USERPRIVILEGES_CACHE="userPrivileges_";
+ public static final String USERPRIVILEGES_CACHE="userUrl_";
  /*间隔符*/
  public static final String SIGN=" _";
 }
