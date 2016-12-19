@@ -30,7 +30,7 @@ public class RedisDao {
     /*构造函数初始化 不过期需要设置 privilege-service.properties redis.timeout=0 即可*/
     public RedisDao(JedisPoolConfig poolConfig, String host, int port, int timeout, String password)
     {
-        jedisPool = new JedisPool(poolConfig, host, port, timeout, password);
+        jedisPool = new JedisPool(poolConfig, host, port, 0, password);
     }
     private Schema schema  = RuntimeSchema.getSchema(PrivilegeUrl.class);
 
@@ -45,7 +45,7 @@ public class RedisDao {
     public String putUrlRedis(PrivilegeUrl privilegeUrl, String appid, String uid)
     {
         try{
-            Jedis jedis = jedisPool.getResource();
+            Jedis jedis = this.jedisPool.getResource();
             try{
                 String key = RedisConstant.USERPRIVILEGES_CACHE+appid+ RedisConstant.SIGN+uid;
                 byte[] bytes = ProtostuffIOUtil.toByteArray(privilegeUrl,schema,
@@ -56,6 +56,7 @@ public class RedisDao {
                 return result;
             }
             finally {
+                jedisPool.returnResource(jedis);
                 jedis.quit();
             }
         }
@@ -89,6 +90,7 @@ public class RedisDao {
                 }
             }
             finally {
+                jedisPool.returnResource(jedis);
                 jedis.quit();
             }
         }
@@ -108,13 +110,21 @@ public class RedisDao {
     public boolean deleteRedisKey(String appid, String uid)
     {
         try{
-            Jedis jedis = jedisPool.getResource();
+            Jedis jedis = this.jedisPool.getResource();
             try{
                 String key = RedisConstant.USERPRIVILEGES_CACHE+appid+ RedisConstant.SIGN+uid;
-                jedis.del(key);
-                return true;
+                if(jedis.exists(key))
+                {
+                    jedis.del(key);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             finally {
+                jedisPool.returnResource(jedis);
                 jedis.quit();
             }
         }
@@ -134,10 +144,10 @@ public class RedisDao {
     public boolean existUrlRedis(String url,String appid, String uid)
     {
         try{
-            Jedis jedis = jedisPool.getResource();
+            Jedis jedis = this.jedisPool.getResource();
             try{
                 String key = RedisConstant.USERPRIVILEGES_CACHE+appid+ RedisConstant.SIGN+uid;
-                //if(!jedis.exists(key)) return false;
+                if(!jedis.exists(key)) return false;
 
                 byte[] bytes = jedis.get(key.getBytes());
                 /*从缓存中获取到*/
@@ -167,6 +177,7 @@ public class RedisDao {
                 }
             }
             finally {
+                jedisPool.returnResource(jedis);
                 jedis.quit();
             }
         }
@@ -209,13 +220,14 @@ public class RedisDao {
     public boolean existKeyRedis(String appid, String uid)
     {
         try{
-            Jedis jedis = jedisPool.getResource();
+            Jedis jedis = this.jedisPool.getResource();
             try{
                 String key = RedisConstant.USERPRIVILEGES_CACHE+appid+ RedisConstant.SIGN+uid;
 
                 return jedis.exists(key);
             }
             finally {
+                jedisPool.returnResource(jedis);
                 jedis.quit();
             }
         }
