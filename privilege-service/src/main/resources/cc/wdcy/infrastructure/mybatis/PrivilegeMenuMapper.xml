@@ -13,7 +13,7 @@
 		<result column="menu_rule" property="menuRule" jdbcType="VARCHAR" />
 		<result column="menu_level" property="menuLevel" jdbcType="INTEGER" />
 		<result column="display_order" property="displayOrder" jdbcType="INTEGER" />
-		<result column="parent_id" property="parentId" jdbcType="INTEGER" />
+		<result column="parent_id" property="parentId" jdbcType="VARCHAR" />
 		<result column="resource_type" property="resourceType" jdbcType="INTEGER" />
 	</resultMap>
 	<sql id="Insert_Column_List">
