@@ -24,6 +24,9 @@ import java.util.Map;
 /**
  * redis menu 接口
  * 获取数据：getMenu?appId=&appUserId=
+ * 更新数据：updateMenu?appId=&appUserId=
+ * 删除数据：deleteMenu?appId=&appUserId=
+ * key是否存在：existMenuKey?appId=&appUserId=
  */
 @Controller
 @RequestMapping("/menu/")
