@@ -13,6 +13,11 @@ public class RedisConstant {
   * userPrivileges_appid_userid
   */
  public static final String USERPRIVILEGES_CACHE="userPrivilegeUrl_";
+
+ /**
+  * userCacheMenu_appid_userid
+  */
+ public static final String USERMENU_CACHE="userCacheMenu_";
  /*间隔符*/
  public static final String SIGN="_";
 }

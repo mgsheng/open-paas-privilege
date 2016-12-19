@@ -42,6 +42,16 @@
          and app_id=#{appId}
          limit #{startRow},#{pageSize} 
 	</select>
+    <select id="getMenuById" resultMap="privilegeMenuMap" flushCache="true">
+        select * from privilege_menu
+        where  id = #{menuId}
+    </select>
+    <select id="getMenuListByUserId" resultMap="privilegeMenuMap" flushCache="true">
+        SELECT e.* FROM privilege_user a,privilege_user_role b,privilege_role_resource c,privilege_resource    d,privilege_menu e
+WHERE a.app_userid=#{appUserId}
+         and a.app_id=#{appId}
+AND a.uid=b.user_id AND b.privilege_roleid=c.privilege_roleid AND c.resource_id=d.resource_id AND d.menu_id=e.id
+    </select>
     <update id="updatePrivilegeMenu" parameterType="PrivilegeMenu" flushCache="true">
         update privilege_menu set
         <if test="menuCode != null and menuCode !=''">

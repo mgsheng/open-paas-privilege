@@ -19,4 +19,17 @@ public interface PrivilegeMenuRepository extends Repository {
 	void updatePrivilegeMenu(PrivilegeMenu privilegeMenu);
 	void deleteByMenuId(@Param("menuId")String menuId);
 	List<PrivilegeMenu> findMenuPage(@Param("menuId")String menuId,@Param("appId")String appId,@Param("startRow")String startRow,@Param("pageSize")String pageSize);
+
+	/**
+	 * 根据用户ID获取菜单列表
+	 * @param appUserId
+	 * @return
+	 */
+	List<PrivilegeMenu> getMenuListByUserId(@Param("appUserId")String appUserId,@Param("appId")String appId);
+	/**
+	 * 根据表ID获取菜单
+	 * @param menuId
+	 * @return
+	 */
+	PrivilegeMenu getMenuById(@Param("menuId")String menuId);
 }

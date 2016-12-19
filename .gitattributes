@@ -152,6 +152,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/api/MenuAddPrivil
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/MenuDelPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/MenuGetPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/MenuModifyPrivilegeController.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/api/MenuRedisPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/ResourceAddPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/ResourceDelPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/ResourceModifyPrivilegeController.java -text
@@ -257,6 +258,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/testDemo.ja
 privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeAjaxMessage.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeGroupResourceVo.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeGroupVo.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeMenuVo.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeResourceVo.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeRoleVo.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeUserVo.java -text

@@ -42,12 +42,12 @@ public class RedisDao {
      * @param uid
      * @return
      */
-    public String putUrlRedis(PrivilegeUrl privilegeUrl, String appid, String uid)
+    public String putUrlRedis(String prefix,PrivilegeUrl privilegeUrl, String appid, String uid)
     {
         try{
             Jedis jedis = this.jedisPool.getResource();
             try{
-                String key = RedisConstant.USERPRIVILEGES_CACHE+appid+ RedisConstant.SIGN+uid;
+                String key = prefix+appid+ RedisConstant.SIGN+uid;
                 byte[] bytes = ProtostuffIOUtil.toByteArray(privilegeUrl,schema,
                         LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE));
                 /*超时缓存*/
@@ -73,13 +73,13 @@ public class RedisDao {
      * @param uid
      * @return
      */
-    public String getUrlRedis(String appid, String uid)
+    public String getUrlRedis(String prefix,String appid, String uid)
     {
         try
         {
             Jedis jedis = jedisPool.getResource();
             try{
-                String key = RedisConstant.USERPRIVILEGES_CACHE+appid+ RedisConstant.SIGN+uid;
+                String key = prefix+appid+ RedisConstant.SIGN+uid;
                 byte[] bytes = jedis.get(key.getBytes());
                 /*从缓存中获取到*/
                 if (null != bytes)
@@ -107,12 +107,12 @@ public class RedisDao {
      * @param uid
      * @return
      */
-    public boolean deleteRedisKey(String appid, String uid)
+    public boolean deleteRedisKey(String prefix,String appid, String uid)
     {
         try{
             Jedis jedis = this.jedisPool.getResource();
             try{
-                String key = RedisConstant.USERPRIVILEGES_CACHE+appid+ RedisConstant.SIGN+uid;
+                String key = prefix+appid+ RedisConstant.SIGN+uid;
                 if(jedis.exists(key))
                 {
                     jedis.del(key);
@@ -141,12 +141,12 @@ public class RedisDao {
      * @param uid
      * @return
      */
-    public boolean existUrlRedis(String url,String appid, String uid)
+    public boolean existUrlRedis(String prefix,String jsonKeyName,String url,String appid, String uid)
     {
         try{
-            Jedis jedis = this.jedisPool.getResource();
+            Jedis jedis = jedisPool.getResource();
             try{
-                String key = RedisConstant.USERPRIVILEGES_CACHE+appid+ RedisConstant.SIGN+uid;
+                String key = prefix+appid+ RedisConstant.SIGN+uid;
                 if(!jedis.exists(key)) return false;
 
                 byte[] bytes = jedis.get(key.getBytes());
@@ -165,7 +165,7 @@ public class RedisDao {
                             url = url.split("\\?")[0];
                             System.out.println(url);
                         }
-                        ArrayList<String> stringArrayList = getStringFromJson(urlJson);
+                        ArrayList<String> stringArrayList = getStringFromJson(urlJson,jsonKeyName);
                         for (String str : stringArrayList)
                         {
                             if(str.indexOf(url)>-1)
@@ -187,7 +187,7 @@ public class RedisDao {
         }
         return false;
     }
-    private ArrayList<String> getStringFromJson(String json)
+    private ArrayList<String> getStringFromJson(String json,String jsonKeyName)
     {
         ArrayList<String> arrayList = new ArrayList<String>();
         Map map=new HashMap();
@@ -197,7 +197,7 @@ public class RedisDao {
         jc.setArrayMode(JsonConfig.MODE_LIST);
 
         JSONObject jobj=JSONObject.fromObject(json,jc);
-        String obj = jobj.get("urlList").toString();
+        String obj = jobj.get(jsonKeyName).toString();
         if(obj != null && obj.length()>0)
         {
             obj = obj.substring(1,obj.length()-1);
@@ -217,12 +217,12 @@ public class RedisDao {
      * @return
      */
 
-    public boolean existKeyRedis(String appid, String uid)
+    public boolean existKeyRedis(String prefix,String appid, String uid)
     {
         try{
             Jedis jedis = this.jedisPool.getResource();
             try{
-                String key = RedisConstant.USERPRIVILEGES_CACHE+appid+ RedisConstant.SIGN+uid;
+                String key = prefix+appid+ RedisConstant.SIGN+uid;
 
                 return jedis.exists(key);
             }

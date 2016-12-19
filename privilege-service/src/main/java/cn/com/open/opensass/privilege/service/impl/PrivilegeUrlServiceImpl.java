@@ -6,6 +6,7 @@ import cn.com.open.opensass.privilege.dao.cache.RedisDao;
 import cn.com.open.opensass.privilege.model.PrivilegeFunction;
 import cn.com.open.opensass.privilege.model.PrivilegeResource;
 import cn.com.open.opensass.privilege.model.PrivilegeUser;
+import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import cn.com.open.opensass.privilege.service.*;
 import cn.com.open.opensass.privilege.tools.WebUtils;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
@@ -23,6 +24,8 @@ import java.util.*;
 @Service("privilegeUrlService")
 public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
     private static final Logger log = LoggerFactory.getLogger(UrlRedisPrivilegeController.class);
+    private static final String prifix = RedisConstant.USERPRIVILEGES_CACHE;
+    private static final String jsonKeyName = "jsonKeyName";
     @Autowired
     private RedisDao redisDao;
     @Autowired
@@ -45,15 +48,15 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
             return ajaxMessage;
         }
         /*缓存中是否存在*/
-        String urlJedis = redisDao.getUrlRedis(appId, privilegeUser.getuId());
+        String urlJedis = redisDao.getUrlRedis(prifix,appId, privilegeUser.getuId());
         log.info("getDataPrivilege接口读取redis数据："+urlJedis);
         if (null == urlJedis && "" != urlJedis) {
             PrivilegeUrl privilegeUrl = getPrivilegeUrl(appId, appUserId, privilegeUser);
             /*写入redis*/
             log.info("getDataPrivilege接口获取数据并写入redis数据开始");
-            redisDao.putUrlRedis(privilegeUrl, appId, privilegeUser.getuId());
+            redisDao.putUrlRedis(prifix,privilegeUrl, appId, privilegeUser.getuId());
             /*读取redis*/
-            urlJedis = redisDao.getUrlRedis(appId, privilegeUser.getuId());
+            urlJedis = redisDao.getUrlRedis(prifix,appId, privilegeUser.getuId());
             log.info("getDataPrivilege接口获取数据并写入，读取redis数据开始："+urlJedis);
         }
         if (null != urlJedis && urlJedis.length() > 0) {
@@ -80,14 +83,14 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
         }
         /*删除redis健值*/
         log.info("updateDataPrivilege删除redis数据");
-        redisDao.deleteRedisKey(appId, privilegeUser.getuId());
+        redisDao.deleteRedisKey(RedisConstant.USERPRIVILEGES_CACHE,appId, privilegeUser.getuId());
 
         log.info("updateDataPrivilege写入redis数据");
         PrivilegeUrl privilegeUrl = getPrivilegeUrl(appId, appUserId, privilegeUser);
         /*写入redis*/
-        redisDao.putUrlRedis(privilegeUrl, appId, privilegeUser.getuId());
+        redisDao.putUrlRedis(prifix,privilegeUrl, appId, privilegeUser.getuId());
         /*读取redis*/
-        String urlJedis = redisDao.getUrlRedis(appId, privilegeUser.getuId());
+        String urlJedis = redisDao.getUrlRedis(prifix,appId, privilegeUser.getuId());
         log.info("updateDataPrivilege读取redis数据====="+urlJedis);
 
         if (null != urlJedis && urlJedis.length() > 0) {
@@ -106,7 +109,7 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
         PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
          /*获取用户UID*/
         log.info("deleteDataPrivilege删除redis数据");
-        boolean ok = redisDao.deleteRedisKey(appId, appUserId);
+        boolean ok = redisDao.deleteRedisKey(prifix,appId, appUserId);
         ajaxMessage.setCode("1");
         ajaxMessage.setMessage(ok?"Success":"Failed");
         return ajaxMessage;
@@ -116,7 +119,7 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
     public PrivilegeAjaxMessage existRedisUrl(String appId, String appUserId, String url) {
         PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
         /*获取用户UID*/
-        boolean exist = redisDao.existUrlRedis(url, appId, appUserId);
+        boolean exist = redisDao.existUrlRedis(prifix,jsonKeyName,url, appId, appUserId);
         log.info("existUrlPrivilege==url是否存在："+exist);
         ajaxMessage.setCode("1");
         ajaxMessage.setMessage(exist?"exist":"no exist");
@@ -128,7 +131,7 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
         PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
          /*获取用户UID*/
         log.info("deleteDataPrivilege删除redis数据");
-        boolean exist = redisDao.existKeyRedis(appId, appUserId);
+        boolean exist = redisDao.existKeyRedis(prifix,appId, appUserId);
         ajaxMessage.setCode("1");
         ajaxMessage.setMessage(exist?"exist":"no exist");
         return ajaxMessage;
