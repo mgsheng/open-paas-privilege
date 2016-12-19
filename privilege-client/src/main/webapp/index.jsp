@@ -109,6 +109,16 @@
           <li>
             <p><a href="delResource">资源删除</a> <br/>资源删除接口</p>
         </li>
+          <li>
+            <p><a href="addFunction">权限功能添加接口</a> <br/>权限功能添加接口</p>
+        </li>
+         <li>
+            <p><a href="modifyFunction">权限功能修改接口</a> <br/>权限功能修改接口</p>
+        </li>
+          <li>
+            <p><a href="delFunction">权限功能删除接口</a> <br/>权限功能删除接口</p>
+        </li>
+        
       
     </ul>
 </div>

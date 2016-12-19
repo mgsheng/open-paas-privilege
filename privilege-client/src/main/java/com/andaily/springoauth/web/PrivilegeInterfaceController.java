@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.andaily.springoauth.service.dto.PrivilegeFunctionDto;
 import com.andaily.springoauth.service.dto.PrivilegeGroupDto;
 import com.andaily.springoauth.service.dto.PrivilegeMenuDto;
 import com.andaily.springoauth.service.dto.PrivilegeResourceDto;
@@ -71,6 +72,16 @@ public class PrivilegeInterfaceController {
 	
 	@Value("#{properties['privilege-resource-del-uri']}")
 	private String privilegeResourceDelUrl;
+	
+	@Value("#{properties['privilege-function-add-uri']}")
+	private String privilegeFunctionAddUrl;
+	
+	@Value("#{properties['privilege-function-modify-uri']}")	
+	private String privilegeFunctionModifyUrl;
+	
+	
+	@Value("#{properties['privilege-function-del-uri']}")
+	private String privilegeFunctionDelUrl;
 	final static String SEPARATOR = "&";
 	private Map<String, String> map = LoadPopertiesFile.loadProperties();
 
@@ -267,6 +278,63 @@ public class PrivilegeInterfaceController {
 		return "redirect:" + fullUri;
 	}
 
+
+	/**
+	 *权限功能添加接口
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "addFunction", method = RequestMethod.GET)
+	public String addFunction(Model model) {
+		model.addAttribute("privilegeFunctionAddUrl", privilegeFunctionAddUrl);
+		return "privilege/privilege_function_add";
+	}
+
+	@RequestMapping(value = "addFunction", method = RequestMethod.POST)
+	public String addFunction(PrivilegeFunctionDto privilegeFunctionDto)
+			throws Exception {
+		final String fullUri = privilegeFunctionDto.getFullUri();
+		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+		return "redirect:" + fullUri;
+	}
+	/**
+	 *权限功能编辑接口
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "modifyFunction", method = RequestMethod.GET)
+	public String modifyFunction(Model model) {
+		model.addAttribute("privilegeFunctionModifyUrl", privilegeFunctionModifyUrl);
+		return "privilege/privilege_function_modify";
+	}
+	@RequestMapping(value = "modifyFunction", method = RequestMethod.POST)
+	public String modifyFunction(PrivilegeFunctionDto privilegeFunctionDto)
+			throws Exception {
+		final String fullUri = privilegeFunctionDto.getModifyUri();
+		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+		return "redirect:" + fullUri;
+	}
+	/**
+	 *权限功能删除接口
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "delFunction", method = RequestMethod.GET)
+	public String delFunction(Model model) {
+		model.addAttribute("privilegeFunctionDelUrl", privilegeFunctionDelUrl);
+		return "privilege/privilege_function_del";
+	}
+
+	@RequestMapping(value = "delFunction", method = RequestMethod.POST)
+	public String delFunction(PrivilegeFunctionDto privilegeFunctionDto)
+			throws Exception {
+		final String fullUri = privilegeFunctionDto.getDelUri();
+		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+		return "redirect:" + fullUri;
+	}
 
 	/**
 	 * 获取 HMAC-SHA1 签名方法对对encryptText进行签名 值

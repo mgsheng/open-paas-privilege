@@ -29,6 +29,7 @@ privilege-client/src/main/java/com/andaily/springoauth/service/dto/AuthCallbackD
 privilege-client/src/main/java/com/andaily/springoauth/service/dto/AuthorizationCodeDto.java -text
 privilege-client/src/main/java/com/andaily/springoauth/service/dto/DirctPayDto.java -text
 privilege-client/src/main/java/com/andaily/springoauth/service/dto/OrderRefund.java -text
+privilege-client/src/main/java/com/andaily/springoauth/service/dto/PrivilegeFunctionDto.java -text
 privilege-client/src/main/java/com/andaily/springoauth/service/dto/PrivilegeGroupDto.java -text
 privilege-client/src/main/java/com/andaily/springoauth/service/dto/PrivilegeGroupResourceDto.java -text
 privilege-client/src/main/java/com/andaily/springoauth/service/dto/PrivilegeMenuDto.java -text
@@ -82,6 +83,9 @@ privilege-client/src/main/webapp/WEB-INF/jsp/privilege/get_privilege_role.jsp -t
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/get_privilege_user_role.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/modi_privilege_role.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/modi_privilege_user_role.jsp -text
+privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_function_add.jsp -text
+privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_function_del.jsp -text
+privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_function_modify.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_group_add.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_group_del.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_group_modify.jsp -text
