@@ -30,7 +30,7 @@ public class RedisDao {
     /*构造函数初始化 不过期需要设置 privilege-service.properties redis.timeout=0 即可*/
     public RedisDao(JedisPoolConfig poolConfig, String host, int port, int timeout, String password)
     {
-        jedisPool = new JedisPool(poolConfig, host, port, 0, password);
+        jedisPool = new JedisPool(poolConfig, host, port, timeout, password);
     }
     private Schema schema  = RuntimeSchema.getSchema(PrivilegeUrl.class);
 
@@ -45,7 +45,7 @@ public class RedisDao {
     public String putUrlRedis(String prefix,PrivilegeUrl privilegeUrl, String appid, String uid)
     {
         try{
-            Jedis jedis = this.jedisPool.getResource();
+            Jedis jedis = jedisPool.getResource();
             try{
                 String key = prefix+appid+ RedisConstant.SIGN+uid;
                 byte[] bytes = ProtostuffIOUtil.toByteArray(privilegeUrl,schema,
@@ -80,13 +80,16 @@ public class RedisDao {
             Jedis jedis = jedisPool.getResource();
             try{
                 String key = prefix+appid+ RedisConstant.SIGN+uid;
-                byte[] bytes = jedis.get(key.getBytes());
-                /*从缓存中获取到*/
-                if (null != bytes)
+                if(jedis.exists(key))
                 {
-                    PrivilegeUrl privilegeUrl = (PrivilegeUrl) schema.newMessage();
-                    ProtostuffIOUtil.mergeFrom(bytes,privilegeUrl,schema);
-                    return  privilegeUrl.getPrivilegeUrl();
+                    byte[] bytes = jedis.get(key.getBytes());
+                    /*从缓存中获取到*/
+                    if (null != bytes)
+                    {
+                        PrivilegeUrl privilegeUrl = (PrivilegeUrl) schema.newMessage();
+                        ProtostuffIOUtil.mergeFrom(bytes,privilegeUrl,schema);
+                        return  privilegeUrl.getPrivilegeUrl();
+                    }
                 }
             }
             finally {
@@ -110,7 +113,7 @@ public class RedisDao {
     public boolean deleteRedisKey(String prefix,String appid, String uid)
     {
         try{
-            Jedis jedis = this.jedisPool.getResource();
+            Jedis jedis = jedisPool.getResource();
             try{
                 String key = prefix+appid+ RedisConstant.SIGN+uid;
                 if(jedis.exists(key))
@@ -220,7 +223,7 @@ public class RedisDao {
     public boolean existKeyRedis(String prefix,String appid, String uid)
     {
         try{
-            Jedis jedis = this.jedisPool.getResource();
+            Jedis jedis = jedisPool.getResource();
             try{
                 String key = prefix+appid+ RedisConstant.SIGN+uid;
 

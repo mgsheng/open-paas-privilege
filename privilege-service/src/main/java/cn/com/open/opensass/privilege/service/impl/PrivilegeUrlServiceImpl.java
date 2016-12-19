@@ -25,7 +25,7 @@ import java.util.*;
 public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
     private static final Logger log = LoggerFactory.getLogger(UrlRedisPrivilegeController.class);
     private static final String prifix = RedisConstant.USERPRIVILEGES_CACHE;
-    private static final String jsonKeyName = "jsonKeyName";
+    private static final String jsonKeyName = "urlList";
     @Autowired
     private RedisDao redisDao;
     @Autowired
@@ -48,15 +48,16 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
             return ajaxMessage;
         }
         /*缓存中是否存在*/
-        String urlJedis = redisDao.getUrlRedis(prifix,appId, privilegeUser.getuId());
+        String urlJedis = redisDao.getUrlRedis(prifix,appId, appUserId);
         log.info("getDataPrivilege接口读取redis数据："+urlJedis);
-        if (null == urlJedis && "" != urlJedis) {
+        if(null == urlJedis || urlJedis.length()<=0) {
             PrivilegeUrl privilegeUrl = getPrivilegeUrl(appId, appUserId, privilegeUser);
             /*写入redis*/
             log.info("getDataPrivilege接口获取数据并写入redis数据开始");
-            redisDao.putUrlRedis(prifix,privilegeUrl, appId, privilegeUser.getuId());
+            redisDao.putUrlRedis(prifix,privilegeUrl, appId, appUserId);
+
             /*读取redis*/
-            urlJedis = redisDao.getUrlRedis(prifix,appId, privilegeUser.getuId());
+            urlJedis = redisDao.getUrlRedis(prifix,appId, appUserId);
             log.info("getDataPrivilege接口获取数据并写入，读取redis数据开始："+urlJedis);
         }
         if (null != urlJedis && urlJedis.length() > 0) {
@@ -65,7 +66,7 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
             return ajaxMessage;
         } else {
             ajaxMessage.setCode("0");
-            ajaxMessage.setMessage("NO REDIS DATA");
+            ajaxMessage.setMessage("NULL");
             return ajaxMessage;
         }
     }
@@ -78,30 +79,14 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
         log.info("updateDataPrivilege用户数据，appid="+appId+",用户Id="+appUserId);
         if (null == privilegeUser) {
             ajaxMessage.setCode("0");
-            ajaxMessage.setMessage("User Is Null");
+            ajaxMessage.setMessage("USER-NULL");
             return ajaxMessage;
         }
-        /*删除redis健值*/
+
+             /*删除redis健值*/
         log.info("updateDataPrivilege删除redis数据");
-        redisDao.deleteRedisKey(RedisConstant.USERPRIVILEGES_CACHE,appId, privilegeUser.getuId());
-
-        log.info("updateDataPrivilege写入redis数据");
-        PrivilegeUrl privilegeUrl = getPrivilegeUrl(appId, appUserId, privilegeUser);
-        /*写入redis*/
-        redisDao.putUrlRedis(prifix,privilegeUrl, appId, privilegeUser.getuId());
-        /*读取redis*/
-        String urlJedis = redisDao.getUrlRedis(prifix,appId, privilegeUser.getuId());
-        log.info("updateDataPrivilege读取redis数据====="+urlJedis);
-
-        if (null != urlJedis && urlJedis.length() > 0) {
-            ajaxMessage.setCode("1");
-            ajaxMessage.setMessage(urlJedis);
-            return ajaxMessage;
-        } else {
-            ajaxMessage.setCode("0");
-            ajaxMessage.setMessage("NO REDIS DATA");
-            return ajaxMessage;
-        }
+        redisDao.deleteRedisKey(prifix,appId, appUserId);
+        return getRedisUrl(appId,appUserId);
     }
 
     @Override
@@ -122,7 +107,7 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
         boolean exist = redisDao.existUrlRedis(prifix,jsonKeyName,url, appId, appUserId);
         log.info("existUrlPrivilege==url是否存在："+exist);
         ajaxMessage.setCode("1");
-        ajaxMessage.setMessage(exist?"exist":"no exist");
+        ajaxMessage.setMessage(exist?"TRUE":"FALSE");
         return ajaxMessage;
     }
 
@@ -133,7 +118,7 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
         log.info("deleteDataPrivilege删除redis数据");
         boolean exist = redisDao.existKeyRedis(prifix,appId, appUserId);
         ajaxMessage.setCode("1");
-        ajaxMessage.setMessage(exist?"exist":"no exist");
+        ajaxMessage.setMessage(exist?"TRUE":"FALSE");
         return ajaxMessage;
     }
 
@@ -198,7 +183,7 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 
         PrivilegeUrl privilegeUrl = new PrivilegeUrl();
         Map b = new HashMap();
-        b.put("urlList", setUrl);
+        b.put(jsonKeyName, setUrl);
         String data = JSONObject.fromObject(b).toString();
         privilegeUrl.setPrivilegeUrl(data);
         return privilegeUrl;

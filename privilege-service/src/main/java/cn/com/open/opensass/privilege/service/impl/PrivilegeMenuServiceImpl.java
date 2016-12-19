@@ -97,10 +97,21 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 		if(null == menuJedis || menuJedis.length()<=0)
 		{
 			List<PrivilegeMenu> privilegeMenuList = getMenuListByUserId(appUserId,appId);
-
+			if(privilegeMenuList.size()<=0)
+            {
+                ajaxMessage.setCode("0");
+                ajaxMessage.setMessage("MENU-IS-NULL");
+                return ajaxMessage;
+            }
 			Set<PrivilegeMenuVo> privilegeMenuListReturn = new HashSet<PrivilegeMenuVo>();
 
 			Set<PrivilegeMenuVo> privilegeMenuListData = getAllMenuByUserId(privilegeMenuList,privilegeMenuListReturn);  /*缓存中是否存在*/
+            if(privilegeMenuListData.size()<=0)
+            {
+                ajaxMessage.setCode("0");
+                ajaxMessage.setMessage("MENU-IS-NULL");
+                return ajaxMessage;
+            }
 
 			PrivilegeUrl privilegeUrl = new PrivilegeUrl();
 			Map<Object, Object> map = new HashMap<Object, Object>();
@@ -121,7 +132,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 			return ajaxMessage;
 		} else {
 			ajaxMessage.setCode("0");
-			ajaxMessage.setMessage("NO REDIS DATA");
+			ajaxMessage.setMessage("NULL");
 			return ajaxMessage;
 		}
 	}
@@ -141,7 +152,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 		PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
 		boolean menuKeyExist = redisDao.deleteRedisKey(prefix,appId,appUserId);
 		ajaxMessage.setCode("1");
-		ajaxMessage.setMessage("Success");
+		ajaxMessage.setMessage(menuKeyExist?"Success":"Failed");
 		log.info("delMenuRedis接口删除key："+menuKeyExist);
 		return ajaxMessage;
 
@@ -154,7 +165,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 		log.info("existMenuKey是否存在redis数据");
 		boolean exist = redisDao.existKeyRedis(prefix,appId, appUserId);
 		ajaxMessage.setCode("1");
-		ajaxMessage.setMessage(exist?"exist":"no exist");
+		ajaxMessage.setMessage(exist?"TRUE":"FALSE");
 		return ajaxMessage;
 	}
 

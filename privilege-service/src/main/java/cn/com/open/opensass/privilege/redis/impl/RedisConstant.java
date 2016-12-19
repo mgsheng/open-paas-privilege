@@ -17,7 +17,7 @@ public class RedisConstant {
  /**
   * userPrivileges_appid_userid
   */
- public static final String USERPRIVILEGES_CACHE=PUBLICSERVICE_CACHE+"userPrivilegeUrl_";
+ public static final String USERPRIVILEGES_CACHE=PUBLICSERVICE_CACHE+"userCacheUrl_";
 
  /**
   * userCacheMenu_appid_userid
