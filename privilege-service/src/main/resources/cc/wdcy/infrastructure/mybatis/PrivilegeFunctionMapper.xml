@@ -23,5 +23,46 @@
         SELECT * FROM  privilege_function
         where  id = #{functionId}
     </select>
-
+    
+    <select id="findFunctionPage" resultMap="privilegeFunctionMap" flushCache="true">
+         select * from privilege_function
+         where  function_code = #{FunctionCode}
+         limit #{startRow},#{pageSize} 
+	</select>
+    <update id="updatePrivilegeFunction" parameterType="PrivilegeFunction" flushCache="true">
+        update privilege_function set
+        <if test="resourceId != null and resourceId !=''">
+        resource_id = #{resourceId},
+        </if>
+         <if test="operationId != null and operationId !=''" >
+        operation_id = #{operationId},
+        </if>
+        <if test="optUrl != null and optUrl !=''" >
+        opt_url = #{optUrl},
+        </if>
+         <if test="createUser != null  and createUser !=''" >
+        create_user = #{createUser},
+        </if>
+         <if test="createUserId != null  and createUserId !=''" >
+        create_userid = #{createUserId},
+        </if>
+        create_time=#{createTime}
+        where id = #{id}
+    </update>
+	<insert id="savePrivilegeFunction" parameterType="PrivilegeFunction" flushCache="true">
+        insert into privilege_function
+        (id,resource_id,operation_id,opt_url,create_time,create_user,create_userid)
+        values
+        (#{id},#{resourceId},#{operationId},#{optUrl},#{createTime},#{createUser},#{createUserId})
+    </insert>
+	 <delete id="deleteByFunctionId">
+        delete from privilege_function where id=#{functionId}
+    </delete>
+   
+  <delete id="deleteByFunctionIds">
+        delete from privilege_function where id in
+        <foreach item="item" index="index" collection="functionIds" open="(" separator="," close=")">  
+          #{item}  
+        </foreach>
+    </delete>
 </mapper>
