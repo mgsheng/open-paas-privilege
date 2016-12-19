@@ -10,14 +10,19 @@ public class RedisConstant {
  public static final String USER_CACHE_INFO="userCacheInfo_";//存储方式：key:userCacheInfo_username value:""
 
  /**
+  * 公共缓存前缀名
+  */
+ public static final String PUBLICSERVICE_CACHE="privilegeCacheService_";
+
+ /**
   * userPrivileges_appid_userid
   */
- public static final String USERPRIVILEGES_CACHE="userPrivilegeUrl_";
+ public static final String USERPRIVILEGES_CACHE=PUBLICSERVICE_CACHE+"userPrivilegeUrl_";
 
  /**
   * userCacheMenu_appid_userid
   */
- public static final String USERMENU_CACHE="userCacheMenu_";
+ public static final String USERMENU_CACHE=PUBLICSERVICE_CACHE+"userCacheMenu_";
  /*间隔符*/
  public static final String SIGN="_";
 }
