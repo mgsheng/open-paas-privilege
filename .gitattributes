@@ -137,6 +137,9 @@ privilege-service/.settings/org.eclipse.wst.common.project.facet.core.xml -text
 privilege-service/.settings/org.eclipse.wst.jsdt.ui.superType.container -text
 privilege-service/.settings/org.eclipse.wst.jsdt.ui.superType.name -text
 privilege-service/pom.xml -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/api/FunctionAddPrivilegeController.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/api/FunctionDelPrivilegeController.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/api/FunctionModifyPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/GroupAddPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/GroupDelPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/GroupGetPrivilegeController.java -text

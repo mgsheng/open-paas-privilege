@@ -30,7 +30,7 @@
         <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeUserMapper.xml"/>
         <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeUserRoleMapper.xml"/>
         <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeResourceMapper.xml"/>
-        <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeFunctionMapper.xml"/>
+       <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeFunctionMapper.xml"/> 
     </mappers>
 
 </configuration>
