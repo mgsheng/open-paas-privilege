@@ -84,7 +84,7 @@ public class ResourceAddPrivilegeController extends BaseControllerUtil{
     	Boolean f= privilegeResourceService.savePrivilegeResource(pr);
     	if(f){
     		map.put("status","1");
-    		map.put("menuId", pr.id());
+    		map.put("resourceId", pr.id());
     	}else{
     		map.put("status","0");
     		map.put("error_code","10001");

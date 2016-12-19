@@ -256,6 +256,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/test.java -
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/test1.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/testDemo.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeAjaxMessage.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeFunctionVo.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeGroupResourceVo.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeGroupVo.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeMenuVo.java -text

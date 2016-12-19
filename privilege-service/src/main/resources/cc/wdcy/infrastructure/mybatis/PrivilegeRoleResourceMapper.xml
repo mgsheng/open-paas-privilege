@@ -33,6 +33,31 @@
         (#{privilegeRoleId},#{resourceId},#{privilegeFunId},#{createUser},#{createUserId},#{status},#{createTime})
     </insert>
     
+   <update id="updateRoleResourceByRoleId" parameterType="PrivilegeRoleResource" flushCache="true">
+        update privilege_role_resource  
+        <trim prefix="set" suffixOverrides=","> 
+        <if test="privilegeRoleId != null and privilegeRoleId !=''" >
+        privilege_roleid = #{privilegeRoleId},
+        </if>
+        <if test="resourceId != null and resourceId !=''" >
+        resource_id = #{resourceId},
+        </if>
+         <if test="createUser != null and createUser !=''" >
+        create_user = #{createUser},
+        </if>
+         <if test="createUserId != null and createUserId !=''" >
+        create_userid = #{createUserId},
+        </if>
+         <if test="privilegeFunId != null and privilegeFunId!=''" >
+        privilege_funid = #{privilegeFunId},
+        </if>
+        <if test="status != null" >
+        status = #{status}
+        </if>
+       </trim>
+       where Id = #{id}
+     </update> 
+    
     <delete id="delPrivilegeRoleResource" parameterType="PrivilegeRoleResource">
         delete from privilege_role_resource where id=#{id}
     </delete>

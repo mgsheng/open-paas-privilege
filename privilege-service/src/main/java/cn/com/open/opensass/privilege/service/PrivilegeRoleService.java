@@ -15,7 +15,11 @@ public interface PrivilegeRoleService {
 
 	Boolean delPrivilegeRoleById(String privilegeRoleId);
 
-	void updatePrivilegeRole(PrivilegeRole privilegeRole);
+	Boolean updatePrivilegeRole(PrivilegeRole privilegeRole);
 
 	List<String> findRoleByAppId(String appId);
+
+	List<PrivilegeRole> findRoleByPage(String privilegeRoleId, String appId,int start, int limit);
+
+	int findRoleNoPage(String privilegeRoleId, String appId);
 }

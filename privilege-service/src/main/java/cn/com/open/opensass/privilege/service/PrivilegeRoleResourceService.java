@@ -21,4 +21,6 @@ public interface PrivilegeRoleResourceService {
 	PrivilegeRoleResource findByRoleIdAndResourceId(String privilegeRoleId,String roleResource);
 
 	ArrayList<String> findUserResourcesFunId(String appId, String appUserId);
+
+	Boolean updatePrivilegeRoleResource(PrivilegeRoleResource roleResource1);
 }

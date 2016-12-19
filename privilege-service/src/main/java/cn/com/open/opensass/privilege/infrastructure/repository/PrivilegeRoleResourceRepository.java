@@ -26,4 +26,6 @@ public interface PrivilegeRoleResourceRepository extends Repository {
 	PrivilegeRoleResource findByRoleIdAndResourceId(String privilegeRoleId,String resourceId);
 
 	ArrayList<String> findUserResourcesFunId(@Param("appId") String appId, @Param("appUserId") String appUserId);
+
+	void updateRoleResourceByRoleId(PrivilegeRoleResource roleResource1);
 }

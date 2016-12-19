@@ -68,4 +68,14 @@ public class PrivilegeRoleResourceServiceImpl implements PrivilegeRoleResourceSe
 		}
 	}
 
+	@Override
+	public Boolean updatePrivilegeRoleResource(PrivilegeRoleResource roleResource1) {
+		try{
+			privilegeRoleResourceRepository.updateRoleResourceByRoleId(roleResource1);
+			return true;
+		}catch(Exception e){
+			return false;
+		}
+	}
+
 }

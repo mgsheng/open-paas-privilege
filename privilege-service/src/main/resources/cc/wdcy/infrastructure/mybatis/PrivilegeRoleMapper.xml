@@ -45,6 +45,23 @@
 		select privilege_roleid from privilege_role where app_id = #{appId}
 	</select>
 	
+	<select id="findRoleByPage" resultMap="privilegeRoleMap" flushCache="true">
+		select * from privilege_role 
+		where app_id = #{appId}
+		<if test="privilegeRoleId!=null and privilegeRoleId!=''">
+		and privilege_roleid in (#{privilegeRoleId})
+		</if>
+		limit #{start},#{limit}
+	</select>
+	
+	<select id="findRoleNoPage" resultMap="privilegeRoleMap" flushCache="true">
+		select * from privilege_role 
+		where app_id = #{appId}
+		<if test="privilegeRoleId!=null and privilegeRoleId!=''">
+		and privilege_roleid in (#{privilegeRoleId})
+		</if>
+	</select>
+	
     <update id="updatePrivilegeRole" parameterType="PrivilegeRole" flushCache="true">
         update privilege_role
         <trim prefix="set" suffixOverrides=",">
@@ -76,7 +93,7 @@
         create_user = #{createUser},
         </if>
          <if test="createUserId != null and createUserId !=''" >
-        create_serid = #{createUserId},
+        create_userid = #{createUserId},
         </if>
          <if test="createTime != null" >
         create_time = #{createTime},
@@ -97,7 +114,7 @@
 	<insert id="savePrivilegeRole" parameterType="PrivilegeRole" useGeneratedKeys="true" keyProperty="privilegeRoleId">
         insert into privilege_role (privilege_roleid,role_name,app_id,dept_id,group_id,group_name,dept_name,role_level,role_type,remark,create_user,create_userid,status,create_time)
         values
-        (#{privilegeRoleId},#{roleName},#{appId},#{deptId},#{groupId},#{groupName},#{deptName},#{roleLevel},#{role_type},#{remark},#{createUser},#{createUserId},#{status},#{createTime})
+        (#{privilegeRoleId},#{roleName},#{appId},#{deptId},#{groupId},#{groupName},#{deptName},#{roleLevel},#{roleType},#{remark},#{createUser},#{createUserId},#{status},#{createTime})
     </insert>
     <delete id="delPrivilegeRoleById">
         delete from privilege_role where privilege_roleid=#{privilegeRoleId}

@@ -24,6 +24,7 @@ public class PrivilegeRoleServiceImpl implements PrivilegeRoleService {
 			privilegeRoleRepository.savePrivilegeRole(privilegeRole);
 			return true;
 		}catch(Exception e){
+			e.printStackTrace();
 			return false;
 		}
 	}
@@ -39,18 +40,36 @@ public class PrivilegeRoleServiceImpl implements PrivilegeRoleService {
 			privilegeRoleRepository.delPrivilegeRoleById(privilegeRoleId);
 			return true;
 		}catch(Exception e){
+			e.printStackTrace();
 			return false;
 		}
 	}
 
 	@Override
-	public void updatePrivilegeRole(PrivilegeRole privilegeRole) {
-		privilegeRoleRepository.updatePrivilegeRole(privilegeRole);
+	public Boolean updatePrivilegeRole(PrivilegeRole privilegeRole) {
+		try{
+			privilegeRoleRepository.updatePrivilegeRole(privilegeRole);
+			return true;
+		}catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	@Override
 	public List<String> findRoleByAppId(String appId) {
 		return privilegeRoleRepository.findRoleByAppId(appId);
+	}
+
+	@Override
+	public List<PrivilegeRole> findRoleByPage(String privilegeRoleId,String appId, int start, int limit) {
+		return privilegeRoleRepository.findRoleByPage(privilegeRoleId,appId,start,limit);
+	}
+
+	@Override
+	public int findRoleNoPage(String privilegeRoleId, String appId) {
+		List<PrivilegeRole> list = privilegeRoleRepository.findRoleNoPage(privilegeRoleId,appId);
+		return list.size();
 	}
 
 }

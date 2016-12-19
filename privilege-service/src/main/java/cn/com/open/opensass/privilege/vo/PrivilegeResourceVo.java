@@ -7,6 +7,10 @@ public class PrivilegeResourceVo {
 	private String appId;
 	private int status;
 	private String resourceLevel;
+	private String menuId;
+	private int displayOrder;
+	private String baseUrl;
+	
 	public String getResourceId() {
 		return resourceId;
 	}
@@ -43,5 +47,22 @@ public class PrivilegeResourceVo {
 	public void setResourceLevel(String resourceLevel) {
 		this.resourceLevel = resourceLevel;
 	}
-	
+	public String getMenuId() {
+		return menuId;
+	}
+	public void setMenuId(String menuId) {
+		this.menuId = menuId;
+	}
+	public int getDisplayOrder() {
+		return displayOrder;
+	}
+	public void setDisplayOrder(int displayOrder) {
+		this.displayOrder = displayOrder;
+	}
+	public String getBaseUrl() {
+		return baseUrl;
+	}
+	public void setBaseUrl(String baseUrl) {
+		this.baseUrl = baseUrl;
+	}
 }

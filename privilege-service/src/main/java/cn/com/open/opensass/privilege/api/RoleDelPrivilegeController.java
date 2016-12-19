@@ -29,17 +29,23 @@ public class RoleDelPrivilegeController extends BaseControllerUtil{
 	 * 角色删除接口
 	 */
 	@RequestMapping(value = "delRole")
-    public void delRole(HttpServletRequest request,HttpServletResponse response,PrivilegeRoleVo privilegeRoleVo) {
+    public void delRole(HttpServletRequest request,HttpServletResponse response) {
     	Map<String, Object> map=new HashMap<String, Object>();
     	log.info("====================del role start======================");
-    	if(!paraMandatoryCheck(Arrays.asList(privilegeRoleVo.getAppId(),privilegeRoleVo.getPrivilegeRoleId()))){
+    	
+    	String appId = request.getParameter("appId");
+    	String privilegeRoleId = request.getParameter("privilegeRoleId");
+    	String createUser = request.getParameter("createUser");
+    	String createUserId = request.getParameter("createUserId");
+    	
+    	if(!paraMandatoryCheck(Arrays.asList(appId,privilegeRoleId))){
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
               return;
     	}    	
     	
-    	Boolean f = privilegeRoleService.delPrivilegeRoleById(privilegeRoleVo.getPrivilegeRoleId());//删除角色表
+    	Boolean f = privilegeRoleService.delPrivilegeRoleById(privilegeRoleId);//删除角色表
     	if(f){
-    		Boolean f1 = privilegeRoleResourceService.delRoleResourceByRoleId(privilegeRoleVo.getPrivilegeRoleId());//删除角色资源关系表
+    		Boolean f1 = privilegeRoleResourceService.delRoleResourceByRoleId(privilegeRoleId);//删除角色资源关系表
 			if(!f1){
 				paraMandaChkAndReturn(10002, response,"角色资源关系删除失败");
 	            return;

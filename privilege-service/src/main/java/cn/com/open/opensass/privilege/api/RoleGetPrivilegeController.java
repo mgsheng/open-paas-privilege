@@ -15,10 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.google.gson.Gson;
-
 import cn.com.open.opensass.privilege.model.PrivilegeFunction;
-import cn.com.open.opensass.privilege.model.PrivilegeMenu;
 import cn.com.open.opensass.privilege.model.PrivilegeResource;
 import cn.com.open.opensass.privilege.model.PrivilegeRole;
 import cn.com.open.opensass.privilege.model.PrivilegeRoleResource;
@@ -27,7 +24,8 @@ import cn.com.open.opensass.privilege.service.PrivilegeResourceService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleResourceService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
-import cn.com.open.opensass.privilege.tools.StringTool;
+import cn.com.open.opensass.privilege.vo.PrivilegeFunctionVo;
+import cn.com.open.opensass.privilege.vo.PrivilegeResourceVo;
 import cn.com.open.opensass.privilege.vo.PrivilegeRoleVo;
 
 @Controller
@@ -46,57 +44,81 @@ public class RoleGetPrivilegeController extends BaseControllerUtil{
 	 * 角色权限查询接口
 	 */
 	@RequestMapping(value = "getRolePrivilege")
-    public void getRolePrivilege(HttpServletRequest request,HttpServletResponse response,PrivilegeRoleVo privilegeRoleVo) {
+    public void getRolePrivilege(HttpServletRequest request,HttpServletResponse response) {
     	Map<String, Object> map=new HashMap<String, Object>();
     	log.info("===================get rolePrivilege start======================");
-    	if(!paraMandatoryCheck(Arrays.asList(privilegeRoleVo.getAppId(),privilegeRoleVo.getStart(),privilegeRoleVo.getLimit()))){
+    	
+    	String appId=request.getParameter("appId");
+    	String start=request.getParameter("start");
+    	String limit=request.getParameter("limit");
+    	String deptId=request.getParameter("depgId");
+    	String groupId=request.getParameter("groupId");
+    	String privilegeRoleId=request.getParameter("privilegeRoleId");
+    	
+    	if(!paraMandatoryCheck(Arrays.asList(appId,start,limit))){
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
               return;
     	}    
+    	
+    	List<PrivilegeRoleVo> roles = new ArrayList<PrivilegeRoleVo>();
+    	List<PrivilegeResourceVo> resources = new ArrayList<PrivilegeResourceVo>();
+    	List<PrivilegeFunctionVo> functions = new ArrayList<PrivilegeFunctionVo>();
+    	//取出角色List
+    	int count = privilegeRoleService.findRoleNoPage(privilegeRoleId,appId);
+    	List<PrivilegeRole> privilegeRoles = privilegeRoleService.findRoleByPage(privilegeRoleId,appId,Integer.parseInt(start),Integer.parseInt(limit));
+    	for(PrivilegeRole privilegeRole : privilegeRoles){
+			List<PrivilegeRoleResource> privilegeRoleResources = privilegeRoleResourceService.findByPrivilegeRoleId(privilegeRole.getPrivilegeRoleId());
 
-    	List<PrivilegeRole> roles = new ArrayList<PrivilegeRole>();
-    	List<PrivilegeResource> resources = new ArrayList<PrivilegeResource>();
-    	List<PrivilegeFunction> funcs = new ArrayList<PrivilegeFunction>();
-    	
-    	String privilegeRoleIds=privilegeRoleVo.getPrivilegeRoleId();
-    	
-    	if(privilegeRoleIds == null || ("").equals(privilegeRoleIds.trim())){
-    		List<String> roleIds = privilegeRoleService.findRoleByAppId(privilegeRoleVo.getAppId());
-    		privilegeRoleIds = StringTool.listToString(roleIds);
+			List<String> funcIdList = new ArrayList<String>();
+			for(PrivilegeRoleResource privilegeRoleResource : privilegeRoleResources){
+				PrivilegeResource privilegeResource = privilegeResourceService.findByResourceId(privilegeRoleResource.getResourceId(), appId);
+				PrivilegeResourceVo privilegeResourceVo = new PrivilegeResourceVo();
+				privilegeResourceVo.setAppId(privilegeResource.getAppId());
+				privilegeResourceVo.setResourceId(privilegeResource.getResourceId());
+				privilegeResourceVo.setResourceLevel(privilegeResource.getResourceLevel()+"");
+				privilegeResourceVo.setResourceName(privilegeResource.getResourceName());
+				privilegeResourceVo.setResourceRule(privilegeResource.getResourceRule());
+				privilegeResourceVo.setDisplayOrder(privilegeResource.getDisplayOrder());
+				privilegeResourceVo.setMenuId(privilegeResource.getMenuId());
+				privilegeResourceVo.setBaseUrl(privilegeResource.getBaseUrl());
+				privilegeResourceVo.setStatus(privilegeResource.getStatus());
+				resources.add(privilegeResourceVo);//添加到资源List
+				if(privilegeRoleResource.getPrivilegeFunId()!=null){
+					String[] funcIds = privilegeRoleResource.getPrivilegeFunId().split(",");
+					for(String funcId : funcIds){
+						if(!funcIdList.contains(funcId)){
+							funcIdList.add(funcId);
+							PrivilegeFunction privilegeFunction = privilegeFunctionService.findByFunctionId(funcId);
+							if(privilegeFunction != null){
+								PrivilegeFunctionVo privilegeFunctionVo = new PrivilegeFunctionVo();
+	    						privilegeFunctionVo.setFunctionId(privilegeFunction.getId());
+	    						privilegeFunctionVo.setOptId(privilegeFunction.getOperationId());
+	    						privilegeFunctionVo.setResourceId(privilegeFunction.getResourceId());
+	    						privilegeFunctionVo.setOptUrl(privilegeFunction.getOptUrl());
+	    						functions.add(privilegeFunctionVo);//添加到方法List
+	    					}
+						}
+					}
+				}    
+			}
+			PrivilegeRoleVo privilegeRoleVo = new PrivilegeRoleVo();
+			privilegeRoleVo.setAppId(privilegeRole.getAppId());
+			privilegeRoleVo.setDeptId(privilegeRole.getDeptId());
+			privilegeRoleVo.setDeptName(privilegeRole.getDeptName());
+			privilegeRoleVo.setGroupId(privilegeRole.getGroupId());
+			privilegeRoleVo.setGroupName(privilegeRole.getGroupName());
+			privilegeRoleVo.setPrivilegeRoleId(privilegeRole.getPrivilegeRoleId());
+			privilegeRoleVo.setRemark(privilegeRole.getRemark());
+			privilegeRoleVo.setRoleLevel(privilegeRole.getRoleLevel());
+			privilegeRoleVo.setRoleName(privilegeRole.getRoleName());
+			privilegeRoleVo.setStatus(privilegeRole.getStatus());
+			privilegeRoleVo.setResourceList(resources);
+			privilegeRoleVo.setFunctionList(functions);
+			roles.add(privilegeRoleVo);//添加到角色List
     	}
     	
-    	if(privilegeRoleIds != null){
-    		String[] roleIds = privilegeRoleIds.split(",");
-    		PrivilegeRole role = null;
-    		for(String roleId : roleIds){
-    			role = privilegeRoleService.findRoleById(roleId);
-    			List<PrivilegeRoleResource> roleResources = privilegeRoleResourceService.findByPrivilegeRoleId(roleId);
-    			if(roleResources!=null){
-        			PrivilegeResource resource = null;
-    				for(PrivilegeRoleResource roleResource : roleResources){
-    					resource = privilegeResourceService.findByResourceId(roleResource.getResourceId(), privilegeRoleVo.getAppId());
-    					if(resource != null){
-    						resources.add(resource);
-    					}
-    					if(roleResource.getPrivilegeFunId()!=null){
-    						String[] funcIds = roleResource.getPrivilegeFunId().split(",");
-    						PrivilegeFunction function = null;
-    						for(String funcId : funcIds){
-    							function = privilegeFunctionService.findByFunctionId(funcId);
-    							if(function != null){
-    	    						funcs.add(function);
-    	    					}
-    						}
-    					}    					
-    				}
-    				role.setFunctionList(funcs);
-    				role.setResourceList(resources);
-    			}    			    			
-    			roles.add(role);
-    		}
-    	}
     	map.put("roleList", roles);
-    	map.put("count", roles.size());
+    	map.put("count", count);
     	map.put("status", 1);
 		writeErrorJson(response,map);
     	

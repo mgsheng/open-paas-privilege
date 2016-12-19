@@ -13,6 +13,7 @@ public class PrivilegeFunction extends AbstractDomain {
     /**
      *
      */
+    private String id;
     /*资源id*/
     private String resourceId;
     /*操作按钮Id*/
@@ -74,4 +75,13 @@ public class PrivilegeFunction extends AbstractDomain {
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+    
 }
