@@ -12,7 +12,7 @@ public class RedisConstant {
  /**
   * 公共缓存前缀名
   */
- public static final String PUBLICSERVICE_CACHE="privilegeCacheService_";
+ public static final String PUBLICSERVICE_CACHE="privilegeService_";
 
  /**
   * userPrivileges_appid_userid
