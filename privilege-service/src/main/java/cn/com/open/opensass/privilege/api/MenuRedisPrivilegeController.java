@@ -37,12 +37,12 @@ public class MenuRedisPrivilegeController extends BaseControllerUtil {
      * @param response
      */
     @RequestMapping(value = "getMenu", method = RequestMethod.POST)
-    public void putdata(HttpServletRequest request, HttpServletResponse response) {
+    public void putRedisData(HttpServletRequest request, HttpServletResponse response) {
         /*参数接收*/
         String appUserId=request.getParameter("appUserId").trim();
         String appId=request.getParameter("appId").trim();
         Map<Object, Object> map = new HashMap<Object, Object>();
-        log.info("===================get getDataPrivilege start======================");
+        log.info("===================get putdata start======================");
         if (!paraMandatoryCheck(Arrays.asList(appUserId))) {
             paraMandaChkAndReturn(10000, response, "必传参数中有空值");
             return;
@@ -50,8 +50,91 @@ public class MenuRedisPrivilegeController extends BaseControllerUtil {
 
         PrivilegeAjaxMessage ajaxMessage =privilegeMenuService.getMenuRedis(appId,appUserId);
         if (ajaxMessage.getCode().equals("1")) {
-            map.put("menuList",ajaxMessage.getMessage());
-            WebUtils.writeJson(response, JSONObject.fromObject(map));
+            WebUtils.writeJson(response, ajaxMessage.getMessage());
+        } else {
+            map.put("status", ajaxMessage.getCode());
+            map.put("error_code", ajaxMessage.getMessage());/*数据不存在*/
+            writeErrorJson(response, map);
+        }
+        return;
+    }
+
+    /**
+     * 更新redis缓存
+     * @param request
+     * @param response
+     */
+    @RequestMapping(value = "updateMenu", method = RequestMethod.POST)
+    public void updateRedisMenu(HttpServletRequest request, HttpServletResponse response) {
+        /*参数接收*/
+        String appUserId=request.getParameter("appUserId").trim();
+        String appId=request.getParameter("appId").trim();
+        Map<Object, Object> map = new HashMap<Object, Object>();
+        log.info("===================get updateMenu start======================");
+        if (!paraMandatoryCheck(Arrays.asList(appUserId))) {
+            paraMandaChkAndReturn(10000, response, "必传参数中有空值");
+            return;
+        }
+
+        PrivilegeAjaxMessage ajaxMessage =privilegeMenuService.updateMenuRedis(appId,appUserId);
+        if (ajaxMessage.getCode().equals("1")) {
+            WebUtils.writeJson(response, ajaxMessage.getMessage());
+        } else {
+            map.put("status", ajaxMessage.getCode());
+            map.put("error_code", ajaxMessage.getMessage());/*数据不存在*/
+            writeErrorJson(response, map);
+        }
+        return;
+    }
+
+    /**
+     * 删除redis缓存
+     * @param request
+     * @param response
+     */
+    @RequestMapping(value = "deleteMenu", method = RequestMethod.POST)
+    public void delRedisMenu(HttpServletRequest request, HttpServletResponse response) {
+        /*参数接收*/
+        String appUserId=request.getParameter("appUserId").trim();
+        String appId=request.getParameter("appId").trim();
+        Map<Object, Object> map = new HashMap<Object, Object>();
+        log.info("===================get delMenu start======================");
+        if (!paraMandatoryCheck(Arrays.asList(appUserId))) {
+            paraMandaChkAndReturn(10000, response, "必传参数中有空值");
+            return;
+        }
+
+        PrivilegeAjaxMessage ajaxMessage =privilegeMenuService.delMenuRedis(appId,appUserId);
+        if (ajaxMessage.getCode().equals("1")) {
+            WebUtils.writeJson(response, ajaxMessage.getMessage());
+        } else {
+            map.put("status", ajaxMessage.getCode());
+            map.put("error_code", ajaxMessage.getMessage());/*数据不存在*/
+            writeErrorJson(response, map);
+        }
+        return;
+    }
+
+    /**
+     * 删除redis缓存
+     * @param request
+     * @param response
+     */
+    @RequestMapping(value = "existMenuKey", method = RequestMethod.POST)
+    public void existMenuKeyRedis(HttpServletRequest request, HttpServletResponse response) {
+        /*参数接收*/
+        String appUserId=request.getParameter("appUserId").trim();
+        String appId=request.getParameter("appId").trim();
+        Map<Object, Object> map = new HashMap<Object, Object>();
+        log.info("===================get delMenu start======================");
+        if (!paraMandatoryCheck(Arrays.asList(appUserId))) {
+            paraMandaChkAndReturn(10000, response, "必传参数中有空值");
+            return;
+        }
+
+        PrivilegeAjaxMessage ajaxMessage =privilegeMenuService.existMenuKeyRedis(appId,appUserId);
+        if (ajaxMessage.getCode().equals("1")) {
+            WebUtils.writeJson(response, ajaxMessage.getMessage());
         } else {
             map.put("status", ajaxMessage.getCode());
             map.put("error_code", ajaxMessage.getMessage());/*数据不存在*/

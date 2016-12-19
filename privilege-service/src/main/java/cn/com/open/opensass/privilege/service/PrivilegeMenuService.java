@@ -41,6 +41,31 @@ public interface PrivilegeMenuService {
 	 */
 	PrivilegeAjaxMessage getMenuRedis(String appId, String appUserId);
 
+
+	/**
+	 * 更新 redis url 数据
+	 * @param appId 应用id
+	 * @param appUserId 对应应用id的用户id
+	 * @return 相应的提示信息
+	 */
+	PrivilegeAjaxMessage updateMenuRedis(String appId, String appUserId);
+
+	/**
+	 * 删除 redis url 数据
+	 * @param appId 应用id
+	 * @param appUserId 对应应用id的用户id
+	 * @return 相应的提示信息
+	 */
+	PrivilegeAjaxMessage delMenuRedis(String appId, String appUserId);
+
+	/**
+	 * 判断key  redis 是否存在 数据
+	 * @param appId 应用id
+	 * @param appUserId 对应应用id的用户id
+	 * @return 相应的提示信息
+	 */
+	PrivilegeAjaxMessage existMenuKeyRedis(String appId, String appUserId);
+
 	/**
 	 * 获取所有menu数据
 	 * @param privilegeMenuList

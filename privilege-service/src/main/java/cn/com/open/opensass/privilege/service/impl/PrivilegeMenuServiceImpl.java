@@ -93,7 +93,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 	@Override
 	public PrivilegeAjaxMessage getMenuRedis(String appId, String appUserId) {
 		PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
-		String menuJedis = redisDao.getUrlRedis(RedisConstant.USERMENU_CACHE,appId, appUserId);
+		String menuJedis = redisDao.getUrlRedis(prefix,appId, appUserId);
 		if(null == menuJedis || menuJedis.length()<=0)
 		{
 			List<PrivilegeMenu> privilegeMenuList = getMenuListByUserId(appUserId,appId);
@@ -103,7 +103,9 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 			Set<PrivilegeMenuVo> privilegeMenuListData = getAllMenuByUserId(privilegeMenuList,privilegeMenuListReturn);  /*缓存中是否存在*/
 
 			PrivilegeUrl privilegeUrl = new PrivilegeUrl();
-			String json=new JSONArray().fromObject(privilegeMenuListData).toString();
+			Map<Object, Object> map = new HashMap<Object, Object>();
+			map.put("menuList",privilegeMenuListData);
+			String json=new JSONArray().fromObject(map).toString();
 
 			privilegeUrl.setPrivilegeUrl(json);
             /*写入redis*/
@@ -122,6 +124,38 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 			ajaxMessage.setMessage("NO REDIS DATA");
 			return ajaxMessage;
 		}
+	}
+
+	@Override
+	public PrivilegeAjaxMessage updateMenuRedis(String appId, String appUserId) {
+		boolean menuKeyExist = redisDao.existKeyRedis(prefix,appId,appUserId);
+		if(menuKeyExist)
+		{
+			redisDao.deleteRedisKey(prefix,appId,appUserId);
+		}
+		return getMenuRedis(appId,appUserId);
+	}
+
+	@Override
+	public PrivilegeAjaxMessage delMenuRedis(String appId, String appUserId) {
+		PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
+		boolean menuKeyExist = redisDao.deleteRedisKey(prefix,appId,appUserId);
+		ajaxMessage.setCode("1");
+		ajaxMessage.setMessage("Success");
+		log.info("delMenuRedis接口删除key："+menuKeyExist);
+		return ajaxMessage;
+
+	}
+
+	@Override
+	public PrivilegeAjaxMessage existMenuKeyRedis(String appId, String appUserId) {
+		PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
+         /*获取用户UID*/
+		log.info("existMenuKey是否存在redis数据");
+		boolean exist = redisDao.existKeyRedis(prefix,appId, appUserId);
+		ajaxMessage.setCode("1");
+		ajaxMessage.setMessage(exist?"exist":"no exist");
+		return ajaxMessage;
 	}
 
 	@Override
