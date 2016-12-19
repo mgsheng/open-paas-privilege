@@ -78,7 +78,7 @@ public class PrivilegeRoleController {
 	/* 
    * Redirect to oauth-server bind page:   step-2
    * */
-  @RequestMapping(value = "modifyPrivilegeRole", method = RequestMethod.POST)
+  @RequestMapping(value = "modiPrivilegeRole", method = RequestMethod.POST)
    public String modifyPrivilegeRole(PrivilegeRoleDto privilegeRoleDto) throws Exception {
        final String fullUri = privilegeRoleDto.getModiFullUri();
        LOG.debug("Send to Oauth-Server URL: {}", fullUri);
