@@ -1,9 +1,6 @@
 package cn.com.open.opensass.privilege.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import cn.com.open.opensass.privilege.dao.PrivilegeUrl;
 import cn.com.open.opensass.privilege.dao.cache.RedisDao;
@@ -149,9 +146,8 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 				else
 				{
 					privilegeMenuVoSet.add(privilegeMenuVo);
-					PrivilegeMenu privilegeMenuListParents = getMenuById(privilegeMenu.getParentId());List<PrivilegeMenu> privilegeMenuListp = new ArrayList<PrivilegeMenu>();
-					privilegeMenuListp.add(privilegeMenuListParents);
-					getAllMenuByUserId(privilegeMenuListp,privilegeMenuVoSet);
+					PrivilegeMenu privilegeMenuListParents = getMenuById(privilegeMenu.getParentId());
+					getAllMenuByUserId(Arrays.asList(privilegeMenuListParents),privilegeMenuVoSet);
 				}
 			}
 
