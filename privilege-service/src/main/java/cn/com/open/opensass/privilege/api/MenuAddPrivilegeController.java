@@ -74,9 +74,9 @@ public class MenuAddPrivilegeController extends BaseControllerUtil{
     	}
     	pm.setMenuRule(menuRule);
     	if(nullEmptyBlankJudge(parentId)){
-    		pm.setParentId(0);
+    		pm.setParentId("0");
     	}else{
-    		pm.setParentId(Integer.parseInt(parentId));
+    		pm.setParentId(parentId);
     	}
     	if(nullEmptyBlankJudge(dislayOrder)){
     		pm.setDisplayOrder(0);
