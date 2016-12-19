@@ -1,15 +1,9 @@
 package cn.com.open.opensass.privilege.api;
 
-import cn.com.open.opensass.privilege.dao.PrivilegeUrl;
-import cn.com.open.opensass.privilege.dao.cache.RedisDao;
-import cn.com.open.opensass.privilege.model.PrivilegeMenu;
-import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.WebUtils;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
-import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,18 +14,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by jh on 2016/12/19.
  */
 /**
- * redis url 接口
- * 获取数据：getUrl?appId=&appUserId=
- * 修改数据：updateUrl?appId=&appUserId=
- * 删除数据：delUrl?appId=&appUserId=
- * 判断url是否存在：existUrl?appId=&appUserId=&urladdr=
- * 判断key是否在redis中存在 ：existKey?appId=&appUserId=
+ * redis menu 接口
+ * 获取数据：getMenu?appId=&appUserId=
  */
 @Controller
 @RequestMapping("/menu/")

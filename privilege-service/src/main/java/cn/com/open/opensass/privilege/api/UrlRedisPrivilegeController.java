@@ -1,27 +1,21 @@
 package cn.com.open.opensass.privilege.api;
 
-import cn.com.open.opensass.privilege.dao.PrivilegeUrl;
-import cn.com.open.opensass.privilege.dao.cache.RedisDao;
-import cn.com.open.opensass.privilege.model.PivilegeToken;
-import cn.com.open.opensass.privilege.model.PrivilegeFunction;
-import cn.com.open.opensass.privilege.model.PrivilegeResource;
-import cn.com.open.opensass.privilege.model.PrivilegeUser;
-import cn.com.open.opensass.privilege.service.*;
+import cn.com.open.opensass.privilege.service.PrivilegeUrlService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.WebUtils;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
-import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * redis url 接口
