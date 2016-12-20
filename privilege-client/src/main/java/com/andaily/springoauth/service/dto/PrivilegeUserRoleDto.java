@@ -14,11 +14,13 @@ public class PrivilegeUserRoleDto{
 	private String createUserId;
 	private String resourceId;//所拥有的权限（多个限用“，”分隔）
 	private String method;//操作（0-添加角色 1-删除角色）
+	private String optUrl;
 	
 	private String addPrivilegeUserUri;
 	private String delPrivilegeUserUri;
 	private String modiPrivilegeUserUri;
 	private String getPrivilegeUserUri;
+	private String verifyPrivilegeUserUri;
 	
 	public String getAppId() {
 		return appId;
@@ -118,6 +120,18 @@ public class PrivilegeUserRoleDto{
 	}
 	public void setGetPrivilegeUserUri(String getPrivilegeUserUri) {
 		this.getPrivilegeUserUri = getPrivilegeUserUri;
+	}	
+	public String getOptUrl() {
+		return optUrl;
+	}
+	public void setOptUrl(String optUrl) {
+		this.optUrl = optUrl;
+	}	
+	public String getVerifyPrivilegeUserUri() {
+		return verifyPrivilegeUserUri;
+	}
+	public void setVerifyPrivilegeUserUri(String verifyPrivilegeUserUri) {
+		this.verifyPrivilegeUserUri = verifyPrivilegeUserUri;
 	}
 	
 	public String getAddFullUri() throws UnsupportedEncodingException {
@@ -135,5 +149,9 @@ public class PrivilegeUserRoleDto{
 	public String getGetFullUri() {
 		return String.format("%s?appUserId=%s&appId=%s",
         		getPrivilegeUserUri,appUserId,appId);  
+	}
+	public String getVerifyFullUri() {
+		return String.format("%s?appUserId=%s&appId=%s&optUrl=%s",
+        		verifyPrivilegeUserUri,appUserId,appId,optUrl);  
 	}
 }

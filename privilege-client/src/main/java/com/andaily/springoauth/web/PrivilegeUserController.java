@@ -31,6 +31,8 @@ public class PrivilegeUserController {
     private String modiPrivilegeUserUri;
     @Value("#{properties['get-privilege-user-uri']}")
     private String getPrivilegeUserUri;
+    @Value("#{properties['verify-privilege-user-uri']}")
+    private String verifyPrivilegeUserUri;
     
     final static String  SEPARATOR = "&";
     private Map<String,String> map=LoadPopertiesFile.loadProperties();
@@ -40,7 +42,7 @@ public class PrivilegeUserController {
  	@RequestMapping(value = "addPrivilegeUserRole", method = RequestMethod.GET)
  	public String addPrivilegeUserRole(Model model) {
  		model.addAttribute("addPrivilegeUserUri", addPrivilegeUserUri);
- 		return "privilege/add_privilege_user_role";
+ 		return "privilege/privilege_user_role_add";
  	}
  	/* 
      * Redirect to oauth-server bind page:   step-2
@@ -57,7 +59,7 @@ public class PrivilegeUserController {
 	@RequestMapping(value = "delPrivilegeUserRole", method = RequestMethod.GET)
 	public String delPrivilegeUserRole(Model model) {
 		model.addAttribute("delPrivilegeUserUri", delPrivilegeUserUri);
-		return "privilege/del_privilege_user_role";
+		return "privilege/privilege_user_role_del";
 	}
 	/* 
     * Redirect to oauth-server bind page:   step-2
@@ -74,7 +76,7 @@ public class PrivilegeUserController {
 	@RequestMapping(value = "modiPrivilegeUserRole", method = RequestMethod.GET)
 	public String modiPrivilegeUserRole(Model model) {
 		model.addAttribute("modiPrivilegeUserUri", modiPrivilegeUserUri);
-		return "privilege/modi_privilege_user_role";
+		return "privilege/privilege_user_role_modify";
 	}
 	/* 
     * Redirect to oauth-server bind page:   step-2
@@ -92,7 +94,7 @@ public class PrivilegeUserController {
 	@RequestMapping(value = "getPrivilegeUserRole", method = RequestMethod.GET)
 	public String getPrivilegeUserRole(Model model) {
 		model.addAttribute("getPrivilegeUserUri", getPrivilegeUserUri);
-		return "privilege/get_privilege_user_role";
+		return "privilege/privilege_user_role_query";
 	}
 	/* 
    * Redirect to oauth-server bind page:   step-2
@@ -100,6 +102,24 @@ public class PrivilegeUserController {
   @RequestMapping(value = "getPrivilegeUserRole", method = RequestMethod.POST)
    public String getPrivilegeUserRole(PrivilegeUserRoleDto privilegeUserRoleDto) throws Exception {
        final String fullUri = privilegeUserRoleDto.getGetFullUri();
+       LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+       return "redirect:" + fullUri;
+   }
+  
+   /*
+    *  Entrance:   step-1
+    * */
+	@RequestMapping(value = "verifyPrivilegeUserRole", method = RequestMethod.GET)
+	public String verifyPrivilegeUserRole(Model model) {
+		model.addAttribute("verifyPrivilegeUserUri", verifyPrivilegeUserUri);
+		return "privilege/privilege_user_role_verify";
+	}
+	/* 
+   * Redirect to oauth-server bind page:   step-2
+   * */
+  @RequestMapping(value = "verifyPrivilegeUserRole", method = RequestMethod.POST)
+   public String verifyPrivilegeUserRole(PrivilegeUserRoleDto privilegeUserRoleDto) throws Exception {
+       final String fullUri = privilegeUserRoleDto.getVerifyFullUri();
        LOG.debug("Send to Oauth-Server URL: {}", fullUri);
        return "redirect:" + fullUri;
    }

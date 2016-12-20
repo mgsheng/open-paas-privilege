@@ -91,6 +91,9 @@
         <li>
             <p><a href="getPrivilegeUserRole">用户权限查询</a> <br/>用户权限查询接口测试</p>
         </li>
+        <li>
+            <p><a href="verifyPrivilegeUserRole">用户权限认证</a> <br/>用户权限认证接口测试</p>
+        </li>
           <li>
             <p><a href="addMenu">菜单创建</a> <br/>菜单创建接口</p>
         </li>

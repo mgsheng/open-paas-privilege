@@ -39,7 +39,7 @@ public class PrivilegeRoleController {
  	@RequestMapping(value = "addPrivilegeRole", method = RequestMethod.GET)
  	public String addPrivilegeRole(Model model) {
  		model.addAttribute("addPrivilegeRoleUri", addPrivilegeRoleUri);
- 		return "privilege/add_privilege_role";
+ 		return "privilege/privilege_role_add";
  	}
  	/* 
      * Redirect to oauth-server bind page:   step-2
@@ -56,7 +56,7 @@ public class PrivilegeRoleController {
 	@RequestMapping(value = "delPrivilegeRole", method = RequestMethod.GET)
 	public String delPrivilegeRole(Model model) {
 		model.addAttribute("delPrivilegeRoleUri", delPrivilegeRoleUri);
-		return "privilege/del_privilege_role";
+		return "privilege/privilege_role_del";
 	}
 	/* 
     * Redirect to oauth-server bind page:   step-2
@@ -73,7 +73,7 @@ public class PrivilegeRoleController {
 	@RequestMapping(value = "modifyPrivilegeRole", method = RequestMethod.GET)
 	public String modifyPrivilegeRole(Model model) {
 		model.addAttribute("modiPrivilegeRoleUri", modiPrivilegeRoleUri);
-		return "privilege/modi_privilege_role";
+		return "privilege/privilege_role_modify";
 	}
 	/* 
    * Redirect to oauth-server bind page:   step-2
@@ -90,7 +90,7 @@ public class PrivilegeRoleController {
 	@RequestMapping(value = "getPrivilegeRole", method = RequestMethod.GET)
 	public String getPrivilegeRole(Model model) {
 		model.addAttribute("getPrivilegeRoleUri", getPrivilegeRoleUri);
-		return "privilege/get_privilege_role";
+		return "privilege/privilege_role_query";
 	}
 	/* 
   * Redirect to oauth-server bind page:   step-2
