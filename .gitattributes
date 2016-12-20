@@ -165,6 +165,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UrlRedisPrivi
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UserRoleAddPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UserRoleDelPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UserRoleModifyPrivilegeController.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UserRoleVerifyPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/constant/ConstantMessage.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/dao/PrivilegeUrl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/dao/ResourceUrl.java -text
