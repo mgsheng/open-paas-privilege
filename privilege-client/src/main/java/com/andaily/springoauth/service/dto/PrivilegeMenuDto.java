@@ -47,7 +47,7 @@ public class PrivilegeMenuDto {
 				  privilegeMenuModifyUrl,appId,menuId,menuName,menuCode, menuRule, menuLevel,parentId, dislayOrder,status);  
     }
 	public String getQueryUri() throws UnsupportedEncodingException {
-        return String.format("%s?appId=%s&menuId=%s&limit=%s&start=%s",
+        return String.format("%s?appId=%s&menuId=%s&Limit=%s&start=%s",
         		privilegeMenuQueryUrl,appId,menuId,limit,start);  
     }
 	public String getDelUri() throws UnsupportedEncodingException {

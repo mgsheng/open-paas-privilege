@@ -242,7 +242,25 @@ public class PrivilegeInterfaceController {
 		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
 		return "redirect:" + fullUri;
 	}
+	/**
+	 *菜单查询接口
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "getMenus", method = RequestMethod.GET)
+	public String getMenus(Model model) {
+		model.addAttribute("privilegeMenuQueryUrl", privilegeMenuQueryUrl);
+		return "privilege/privilege_menu_query";
+	}
 
+	@RequestMapping(value = "getMenus", method = RequestMethod.POST)
+	public String getMenus(PrivilegeMenuDto privilegeMenuDto)
+			throws Exception {
+		final String fullUri = privilegeMenuDto.getQueryUri();
+		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+		return "redirect:" + fullUri;
+	}
 	/**
 	 *资源添加接口
 	 * 

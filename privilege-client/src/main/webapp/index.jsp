@@ -104,6 +104,9 @@
             <p><a href="delMenu">菜单删除</a> <br/>菜单删除接口</p>
         </li>
           <li>
+            <p><a href="getMenus">菜单查询</a> <br/>菜单查询接口</p>
+        </li>
+          <li>
             <p><a href="addResource">资源创建</a> <br/>资源创建接口</p>
         </li>
          <li>
