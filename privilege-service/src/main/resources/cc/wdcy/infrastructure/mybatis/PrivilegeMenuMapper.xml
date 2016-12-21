@@ -3,7 +3,6 @@
 <mapper namespace="cn.com.open.opensass.privilege.infrastructure.mybatis.PrivilegeMenuRepositoryMyBatis">
 	<resultMap type="PrivilegeMenu" id="privilegeMenuMap">
 		<id column="id" property="id" jdbcType="VARCHAR" />
-		<result column="id" property="menuId" jdbcType="VARCHAR" />
 		<result column="menu_code" property="menuCode" jdbcType="VARCHAR" />
 		<result column="menu_name" property="menuName" jdbcType="VARCHAR" />
 		<result column="app_id" property="appId" jdbcType="VARCHAR" />
@@ -45,8 +44,8 @@
         
          limit #{startRow},#{pageSize} 
 	</select>
-    <select id="getMenuById" resultMap="privilegeMenuMap" flushCache="true">
-        select * from privilege_menu
+    <select id="getMenuById" resultType="java.util.HashMap" flushCache="true">
+        select id as menuId,parent_id as parentId,menu_name as menuName,menu_rule as menuRule,menu_level as menuLevel,display_order as displayOrder from privilege_menu
         where  id = #{menuId}
     </select>
     <select id="getMenuListByUserId" resultMap="privilegeMenuMap" flushCache="true">
