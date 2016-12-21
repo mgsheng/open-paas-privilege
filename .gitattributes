@@ -11,6 +11,7 @@ privilege-client/.settings/org.eclipse.wst.common.component -text
 privilege-client/.settings/org.eclipse.wst.common.project.facet.core.xml -text
 privilege-client/.settings/org.eclipse.wst.jsdt.ui.superType.container -text
 privilege-client/.settings/org.eclipse.wst.jsdt.ui.superType.name -text
+privilege-client/.settings/org.eclipse.wst.validation.prefs -text
 privilege-client/LICENSE -text
 privilege-client/README.md -text
 privilege-client/others/client_test.txt -text
@@ -82,6 +83,7 @@ privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_group_add.jsp -
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_group_del.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_group_modify.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_group_query.jsp -text
+privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_group_query_test.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_menu_add.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_menu_del.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_menu_modify.jsp -text
@@ -126,9 +128,6 @@ privilege-client/src/main/webapp/index.jsp -text
 privilege-client/src/main/webapp/js/jquery-1.7.1.min.js -text
 privilege-client/src/main/webapp/js/user_register.js -text
 privilege-client/src/main/webapp/login.jsp -text
-privilege-client/target/classes/logging.properties -text
-privilege-client/target/classes/privilege-client.properties -text
-privilege-client/target/classes/spring/context.xml -text
 privilege-service/.classpath -text
 privilege-service/.mymetadata -text
 privilege-service/.project -text

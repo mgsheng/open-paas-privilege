@@ -79,9 +79,12 @@ public class PrivilegeInterfaceController {
 	@Value("#{properties['privilege-function-modify-uri']}")	
 	private String privilegeFunctionModifyUrl;
 	
-	
 	@Value("#{properties['privilege-function-del-uri']}")
 	private String privilegeFunctionDelUrl;
+	//查询组织机构测试地址属性
+	@Value("#{properties['privilege-group-query-test-uri']}")
+	private String privilegeGroupQueryTestUrl;
+	
 	final static String SEPARATOR = "&";
 	private Map<String, String> map = LoadPopertiesFile.loadProperties();
 
@@ -160,6 +163,25 @@ public class PrivilegeInterfaceController {
 	public String getGroupPrivilege(PrivilegeGroupDto privilegeGroupDto)
 			throws Exception {
 		final String fullUri = privilegeGroupDto.getQueryUri();
+		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+		return "redirect:" + fullUri;
+	}
+	/**
+	 * 组织机构权限查询接口=========测试
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "getGroupPrivilegeTest", method = RequestMethod.GET)
+	public String getGroupPrivilegeTest(Model model) {
+		model.addAttribute("privilegeGroupQueryTestUrl", privilegeGroupQueryTestUrl);
+		return "privilege/privilege_group_query_test";
+	}
+
+	@RequestMapping(value = "getGroupPrivilegeTest", method = RequestMethod.POST)
+	public String getGroupPrivilegeTest(PrivilegeGroupDto privilegeGroupDto)
+			throws Exception {
+		final String fullUri = privilegeGroupDto.getQueryTestUri();
 		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
 		return "redirect:" + fullUri;
 	}

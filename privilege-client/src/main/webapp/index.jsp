@@ -121,7 +121,9 @@
           <li>
             <p><a href="delFunction">权限功能删除接口</a> <br/>权限功能删除接口</p>
         </li>
-        
+          <li>
+            <p><a href="getGroupPrivilegeTest">查询组织机构测试</a> <br/>查询组织机构测试</p>
+        </li>
       
     </ul>
 </div>

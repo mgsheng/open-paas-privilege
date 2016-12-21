@@ -21,6 +21,15 @@ public class PrivilegeGroupDto {
 	private String start;
 	private String method;
 	
+	private String privilegeGroupQueryTestUrl;
+	public String getQueryTestUri() throws UnsupportedEncodingException {
+        return String.format("%s?groupId=%s&appId=%s",
+        		privilegeGroupQueryTestUrl,groupId,appId);  
+    }
+	public void setPrivilegeGroupQueryTestUrl(String privilegeGroupQueryTestUrl) {
+		this.privilegeGroupQueryTestUrl = privilegeGroupQueryTestUrl;
+	}
+	
 	
 	public String getMethod() {
 		return method;
