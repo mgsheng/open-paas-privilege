@@ -29,6 +29,11 @@
 	  resource_level,
 	  base_url
 	</sql>
+	<select id="findByResource_Id" resultMap="privilegeResourceMap" flushCache="true">
+         select * from privilege_resource
+         where  resource_id = #{resourceId}
+       
+	</select>
     <select id="findByResourceId" resultMap="privilegeResourceMap" flushCache="true">
          select * from privilege_resource
          where  resource_id = #{resourceId}
