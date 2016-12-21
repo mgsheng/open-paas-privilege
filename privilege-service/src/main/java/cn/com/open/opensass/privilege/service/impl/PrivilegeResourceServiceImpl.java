@@ -78,4 +78,10 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 		return privilegeResourceRepository.findResourceByAppUserId(userId);
 	}
 
+	@Override
+	public PrivilegeResource findByResourceId(String resourceId) {
+		// TODO Auto-generated method stub
+		return privilegeResourceRepository.findByResource_Id(resourceId);
+	}
+
 }
