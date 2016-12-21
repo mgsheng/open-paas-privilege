@@ -63,20 +63,18 @@ public class UserMenuRedisPrivilegeController extends BaseControllerUtil{
     	
     	//redis key
     	String userCacheMenuKey="privilegeService_userCacheMenu_"+user.getAppId()+"_"+user.getAppUserId();
-    	try {
+    	
     		//取缓存
         	if (redisClientTemplate.getString(userCacheMenuKey)!=null) {
     			String jString=redisClientTemplate.getString(userCacheMenuKey);
     			JSONObject  jasonObject = JSONObject.fromObject(jString);
     			Map JsonMap = (Map)jasonObject;
     		    writeSuccessJson(response, JsonMap);  
+    		    redisClientTemplate.disconnect();
     			return;
     		}
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}finally {
-			redisClientTemplate.disconnect();
-		}
+		
+		
     	
     	//resourceList
     	String privilegeResourceIds=user.getResourceId();
