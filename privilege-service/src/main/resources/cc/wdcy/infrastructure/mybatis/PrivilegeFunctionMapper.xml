@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.com.open.opensass.privilege.infrastructure.mybatis.PrivilegeFunctionRepositoryMyBatis">
     <resultMap type="PrivilegeFunction" id="privilegeFunctionMap">
-        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <id column="id" property="functionId" jdbcType="VARCHAR"/>
         <result column="resource_id" property="resourceId" jdbcType="VARCHAR"/>
         <result column="operation_id" property="operationId" jdbcType="VARCHAR"/>
         <result column="opt_url" property="optUrl" jdbcType="VARCHAR"/>
