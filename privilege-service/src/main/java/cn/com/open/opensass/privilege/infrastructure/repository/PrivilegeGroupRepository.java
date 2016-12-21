@@ -17,5 +17,5 @@ public interface PrivilegeGroupRepository extends Repository {
 	void savePrivilegeGroup(PrivilegeGroup privilegeGroup);
 	PrivilegeGroup findByGroupId(@Param("groupId")String groupId,@Param("appId")String appId);
 	void updatePrivilegeGroup(PrivilegeGroup privilegeGroup);
-	List<PrivilegeGroup> findGroupPage(@Param("groupId")String groupId,@Param("appId")String appId,@Param("startRow")String startRow,@Param("pageSize")String pageSize);
+	List<PrivilegeGroup> findGroupPage(@Param("groupId")String groupId,@Param("appId")String appId,@Param("startRow")Integer startRow,@Param("pageSize")Integer pageSize);
 }

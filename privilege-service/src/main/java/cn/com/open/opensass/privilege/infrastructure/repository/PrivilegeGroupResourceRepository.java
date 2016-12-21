@@ -20,4 +20,5 @@ public interface PrivilegeGroupResourceRepository extends Repository {
 	void deleteResource(@Param("groupId")String groupId ,@Param("resourceId")String resourceId);
 	void deleteByGroup(@Param("groupId")String groupId);
 	void updatePrivilegeGroupResource(PrivilegeGroupResource privilegeGroupResource);
+	List<String> findResourceIdsByGroupId(@Param("groupId")String groupId);
 }

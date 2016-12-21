@@ -11,7 +11,7 @@
     <!--<import resource="security.xml"/>-->
 
     <!--annotation configuration -->
-    <context:annotation-config/>
+     <context:annotation-config/>
     <!-- <context:component-scan base-package="cn.com.open.opensass.privilege.web"/> -->
     <context:component-scan base-package="cn.com.open.opensass.privilege.api"/>
 

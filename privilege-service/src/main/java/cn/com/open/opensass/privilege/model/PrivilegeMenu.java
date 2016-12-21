@@ -22,7 +22,15 @@ public class PrivilegeMenu extends AbstractDomain {
 	private String createUserId;
 	private int resourceType;
 	private int status;
+	private String menuId;
 	
+	
+	public String getMenuId() {
+		return menuId;
+	}
+	public void setMenuId(String menuId) {
+		this.menuId = menuId;
+	}
 	public String getAppId() {
 		return appId;
 	}

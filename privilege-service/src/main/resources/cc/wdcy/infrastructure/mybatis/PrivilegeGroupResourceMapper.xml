@@ -64,5 +64,10 @@
            from privilege_group_resource
          where  group_id = #{groupId}
 	</select>
-	
+	<select id="findResourceIdsByGroupId" parameterType="String" resultType="String" flushCache="true">
+         select 
+           resource_id
+           from privilege_group_resource
+         where  group_id = #{groupId}
+	</select>
 </mapper>

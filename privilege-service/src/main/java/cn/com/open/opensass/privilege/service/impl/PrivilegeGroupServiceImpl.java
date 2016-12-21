@@ -41,9 +41,9 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 	public List<PrivilegeGroup> findGroupPage(String groupId, String appId,
 			String startRow, String pageSize) {
 		// TODO Auto-generated method stub
-		return null;
-	}
-
-  
+		List<PrivilegeGroup> groupPage = privilegeGroupRepository.findGroupPage(groupId, appId,Integer.parseInt(startRow), Integer.parseInt(pageSize));
+		
+		return groupPage;
+	} 
 
 }

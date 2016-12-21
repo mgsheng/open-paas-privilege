@@ -14,4 +14,5 @@ public interface PrivilegeGroupResourceService {
 	Boolean deleteResource (String  groupId,String resourceId);
 	Boolean deleteByGroupId(String  groupId);
 	Boolean updatePrivilegeGroupResource(PrivilegeGroupResource privilegeGroupResource);
+	List<String> findResourceIdsByGroupId(String groupId);
 }

@@ -11,5 +11,4 @@ public interface PrivilegeGroupService {
 	Boolean savePrivilegeGroup(PrivilegeGroup privilegeGroup);
 	PrivilegeGroup findBygroupId(String groupId,String appId);
 	List<PrivilegeGroup>findGroupPage(String groupId,String appId,String startRow,String pageSize);
-
 }

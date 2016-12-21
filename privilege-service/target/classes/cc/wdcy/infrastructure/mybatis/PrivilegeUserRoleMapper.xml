@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.opensass.privilege.infrastructure.mybatis.PrivilegeUserRoleRepositoryMyBatis">
+	<resultMap type="PrivilegeUserRole" id="privilegeUserRoleMap">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="VARCHAR" />
+		<result column="privilege_roleid" property="privilegeRoleId" jdbcType="VARCHAR" />
+		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
+		<result column="create_userid" property="createUserId" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Insert_Column_List">
+	  id,
+	  user_id,
+	  privilege_roleid,
+	  create_user,
+	  create_userid,
+	  create_time,
+	  status
+	</sql>
+	
+	<select id="findById" resultMap="privilegeUserRoleMap" flushCache="true">
+         select * from privilege_user_role
+         where  id = #{id}
+	</select>
+	<select id="findByUidAndRoleId" resultMap="privilegeUserRoleMap" flushCache="true">
+		select * from privilege_user_role where privilege_roleid = #{privilegeRoleId} and user_id = #{userId} 
+	</select>
+	<insert id="savePrivilegeUserRole" parameterType="PrivilegeUserRole" useGeneratedKeys="true" keyProperty="id">
+        insert into privilege_user_role (user_id,privilege_roleid,create_userid,create_user,create_time,status)
+        values
+        (#{userId},#{privilegeRoleId},#{createUser},#{createUserId},#{createTime},#{status})
+    </insert>
+    <delete id="delPrivilegeUserRoleByUid">
+        delete from privilege_user_role where user_id=#{userId}
+    </delete>
+    <delete id="delPrivilegeUserRole">
+    	delete from privilege_user_role where id=#{id}
+    </delete>
+</mapper>

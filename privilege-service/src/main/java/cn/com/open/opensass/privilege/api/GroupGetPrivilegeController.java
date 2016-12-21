@@ -40,7 +40,7 @@ public class GroupGetPrivilegeController extends BaseControllerUtil{
     	String groupId=request.getParameter("groupId");
     	String appId=request.getParameter("appId");
     	String start=request.getParameter("start");
-    	String limit=request.getParameter("Limit");
+    	String limit=request.getParameter("limit");
     	Map<String, Object> map=new HashMap<String, Object>();
     	log.info("====================query start======================");
     	if(!paraMandatoryCheck(Arrays.asList(groupId,start,appId,limit))){
