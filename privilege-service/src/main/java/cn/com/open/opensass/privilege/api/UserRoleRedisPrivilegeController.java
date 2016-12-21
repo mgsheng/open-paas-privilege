@@ -70,21 +70,20 @@ public class UserRoleRedisPrivilegeController extends BaseControllerUtil {
 		// redis key
 		String userCacheRoleKey = "privilegeService_userCacheRole_" + user.getAppId() + "_" + user.getAppUserId();
 		// 取缓存
-		try {
+	
 			if (redisClientTemplate.getString(userCacheRoleKey) != null) {
 				String jString = redisClientTemplate.getString(userCacheRoleKey);
 				System.err.println("缓存==" + jString);
 				JSONObject  jasonObject = JSONObject.fromObject(jString);
 				Map JsonMap = (Map)jasonObject;
 			    writeSuccessJson(response, JsonMap);   
+			    redisClientTemplate.disconnect();
 				return;
 			}
-		} catch (Exception e) {
-			System.err.println("去缓存出错");
-			throw new RuntimeException(e);
-		}finally {
-			redisClientTemplate.disconnect();
-		}
+		
+			
+			
+		
 		
 		String privilegeRoleIds = user.getPrivilegeRoleId();
 		String privilegeResourceIds = user.getResourceId();
