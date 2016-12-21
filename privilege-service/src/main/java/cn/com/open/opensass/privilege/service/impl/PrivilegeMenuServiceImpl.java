@@ -203,7 +203,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 	@Override
 	public PrivilegeMenu findByMenuId(String menuId) {
 		// TODO Auto-generated method stub
-		return null;
+		return privilegeMenuRepository.getMenuById(menuId);
 	}
 
 
