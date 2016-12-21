@@ -3,6 +3,7 @@
 <mapper namespace="cn.com.open.opensass.privilege.infrastructure.mybatis.PrivilegeMenuRepositoryMyBatis">
 	<resultMap type="PrivilegeMenu" id="privilegeMenuMap">
 		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="id" property="menuId" jdbcType="VARCHAR" />
 		<result column="menu_code" property="menuCode" jdbcType="VARCHAR" />
 		<result column="menu_name" property="menuName" jdbcType="VARCHAR" />
 		<result column="app_id" property="appId" jdbcType="VARCHAR" />
