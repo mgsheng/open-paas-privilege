@@ -91,7 +91,7 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil{
     		for(String resourceId : resourceIds){
     			resource = privilegeResourceService.findByResourceId(resourceId, user.getAppId());
     			resources.add(resource);
-    			menu = privilegeMenuService.findByMenuId(resource.getMenuId());
+    			menu = privilegeMenuService.findByMenuId(resource.getMenuId(), resource.getAppId());
 				menus.add(menu);
 				/*while(menu.getParentId() != 0){
 					menu = privilegeMenuService.findByMenuId(menu.getParentId()+"", menu.getAppId());
