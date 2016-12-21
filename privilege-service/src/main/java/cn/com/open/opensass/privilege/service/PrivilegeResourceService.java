@@ -11,6 +11,7 @@ import cn.com.open.opensass.privilege.model.PrivilegeResource;
 public interface PrivilegeResourceService {
 	Boolean savePrivilegeResource(PrivilegeResource privilegeResource);
 	PrivilegeResource findByResourceId(String resourceId,String appId);
+	PrivilegeResource findByResourceId(String resourceId);
 	PrivilegeResource findByResourceCode(String resourceId,String appId);
 	List<PrivilegeResource>findResourcePage(String resourceId,String appId,String startRow,String pageSize);
 	Boolean updatePrivilegeResource(PrivilegeResource privilegeResource);
