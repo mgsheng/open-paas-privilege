@@ -15,6 +15,7 @@ public interface PrivilegeResourceRepository extends Repository {
 	PrivilegeResource findByResourceCode(@Param("resourceId")String resourceId,@Param("appId")String appId);
 	void savePrivilegeResource(PrivilegeResource privilegeResource);
 	PrivilegeResource findByResourceId(@Param("resourceId")String resourceId,@Param("appId")String appId);
+	PrivilegeResource findByResource_Id(@Param("resourceId")String resourceId);
 	void updatePrivilegeResource(PrivilegeResource privilegeResource);
 	List<PrivilegeResource> findResourcePage(@Param("resourceId")String resourceId,@Param("appId")String appId,@Param("startRow")String startRow,@Param("pageSize")String pageSize);
 	void deleteByResourceId(@Param("resourceId")String resourceId);
