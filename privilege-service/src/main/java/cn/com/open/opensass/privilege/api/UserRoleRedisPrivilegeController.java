@@ -54,7 +54,7 @@ public class UserRoleRedisPrivilegeController extends BaseControllerUtil {
 	@RequestMapping("getUserRolePrivilege")
 	public void getUserPrivilege(HttpServletRequest request, HttpServletResponse response,
 			PrivilegeUserVo privilegeUserVo) {
-		Map<String, List<Map<String, Object>>> map = new HashMap<>();
+		Map<String, List<Map<String, Object>>> map = new HashMap<String,List<Map<String, Object>>>();
 		log.info("====================redis user role start======================");    	
 		if (!paraMandatoryCheck(Arrays.asList(privilegeUserVo.getAppId(), privilegeUserVo.getAppUserId()))) {
 			paraMandaChkAndReturn(10000, response, "必传参数中有空值");
@@ -95,9 +95,9 @@ public class UserRoleRedisPrivilegeController extends BaseControllerUtil {
 			List<String> roleIdList = new ArrayList<String>();
 			Collections.addAll(roleIdList, roleIds1);
 			PrivilegeRole role = null;// roleList
-			List<Map<String, Object>> roleList = new ArrayList<>();
+			List<Map<String, Object>> roleList = new ArrayList<Map<String,Object>>();
 			for (String roleId : roleIdList) {
-				Map<String, Object> map2 = new HashMap<>();
+				Map<String, Object> map2 = new HashMap<String,Object>();
 				role = privilegeRoleService.findRoleById(roleId);
 				map2.put("appId", role.getAppId());
 				map2.put("deptId", role.getDeptId());
@@ -122,9 +122,9 @@ public class UserRoleRedisPrivilegeController extends BaseControllerUtil {
 			List<String> resourceIdList = new ArrayList<String>();
 			Collections.addAll(resourceIdList, resourceIds1);
 			PrivilegeResource resource = null;
-			List<Map<String, Object>> resourceList = new ArrayList<>();
+			List<Map<String, Object>> resourceList = new ArrayList<Map<String,Object>>();
 			for (String resourceId : resourceIdList) {
-				Map<String, Object> map2 = new HashMap<>();
+				Map<String, Object> map2 = new HashMap<String,Object>();
 				resource = privilegeResourceService.findByResourceId(resourceId);
 				map2.put("appId", resource.getAppId());
 				map2.put("resourceId", resource.getResourceId());
@@ -146,9 +146,9 @@ public class UserRoleRedisPrivilegeController extends BaseControllerUtil {
 			List<String> functionIdList = new ArrayList<String>();
 			Collections.addAll(functionIdList, functionIds1);
 			PrivilegeFunction function = null;
-			List<Map<String, Object>> functionList = new ArrayList<>();
+			List<Map<String, Object>> functionList = new ArrayList<Map<String,Object>>();
 			for (String functionId : functionIdList) {
-				Map<String, Object> map2 = new HashMap<>();
+				Map<String, Object> map2 = new HashMap<String,Object>();
 				function = privilegeFunctionService.findByFunctionId(functionId);
 				map2.put("resourceId", function.getResourceId());
 				map2.put("functionId", function.getId());
