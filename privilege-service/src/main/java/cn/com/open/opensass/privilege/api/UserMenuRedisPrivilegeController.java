@@ -111,14 +111,11 @@ public class UserMenuRedisPrivilegeController extends BaseControllerUtil{
 			}
 				menuMap.put("menuList", menuList);
 		}
-    	try {
-			
+    	
     		redisClientTemplate.setString(userCacheMenuKey, JSONObject.fromObject(menuMap).toString());
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}finally {
+		
 			redisClientTemplate.disconnect();
-		}
+	
     	
     	
     	/*String	json=JSONObject.fromObject(menuMap).toString();
