@@ -14,6 +14,7 @@ import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
 public interface PrivilegeMenuService {
 	Boolean savePrivilegeMenu(PrivilegeMenu privilegeMenu);
 	PrivilegeMenu findByMenuId(String menuId,String appId);
+	PrivilegeMenu findByMenuId(String menuId);
 	List<PrivilegeMenu>findMenuPage(String menuId,String appId,String startRow,String pageSize);
 	Boolean updatePrivilegeMenu(PrivilegeMenu privilegeMenu);
 	Boolean deleteByMenuId(String  menuId);
