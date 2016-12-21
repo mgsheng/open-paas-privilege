@@ -298,6 +298,7 @@ privilege-service/src/main/webapp/WEB-INF/soc-servlet.xml -text
 privilege-service/src/main/webapp/WEB-INF/web.xml -text
 privilege-service/src/main/webapp/index.jsp -text
 privilege-service/src/test/java/cn/com/open/test/GroupTest.java -text
+privilege-service/src/test/java/cn/com/open/test/RedisTest.java -text
 privilege-service/target/classes/cc/wdcy/infrastructure/mybatis/PrivilegeFunctionMapper.xml -text
 privilege-service/target/classes/cc/wdcy/infrastructure/mybatis/PrivilegeMenuMapper.xml -text
 privilege-service/target/classes/cc/wdcy/infrastructure/mybatis/PrivilegeResourceMapper.xml -text
