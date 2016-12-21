@@ -158,14 +158,12 @@ public class UserRoleRedisPrivilegeController extends BaseControllerUtil {
 			map.put("functionList", functionList);
 		}
 		
-		try {
+		
 			
 			redisClientTemplate.setString(userCacheRoleKey, JSONObject.fromObject(map).toString());
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}finally {
+	
 			redisClientTemplate.disconnect();
-		}
+		
 		String json = JSONObject.fromObject(map).toString();
 		System.err.println(json + "==json");
 		writeSuccessJson(response, map);
