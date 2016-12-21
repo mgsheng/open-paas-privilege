@@ -1,6 +1,7 @@
 package cn.com.open.opensass.privilege.infrastructure.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -16,7 +17,6 @@ public interface PrivilegeMenuRepository extends Repository {
 	
 	void savePrivilegeMenu(PrivilegeMenu privilegeMenu);
 	PrivilegeMenu findByMenuId(@Param("menuId")String menuId,@Param("appId")String appId);
-	PrivilegeMenu findByMenu_Id(@Param("menuId")String menuId);
 	void updatePrivilegeMenu(PrivilegeMenu privilegeMenu);
 	void deleteByMenuId(@Param("menuId")String menuId);
 	List<PrivilegeMenu> findMenuPage(@Param("menuId")String menuId,@Param("appId")String appId,@Param("startRow")int startRow,@Param("pageSize")int pageSize);
@@ -32,5 +32,5 @@ public interface PrivilegeMenuRepository extends Repository {
 	 * @param menuId
 	 * @return
 	 */
-	PrivilegeMenu getMenuById(@Param("menuId")String menuId);
+	Map<String, Object> getMenuById(@Param("menuId")String menuId);
 }
