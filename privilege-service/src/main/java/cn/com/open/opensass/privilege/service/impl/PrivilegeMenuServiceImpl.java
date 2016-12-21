@@ -51,7 +51,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 
 	@Override
 	public List<PrivilegeMenu> findMenuPage(String menuId, String appId,
-			String startRow, String pageSize) {
+			int startRow, int pageSize) {
 		// TODO Auto-generated method stub
 		return privilegeMenuRepository.findMenuPage(menuId, appId, startRow, pageSize);
 	}
@@ -198,6 +198,12 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 
 		}
 		return privilegeMenuVoSet;
+	}
+
+	@Override
+	public PrivilegeMenu findByMenuId(String menuId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

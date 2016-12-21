@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.opensass.privilege.model.PrivilegeGroup;
 import cn.com.open.opensass.privilege.model.PrivilegeGroupResource;
+import cn.com.open.opensass.privilege.model.PrivilegeMenu;
 import cn.com.open.opensass.privilege.service.PrivilegeGroupResourceService;
 import cn.com.open.opensass.privilege.service.PrivilegeGroupService;
+import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 
 /**
@@ -29,7 +31,7 @@ import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 public class MenuGetPrivilegeController extends BaseControllerUtil{
 	private static final Logger log = LoggerFactory.getLogger(MenuGetPrivilegeController.class);
 	@Autowired
-	private PrivilegeGroupService privilegeGroupService;
+	private PrivilegeMenuService privilegeMenuService;
 
     /**
      * 菜单查询接口
@@ -37,24 +39,24 @@ public class MenuGetPrivilegeController extends BaseControllerUtil{
      */
     @RequestMapping("getMenus")
     public void getMenus(HttpServletRequest request,HttpServletResponse response) {
-    	String groupId=request.getParameter("groupId");
+    	String menuId=request.getParameter("menuId");
     	String appId=request.getParameter("appId");
     	String start=request.getParameter("start");
     	String limit=request.getParameter("Limit");
     	Map<String, Object> map=new HashMap<String, Object>();
     	log.info("====================query start======================");
-    	if(!paraMandatoryCheck(Arrays.asList(groupId,start,appId,limit))){
+    	if(!paraMandatoryCheck(Arrays.asList(start,appId,limit))){
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
               return;	
     	}
-    	List<PrivilegeGroup>lists=privilegeGroupService.findGroupPage(groupId, appId, start, limit);
+    	List<PrivilegeMenu>lists=privilegeMenuService.findMenuPage(menuId, appId,Integer.parseInt(start),Integer.parseInt(limit));
     	if(lists!=null&&lists.size()>0){
     		for(int i=0;i<lists.size();i++){
     			
     		}
     		map.put("status", "1");
     		map.put("count", lists.size());
-    		map.put("groupList",lists);
+    		map.put("menuList",lists);
     	}else{
     		map.put("status", "0");
     		map.put("error_code", "10001");

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.com.open.opensass.privilege.infrastructure.mybatis.PrivilegeMenuRepositoryMyBatis">
 	<resultMap type="PrivilegeMenu" id="privilegeMenuMap">
-		<id column="id" property="menuId" jdbcType="VARCHAR" />
+		<id column="id" property="id" jdbcType="VARCHAR" />
 		<result column="menu_code" property="menuCode" jdbcType="VARCHAR" />
 		<result column="menu_name" property="menuName" jdbcType="VARCHAR" />
 		<result column="app_id" property="appId" jdbcType="VARCHAR" />
@@ -38,8 +38,10 @@
 	</select>
 	<select id="findMenuPage" resultMap="privilegeMenuMap" flushCache="true">
          select * from privilege_menu
-         where  menu_code = #{menuCode}
+         where  id = #{menuId} 
+         or parent_id=#{menuId}
          and app_id=#{appId}
+        
          limit #{startRow},#{pageSize} 
 	</select>
     <select id="getMenuById" resultMap="privilegeMenuMap" flushCache="true">
