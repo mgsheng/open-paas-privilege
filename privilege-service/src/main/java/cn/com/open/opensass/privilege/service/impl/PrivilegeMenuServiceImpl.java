@@ -85,10 +85,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 		return privilegeMenuRepository.getMenuListByUserId(appUserId,appId);
 	}
 
-	@Override
-	public PrivilegeMenu getMenuById(String menuId) {
-		return privilegeMenuRepository.getMenuById(menuId);
-	}
+	
 
 	@Override
 	public PrivilegeAjaxMessage getMenuRedis(String appId, String appUserId) {
@@ -201,10 +198,18 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 	}
 
 	@Override
-	public PrivilegeMenu findByMenuId(String menuId) {
+	public Map<String, Object> findByMenuId(String menuId) {
 		// TODO Auto-generated method stub
 		return privilegeMenuRepository.getMenuById(menuId);
 	}
+
+	@Override
+	public PrivilegeMenu getMenuById(String menuId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
 
 
 }
