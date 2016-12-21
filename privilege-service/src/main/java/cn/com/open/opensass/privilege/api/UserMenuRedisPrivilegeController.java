@@ -97,16 +97,9 @@ public class UserMenuRedisPrivilegeController extends BaseControllerUtil{
     	
     	if (menuIdSet!=null) {
 			List<Map<String, Object>> menuList=new ArrayList<Map<String,Object>>();
-			PrivilegeMenu menu=null;
 			for(String menuId:menuIdSet){
-				Map<String, Object> map2=new HashMap<String,Object>();
-				menu=privilegeMenuService.findByMenuId(menuId);
-				map2.put("menuId", menu.getMenuId());
-				map2.put("parentId", menu.getParentId());
-				map2.put("menuName", menu.getMenuName());
-				map2.put("menuRule", menu.getMenuRule());
-				map2.put("menuLevel", menu.getMenuLevel());
-				map2.put("displayOrder", menu.getDisplayOrder());
+				Map<String, Object> map2=privilegeMenuService.findByMenuId(menuId);
+				
 				menuList.add(map2);
 			}
 				menuMap.put("menuList", menuList);
