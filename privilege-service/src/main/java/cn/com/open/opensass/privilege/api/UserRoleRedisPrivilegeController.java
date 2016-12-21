@@ -151,7 +151,7 @@ public class UserRoleRedisPrivilegeController extends BaseControllerUtil {
 				Map<String, Object> map2 = new HashMap<>();
 				function = privilegeFunctionService.findByFunctionId(functionId);
 				map2.put("resourceId", function.getResourceId());
-				map2.put("functionId", function.getFunctionId());
+				map2.put("functionId", function.getId());
 				map2.put("optId", function.getOperationId());
 				map2.put("optUrl", function.getOptUrl());
 				functionList.add(map2);
