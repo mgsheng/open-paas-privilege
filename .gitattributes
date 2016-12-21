@@ -235,6 +235,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/Priv
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeRoleResourceServiceImpl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeRoleServiceImpl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeUrlServiceImpl.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeUserRedisServiceImpl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeUserRoleServiceImpl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeUserServiceImpl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/AbstractDomain.java -text
