@@ -48,9 +48,9 @@ public class UserMenuRedisPrivilegeController extends BaseControllerUtil{
 	
 	@RequestMapping("getUserMenuPrivilege")
 	public void MenuRedisPrivilege(HttpServletRequest request,HttpServletResponse response,PrivilegeUserVo privilegeUserVo){
-		Set<String> menuIdSet=new HashSet<>();
+		Set<String> menuIdSet=new HashSet<String>();
 		log.info("====================redis user menu start======================");    	
-		Map<String,List<Map<String, Object>>> menuMap=new HashMap<>();
+		Map<String,List<Map<String, Object>>> menuMap=new HashMap<String,List<Map<String, Object>>>();
 		if(!paraMandatoryCheck(Arrays.asList(privilegeUserVo.getAppId(),privilegeUserVo.getAppUserId()))){
   		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
             return;
@@ -98,10 +98,10 @@ public class UserMenuRedisPrivilegeController extends BaseControllerUtil{
     	//menuList
     	
     	if (menuIdSet!=null) {
-			List<Map<String, Object>> menuList=new ArrayList<>();
+			List<Map<String, Object>> menuList=new ArrayList<Map<String,Object>>();
 			PrivilegeMenu menu=null;
 			for(String menuId:menuIdSet){
-				Map<String, Object> map2=new HashMap<>();
+				Map<String, Object> map2=new HashMap<String,Object>();
 				menu=privilegeMenuService.findByMenuId(menuId);
 				map2.put("menuId", menu.getMenuId());
 				map2.put("parentId", menu.getParentId());
