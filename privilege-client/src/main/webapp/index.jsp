@@ -130,6 +130,12 @@
          <li>
             <p><a href="getUserRoleRedisPrivilegeTest">用户角色缓存查询</a> <br/>用户角色缓存查询</p>
         </li>
+         <li>
+            <p><a href="delUserRoleRedisPrivilegeTest">用户角色缓存删除</a> <br/>用户角色缓存删除</p>
+        </li>
+        <li>
+            <p><a href="updateUserRoleRedisPrivilegeTest">用户角色缓存更新</a> <br/>用户角色缓存更新</p>
+        </li>
       
     </ul>
 </div>
