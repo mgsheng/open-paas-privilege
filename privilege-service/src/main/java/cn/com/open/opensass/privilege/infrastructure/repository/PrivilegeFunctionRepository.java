@@ -1,6 +1,7 @@
 package cn.com.open.opensass.privilege.infrastructure.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -17,4 +18,5 @@ public interface PrivilegeFunctionRepository {
 	void deleteByFunctionId(@Param("functionId")String functionId);
 	void deleteByFunctionIds(@Param("functionIds")String[] functionIds);
 	List<PrivilegeFunction> findFunctionPage(@Param("functionId")String functionId,@Param("startRow")String startRow,@Param("pageSize")String pageSize);
+	List<Map<String, Object>> getFunctionListByUserId(@Param("appUserId")String appUserId,@Param("appId")String appId);
 }
