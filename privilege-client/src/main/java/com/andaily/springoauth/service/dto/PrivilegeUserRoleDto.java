@@ -21,6 +21,7 @@ public class PrivilegeUserRoleDto{
 	private String modiPrivilegeUserUri;
 	private String getPrivilegeUserUri;
 	private String verifyPrivilegeUserUri;
+	private String privilegeUserRoleQueryTestUrl;
 	
 	public String getAppId() {
 		return appId;
@@ -154,4 +155,13 @@ public class PrivilegeUserRoleDto{
 		return String.format("%s?appUserId=%s&appId=%s&optUrl=%s",
         		verifyPrivilegeUserUri,appUserId,appId,optUrl);  
 	}
+	public String getPrivilegeUserRoleQueryTestUrl() {
+		return String.format("%s?appUserId=%s&appId=%s",
+						privilegeUserRoleQueryTestUrl,appUserId,appId);
+	}
+	public void setPrivilegeUserRoleQueryTestUrl(String privilegeUserRoleQueryTestUrl) {
+		this.privilegeUserRoleQueryTestUrl = privilegeUserRoleQueryTestUrl;
+	}
+	
+	
 }
