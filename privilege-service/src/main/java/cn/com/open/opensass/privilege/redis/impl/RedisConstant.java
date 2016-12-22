@@ -23,6 +23,10 @@ public class RedisConstant {
   * userCacheMenu_appid_userid
   */
  public static final String USERMENU_CACHE=PUBLICSERVICE_CACHE+"userCacheMenu_";
+ /**
+  * userCacheRole_appid_userid
+  */
+ public static final String USERROLE_CACHE=PUBLICSERVICE_CACHE+"userCacheRole_";
  /*间隔符*/
  public static final String SIGN="_";
 }
