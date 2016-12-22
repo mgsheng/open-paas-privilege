@@ -34,8 +34,12 @@ public class PrivilegeUserController {
     @Value("#{properties['verify-privilege-user-uri']}")
     private String verifyPrivilegeUserUri;
     
+    @Value("#{properties['privilege-userroleredis-del-uri']}")
+    private String privilegeUserRoleDelTestUrl;
     @Value("#{properties['privilege-userroleredis-query-uri']}")
     private String privilegeUserRoleQueryTestUrl;
+    @Value("#{properties['privilege-userroleredis-update-uri']}")
+    private String privilegeUserRoleUpdateTestUrl;
     
     final static String  SEPARATOR = "&";
     private Map<String,String> map=LoadPopertiesFile.loadProperties();
@@ -134,6 +138,32 @@ public class PrivilegeUserController {
 	}
   	@RequestMapping(value = "getUserRoleRedisPrivilegeTest", method = RequestMethod.POST)
 	public String getUserRoleRedis(PrivilegeUserRoleDto privilegeUserRoleDto) {
+  		
+  		final String fullUri = privilegeUserRoleDto.getPrivilegeUserRoleQueryTestUrl();
+  		System.err.println(fullUri);
+        LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+        return "redirect:" + fullUri;
+	}
+  	@RequestMapping(value = "delUserRoleRedisPrivilegeTest", method = RequestMethod.GET)
+	public String delUserRoleRedis(Model model) {
+		model.addAttribute("privilegeUserRoleDelTestUrl", privilegeUserRoleDelTestUrl);
+		return "privilege/privilege_userrole_delete_redis";
+	}
+  	@RequestMapping(value = "updateUserRoleRedisPrivilegeTest", method = RequestMethod.GET)
+	public String updateUserRoleRedis(Model model) {
+		model.addAttribute("privilegeUserRoleUpdateTestUrl", privilegeUserRoleUpdateTestUrl);
+		return "privilege/privilege_userrole_update_redis";
+	}
+  	@RequestMapping(value = "updateUserRoleRedisPrivilegeTest", method = RequestMethod.POST)
+	public String updateUserRoleRedis(PrivilegeUserRoleDto privilegeUserRoleDto) {
+  		
+  		final String fullUri = privilegeUserRoleDto.getPrivilegeUserRoleQueryTestUrl();
+  		System.err.println(fullUri);
+        LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+        return "redirect:" + fullUri;
+	}
+  	@RequestMapping(value = "delUserRoleRedisPrivilegeTest", method = RequestMethod.POST)
+	public String delUserRoleRedis(PrivilegeUserRoleDto privilegeUserRoleDto) {
   		
   		final String fullUri = privilegeUserRoleDto.getPrivilegeUserRoleQueryTestUrl();
   		System.err.println(fullUri);
