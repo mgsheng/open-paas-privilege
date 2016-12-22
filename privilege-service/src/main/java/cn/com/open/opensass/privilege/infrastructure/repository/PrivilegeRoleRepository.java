@@ -1,6 +1,7 @@
 package cn.com.open.opensass.privilege.infrastructure.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -18,7 +19,9 @@ public interface PrivilegeRoleRepository extends Repository {
 	PrivilegeRole findByRoleId(String pararentRoleId);
 
 	void delPrivilegeRoleById(String privilegeRoleId);
-
+	
+	List<Map<String, Object>> getRoleListByUserId(@Param("appUserId")String appUserId,@Param("appId")String appId);
+	
 	void updatePrivilegeRole(PrivilegeRole privilegeRole);
 
 	List<String> findRoleByAppId(String appId);
