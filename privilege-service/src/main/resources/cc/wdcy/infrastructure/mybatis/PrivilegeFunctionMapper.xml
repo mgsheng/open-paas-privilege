@@ -23,7 +23,13 @@
         SELECT * FROM  privilege_function
         where  id = #{functionId}
     </select>
-    
+    <select id="getFunctionListByUserId" resultType="java.util.HashMap" flushCache="true">
+    	SELECT DISTINCT d.resource_id as resourceId,d.id as functionId,d.operation_id as optId,
+    	d.opt_url as optUrl FROM privilege_user a,privilege_user_role b,privilege_role_resource c,
+    	privilege_function d WHERE a.app_userid=#{appUserId}
+         AND a.app_id=#{appId}
+	AND a.uid=b.user_id AND b.privilege_roleid=c.privilege_roleid AND c.resource_id=d.resource_id;
+    </select>
     <select id="findFunctionPage" resultMap="privilegeFunctionMap" flushCache="true">
          select * from privilege_function
          where  function_code = #{FunctionCode}
