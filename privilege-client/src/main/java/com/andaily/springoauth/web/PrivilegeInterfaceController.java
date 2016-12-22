@@ -317,6 +317,26 @@ public class PrivilegeInterfaceController {
 		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
 		return "redirect:" + fullUri;
 	}
+	
+	/**
+	 *资源查询接口
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "getResPrivilege", method = RequestMethod.GET)
+	public String getResPrivilege(Model model) {
+		model.addAttribute("privilegeResourceQueryUrl", privilegeResourceQueryUrl);
+		return "privilege/privilege_resource_del";
+	}
+
+	@RequestMapping(value = "getResPrivilege", method = RequestMethod.POST)
+	public String getResPrivilege(PrivilegeResourceDto privilegeResourceDto)
+			throws Exception {
+		final String fullUri = privilegeResourceDto.getQueryUri();
+		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+		return "redirect:" + fullUri;
+	}
 
 
 	/**

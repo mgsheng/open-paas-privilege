@@ -91,6 +91,7 @@ privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_menu_query.jsp 
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_resource_add.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_resource_del.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_resource_modify.jsp -text
+privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_resource_query.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_role_add.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_role_del.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_role_modify.jsp -text
