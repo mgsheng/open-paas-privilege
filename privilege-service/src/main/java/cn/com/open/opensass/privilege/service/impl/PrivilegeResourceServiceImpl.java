@@ -1,6 +1,7 @@
 package cn.com.open.opensass.privilege.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -82,6 +83,11 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 	public PrivilegeResource findByResourceId(String resourceId) {
 		// TODO Auto-generated method stub
 		return privilegeResourceRepository.findByResource_Id(resourceId);
+	}
+
+	@Override
+	public List<Map<String, Object>> getResourceListByUserId(String appUserId, String appId) {
+		return privilegeResourceRepository.getResourceListByUserId(appUserId, appId);
 	}
 
 }
