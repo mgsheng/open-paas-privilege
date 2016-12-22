@@ -20,5 +20,5 @@ public interface PrivilegeResourceService {
 	Boolean updatePrivilegeResource(PrivilegeResource privilegeResource);
 	Boolean deleteByResourceId(String  resourceId);
 	List<Map<String, Object>> getResourceListByUserId(String appUserId,String appId);
-	PrivilegeResource findResourceByAppUserId(String userId);
+	//PrivilegeResource findResourceByAppUserId(String userId);
 }
