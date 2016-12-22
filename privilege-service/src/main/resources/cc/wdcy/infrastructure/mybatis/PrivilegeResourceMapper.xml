@@ -45,6 +45,15 @@
          and app_id=#{appId}
          limit #{startRow},#{pageSize} 
 	</select>
+	<select id="getResourceListByUserId" resultType="java.util.HashMap" flushCache="true">
+		SELECT DISTINCT d.app_id as appId,d.resource_id as resourceId,d.resource_level as resourceLevel,
+		d.resource_name as resourceName,d.resource_rule as resourceRule,d.display_order as dislayOrder,
+		d.menu_id as menuId,d.base_url as baseUrl,d.status as status
+		 FROM privilege_user a,privilege_user_role b,privilege_role_resource c,privilege_resource d
+		WHERE a.app_userid=#{appUserId}
+         AND a.app_id=#{appId}
+		AND a.uid=b.user_id AND b.privilege_roleid=c.privilege_roleid AND c.resource_id=d.resource_id;
+	</select>
     <select id="findResourceByAppUserId" parameterType="String" resultMap="privilegeResourceMap" flushCache="true">
         SELECT
       d.*
