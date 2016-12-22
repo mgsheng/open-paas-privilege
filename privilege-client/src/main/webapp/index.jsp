@@ -127,6 +127,9 @@
           <li>
             <p><a href="getGroupPrivilegeTest">查询组织机构测试</a> <br/>查询组织机构测试</p>
         </li>
+         <li>
+            <p><a href="getUserRoleRedisPrivilegeTest">用户角色缓存查询</a> <br/>用户角色缓存查询</p>
+        </li>
       
     </ul>
 </div>
