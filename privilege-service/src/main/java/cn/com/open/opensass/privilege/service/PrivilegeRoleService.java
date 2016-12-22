@@ -1,8 +1,10 @@
 package cn.com.open.opensass.privilege.service;
 
 import java.util.List;
+import java.util.Map;
 
 import cn.com.open.opensass.privilege.model.PrivilegeRole;
+import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 
 /**
  * 
@@ -22,4 +24,7 @@ public interface PrivilegeRoleService {
 	List<PrivilegeRole> findRoleByPage(String privilegeRoleId, String appId,int start, int limit);
 
 	int findRoleNoPage(String privilegeRoleId, String appId);
+	
+	List<Map<String, Object>> getRoleListByUserId(String appUserId,String appId);
+	PrivilegeAjaxMessage getUserRoleRedis(String appId, String appUserId);
 }
