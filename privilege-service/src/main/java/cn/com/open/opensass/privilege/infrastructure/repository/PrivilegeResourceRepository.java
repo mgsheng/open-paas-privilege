@@ -20,6 +20,6 @@ public interface PrivilegeResourceRepository extends Repository {
 	void updatePrivilegeResource(PrivilegeResource privilegeResource);
 	List<PrivilegeResource> findResourcePage(@Param("resourceId")String resourceId,@Param("appId")String appId,@Param("startRow")String startRow,@Param("pageSize")String pageSize);
 	void deleteByResourceId(@Param("resourceId")String resourceId);
-	PrivilegeResource findResourceByAppUserId(@Param("userId")String userId);
+	List<PrivilegeResource> findResourceByAppUserId(@Param("groupId")String groupId,@Param("appId")String appId);
 	List<Map<String, Object>> getResourceListByUserId(@Param("appUserId")String appUserId,@Param("appId")String appId);
 }
