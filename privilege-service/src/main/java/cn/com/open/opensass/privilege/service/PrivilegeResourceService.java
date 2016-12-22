@@ -1,6 +1,9 @@
 package cn.com.open.opensass.privilege.service;
 
 import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
 
 import cn.com.open.opensass.privilege.model.PrivilegeMenu;
 import cn.com.open.opensass.privilege.model.PrivilegeResource;
@@ -16,6 +19,6 @@ public interface PrivilegeResourceService {
 	List<PrivilegeResource>findResourcePage(String resourceId,String appId,String startRow,String pageSize);
 	Boolean updatePrivilegeResource(PrivilegeResource privilegeResource);
 	Boolean deleteByResourceId(String  resourceId);
-
+	List<Map<String, Object>> getResourceListByUserId(String appUserId,String appId);
 	PrivilegeResource findResourceByAppUserId(String userId);
 }
