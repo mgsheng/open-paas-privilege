@@ -18,9 +18,11 @@ import cn.com.open.opensass.privilege.service.PrivilegeUserRedisService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.WebUtils;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
+
 /**
- * redis menu 接口
- * 获取数据：getMenu?appId=&appUserId=
+ * redis userRole 接口 获取数据：getUserRoleRedis?appId=&appUserId=
+ * 更新数据：updateUserRoleRedis?appId=&appUserId=
+ * 删除数据：deleteUserRoleRedis?appId=&appUserId=
  */
 @Controller
 @RequestMapping("/userRole/")
@@ -28,13 +30,12 @@ public class UserRoleRedisPrivilegeController extends BaseControllerUtil {
 	private static final Logger log = LoggerFactory.getLogger(UserRoleRedisPrivilegeController.class);
 	@Autowired
 	private PrivilegeUserRedisService privilegeUserRedisService;
-	
 
 	/**
 	 * 用户角色缓存接口
 	 * 
 	 */
-	 @RequestMapping(value = "getUserRoleRedis", method = RequestMethod.GET)
+	@RequestMapping(value = "getUserRoleRedis", method = RequestMethod.POST)
 	public void getUserPrivilege(HttpServletRequest request, HttpServletResponse response) {
 		String appId = request.getParameter("appId").trim();
 		String appUserId = request.getParameter("appUserId").trim();
@@ -56,5 +57,48 @@ public class UserRoleRedisPrivilegeController extends BaseControllerUtil {
 		}
 		return;
 
+	}
+	@RequestMapping(value = "updateUserRoleRedis", method = RequestMethod.POST)
+	public void updateUserRoleRedis(HttpServletRequest request,HttpServletResponse response){
+		String appId = request.getParameter("appId").trim();
+		String appUserId = request.getParameter("appUserId").trim();
+		Map<String, Object> map = new HashMap<String, Object>();
+		log.info("====================del redis user role start======================");
+		if (!paraMandatoryCheck(Arrays.asList(appId, appUserId))) {
+			paraMandaChkAndReturn(10000, response, "必传参数中有空值");
+			return;
+		}
+		PrivilegeAjaxMessage ajaxMessage=privilegeUserRedisService.updateUserRoleRedis(appId, appUserId);
+		if (ajaxMessage.getCode().equals("1")) {
+			System.err.println(ajaxMessage.getMessage());
+			WebUtils.writeJson(response, ajaxMessage.getMessage());
+		} else {
+			map.put("status", ajaxMessage.getCode());
+			map.put("error_code", ajaxMessage.getMessage());/* 数据不存在 */
+			writeErrorJson(response, map);
+		}
+		return;
+	}
+	
+	@RequestMapping(value = "deleteUserRoleRedis", method = RequestMethod.POST)
+	public void delUserRoleRedis(HttpServletRequest request, HttpServletResponse response) {
+		String appId = request.getParameter("appId").trim();
+		String appUserId = request.getParameter("appUserId").trim();
+		Map<String, Object> map = new HashMap<String, Object>();
+		log.info("====================del redis user role start======================");
+		if (!paraMandatoryCheck(Arrays.asList(appId, appUserId))) {
+			paraMandaChkAndReturn(10000, response, "必传参数中有空值");
+			return;
+		}
+		PrivilegeAjaxMessage ajaxMessage=privilegeUserRedisService.delUserRoleRedis(appId, appUserId);
+		if (ajaxMessage.getCode().equals("1")) {
+			System.err.println(ajaxMessage.getMessage());
+			WebUtils.writeJson(response, ajaxMessage.getMessage());
+		} else {
+			map.put("status", ajaxMessage.getCode());
+			map.put("error_code", ajaxMessage.getMessage());/* 数据不存在 */
+			writeErrorJson(response, map);
+		}
+		return;
 	}
 }
