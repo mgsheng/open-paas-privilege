@@ -13,4 +13,7 @@ public interface PrivilegeGroupService {
 	PrivilegeGroup findBygroupId(String groupId,String appId);
 	List<PrivilegeGroup>findGroupPage(String groupId,String appId,String startRow,String pageSize);
 	Map<String, Object> findGroupPrivilege(String groupId,String appId);
+	boolean delGroupPrivilegeCache(String groupId,String appId);
+	boolean updateGroupPrivilegeCache(String groupId,String appId);
+	
 }
