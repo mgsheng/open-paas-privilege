@@ -103,6 +103,7 @@ privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_user_role_query
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_user_role_verify.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_userrole_delete_redis.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_userrole_query_redis.jsp -text
+privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_userrole_update_redis.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/refresh_token.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/register.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/resources/user_user_info.jsp -text
