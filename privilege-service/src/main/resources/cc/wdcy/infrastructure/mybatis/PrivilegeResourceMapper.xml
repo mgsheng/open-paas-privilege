@@ -29,6 +29,26 @@
 	  resource_level,
 	  base_url
 	</sql>
+	
+	<select id="findByGroupIdAndAppId" resultType="java.util.HashMap" flushCache="true">
+		SELECT
+			pr.app_id AS appid,
+			pr.resource_id AS resourceId,
+			pr.resource_level AS resourceLevel,
+			pr.resource_name AS resourceName,
+			pr.resource_rule AS resourceRule,
+			pr.display_order AS dislayOrder,
+			pr.menu_id AS menuId,
+			pr.base_url AS baseUrl,
+			pr.`status`
+		FROM
+			privilege_group_resource pgr,
+			privilege_resource pr
+		WHERE
+			pgr.group_id = #{groupId}
+		AND pr.app_id = #{appId}
+		AND pgr.resource_id = pr.resource_id
+	</select>
 	<select id="findByResource_Id" resultMap="privilegeResourceMap" flushCache="true">
          select * from privilege_resource
          where  resource_id = #{resourceId}
