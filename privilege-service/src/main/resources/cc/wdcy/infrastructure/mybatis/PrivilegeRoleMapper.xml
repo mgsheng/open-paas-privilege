@@ -40,7 +40,15 @@
          select * from privilege_role
          where  privilege_roleid = #{privilegeRoleId}
 	</select>
-	
+	<select id="getRoleListByUserId" resultType="java.util.HashMap" flushCache="true">
+		SELECT c.app_id as appId,c.dept_id  as deptId,c.dept_name as deptName,c.group_id as groupId,
+		c.group_name as groupName,c.privilege_roleid as privilegeRoleId,c.parent_roleId as parentRoleId,
+		c.remark as remark,c.role_level as roleLevel,c.role_name as roleName,c.status as status
+		 FROM privilege_user a,privilege_user_role b,privilege_role c
+		WHERE a.app_userid=#{appUserId}
+         and a.app_id=#{appId}
+		AND a.uid=b.user_id AND b.privilege_roleid=c.privilege_roleid 
+	</select>
 	<select id="findRoleByAppId" resultType="java.lang.String" flushCache="true">
 		select privilege_roleid from privilege_role where app_id = #{appId}
 	</select>
