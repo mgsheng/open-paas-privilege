@@ -31,6 +31,21 @@
 	  parent_id,
 	  resource_type
 	</sql>
+	<select id="findMenuByAppId" resultType="java.util.HashMap" flushCache="true">
+		SELECT DISTINCT
+			pm.id AS menuId,
+			pm.parent_id AS parentId,
+			pm.menu_name AS menuName,
+			pm.menu_rule AS menuRule,
+			pm.menu_level AS menuLevel,
+			pm.display_order AS displayOrder
+		FROM
+			privilege_menu pm,
+			privilege_resource pr
+		WHERE
+			pm.app_id = #{appId}
+		AND pm.id = pr.menu_id
+	</select>
 	<select id="findByMenuId" resultMap="privilegeMenuMap" flushCache="true">
          select * from privilege_menu
          where  id = #{menuId}
