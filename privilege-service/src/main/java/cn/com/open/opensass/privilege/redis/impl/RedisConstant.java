@@ -29,4 +29,8 @@ public class RedisConstant {
  public static final String USERROLE_CACHE=PUBLICSERVICE_CACHE+"userCacheRole_";
  /*间隔符*/
  public static final String SIGN="_";
+ /**
+  * 组织机构缓存key
+  */
+ public static final String PRIVILEGE_GROUPCACHE = "privilegeService_groupCache_";
 }
