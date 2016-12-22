@@ -1,6 +1,7 @@
 package cn.com.open.opensass.privilege.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeFunctionRepository;
 import cn.com.open.opensass.privilege.model.PrivilegeFunction;
@@ -69,6 +70,10 @@ public class PrivilegeFunctionServiceImpl implements PrivilegeFunctionService {
 			// TODO: handle exception
 			return false;
 		}
+	}
+	@Override
+	public List<Map<String, Object>> getFunctionListByUserId(String appUserId, String appId) {
+		return privilegeFunctionRepository.getFunctionListByUserId(appUserId, appId);
 	}
 	
 	
