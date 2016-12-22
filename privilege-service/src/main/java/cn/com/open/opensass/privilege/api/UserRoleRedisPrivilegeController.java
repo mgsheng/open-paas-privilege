@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import cn.com.open.opensass.privilege.service.PrivilegeUserRedisService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
@@ -20,7 +19,8 @@ import cn.com.open.opensass.privilege.tools.WebUtils;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 
 /**
- * redis userRole 接口 获取数据：getUserRoleRedis?appId=&appUserId=
+ * redis userRole 接口 
+ * 获取数据：getUserRoleRedis?appId=&appUserId=
  * 更新数据：updateUserRoleRedis?appId=&appUserId=
  * 删除数据：deleteUserRoleRedis?appId=&appUserId=
  */
@@ -35,7 +35,7 @@ public class UserRoleRedisPrivilegeController extends BaseControllerUtil {
 	 * 用户角色缓存接口
 	 * 
 	 */
-	@RequestMapping(value = "getUserRoleRedis", method = RequestMethod.POST)
+	@RequestMapping(value = "getUserRoleRedis")
 	public void getUserPrivilege(HttpServletRequest request, HttpServletResponse response) {
 		String appId = request.getParameter("appId").trim();
 		String appUserId = request.getParameter("appUserId").trim();
@@ -58,7 +58,7 @@ public class UserRoleRedisPrivilegeController extends BaseControllerUtil {
 		return;
 
 	}
-	@RequestMapping(value = "updateUserRoleRedis", method = RequestMethod.POST)
+	@RequestMapping(value = "updateUserRoleRedis")
 	public void updateUserRoleRedis(HttpServletRequest request,HttpServletResponse response){
 		String appId = request.getParameter("appId").trim();
 		String appUserId = request.getParameter("appUserId").trim();
@@ -80,7 +80,7 @@ public class UserRoleRedisPrivilegeController extends BaseControllerUtil {
 		return;
 	}
 	
-	@RequestMapping(value = "deleteUserRoleRedis", method = RequestMethod.POST)
+	@RequestMapping(value = "deleteUserRoleRedis")
 	public void delUserRoleRedis(HttpServletRequest request, HttpServletResponse response) {
 		String appId = request.getParameter("appId").trim();
 		String appUserId = request.getParameter("appUserId").trim();
