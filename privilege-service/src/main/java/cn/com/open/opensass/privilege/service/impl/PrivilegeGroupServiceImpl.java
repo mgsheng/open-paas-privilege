@@ -66,7 +66,7 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 	@Override
 	public Map<String, Object> findGroupPrivilege(String groupId, String appId) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		if (groupId == null || appId == null) {
+		if (groupId == null ||("".equals(groupId)) || appId == null || ("".equals(appId))) {
 			map.put("status", "0");
 			map.put("error_code", "10001");
 			return map;
@@ -82,8 +82,8 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 				Map map2 = (Map) jsonObject;
 				if (map2 != null && map2.size() > 0) {// 查询缓存命中
 					// map.put("status", "1");
-					map.put(PRIVILEGESERVICE_GROUPCACHE_APPID_GROUPID, map2);
-					return map;
+					//map.put(PRIVILEGESERVICE_GROUPCACHE_APPID_GROUPID, map2);
+					return map2;
 				}
 			} else {
 				Map<String, Object> redisMap = new HashMap<String, Object>();
@@ -107,6 +107,45 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * 删除组织机构的缓存
+	 */
+	@Override
+	public boolean delGroupPrivilegeCache(String groupId, String appId) {
+		if (groupId == null ||("".equals(groupId)) || appId == null || ("".equals(appId))) {
+			return false;
+		}
+		String privilegeservice_groupcache_appid_groupid = groupCachePrefix + "_" + groupId;
+		redisClientTemplate.del(privilegeservice_groupcache_appid_groupid);
+		return true;
+	}
+	
+	/**
+	 * 更新组织机构缓存
+	 */
+	@Override
+	public boolean updateGroupPrivilegeCache(String groupId, String appId) {
+		if (groupId == null ||("".equals(groupId)) || appId == null || ("".equals(appId))) {
+			return false;
+		}
+		String privilegeservice_groupcache_appid_groupid = groupCachePrefix + appId + "_" + groupId;
+		Map<String, Object> redisMap = new HashMap<String, Object>();
+		// 根据组Id和appId 查询资源
+		List<PrivilegeResource> resourceList = privilegeResourceRepository.findByGroupIdAndAppId(groupId,appId);
+		if (resourceList!=null && resourceList.size()>0) {
+			redisMap.put("resourceList", resourceList);
+		}
+		//根据appid查询菜单
+		List<PrivilegeMenu> menuList = privilegeMenuRepository.findMenuByAppId(appId);
+		if (menuList!=null && menuList.size()>0) {
+			redisMap.put("menuList", menuList);
+		}
+		// 向redis中添加组织机构的缓存
+		redisClientTemplate.setString(privilegeservice_groupcache_appid_groupid,
+				JSONObject.fromObject(redisMap).toString());
+		return true;
 	}
 	
 }
