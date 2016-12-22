@@ -4,13 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import cn.com.open.opensass.privilege.dao.cache.RedisDao;
-import cn.com.open.opensass.privilege.model.PrivilegeFunction;
-import cn.com.open.opensass.privilege.model.PrivilegeResource;
-import cn.com.open.opensass.privilege.model.PrivilegeRole;
 import cn.com.open.opensass.privilege.model.PrivilegeUser;
 import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
@@ -26,6 +24,7 @@ import net.sf.json.JSONObject;
 public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService {
 	private static final String prefix = RedisConstant.USERROLE_CACHE;
 	public static final String SIGN = RedisConstant.SIGN;
+	private static final Logger log = LoggerFactory.getLogger(PrivilegeUserRedisServiceImpl.class);
 	@Autowired
 	private PrivilegeUserService privilegeUserService;
 	@Autowired
@@ -54,6 +53,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 		// redis key
 		String userCacheRoleKey = prefix + appId + SIGN + appUserId;
 		/* 缓存中是否存在 存在返回 */
+		log.info("获取缓存");
 		String jsonString = redisClientTemplate.getString(userCacheRoleKey);
 		if (null != jsonString && jsonString.length() > 0) {
 			ajaxMessage.setCode("1");
@@ -61,6 +61,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 			System.err.println("缓存");
 			return ajaxMessage;
 		}
+		log.info("从数据库获取数据");
 		List<Map<String, Object>> roles = privilegeRoleService.getRoleListByUserId(appUserId, appId);
 		roleMap.put("roleList", roles);
 		// resourceList
