@@ -7,5 +7,4 @@ import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 
 public interface PrivilegeUserRedisService {
 	PrivilegeAjaxMessage getRedisUserRole(String appId,String appUserId);
-	PrivilegeAjaxMessage getRedisUserMenu(String appId,String appUserId);
 }
