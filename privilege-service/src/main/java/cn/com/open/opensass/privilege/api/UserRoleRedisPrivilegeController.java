@@ -1,10 +1,7 @@
 package cn.com.open.opensass.privilege.api;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,26 +14,27 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.service.PrivilegeUserRedisService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.WebUtils;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
-
+/**
+ * redis menu 接口
+ * 获取数据：getMenu?appId=&appUserId=
+ */
 @Controller
 @RequestMapping("/userRole/")
 public class UserRoleRedisPrivilegeController extends BaseControllerUtil {
 	private static final Logger log = LoggerFactory.getLogger(UserRoleRedisPrivilegeController.class);
 	@Autowired
 	private PrivilegeUserRedisService privilegeUserRedisService;
-	@Autowired
-	private RedisClientTemplate redisClientTemplate;
+	
 
 	/**
 	 * 用户角色缓存接口
 	 * 
 	 */
-	 @RequestMapping(value = "getUserRoleRedis", method = RequestMethod.POST)
+	 @RequestMapping(value = "getUserRoleRedis", method = RequestMethod.GET)
 	public void getUserPrivilege(HttpServletRequest request, HttpServletResponse response) {
 		String appId = request.getParameter("appId").trim();
 		String appUserId = request.getParameter("appUserId").trim();
