@@ -7,8 +7,10 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.quartz.AdaptableJobFactory;
 import org.springframework.stereotype.Repository;
 
+import cn.com.open.opensass.privilege.dao.cache.RedisDao;
 import cn.com.open.opensass.privilege.model.PrivilegeUser;
 import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
@@ -35,7 +37,8 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 	private PrivilegeFunctionService privilegeFunctionService;
 	@Autowired
 	private RedisClientTemplate redisClientTemplate;
-	
+	@Autowired
+	private RedisDao redisDao;
 
 	@Override
 	public PrivilegeAjaxMessage getRedisUserRole(String appId, String appUserId) {
@@ -49,7 +52,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 			return ajaxMessage;
 		}
 		Map<String, Object> roleMap = new HashMap<String, Object>();
-		
+
 		// redis key
 		String userCacheRoleKey = prefix + appId + SIGN + appUserId;
 		/* 缓存中是否存在 存在返回 */
@@ -75,6 +78,26 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 		ajaxMessage.setCode("1");
 		ajaxMessage.setMessage(JSONObject.fromObject(roleMap).toString());
 		return ajaxMessage;
+	}
+
+	@Override
+	public PrivilegeAjaxMessage delUserRoleRedis(String appId, String appUserId) {
+		PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
+		Boolean UserRoleKeyExist = redisDao.deleteRedisKey(prefix, appId, appUserId);
+		ajaxMessage.setCode("1");
+		ajaxMessage.setMessage(UserRoleKeyExist ? "Success" : "Failed");
+		log.info("delMenuRedis接口删除：" + UserRoleKeyExist);
+		return ajaxMessage;
+	}
+
+	@Override
+	public PrivilegeAjaxMessage updateUserRoleRedis(String appId, String appUserId) {
+		boolean RedisKeyExist = redisDao.existKeyRedis(prefix, appId, appUserId);
+		if (RedisKeyExist) {
+			delUserRoleRedis(appId, appUserId);
+		}
+		log.info("更新redis");
+		return getRedisUserRole(appId, appUserId);
 	}
 
 }
