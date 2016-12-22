@@ -117,7 +117,7 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 		if (groupId == null ||("".equals(groupId)) || appId == null || ("".equals(appId))) {
 			return false;
 		}
-		String privilegeservice_groupcache_appid_groupid = groupCachePrefix + "_" + groupId;
+		String privilegeservice_groupcache_appid_groupid = groupCachePrefix + appId+"_" + groupId;
 		redisClientTemplate.del(privilegeservice_groupcache_appid_groupid);
 		return true;
 	}
