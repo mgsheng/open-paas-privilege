@@ -34,6 +34,9 @@ public class PrivilegeUserController {
     @Value("#{properties['verify-privilege-user-uri']}")
     private String verifyPrivilegeUserUri;
     
+    @Value("#{properties['privilege-userroleredis-query-uri']}")
+    private String privilegeUserRoleQueryTestUrl;
+    
     final static String  SEPARATOR = "&";
     private Map<String,String> map=LoadPopertiesFile.loadProperties();
      /*
@@ -50,6 +53,7 @@ public class PrivilegeUserController {
     @RequestMapping(value = "addPrivilegeUserRole", method = RequestMethod.POST)
      public String addPrivilegeUserRole(PrivilegeUserRoleDto privilegeUserRoleDto) throws Exception {
          final String fullUri = privilegeUserRoleDto.getAddFullUri();
+         System.err.println(fullUri);
          LOG.debug("Send to Oauth-Server URL: {}", fullUri);
          return "redirect:" + fullUri;
      }
@@ -123,4 +127,17 @@ public class PrivilegeUserController {
        LOG.debug("Send to Oauth-Server URL: {}", fullUri);
        return "redirect:" + fullUri;
    }
+  	@RequestMapping(value = "getUserRoleRedisPrivilegeTest", method = RequestMethod.GET)
+	public String getUserRoleRedis(Model model) {
+		model.addAttribute("privilegeUserRoleQueryTestUrl", privilegeUserRoleQueryTestUrl);
+		return "privilege/privilege_userrole_query_redis";
+	}
+  	@RequestMapping(value = "getUserRoleRedisPrivilegeTest", method = RequestMethod.POST)
+	public String getUserRoleRedis(PrivilegeUserRoleDto privilegeUserRoleDto) {
+  		
+  		final String fullUri = privilegeUserRoleDto.getPrivilegeUserRoleQueryTestUrl();
+  		System.err.println(fullUri);
+        LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+        return "redirect:" + fullUri;
+	}
 }
