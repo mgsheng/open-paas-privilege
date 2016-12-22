@@ -1,6 +1,9 @@
 package cn.com.open.opensass.privilege.service;
 
 import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
 
 import cn.com.open.opensass.privilege.model.PrivilegeFunction;
 
@@ -15,4 +18,5 @@ public interface PrivilegeFunctionService {
 	Boolean updatePrivilegeFunction(PrivilegeFunction privilegeFunction);
 	Boolean deleteByFunctionId(String  functionId);
 	Boolean deleteByFunctionIds(String []  functionIds);
+	List<Map<String, Object>> getFunctionListByUserId(String appUserId,String appId);
 }
