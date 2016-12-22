@@ -45,7 +45,7 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 
 	@Override
 	public List<PrivilegeResource> findResourcePage(String resourceId, String appId,
-			String startRow, String pageSize) {
+			int startRow, int pageSize) {
 		// TODO Auto-generated method stub
 		return privilegeResourceRepository.findResourcePage(resourceId, appId, startRow, pageSize);
 	}

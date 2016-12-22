@@ -16,7 +16,7 @@ public interface PrivilegeResourceService {
 	PrivilegeResource findByResourceId(String resourceId,String appId);
 	PrivilegeResource findByResourceId(String resourceId);
 	PrivilegeResource findByResourceCode(String resourceId,String appId);
-	List<PrivilegeResource>findResourcePage(String resourceId,String appId,String startRow,String pageSize);
+	List<PrivilegeResource>findResourcePage(String resourceId,String appId,int startRow,int pageSize);
 	Boolean updatePrivilegeResource(PrivilegeResource privilegeResource);
 	Boolean deleteByResourceId(String  resourceId);
 	List<Map<String, Object>> getResourceListByUserId(String appUserId,String appId);

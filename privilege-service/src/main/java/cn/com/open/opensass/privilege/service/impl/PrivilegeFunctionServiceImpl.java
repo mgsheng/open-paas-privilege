@@ -72,6 +72,11 @@ public class PrivilegeFunctionServiceImpl implements PrivilegeFunctionService {
 		}
 	}
 	@Override
+	public List<PrivilegeFunction> getFunctionByRId(String resourceId) {
+		// TODO Auto-generated method stub
+		return privilegeFunctionRepository.getFunctionByRId(resourceId);
+	}
+	@Override
 	public List<Map<String, Object>> getFunctionListByUserId(String appUserId, String appId) {
 		return privilegeFunctionRepository.getFunctionListByUserId(appUserId, appId);
 	}

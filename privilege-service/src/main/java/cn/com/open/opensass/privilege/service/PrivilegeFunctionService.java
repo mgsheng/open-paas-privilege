@@ -18,5 +18,13 @@ public interface PrivilegeFunctionService {
 	Boolean updatePrivilegeFunction(PrivilegeFunction privilegeFunction);
 	Boolean deleteByFunctionId(String  functionId);
 	Boolean deleteByFunctionIds(String []  functionIds);
+	/**
+	 * 获取功能根据resourceId
+	 * @param functionId
+	 * @param startRow
+	 * @param pageSize
+	 * @return
+	 */
+	List<PrivilegeFunction>getFunctionByRId(String resourceId);
 	List<Map<String, Object>> getFunctionListByUserId(String appUserId,String appId);
 }

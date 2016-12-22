@@ -32,7 +32,7 @@
     </select>
     <select id="findFunctionPage" resultMap="privilegeFunctionMap" flushCache="true">
          select * from privilege_function
-         where  function_code = #{FunctionCode}
+         where  function_code = #{functionCode}
          limit #{startRow},#{pageSize} 
 	</select>
     <update id="updatePrivilegeFunction" parameterType="PrivilegeFunction" flushCache="true">
@@ -64,7 +64,10 @@
 	 <delete id="deleteByFunctionId">
         delete from privilege_function where id=#{functionId}
     </delete>
-   
+    <select id="getFunctionByRId" resultMap="privilegeFunctionMap" flushCache="true">
+         select * from privilege_function
+         where  resource_id = #{resourceId}
+	</select>
   <delete id="deleteByFunctionIds">
         delete from privilege_function where id in
         <foreach item="item" index="index" collection="functionIds" open="(" separator="," close=")">  
