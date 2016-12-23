@@ -35,14 +35,10 @@ import net.sf.json.JSONObject;
 @RequestMapping("/UserMenu/")
 public class UserMenuRedisPrivilegeController extends BaseControllerUtil{
 	private static final Logger log = LoggerFactory.getLogger(UserMenuRedisPrivilegeController.class);
-	@Autowired
-	private PrivilegeUserService privilegeUserService;
 	
-	@Autowired 
-	private PrivilegeResourceService privilegeResourceService; 
 	
-	@Autowired
-	private  RedisClientTemplate redisClientTemplate;
+	
+	
 	
 	
 	@RequestMapping("getUserMenuPrivilege")
@@ -54,62 +50,15 @@ public class UserMenuRedisPrivilegeController extends BaseControllerUtil{
   		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
             return;
 		}  
-		PrivilegeUser user = privilegeUserService.findByAppIdAndUserId(privilegeUserVo.getAppId(),privilegeUserVo.getAppUserId());
-    	if(user==null){
-    		 paraMandaChkAndReturn(10001, response,"该用户不存在");
-             return;
-    	}
     	
-    	//redis key
-    	String userCacheMenuKey="privilegeService_userCacheMenu_"+user.getAppId()+"_"+user.getAppUserId();
     	
-    		//取缓存
-        	if (redisClientTemplate.getString(userCacheMenuKey)!=null) {
-    			String jString=redisClientTemplate.getString(userCacheMenuKey);
-    			JSONObject  jasonObject = JSONObject.fromObject(jString);
-    			Map JsonMap = (Map)jasonObject;
-    		    writeSuccessJson(response, JsonMap);  
-    		    redisClientTemplate.disconnect();
-    			return;
-    		}
-		
-		
     	
-    	//resourceList
-    	String privilegeResourceIds=user.getResourceId();
-    	
-    	if(privilegeResourceIds!=null&&!("").equals(privilegeResourceIds)){
-    		String[] resourceIds1 = privilegeResourceIds.split(",");//将当前user privilegeResourceIds字段数组转list
-    		List<String> resourceIdList = new ArrayList<String>();
-    		Collections.addAll(resourceIdList, resourceIds1);
-			PrivilegeResource resource=null;
-    		for(String resourceId : resourceIdList){
-    			resource=privilegeResourceService.findByResourceId(resourceId);
-    			if (resource.getMenuId()!=null&&!("").equals(resource.getMenuId())) {
-    				menuIdSet.add(resource.getMenuId());
-				}
-    		}
     		
-    	}
-    	
-    	//menuList
-    	
-    	if (menuIdSet!=null) {
-			List<Map<String, Object>> menuList=new ArrayList<Map<String,Object>>();
-			for(String menuId:menuIdSet){
-				
-			}
-				menuMap.put("menuList", menuList);
-		}
-    	
-    		redisClientTemplate.setString(userCacheMenuKey, JSONObject.fromObject(menuMap).toString());
 		
-			redisClientTemplate.disconnect();
-	
+		
     	
     	
-    	/*String	json=JSONObject.fromObject(menuMap).toString();
-    	System.err.println(json+"==json");*/
-    	writeSuccessJson(response,menuMap);
+    	
+    
 	}
 }
