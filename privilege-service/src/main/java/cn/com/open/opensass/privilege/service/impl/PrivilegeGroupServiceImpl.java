@@ -145,9 +145,11 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 		}
 		//根据appid查询菜单
 		List<PrivilegeMenu> menuList = privilegeMenuRepository.findMenuByAppId(appId);
-		if (menuList!=null && menuList.size()>0) {
-			redisMap.put("menuList", menuList);
-		}
+		
+		Set<PrivilegeMenuVo> privilegeMenuVoSet = new HashSet<PrivilegeMenuVo>();
+		//获取所有父菜单
+		Set<PrivilegeMenuVo> allMenu = privilegeMenuService.getAllMenuByUserId(menuList, privilegeMenuVoSet);
+			redisMap.put("menuList", allMenu);
 		// 向redis中添加组织机构的缓存
 		redisClientTemplate.setString(privilegeservice_groupcache_appid_groupid,
 				JSONObject.fromObject(redisMap).toString());
