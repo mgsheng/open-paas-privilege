@@ -1,8 +1,10 @@
 package cn.com.open.opensass.privilege.service.impl;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,8 @@ import cn.com.open.opensass.privilege.model.PrivilegeResource;
 import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import cn.com.open.opensass.privilege.service.PrivilegeGroupService;
+import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
+import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
 import net.sf.json.JSONObject;
 
 /**
@@ -32,6 +36,8 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 	private PrivilegeMenuRepository privilegeMenuRepository;
 	@Autowired
 	private RedisClientTemplate redisClientTemplate;
+	@Autowired
+	private PrivilegeMenuService privilegeMenuService;
 	// 缓存前缀
 	private String groupCachePrefix = RedisConstant.PRIVILEGE_GROUPCACHE;
 
@@ -81,8 +87,6 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 				JSONObject jsonObject = JSONObject.fromObject(str);
 				Map map2 = (Map) jsonObject;
 				if (map2 != null && map2.size() > 0) {// 查询缓存命中
-					// map.put("status", "1");
-					//map.put(PRIVILEGESERVICE_GROUPCACHE_APPID_GROUPID, map2);
 					return map2;
 				}
 			} else {
@@ -94,9 +98,11 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 				}
 				//根据appid查询菜单
 				List<PrivilegeMenu> menuList = privilegeMenuRepository.findMenuByAppId(appId);
-				if (menuList!=null && menuList.size()>0) {
-					redisMap.put("menuList", menuList);
-				}
+				
+				Set<PrivilegeMenuVo> privilegeMenuVoSet = new HashSet<PrivilegeMenuVo>();
+				//获取所有父菜单
+				Set<PrivilegeMenuVo> allMenu = privilegeMenuService.getAllMenuByUserId(menuList, privilegeMenuVoSet);
+					redisMap.put("menuList", allMenu);
 				// 向redis中添加组织机构的缓存
 				redisClientTemplate.setString(PRIVILEGESERVICE_GROUPCACHE_APPID_GROUPID,
 						JSONObject.fromObject(redisMap).toString());
