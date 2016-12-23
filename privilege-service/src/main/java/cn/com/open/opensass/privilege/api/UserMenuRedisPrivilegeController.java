@@ -43,8 +43,7 @@ public class UserMenuRedisPrivilegeController extends BaseControllerUtil{
 	
 	@Autowired
 	private  RedisClientTemplate redisClientTemplate;
-	@Autowired
-	private  PrivilegeMenuService privilegeMenuService;
+	
 	
 	@RequestMapping("getUserMenuPrivilege")
 	public void MenuRedisPrivilege(HttpServletRequest request,HttpServletResponse response,PrivilegeUserVo privilegeUserVo){
@@ -98,9 +97,7 @@ public class UserMenuRedisPrivilegeController extends BaseControllerUtil{
     	if (menuIdSet!=null) {
 			List<Map<String, Object>> menuList=new ArrayList<Map<String,Object>>();
 			for(String menuId:menuIdSet){
-				Map<String, Object> map2=privilegeMenuService.findByMenuId(menuId);
 				
-				menuList.add(map2);
 			}
 				menuMap.put("menuList", menuList);
 		}
