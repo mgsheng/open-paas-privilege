@@ -32,6 +32,6 @@ public interface PrivilegeMenuRepository extends Repository {
 	 * @param menuId
 	 * @return
 	 */
-	Map<String, Object> getMenuById(@Param("menuId")String menuId);
+	PrivilegeMenu getMenuById(@Param("menuId")String menuId);
 	List<PrivilegeMenu> findMenuByAppId(@Param("appId")String appId);
 }
