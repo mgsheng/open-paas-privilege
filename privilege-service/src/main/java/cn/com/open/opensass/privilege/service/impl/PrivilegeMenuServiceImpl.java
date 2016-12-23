@@ -197,16 +197,16 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 		return privilegeMenuVoSet;
 	}
 
-	@Override
+	/*@Override
 	public Map<String, Object> findByMenuId(String menuId) {
 		// TODO Auto-generated method stub
 		return privilegeMenuRepository.getMenuById(menuId);
-	}
+	}*/
 
 	@Override
 	public PrivilegeMenu getMenuById(String menuId) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return privilegeMenuRepository.getMenuById(menuId);
 	}
 
 	
