@@ -16,7 +16,7 @@ public interface PrivilegeMenuService {
 	Boolean savePrivilegeMenu(PrivilegeMenu privilegeMenu);
 	PrivilegeMenu findByMenuId(String menuId,String appId);
 	List<PrivilegeMenu>findMenuPage(String menuId,String appId,int startRow,int pageSize);
-	Map<String, Object> findByMenuId(String menuId);
+	//Map<String, Object> findByMenuId(String menuId);
 	Boolean updatePrivilegeMenu(PrivilegeMenu privilegeMenu);
 	Boolean deleteByMenuId(String  menuId);
 
