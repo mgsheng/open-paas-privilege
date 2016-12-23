@@ -175,5 +175,5 @@
         </bean>
         
        <bean id="redisClientTemplate" class="cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate"></bean>
-		<bean id="privilegeGroupService" class="cn.com.open.opensass.privilege.service.impl.PrivilegeGroupServiceImpl"></bean>
+		
 </beans>
