@@ -31,14 +31,8 @@
 	  parent_id,
 	  resource_type
 	</sql>
-	<select id="findMenuByAppId" resultType="java.util.HashMap" flushCache="true">
-		SELECT DISTINCT
-			pm.id AS menuId,
-			pm.parent_id AS parentId,
-			pm.menu_name AS menuName,
-			pm.menu_rule AS menuRule,
-			pm.menu_level AS menuLevel,
-			pm.display_order AS displayOrder
+	<select id="findMenuByAppId" resultMap="privilegeMenuMap" flushCache="true">
+		SELECT DISTINCT pm.*
 		FROM
 			privilege_menu pm,
 			privilege_resource pr
@@ -59,8 +53,8 @@
         
          limit #{startRow},#{pageSize} 
 	</select>
-    <select id="getMenuById" resultType="java.util.HashMap" flushCache="true">
-        select id as menuId,parent_id as parentId,menu_name as menuName,menu_rule as menuRule,menu_level as menuLevel,display_order as displayOrder from privilege_menu
+    <select id="getMenuById" resultMap="privilegeMenuMap" flushCache="true">
+        select * from privilege_menu
         where  id = #{menuId}
     </select>
     <select id="getMenuListByUserId" resultMap="privilegeMenuMap" flushCache="true">
