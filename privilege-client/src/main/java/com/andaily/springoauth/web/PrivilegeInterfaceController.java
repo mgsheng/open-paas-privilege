@@ -82,8 +82,14 @@ public class PrivilegeInterfaceController {
 	@Value("#{properties['privilege-function-del-uri']}")
 	private String privilegeFunctionDelUrl;
 	//查询组织机构测试地址属性
-	@Value("#{properties['privilege-group-query-test-uri']}")
+	@Value("#{properties['privilege-groupredis-query-uri']}")
 	private String privilegeGroupQueryTestUrl;
+	//查询组织机构缓存删除测试地址
+	@Value("#{properties['privilege-groupredis-del-uri']}")
+	private String privilegeGroupRedisDelUrl;
+	//查询组织机构缓存更新测试地址
+	@Value("#{properties['privilege-groupredis-update-uri']}")
+	private String privilegeGroupRedisUpdateUrl;
 	
 	final static String SEPARATOR = "&";
 	private Map<String, String> map = LoadPopertiesFile.loadProperties();
@@ -185,6 +191,43 @@ public class PrivilegeInterfaceController {
 		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
 		return "redirect:" + fullUri;
 	}
+	/**
+	 * 组织机构权限缓存删除接口
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "delGroupPrivilegeRedis", method = RequestMethod.GET)
+	public String delGroupPrivilegeRedis(Model model) {
+		model.addAttribute("privilegeGroupQueryTestUrl", privilegeGroupRedisDelUrl);
+		return "privilege/privilege_group_del_redis";
+	}
+	@RequestMapping(value = "delGroupPrivilegeRedis", method = RequestMethod.POST)
+	public String delGroupPrivilegeRedis(PrivilegeGroupDto privilegeGroupDto)
+			throws Exception {
+		final String fullUri = privilegeGroupDto.getQueryTestUri();
+		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+		return "redirect:" + fullUri;
+	}
+	/**
+	 * 组织机构权限缓存更新接口
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "updateGroupPrivilegeRedis", method = RequestMethod.GET)
+	public String updateGroupPrivilegeRedis(Model model) {
+		model.addAttribute("privilegeGroupQueryTestUrl", privilegeGroupRedisUpdateUrl);
+		return "privilege/privilege_group_update_redis";
+	}
+	@RequestMapping(value = "updateGroupPrivilegeRedis", method = RequestMethod.POST)
+	public String updateGroupPrivilegeRedis(PrivilegeGroupDto privilegeGroupDto)
+			throws Exception {
+		final String fullUri = privilegeGroupDto.getQueryTestUri();
+		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+		return "redirect:" + fullUri;
+	}
+	
 	/**
 	 *菜单添加接口
 	 * 
