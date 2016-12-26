@@ -85,6 +85,7 @@ privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_group_del_redis
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_group_modify.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_group_query.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_group_query_test.jsp -text
+privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_group_update_redis.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_menu_add.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_menu_del.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_menu_modify.jsp -text
