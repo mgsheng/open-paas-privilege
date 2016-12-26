@@ -1,5 +1,6 @@
 package cn.com.open.opensass.privilege.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeResourceRepository;
 import cn.com.open.opensass.privilege.model.PrivilegeResource;
 import cn.com.open.opensass.privilege.service.PrivilegeResourceService;
+import cn.com.open.opensass.privilege.vo.PrivilegeResourceVo;
 
 /**
  * 
@@ -85,6 +87,26 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 	@Override
 	public List<Map<String, Object>> getResourceListByUserId(String appUserId, String appId) {
 		return privilegeResourceRepository.getResourceListByUserId(appUserId, appId);
+	}
+
+	@Override
+	public List<PrivilegeResourceVo> findByGroupIdAndAppId(String groupId, String appId) {
+		List<PrivilegeResourceVo> privilegeResourceVos =new ArrayList<PrivilegeResourceVo>();
+		List<PrivilegeResource> privilegeResources=privilegeResourceRepository.findByGroupIdAndAppId(groupId, appId);
+		for(PrivilegeResource resource:privilegeResources){
+			PrivilegeResourceVo privilegeResourceVo=new PrivilegeResourceVo();
+			privilegeResourceVo.setAppId(resource.getAppId());
+			privilegeResourceVo.setBaseUrl(resource.getBaseUrl());
+			privilegeResourceVo.setDisplayOrder(resource.getDisplayOrder());
+			privilegeResourceVo.setMenuId(resource.getMenuId());
+			privilegeResourceVo.setResourceId(resource.getResourceId());
+			privilegeResourceVo.setResourceLevel(String.valueOf(resource.getResourceLevel()));
+			privilegeResourceVo.setResourceName(resource.getResourceName());
+			privilegeResourceVo.setResourceRule(resource.getResourceRule());
+			privilegeResourceVo.setStatus(resource.getStatus());
+			privilegeResourceVos.add(privilegeResourceVo);
+		}
+		return privilegeResourceVos;
 	}
 
 }
