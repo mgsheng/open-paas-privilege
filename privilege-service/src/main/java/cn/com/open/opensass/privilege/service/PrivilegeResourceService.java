@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import cn.com.open.opensass.privilege.model.PrivilegeMenu;
 import cn.com.open.opensass.privilege.model.PrivilegeResource;
+import cn.com.open.opensass.privilege.vo.PrivilegeResourceVo;
 
 /**
  * 
@@ -21,4 +22,5 @@ public interface PrivilegeResourceService {
 	Boolean deleteByResourceId(String  resourceId);
 	List<Map<String, Object>> getResourceListByUserId(String appUserId,String appId);
 	//PrivilegeResource findResourceByAppUserId(String userId);
+	List<PrivilegeResourceVo> findByGroupIdAndAppId(String groupId,String appId);
 }
