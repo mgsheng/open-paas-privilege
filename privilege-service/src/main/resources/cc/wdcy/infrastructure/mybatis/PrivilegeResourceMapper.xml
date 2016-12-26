@@ -30,17 +30,9 @@
 	  base_url
 	</sql>
 	
-	<select id="findByGroupIdAndAppId" resultType="java.util.HashMap" flushCache="true">
+	<select id="findByGroupIdAndAppId" resultMap="privilegeResourceMap" flushCache="true">
 		SELECT DISTINCT
-			pr.app_id as appId,
-			pr.resource_id as resourceId,
-			pr.resource_level as resourceLevel,
-			pr.resource_name as resourceName,
-			pr.resource_rule as resourceRule,
-			pr.display_order as dislayOrder,
-			pr.menu_id as menuId,
-			pr.base_url as baseUrl,
-			pr.status as status
+			pr.*
 		FROM
 			privilege_group pg,
 			privilege_group_resource pgr,
