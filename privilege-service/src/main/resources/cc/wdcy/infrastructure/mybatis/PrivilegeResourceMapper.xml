@@ -31,23 +31,24 @@
 	</sql>
 	
 	<select id="findByGroupIdAndAppId" resultType="java.util.HashMap" flushCache="true">
-		SELECT
-			pr.app_id AS appid,
-			pr.resource_id AS resourceId,
-			pr.resource_level AS resourceLevel,
-			pr.resource_name AS resourceName,
-			pr.resource_rule AS resourceRule,
-			pr.display_order AS dislayOrder,
-			pr.menu_id AS menuId,
-			pr.base_url AS baseUrl,
-			pr.`status`
+		SELECT DISTINCT
+			pr.app_id as appId,
+			pr.resource_id as resourceId,
+			pr.resource_level as resourceLevel,
+			pr.resource_name as resourceName,
+			pr.resource_rule as resourceRule,
+			pr.display_order as dislayOrder,
+			pr.menu_id as menuId,
+			pr.base_url as baseUrl,
+			pr.status as status
 		FROM
+			privilege_group pg,
 			privilege_group_resource pgr,
 			privilege_resource pr
 		WHERE
-			pgr.group_id = #{groupId}
-		AND pr.app_id = #{appId}
-		AND pgr.resource_id = pr.resource_id
+			pg.app_id=#{appId}
+			AND #{groupId}=pgr.group_id AND pgr.resource_id=pr.resource_id
+			
 	</select>
 	<select id="findByResource_Id" resultMap="privilegeResourceMap" flushCache="true">
          select * from privilege_resource
