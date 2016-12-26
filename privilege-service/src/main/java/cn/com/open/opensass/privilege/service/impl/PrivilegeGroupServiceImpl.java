@@ -22,8 +22,10 @@ import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import cn.com.open.opensass.privilege.service.PrivilegeGroupService;
 import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
+import cn.com.open.opensass.privilege.service.PrivilegeResourceService;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
+import cn.com.open.opensass.privilege.vo.PrivilegeResourceVo;
 import net.sf.json.JSONObject;
 
 /**
@@ -35,7 +37,8 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 	@Autowired
 	private PrivilegeGroupRepository privilegeGroupRepository;
 	@Autowired
-	private PrivilegeResourceRepository privilegeResourceRepository;
+	private PrivilegeResourceService privilegeResourceService;
+	
 	@Autowired
 	private PrivilegeMenuRepository privilegeMenuRepository;
 	@Autowired
@@ -102,7 +105,7 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 		log.info("从数据库获取数据");
 		Map<String, Object> redisMap = new HashMap<String, Object>();
 		// 根据组Id和appId 查询资源
-		List<Map<String, Object>> resourceList = privilegeResourceRepository.findByGroupIdAndAppId(groupId, appId);
+		List<PrivilegeResourceVo> resourceList = privilegeResourceService.findByGroupIdAndAppId(groupId, appId);
 		redisMap.put("resourceList", resourceList);
 		// 根据groupId appId查询菜单
 		List<PrivilegeMenu> menuList = privilegeMenuRepository.findMenuByGroupIdAndAppId(groupId, appId);
