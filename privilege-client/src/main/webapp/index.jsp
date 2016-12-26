@@ -125,7 +125,13 @@
             <p><a href="delFunction">权限功能删除接口</a> <br/>权限功能删除接口</p>
         </li>
           <li>
-            <p><a href="getGroupPrivilegeTest">查询组织机构测试</a> <br/>查询组织机构测试</p>
+            <p><a href="getGroupPrivilegeTest">查询组织机构缓存</a> <br/>查询组织机构缓存</p>
+        </li>
+         <li>
+            <p><a href="delGroupPrivilegeRedis">删除组织机构缓存</a> <br/>删除组织机构缓存</p>
+        </li>
+         <li>
+            <p><a href="updateGroupPrivilegeRedis">更新组织机构缓存</a> <br/>更新组织机构缓存</p>
         </li>
          <li>
             <p><a href="getUserRoleRedisPrivilegeTest">用户角色缓存查询</a> <br/>用户角色缓存查询</p>
