@@ -31,14 +31,13 @@
 	  parent_id,
 	  resource_type
 	</sql>
-	<select id="findMenuByAppId" resultMap="privilegeMenuMap" flushCache="true">
-		SELECT DISTINCT pm.*
-		FROM
-			privilege_menu pm,
-			privilege_resource pr
-		WHERE
-			pm.app_id = #{appId}
-		AND pm.id = pr.menu_id
+	<select id="findMenuByGroupIdAndAppId" resultMap="privilegeMenuMap" flushCache="true">
+		
+		select  pm.* from privilege_group pg,privilege_group_resource pgr,
+		privilege_resource pr,privilege_menu pm
+		WHERE 
+		pg.app_id=#{appId}
+		AND #{groupId}=pgr.group_id AND pgr.resource_id=pr.resource_id AND pr.menu_id=pm.id
 	</select>
 	<select id="findByMenuId" resultMap="privilegeMenuMap" flushCache="true">
          select * from privilege_menu
