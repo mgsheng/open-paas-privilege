@@ -85,7 +85,7 @@
                 </div>
                 <br/>
                 <br/>
-                <button type="submit" class="btn btn-primary">调用菜单查询接口</button>
+                <button type="submit" class="btn btn-primary">调用权限资源查询接口</button>
                 <button type="button"  class="btn btn-primary" onclick="btnSubmit();">获取接口调用地址</button>
             </form>
 

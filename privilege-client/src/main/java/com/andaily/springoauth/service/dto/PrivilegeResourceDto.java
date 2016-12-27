@@ -35,8 +35,8 @@ public class PrivilegeResourceDto {
 				 privilegeResourceModifyUrl,appId,resourceId,resourceLevel,resourceName, menuId, baseUrl,resourceRule, createUser,createUserId);   
     }
 	public String getQueryUri() throws UnsupportedEncodingException {
-		 return String.format("%s?appId=%s&resourceLevel=%s&resourceName=%s&menuId=%s&baseUrl=%s&resourceRule=%s&createUser=%s&createUserid=%s",
-				 privilegeResourceQueryUrl,appId,resourceLevel,resourceName, menuId, baseUrl,resourceRule, createUser,createUserId);  
+		 return String.format("%s?appId=%s&resourceLevel=%s&menuId=%s&start=%s&Limit=%s",
+				 privilegeResourceQueryUrl,appId,resourceLevel, menuId, start,limit);  
     }
 	public String getDelUri() throws UnsupportedEncodingException {
 		 return String.format("%s?appId=%s&resourceId=%s&createUser=%s&createUserid=%s",

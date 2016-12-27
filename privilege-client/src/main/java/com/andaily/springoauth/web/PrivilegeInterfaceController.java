@@ -569,7 +569,7 @@ public class PrivilegeInterfaceController {
 	@RequestMapping(value = "getResPrivilege", method = RequestMethod.GET)
 	public String getResPrivilege(Model model) {
 		model.addAttribute("privilegeResourceQueryUrl", privilegeResourceQueryUrl);
-		return "privilege/privilege_resource_del";
+		return "privilege/privilege_resource_query";
 	}
 
 	@RequestMapping(value = "getResPrivilege", method = RequestMethod.POST)
