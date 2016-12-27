@@ -50,9 +50,9 @@ public class ResourceGetPrivilegeController extends BaseControllerUtil{
     		Map<String, Object> resourceMap=null;
     		map.put("status", "1");
     		map.put("count", lists.size());
-    		List<Map<String, Object>> list=new ArrayList<>();
+    		List<Map<String, Object>> list=new ArrayList<Map<String, Object>>();
     		for(int i=0;i<lists.size();i++){
-    			resourceMap=new HashMap<>();
+    			resourceMap=new HashMap<String,Object>();
     			resourceMap.put("appId", lists.get(i).getAppId());
     			resourceMap.put("resourceId", lists.get(i).getResourceId());
     			resourceMap.put("resourceLevel", lists.get(i).getResourceLevel());
