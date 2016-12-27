@@ -30,6 +30,10 @@
          AND a.app_id=#{appId}
 	AND a.uid=b.user_id AND b.privilege_roleid=c.privilege_roleid AND c.resource_id=d.resource_id;
     </select>
+    <select id="getFunctionListByAppId" resultMap="privilegeFunctionMap" flushCache="true">
+   		select b.* FROM privilege_resource a,privilege_function b WHERE
+		a.app_id=#{appId} AND a.resource_id=b.resource_id
+    </select>
     <select id="findFunctionPage" resultMap="privilegeFunctionMap" flushCache="true">
          select * from privilege_function
          where  function_code = #{functionCode}
