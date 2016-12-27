@@ -31,7 +31,7 @@ public class AppMenuRedisPrivilegeController extends BaseControllerUtil{
 	private PrivilegeMenuService privilegeMenuService;
 	@RequestMapping("getAppMenuRedis")
 	public void getAppMenuRedisPrivilege(HttpServletRequest request,HttpServletResponse response){
-		String appId=request.getParameter("appID").trim();
+		String appId=request.getParameter("appId").trim();
 		Map<String, Object> map = new HashMap<String, Object>();
 		log.info("====================redis app menu start======================");
 		if (!paraMandatoryCheck(Arrays.asList(appId))) {
@@ -51,7 +51,7 @@ public class AppMenuRedisPrivilegeController extends BaseControllerUtil{
 	}
 	@RequestMapping("delAppMenuRedis")
 	public void delAppMenuRedisPrivilege(HttpServletRequest request,HttpServletResponse response){
-		String appId=request.getParameter("appID").trim();
+		String appId=request.getParameter("appId").trim();
 		Map<String, Object> map = new HashMap<String, Object>();
 		log.info("====================redis app menu start======================");
 		if (!paraMandatoryCheck(Arrays.asList(appId))) {
@@ -71,7 +71,7 @@ public class AppMenuRedisPrivilegeController extends BaseControllerUtil{
 	}
 	@RequestMapping("updateAppMenuRedis")
 	public void updateAppMenuRedisPrivilege(HttpServletRequest request,HttpServletResponse response){
-		String appId=request.getParameter("appID").trim();
+		String appId=request.getParameter("appId").trim();
 		Map<String, Object> map = new HashMap<String, Object>();
 		log.info("====================redis app menu start======================");
 		if (!paraMandatoryCheck(Arrays.asList(appId))) {
