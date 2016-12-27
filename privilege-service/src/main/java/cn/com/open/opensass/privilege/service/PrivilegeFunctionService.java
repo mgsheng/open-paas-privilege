@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import cn.com.open.opensass.privilege.model.PrivilegeFunction;
+import cn.com.open.opensass.privilege.vo.PrivilegeFunctionVo;
 
 /**
  * Created by jh on 2016/12/15.
@@ -27,4 +28,5 @@ public interface PrivilegeFunctionService {
 	 */
 	List<PrivilegeFunction>getFunctionByRId(String resourceId);
 	List<Map<String, Object>> getFunctionListByUserId(String appUserId,String appId);
+	List<PrivilegeFunctionVo> getFunctionListByAppId(String appId);
 }
