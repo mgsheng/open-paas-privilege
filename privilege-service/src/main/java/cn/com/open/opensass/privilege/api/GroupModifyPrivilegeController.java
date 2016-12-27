@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.opensass.privilege.model.PrivilegeGroupResource;
 import cn.com.open.opensass.privilege.service.PrivilegeGroupResourceService;
-import cn.com.open.opensass.privilege.service.PrivilegeGroupService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 
 /**
