@@ -142,6 +142,38 @@
         <li>
             <p><a href="updateUserRoleRedisPrivilegeTest">用户角色缓存更新</a> <br/>用户角色缓存更新</p>
         </li>
+        <li>
+            <p><a href="getAppRolePrivilegeRedis">应用角色缓存查询</a> <br/>应用角色缓存查询</p>
+        </li>
+         <li>
+            <p><a href="delAppRolePrivilegeRedis">应用角色缓存删除</a> <br/>应用角色缓存删除</p>
+        </li>
+         <li>
+            <p><a href="updateAppRolePrivilegeRedis">应用角色缓存更新</a> <br/>应用角色缓存更新</p>
+        </li>
+      	 <li>
+            <p><a href="getAppMenuPrivilegeRedis">应用菜单缓存查询</a> <br/>应用菜单缓存查询</p>
+        </li>
+        <li>
+            <p><a href="delAppMenuPrivilegeRedis">应用菜单缓存删除</a> <br/>应用菜单缓存删除</p>
+            
+        </li>
+        <li>
+            <p><a href="updateAppMenuPrivilegeRedis">应用菜单缓存更新</a> <br/>应用菜单缓存更新</p>
+            
+        </li>
+        <li>
+            <p><a href="getAppResPrivilegeRedis">应用资源缓存查询</a> <br/>应用资源缓存查询</p>
+            
+        </li>
+        <li>
+            <p><a href="delAppResPrivilegeRedis">应用资源缓存删除</a> <br/>应用资源缓存删除</p>
+            
+        </li>
+        <li>
+            <p><a href="updateAppResPrivilegeRedis">应用资源缓存更新</a> <br/>应用资源缓存更新</p>
+            
+        </li>
       
     </ul>
 </div>
