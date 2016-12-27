@@ -67,6 +67,9 @@
          AND a.app_id=#{appId}
 		AND a.uid=b.user_id AND b.privilege_roleid=c.privilege_roleid AND c.resource_id=d.resource_id;
 	</select>
+	 <select id="getResourceListByAppId" resultMap="privilegeResourceMap" flushCache="true">
+	 	select * from privilege_resource where app_id=#{appId}
+	 </select>
     <select id="findResourceByAppUserId" parameterType="String" resultMap="privilegeResourceMap" flushCache="true">
         SELECT
       d.*
