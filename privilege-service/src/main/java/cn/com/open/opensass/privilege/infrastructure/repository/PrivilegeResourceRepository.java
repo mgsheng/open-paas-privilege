@@ -22,4 +22,5 @@ public interface PrivilegeResourceRepository extends Repository {
 	void deleteByResourceId(@Param("resourceId")String resourceId);
 	List<PrivilegeResource> findByGroupIdAndAppId(@Param("groupId")String groupId,@Param("appId")String appId);
 	List<Map<String, Object>> getResourceListByUserId(@Param("appUserId")String appUserId,@Param("appId")String appId);
+	List<PrivilegeResource> getResourceListByAppId(@Param("appId")String appId);
 }
