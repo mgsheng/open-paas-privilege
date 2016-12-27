@@ -137,6 +137,38 @@ public class RedisDao {
         }
         return false;
     }
+    /**
+     * 删除jedis
+     * @param appid
+     * @return
+     */
+    public boolean deleteRedisKey(String prefix,String appid)
+    {
+        try{
+            Jedis jedis = jedisPool.getResource();
+            try{
+                String key = prefix+appid;
+                if(jedis.exists(key))
+                {
+                    jedis.del(key);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            finally {
+                jedisPool.returnResource(jedis);
+                jedis.quit();
+            }
+        }
+        catch (Exception e)
+        {
+            log.error(e.getMessage(),e);
+        }
+        return false;
+    }
 
     /**
      * 判断值是否存在jedis
@@ -226,6 +258,32 @@ public class RedisDao {
             Jedis jedis = jedisPool.getResource();
             try{
                 String key = prefix+appid+ RedisConstant.SIGN+uid;
+
+                return jedis.exists(key);
+            }
+            finally {
+                jedisPool.returnResource(jedis);
+                jedis.quit();
+            }
+        }
+        catch (Exception e)
+        {
+            log.error(e.getMessage(),e);
+        }
+        return false;
+    }
+    /**
+     * 判断key是否存在
+     * @param appid
+     * @return
+     */
+
+    public boolean existKeyRedis(String prefix,String appid)
+    {
+        try{
+            Jedis jedis = jedisPool.getResource();
+            try{
+                String key = prefix+appid;
 
                 return jedis.exists(key);
             }
