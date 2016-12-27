@@ -3,6 +3,8 @@ package cn.com.open.opensass.privilege.service;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import cn.com.open.opensass.privilege.model.PrivilegeRole;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 
@@ -26,5 +28,8 @@ public interface PrivilegeRoleService {
 	int findRoleNoPage(String privilegeRoleId, String appId);
 	
 	List<Map<String, Object>> getRoleListByUserId(String appUserId,String appId);
-	PrivilegeAjaxMessage getUserRoleRedis(String appId, String appUserId);
+	PrivilegeAjaxMessage getAppRoleRedis(String appId);
+	List<Map<String, Object>> getRoleListByAppId(String appId);
+	PrivilegeAjaxMessage delAppRoleRedis(String appId);
+	PrivilegeAjaxMessage updateAppRoleRedis(String appId);
 }
