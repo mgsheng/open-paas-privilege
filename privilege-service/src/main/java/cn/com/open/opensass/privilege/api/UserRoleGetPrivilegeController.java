@@ -26,6 +26,8 @@ import cn.com.open.opensass.privilege.service.PrivilegeRoleResourceService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
+import cn.com.open.opensass.privilege.vo.PrivilegeResourceVo;
+import cn.com.open.opensass.privilege.vo.PrivilegeRoleVo;
 import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
 
 @Controller
@@ -56,29 +58,49 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil{
 
     	List<PrivilegeMenu> menus = new ArrayList<PrivilegeMenu>();
     	List<PrivilegeRole> roles = new ArrayList<PrivilegeRole>();
-    	List<PrivilegeResource> resources = new ArrayList<PrivilegeResource>();
+    	List<PrivilegeResourceVo> resources = new ArrayList<PrivilegeResourceVo>();
     	
     	PrivilegeUser user = privilegeUserService.findByAppIdAndUserId(privilegeUserVo.getAppId(),privilegeUserVo.getAppUserId());
     	if(user.getPrivilegeRoleId()!=null && !("").equals(user.getPrivilegeRoleId())){//通过角色获取resource,menu
     		String[] roleIds = user.getPrivilegeRoleId().split(",");
     		PrivilegeRole role = null;
+    		PrivilegeRoleVo roleVo = new PrivilegeRoleVo();
     		for(String roleId : roleIds){
     			role = privilegeRoleService.findRoleById(roleId);
     			List<PrivilegeRoleResource> roleResources = privilegeRoleResourceService.findByPrivilegeRoleId(roleId);
+    			roleVo.setAppId(role.getAppId());
+    			roleVo.setDeptId(role.getDeptId());
+    			roleVo.setDeptName(role.getDeptName());
+    			roleVo.setGroupId(role.getGroupId());
+    			roleVo.setGroupName(role.getGroupId());
+    			roleVo.setPrivilegeRoleId(role.getPrivilegeRoleId());
+    			roleVo.setRemark(role.getRemark());
+    			roleVo.setRoleLevel(role.getRoleLevel());
+    			roleVo.setRoleName(role.getRoleName());
     			if(roleResources!=null){
         			PrivilegeResource resource = null;
+        			PrivilegeResourceVo resourceVo = new PrivilegeResourceVo();
         			PrivilegeMenu menu = null;
     				for(PrivilegeRoleResource roleResource : roleResources){
     					resource = privilegeResourceService.findByResourceId(roleResource.getResourceId(), privilegeUserVo.getAppId());
-    					resources.add(resource);
+    					resourceVo.setAppId(resource.getAppId());
+    					resourceVo.setResourceId(resource.getResourceId());
+    					resourceVo.setResourceLevel(resource.getResourceLevel()+"");
+    					resourceVo.setResourceName(resource.getResourceName());
+    					resourceVo.setResourceRule(resource.getResourceRule());
+    					resourceVo.setDisplayOrder(resource.getDisplayOrder());
+    					resourceVo.setMenuId(resource.getMenuId());
+    					resourceVo.setBaseUrl(resource.getBaseUrl());
+    					resourceVo.setStatus(resource.getStatus());
+    					resources.add(resourceVo);
     					menu = privilegeMenuService.findByMenuId(resource.getMenuId(), resource.getAppId());
     					menus.add(menu);
-    					/*while(menu.getParentId() != 0){
+    					while(!("0").equals(menu.getParentId())){
     						menu = privilegeMenuService.findByMenuId(menu.getParentId()+"", menu.getAppId());
     						menus.add(menu);    						
-    					}*/
+    					}
     				}
-    				//role.setResourceList(resources);
+    				roleVo.setResourceList(resources);
     			}    			    			
     			roles.add(role);
     		}
@@ -87,21 +109,27 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil{
     	if(user.getResourceId()!=null && !("").equals(user.getResourceId())){//通过资源获取resource,menu
     		String[] resourceIds = user.getResourceId().split(",");
     		PrivilegeResource resource = null;
+    		PrivilegeResourceVo resourceVo = new PrivilegeResourceVo();
     		PrivilegeMenu menu = null;
     		for(String resourceId : resourceIds){
     			resource = privilegeResourceService.findByResourceId(resourceId, user.getAppId());
-    			resources.add(resource);
+    			resourceVo.setAppId(resource.getAppId());
+				resourceVo.setResourceId(resource.getResourceId());
+				resourceVo.setResourceLevel(resource.getResourceLevel()+"");
+				resourceVo.setResourceName(resource.getResourceName());
+				resourceVo.setResourceRule(resource.getResourceRule());
+				resourceVo.setDisplayOrder(resource.getDisplayOrder());
+				resourceVo.setMenuId(resource.getMenuId());
+				resourceVo.setBaseUrl(resource.getBaseUrl());
+				resourceVo.setStatus(resource.getStatus());
+    			resources.add(resourceVo);
     			menu = privilegeMenuService.findByMenuId(resource.getMenuId(), resource.getAppId());
 				menus.add(menu);
-				/*while(menu.getParentId() != 0){
+				while(!("0").equals(menu.getParentId())){
 					menu = privilegeMenuService.findByMenuId(menu.getParentId()+"", menu.getAppId());
 					menus.add(menu);    						
-				}*/
+				}
     		}
-    	}
-    	
-    	if(user.getPrivilegeFunId()!=null && !("").equals(user.getPrivilegeFunId())){//通过方法获取resource,menu
-    		
     	}
     	
     	user.setMenuList(menus);
