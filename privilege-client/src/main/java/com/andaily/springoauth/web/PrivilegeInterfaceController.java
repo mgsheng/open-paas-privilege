@@ -90,6 +90,24 @@ public class PrivilegeInterfaceController {
 	//查询组织机构缓存更新测试地址
 	@Value("#{properties['privilege-groupredis-update-uri']}")
 	private String privilegeGroupRedisUpdateUrl;
+	@Value("#{properties['privilege-approleredis-query-uri']}")
+	private String privilegeAppRoleRedisGetUrl;
+	@Value("#{properties['privilege-approleredis-del-uri']}")
+	private String privilegeAppRoleRedisDelUrl;
+	@Value("#{properties['privilege-approleredis-update-uri']}")
+	private String privilegeAppRoleRedisUpdateUrl;
+	@Value("#{properties['privilege-appmenu-redis-query-uri']}")
+	private String privilegeAppMenuRedisGetUrl;
+	@Value("#{properties['privilege-appmenu-redis-del-uri']}")
+	private String privilegeAppMenuRedisDelUrl;
+	@Value("#{properties['privilege-appmenu-redis-update-uri']}")
+	private String privilegeAppMenuRedisUpdateUrl;
+	@Value("#{properties['privilege-appres-redis-query-uri']}")
+	private String privilegeAppResRedisGetUrl;
+	@Value("#{properties['privilege-appres-redis-del-uri']}")
+	private String privilegeAppResRedisDelUrl;
+	@Value("#{properties['privilege-appres-redis-update-uri']}")
+	private String privilegeAppResRedisUpdateUrl;
 	
 	final static String SEPARATOR = "&";
 	private Map<String, String> map = LoadPopertiesFile.loadProperties();
@@ -172,6 +190,187 @@ public class PrivilegeInterfaceController {
 		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
 		return "redirect:" + fullUri;
 	}
+	/**
+	 * 应用角色 缓存查询
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "getAppRolePrivilegeRedis", method = RequestMethod.GET)
+	public String getAppRolePrivilegeRedis(Model model) {
+		model.addAttribute("privilegeGroupQueryTestUrl", privilegeAppRoleRedisGetUrl);
+		return "privilege/privilege_app_role_query_redis";
+	}
+
+	@RequestMapping(value = "getAppRolePrivilegeRedis", method = RequestMethod.POST)
+	public String getAppRolePrivilegeRedis(HttpServletRequest request)
+			throws Exception {
+		final String fullUri = request.getParameter("privilegeGroupQueryTestUrl")+"?appId="+request.getParameter("appId");
+		System.err.println(fullUri);
+		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+		return "redirect:" + fullUri;
+	}
+	/**
+	 * 应用角色 缓存删除
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "delAppRolePrivilegeRedis", method = RequestMethod.GET)
+	public String delAppRolePrivilegeRedis(Model model) {
+		model.addAttribute("privilegeGroupQueryTestUrl", privilegeAppRoleRedisDelUrl);
+		return "privilege/privilege_app_role_del_redis";
+	}
+
+	@RequestMapping(value = "delAppRolePrivilegeRedis", method = RequestMethod.POST)
+	public String delAppRolePrivilegeRedis(HttpServletRequest request)
+			throws Exception {
+		final String fullUri = request.getParameter("privilegeGroupQueryTestUrl")+"?appId="+request.getParameter("appId");
+		System.err.println(fullUri);
+		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+		return "redirect:" + fullUri;
+	}
+	/**
+	 * 应用角色 缓存更新
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "updateAppRolePrivilegeRedis", method = RequestMethod.GET)
+	public String updateAppRolePrivilegeRedis(Model model) {
+		model.addAttribute("privilegeGroupQueryTestUrl", privilegeAppRoleRedisUpdateUrl);
+		return "privilege/privilege_app_role_update_redis";
+	}
+
+	@RequestMapping(value = "updateAppRolePrivilegeRedis", method = RequestMethod.POST)
+	public String updateAppRolePrivilegeRedis(HttpServletRequest request)
+			throws Exception {
+		final String fullUri = request.getParameter("privilegeGroupQueryTestUrl")+"?appId="+request.getParameter("appId");
+		System.err.println(fullUri);
+		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+		return "redirect:" + fullUri;
+	}
+	/**
+	 * 应用菜单 缓存查询
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "getAppMenuPrivilegeRedis", method = RequestMethod.GET)
+	public String getAppMenuPrivilegeRedis(Model model) {
+		model.addAttribute("privilegeGroupQueryTestUrl", privilegeAppMenuRedisGetUrl);
+		return "privilege/privilege_app_menu_query_redis";
+	}
+
+	@RequestMapping(value = "getAppMenuPrivilegeRedis", method = RequestMethod.POST)
+	public String getAppMenuPrivilegeRedis(HttpServletRequest request)
+			throws Exception {
+		final String fullUri = request.getParameter("privilegeGroupQueryTestUrl")+"?appId="+request.getParameter("appId");
+		System.err.println(fullUri);
+		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+		return "redirect:" + fullUri;
+	}
+	/**
+	 * 应用菜单 缓存删除
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "delAppMenuPrivilegeRedis", method = RequestMethod.GET)
+	public String delAppMenuPrivilegeRedis(Model model) {
+		model.addAttribute("privilegeGroupQueryTestUrl", privilegeAppMenuRedisDelUrl);
+		return "privilege/privilege_app_menu_del_redis";
+	}
+
+	@RequestMapping(value = "delAppMenuPrivilegeRedis", method = RequestMethod.POST)
+	public String delAppMenuPrivilegeRedis(HttpServletRequest request)
+			throws Exception {
+		final String fullUri = request.getParameter("privilegeGroupQueryTestUrl")+"?appId="+request.getParameter("appId");
+		System.err.println(fullUri);
+		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+		return "redirect:" + fullUri;
+	}
+	/**
+	 * 应用菜单 缓存更新
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "updateAppMenuPrivilegeRedis", method = RequestMethod.GET)
+	public String updateAppMenuPrivilegeRedis(Model model) {
+		model.addAttribute("privilegeGroupQueryTestUrl", privilegeAppMenuRedisUpdateUrl);
+		return "privilege/privilege_app_menu_update_redis";
+	}
+
+	@RequestMapping(value = "updateAppMenuPrivilegeRedis", method = RequestMethod.POST)
+	public String updateAppMenuPrivilegeRedis(HttpServletRequest request)
+			throws Exception {
+		final String fullUri = request.getParameter("privilegeGroupQueryTestUrl")+"?appId="+request.getParameter("appId");
+		System.err.println(fullUri);
+		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+		return "redirect:" + fullUri;
+	}
+	/**
+	 * 应用资源 缓存查询
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "getAppResPrivilegeRedis", method = RequestMethod.GET)
+	public String getAppResPrivilegeRedis(Model model) {
+		model.addAttribute("privilegeGroupQueryTestUrl", privilegeAppResRedisGetUrl);
+		return "privilege/privilege_app_res_query_redis";
+	}
+
+	@RequestMapping(value = "getAppResPrivilegeRedis", method = RequestMethod.POST)
+	public String getAppResPrivilegeRedis(HttpServletRequest request)
+			throws Exception {
+		final String fullUri = request.getParameter("privilegeGroupQueryTestUrl")+"?appId="+request.getParameter("appId");
+		System.err.println(fullUri);
+		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+		return "redirect:" + fullUri;
+	}
+	/**
+	 * 应用资源 缓存删除
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "delAppResPrivilegeRedis", method = RequestMethod.GET)
+	public String delAppResPrivilegeRedis(Model model) {
+		model.addAttribute("privilegeGroupQueryTestUrl", privilegeAppResRedisDelUrl);
+		return "privilege/privilege_app_res_del_redis";
+	}
+
+	@RequestMapping(value = "delAppResPrivilegeRedis", method = RequestMethod.POST)
+	public String delAppResPrivilegeRedis(HttpServletRequest request)
+			throws Exception {
+		final String fullUri = request.getParameter("privilegeGroupQueryTestUrl")+"?appId="+request.getParameter("appId");
+		System.err.println(fullUri);
+		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+		return "redirect:" + fullUri;
+	}
+	/**
+	 * 应用资源 缓存更新
+	 * 
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "updateAppResPrivilegeRedis", method = RequestMethod.GET)
+	public String updateAppResPrivilegeRedis(Model model) {
+		model.addAttribute("privilegeGroupQueryTestUrl", privilegeAppResRedisUpdateUrl);
+		return "privilege/privilege_app_res_update_redis";
+	}
+
+	@RequestMapping(value = "updateAppResPrivilegeRedis", method = RequestMethod.POST)
+	public String updateAppResPrivilegeRedis(HttpServletRequest request)
+			throws Exception {
+		final String fullUri = request.getParameter("privilegeGroupQueryTestUrl")+"?appId="+request.getParameter("appId");
+		System.err.println(fullUri);
+		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+		return "redirect:" + fullUri;
+	}
+	
 	/**
 	 * 组织机构权限查询接口=========测试
 	 * 
