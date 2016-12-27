@@ -20,4 +20,5 @@ public interface PrivilegeFunctionRepository {
 	List<PrivilegeFunction> findFunctionPage(@Param("functionId")String functionId,@Param("startRow")String startRow,@Param("pageSize")String pageSize);
 	List<PrivilegeFunction>getFunctionByRId(@Param("resourceId")String resourceId);
 	List<Map<String, Object>> getFunctionListByUserId(@Param("appUserId")String appUserId,@Param("appId")String appId);
+	List<PrivilegeFunction> getFunctionListByAppId(@Param("appId")String appId);
 }
