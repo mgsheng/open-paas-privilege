@@ -79,6 +79,7 @@ privilege-client/src/main/webapp/WEB-INF/jsp/password.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_app_menu_del_redis.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_app_menu_query_redis.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_app_menu_update_redis.jsp -text
+privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_app_res_del_redis.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_function_add.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_function_del.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_function_modify.jsp -text
