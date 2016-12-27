@@ -1,17 +1,24 @@
 package cn.com.open.opensass.privilege.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.com.open.opensass.privilege.dao.cache.RedisDao;
 import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeRoleRepository;
 import cn.com.open.opensass.privilege.model.PrivilegeRole;
+import cn.com.open.opensass.privilege.model.PrivilegeUser;
+import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
+import net.sf.json.JSONObject;
 
 /**
  * 
@@ -19,9 +26,12 @@ import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 @Service("PrivilegeRoleService")
 public class PrivilegeRoleServiceImpl implements PrivilegeRoleService {
 
+	private static final String AppRoleRedisPrefix = RedisConstant.APPROLE_CACHE;
+	private static final Logger log = LoggerFactory.getLogger(PrivilegeRoleServiceImpl.class);
     @Autowired
     private PrivilegeRoleRepository privilegeRoleRepository;
-    private static final String prefix = RedisConstant.USERROLE_CACHE;
+    @Autowired
+    private RedisClientTemplate redisClientTemplate;
     @Autowired
     private RedisDao redisDao;
 	@Override
@@ -85,22 +95,70 @@ public class PrivilegeRoleServiceImpl implements PrivilegeRoleService {
 	}
 
 	@Override
-	public PrivilegeAjaxMessage getUserRoleRedis(String appId, String appUserId) {
+	public PrivilegeAjaxMessage getAppRoleRedis(String appId) {
 		PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
-		String menuJedis = redisDao.getUrlRedis(prefix,appId, appUserId);
-		if(null == menuJedis || menuJedis.length()<=0){
-			List<Map<String, Object>>	privilegeRoleList=getRoleListByUserId(appUserId, appId);
-			if(privilegeRoleList.size()<=0)
-            {
-                ajaxMessage.setCode("0");
-                ajaxMessage.setMessage("ROLE-IS-NULL");
-                return ajaxMessage;
-            }
-			
-			
-			
+		Map<String, Object> roleMap = new HashMap<String, Object>();
+		// redis key
+		String AppRoleRedisKey = AppRoleRedisPrefix + appId;
+		String jsonString = redisClientTemplate.getString(AppRoleRedisKey);
+		if (null != jsonString && jsonString.length() > 0) {
+			ajaxMessage.setCode("1");
+			ajaxMessage.setMessage(jsonString);
+			System.err.println("缓存");
+			return ajaxMessage;
 		}
-		return null;
+		log.info("从数据库获取数据");
+		//roleList
+		List<Map<String, Object>> RoleRedisList=getRoleListByAppId(appId);
+		roleMap.put("roleList", RoleRedisList);
+		redisClientTemplate.setString(AppRoleRedisKey, JSONObject.fromObject(roleMap).toString());
+		ajaxMessage.setCode("1");
+		ajaxMessage.setMessage(JSONObject.fromObject(roleMap).toString());
+		return ajaxMessage;
+	}
+
+	@Override
+	public List<Map<String, Object>> getRoleListByAppId(String appId) {
+		List<PrivilegeRole> roles=privilegeRoleRepository.getRoleListByAppId(appId);
+		List<Map<String, Object>> roleRedis=new ArrayList<Map<String,Object>>();
+		for(PrivilegeRole role:roles){
+			Map<String , Object> map=new HashMap<String, Object>();
+			map.put("appId", role.getAppId());
+			map.put("deptId", role.getDeptId());
+			map.put("deptName", role.getDeptName());
+			map.put("groupId", role.getGroupId());
+			map.put("groupName", role.getGroupName());
+			map.put("privilegeRoleId", role.getPrivilegeRoleId());
+			map.put("parentRoleId", role.getParentRoleId());
+			map.put("remark", role.getRemark());
+			map.put("roleLevel", role.getRoleLevel());
+			map.put("roleName",role.getRoleName());
+			map.put("status", role.getStatus());
+			roleRedis.add(map);
+		}
+		
+		
+		return roleRedis;
+	}
+
+	@Override
+	public PrivilegeAjaxMessage delAppRoleRedis(String appId) {
+		PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
+		Boolean RoleKeyExist = redisDao.deleteRedisKey(AppRoleRedisPrefix, appId);
+		ajaxMessage.setCode("1");
+		ajaxMessage.setMessage(RoleKeyExist ? "Success" : "Failed");
+		log.info("delMenuRedis接口删除：" + RoleKeyExist);
+		return ajaxMessage;
+	}
+
+	@Override
+	public PrivilegeAjaxMessage updateAppRoleRedis(String appId) {
+		boolean RedisKeyExist = redisDao.existKeyRedis(AppRoleRedisPrefix, appId);
+		if (RedisKeyExist) {
+			delAppRoleRedis(appId);
+		}
+		log.info("更新redis");
+		return getAppRoleRedis(appId);
 	}
 
 }
