@@ -62,6 +62,9 @@ WHERE a.app_userid=#{appUserId}
          and a.app_id=#{appId}
 AND a.uid=b.user_id AND b.privilege_roleid=c.privilege_roleid AND c.resource_id=d.resource_id AND d.menu_id=e.id
     </select>
+      <select id="getMenuListByAppId" resultMap="privilegeMenuMap" flushCache="true">
+       	select * from privilege_menu where app_id=#{appId}
+       </select>
     <update id="updatePrivilegeMenu" parameterType="PrivilegeMenu" flushCache="true">
         update privilege_menu set
         <if test="menuCode != null and menuCode !=''">
