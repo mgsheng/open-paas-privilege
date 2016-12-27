@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import cn.com.open.opensass.privilege.model.PrivilegeMenu;
 import cn.com.open.opensass.privilege.model.PrivilegeResource;
+import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 import cn.com.open.opensass.privilege.vo.PrivilegeResourceVo;
 
 /**
@@ -23,4 +24,8 @@ public interface PrivilegeResourceService {
 	List<Map<String, Object>> getResourceListByUserId(String appUserId,String appId);
 	//PrivilegeResource findResourceByAppUserId(String userId);
 	List<PrivilegeResourceVo> findByGroupIdAndAppId(String groupId,String appId);
+	List<PrivilegeResourceVo> getResourceListByAppId(String appId);
+	PrivilegeAjaxMessage getAppResRedis(String appId);
+	PrivilegeAjaxMessage delAppResRedis(String appId);
+	PrivilegeAjaxMessage updateAppResRedis(String appId);
 }
