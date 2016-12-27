@@ -27,6 +27,19 @@ public class RedisConstant {
   * userCacheRole_appid_userid
   */
  public static final String USERROLE_CACHE=PUBLICSERVICE_CACHE+"userCacheRole_";
+ 
+ /**
+  * appRoleCache_appid
+  */
+ public static final String APPROLE_CACHE=PUBLICSERVICE_CACHE+"appRoleCache_";
+ /**
+  * appMenuCache_appid
+  */
+ public static final String APPMENU_CACHE=PUBLICSERVICE_CACHE+"appMenuCache_";
+ /**
+  * appResCache_appid
+  */
+ public static final String APPRES_CACHE=PUBLICSERVICE_CACHE+"appResCache_";
  /*间隔符*/
  public static final String SIGN="_";
  /**
