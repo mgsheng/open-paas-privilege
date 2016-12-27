@@ -31,7 +31,7 @@ public class AppRoleRedisPrivilegeController extends BaseControllerUtil{
 	PrivilegeRoleService privilegeRoleService;
 	@RequestMapping("getAppRoleRedis")
 	public void getAppRoleRedisPrivilege(HttpServletRequest request,HttpServletResponse response){
-		String appId=request.getParameter("appID").trim();
+		String appId=request.getParameter("appId").trim();
 		Map<String, Object> map = new HashMap<String, Object>();
 		log.info("====================redis app role start======================");
 		if (!paraMandatoryCheck(Arrays.asList(appId))) {
@@ -51,7 +51,7 @@ public class AppRoleRedisPrivilegeController extends BaseControllerUtil{
 	}
 	@RequestMapping("delAppRoleRedis")
 	public void delAppRoleRedisPrivilege(HttpServletRequest request,HttpServletResponse response){
-		String appId=request.getParameter("appID").trim();
+		String appId=request.getParameter("appId").trim();
 		Map<String, Object> map = new HashMap<String, Object>();
 		log.info("====================redis app role start======================");
 		if (!paraMandatoryCheck(Arrays.asList(appId))) {
@@ -71,7 +71,7 @@ public class AppRoleRedisPrivilegeController extends BaseControllerUtil{
 	}
 	@RequestMapping("updateAppRoleRedis")
 	public void updateAppRoleRedisPrivilege(HttpServletRequest request,HttpServletResponse response){
-		String appId=request.getParameter("appID").trim();
+		String appId=request.getParameter("appId").trim();
 		Map<String, Object> map = new HashMap<String, Object>();
 		log.info("====================redis app role start======================");
 		if (!paraMandatoryCheck(Arrays.asList(appId))) {
