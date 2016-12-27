@@ -76,6 +76,7 @@ privilege-client/src/main/webapp/WEB-INF/jsp/demo/regok.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/implicit.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/oauth_error.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/password.jsp -text
+privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_app_menu_del_redis.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_function_add.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_function_del.jsp -text
 privilege-client/src/main/webapp/WEB-INF/jsp/privilege/privilege_function_modify.jsp -text
