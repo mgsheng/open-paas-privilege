@@ -49,6 +49,10 @@
          and a.app_id=#{appId}
 		AND a.uid=b.user_id AND b.privilege_roleid=c.privilege_roleid 
 	</select>
+	<select id="getRoleListByAppId" resultMap="privilegeRoleMap" flushCache="true">
+	 select * from privilege_role
+         where  app_id = #{appId}
+	</select>
 	<select id="findRoleByAppId" resultType="java.lang.String" flushCache="true">
 		select privilege_roleid from privilege_role where app_id = #{appId}
 	</select>
