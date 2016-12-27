@@ -75,6 +75,31 @@ public interface PrivilegeMenuService {
 	 * @return
 	 */
 	Set<PrivilegeMenuVo> getAllMenuByUserId(List<PrivilegeMenu> privilegeMenuList, Set<PrivilegeMenuVo> privilegeMenuVoSet);
-
+	/**
+	 * 获取所有menu数据
+	 * @param appId
+	 * @return
+	 */
+	List<PrivilegeMenu> getMenuListByAppId(String appId);
+	/**
+	 * 获取redis menu 数据
+	 * @param appId 应用id
+	 * @return 相应的提示信息
+	 */
+	PrivilegeAjaxMessage getAppMenuRedis(String appId);
+	
+	/**
+	 * 删除redis menu 数据
+	 * @param appId 应用id
+	 * @return 相应的提示信息
+	 */
+	PrivilegeAjaxMessage delAppMenuRedis(String appId);
+	
+	/**
+	 * 更新redis menu 数据
+	 * @param appId 应用id
+	 * @return 相应的提示信息
+	 */
+	PrivilegeAjaxMessage updateAppMenuRedis(String appId);
 
 }
