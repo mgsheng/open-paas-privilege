@@ -1,10 +1,12 @@
 package cn.com.open.opensass.privilege.api;
 
-import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
-import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
-import cn.com.open.opensass.privilege.tools.WebUtils;
-import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
-import net.sf.json.JSONObject;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +14,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
+import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
+import cn.com.open.opensass.privilege.tools.WebUtils;
+import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 
 /**
  * Created by jh on 2016/12/19.

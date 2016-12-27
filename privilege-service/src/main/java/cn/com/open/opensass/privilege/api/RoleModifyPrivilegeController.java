@@ -18,7 +18,6 @@ import cn.com.open.opensass.privilege.model.PrivilegeRoleResource;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleResourceService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
-import cn.com.open.opensass.privilege.vo.PrivilegeRoleVo;
 
 @Controller
 @RequestMapping("/role/")
