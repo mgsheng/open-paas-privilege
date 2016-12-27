@@ -72,6 +72,11 @@
          select * from privilege_function
          where  resource_id = #{resourceId}
 	</select>
+	  <select id="getFunctionMap" resultType="java.util.Map" flushCache="true">
+         select resource_id as resourceId,id as functionId ,operation_id as optId,opt_url as optUrl from privilege_function
+         where  resource_id = #{resourceId}
+	</select>
+	
   <delete id="deleteByFunctionIds">
         delete from privilege_function where id in
         <foreach item="item" index="index" collection="functionIds" open="(" separator="," close=")">  

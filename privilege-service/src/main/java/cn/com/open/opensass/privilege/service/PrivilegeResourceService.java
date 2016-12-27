@@ -18,12 +18,14 @@ public interface PrivilegeResourceService {
 	PrivilegeResource findByResourceId(String resourceId,String appId);
 	PrivilegeResource findByResourceId(String resourceId);
 	PrivilegeResource findByResourceCode(String resourceId,String appId);
-	List<PrivilegeResource>findResourcePage(String resourceId,String appId,int startRow,int pageSize);
+	List<PrivilegeResource>findResourcePage(String menuId,String appId,int startRow,int pageSize,String resourceLevel);
 	Boolean updatePrivilegeResource(PrivilegeResource privilegeResource);
 	Boolean deleteByResourceId(String  resourceId);
 	List<Map<String, Object>> getResourceListByUserId(String appUserId,String appId);
 	//PrivilegeResource findResourceByAppUserId(String userId);
 	List<PrivilegeResourceVo> findByGroupIdAndAppId(String groupId,String appId);
+	List<PrivilegeResource> findResourceLists(String groupIds[]);
+	List<Map<String, Object>> findResourceMap(String groupIds[]);
 	List<PrivilegeResourceVo> getResourceListByAppId(String appId);
 	PrivilegeAjaxMessage getAppResRedis(String appId);
 	PrivilegeAjaxMessage delAppResRedis(String appId);

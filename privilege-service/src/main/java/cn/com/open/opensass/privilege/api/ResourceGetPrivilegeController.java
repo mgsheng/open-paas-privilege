@@ -1,5 +1,6 @@
 package cn.com.open.opensass.privilege.api;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,18 +49,21 @@ public class ResourceGetPrivilegeController extends BaseControllerUtil{
     	String appId=request.getParameter("appId");
     	String start=request.getParameter("start");
     	String limit=request.getParameter("Limit");
+    	String resourceLevel=request.getParameter("resourceLevel");
     	Map<String, Object> map=new HashMap<String, Object>();
     	log.info("====================query start======================");
     	if(!paraMandatoryCheck(Arrays.asList(start,appId,limit))){
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
               return;	
     	}
-    	List<PrivilegeResource>lists=privilegeResourceService.findResourcePage(menuId, appId,Integer.parseInt(start),Integer.parseInt(limit));
+    	List<PrivilegeResource>lists=privilegeResourceService.findResourcePage(menuId, appId,Integer.parseInt(start),Integer.parseInt(limit), resourceLevel);
     	if(lists!=null&&lists.size()>0){
-    		Map<String, Object> resourceMap=new HashMap<String, Object>();
+    		Map<String, Object> resourceMap=null;
     		map.put("status", "1");
     		map.put("count", lists.size());
+    		List<Map<String, Object>> list=new ArrayList<>();
     		for(int i=0;i<lists.size();i++){
+    			resourceMap=new HashMap<>();
     			resourceMap.put("appId", lists.get(i).getAppId());
     			resourceMap.put("resourceId", lists.get(i).getResourceId());
     			resourceMap.put("resourceLevel", lists.get(i).getResourceLevel());
@@ -69,16 +73,16 @@ public class ResourceGetPrivilegeController extends BaseControllerUtil{
     			resourceMap.put("menuId", lists.get(i).getMenuId());
     			resourceMap.put("baseUrl", lists.get(i).getBaseUrl());
     			resourceMap.put("status", lists.get(i).getStatus());
-    			if(nullEmptyBlankJudge(lists.get(i).getResourceId())){
-    				List<PrivilegeFunction>functionList=privilegeFunctionService.getFunctionByRId(lists.get(i).getResourceId());
+    			if(!nullEmptyBlankJudge(lists.get(i).getResourceId())){
+    				List<Map<String, Object>> functionList=privilegeFunctionService.getFunctionMap(lists.get(i).getResourceId());
         			if(functionList!=null&&functionList.size()>0){
         			 resourceMap.put("functionList", functionList);	
         			}
     			}
-    			
+    			list.add(resourceMap);
     		}
-    		JSON json =JSONObject.fromObject(resourceMap);
-    		map.put("resourceList",json);
+    		//JSON json =JSONObject.fromObject(resourceMap);
+    		map.put("resourceList",list);
     	}else{
     		map.put("status", "0");
     		map.put("error_code", "10001");

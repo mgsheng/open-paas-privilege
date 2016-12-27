@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import cn.com.open.opensass.privilege.model.PrivilegeGroup;
 import cn.com.open.opensass.privilege.model.PrivilegeGroupResource;
 
 
@@ -21,4 +22,5 @@ public interface PrivilegeGroupResourceRepository extends Repository {
 	void deleteByGroup(@Param("groupId")String groupId);
 	void updatePrivilegeGroupResource(PrivilegeGroupResource privilegeGroupResource);
 	List<String> findResourceIdsByGroupId(@Param("groupId")String groupId);
+	List<PrivilegeGroupResource> findGprPage(@Param("groupId")String groupId,@Param("startRow")int startRow,@Param("pageSize")int pageSize);
 }

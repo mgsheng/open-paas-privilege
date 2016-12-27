@@ -27,6 +27,8 @@ public interface PrivilegeFunctionService {
 	 * @return
 	 */
 	List<PrivilegeFunction>getFunctionByRId(String resourceId);
+	
+	List<Map<String, Object>>getFunctionMap(String resourceId);
 	List<Map<String, Object>> getFunctionListByUserId(String appUserId,String appId);
 	List<PrivilegeFunctionVo> getFunctionListByAppId(String appId);
 }

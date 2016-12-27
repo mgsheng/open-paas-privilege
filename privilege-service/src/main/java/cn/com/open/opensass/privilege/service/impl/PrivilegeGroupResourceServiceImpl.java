@@ -90,4 +90,12 @@ public class PrivilegeGroupResourceServiceImpl implements PrivilegeGroupResource
 		return list;
 	}
 
+
+	@Override
+	public List<PrivilegeGroupResource> getPgrs(String groupId,
+			String startRow, String pageSize) {
+		// TODO Auto-generated method stub
+		return privilegeGroupResourceRepository.findGprPage(groupId,Integer.parseInt(startRow), Integer.parseInt(pageSize));
+	}
+
 }

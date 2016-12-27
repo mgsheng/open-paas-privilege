@@ -2,6 +2,7 @@ package cn.com.open.opensass.privilege.service;
 
 import java.util.List;
 
+import cn.com.open.opensass.privilege.model.PrivilegeGroup;
 import cn.com.open.opensass.privilege.model.PrivilegeGroupResource;
 
 /**
@@ -15,4 +16,5 @@ public interface PrivilegeGroupResourceService {
 	Boolean deleteByGroupId(String  groupId);
 	Boolean updatePrivilegeGroupResource(PrivilegeGroupResource privilegeGroupResource);
 	List<String> findResourceIdsByGroupId(String groupId);
+	List<PrivilegeGroupResource> getPgrs(String groupId,String startRow,String pageSize);
 }

@@ -63,10 +63,10 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 	}
 
 	@Override
-	public List<PrivilegeResource> findResourcePage(String resourceId, String appId,
-			int startRow, int pageSize) {
+	public List<PrivilegeResource> findResourcePage(String menuId, String appId,
+			int startRow, int pageSize,String resourceLevel) {
 		// TODO Auto-generated method stub
-		return privilegeResourceRepository.findResourcePage(resourceId, appId, startRow, pageSize);
+		return privilegeResourceRepository.findResourcePage(menuId, appId, startRow, pageSize,resourceLevel);
 	}
 
 	@Override
@@ -124,6 +124,18 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 			privilegeResourceVos.add(privilegeResourceVo);
 		}
 		return privilegeResourceVos;
+	}
+
+	@Override
+	public List<PrivilegeResource> findResourceLists(String[] groupIds) {
+		// TODO Auto-generated method stub
+		return privilegeResourceRepository.findResourceList(groupIds);
+	}
+
+	@Override
+	public List<Map<String, Object>> findResourceMap(String[] groupIds) {
+		// TODO Auto-generated method stub
+		return privilegeResourceRepository.findResourceMap(groupIds);
 	}
 
 	@Override

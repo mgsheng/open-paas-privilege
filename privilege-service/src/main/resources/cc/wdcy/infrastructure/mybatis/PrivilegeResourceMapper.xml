@@ -54,8 +54,9 @@
 	</select>
     <select id="findResourcePage" resultMap="privilegeResourceMap" flushCache="true">
          select * from privilege_resource
-         where  resource_id = #{resourceId}
+         where  menu_id = #{menuId}
          and app_id=#{appId}
+         and resource_level=#{resourceLevel}
          limit #{startRow},#{pageSize} 
 	</select>
 	<select id="getResourceListByUserId" resultType="java.util.HashMap" flushCache="true">
@@ -123,5 +124,18 @@
     <delete id="deleteByResourceId">
         delete from privilege_resource where resource_id=#{resourceId}
     </delete>
+    <select id="findResourceList" resultMap="privilegeResourceMap" flushCache="true">
+        select app_id,resource_id,resource_level,resource_name,resource_rule,display_order,menu_id,base_url,status from privilege_resource where resource_id in
+        <foreach item="item" index="index" collection="resourceIds" open="(" separator="," close=")">  
+          #{item}  
+        </foreach>
+    </select>
+    
+      <select id="findResourceMap" resultType="java.util.Map" flushCache="true">
+        select app_id as appId,resource_id as resourceId,resource_level as resourceLevel,resource_name as resourceName,resource_rule as resourceRule,display_order as dislayOrder ,menu_id as menuId,base_url as baseUrl,status from privilege_resource where resource_id in
+        <foreach item="item" index="index" collection="resourceIds" open="(" separator="," close=")">  
+          #{item}  
+        </foreach>
+    </select>
 
 </mapper>

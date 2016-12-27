@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeFunctionRepository;
-import cn.com.open.opensass.privilege.model.PrivilegeFunction;
-import cn.com.open.opensass.privilege.model.PrivilegeMenu;
-import cn.com.open.opensass.privilege.service.PrivilegeFunctionService;
-import cn.com.open.opensass.privilege.vo.PrivilegeFunctionVo;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeFunctionRepository;
+import cn.com.open.opensass.privilege.model.PrivilegeFunction;
+import cn.com.open.opensass.privilege.service.PrivilegeFunctionService;
+import cn.com.open.opensass.privilege.vo.PrivilegeFunctionVo;
 
 /**
  * Created by jh on 2016/12/15.
@@ -82,6 +81,11 @@ public class PrivilegeFunctionServiceImpl implements PrivilegeFunctionService {
 	@Override
 	public List<Map<String, Object>> getFunctionListByUserId(String appUserId, String appId) {
 		return privilegeFunctionRepository.getFunctionListByUserId(appUserId, appId);
+	}
+	@Override
+	public List<Map<String, Object>> getFunctionMap(String resourceId) {
+		// TODO Auto-generated method stub
+		return privilegeFunctionRepository.getFunctionMap(resourceId);
 	}
 	@Override
 	public List<PrivilegeFunctionVo> getFunctionListByAppId(String appId) {
