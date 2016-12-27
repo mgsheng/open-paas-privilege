@@ -1,5 +1,6 @@
 package cn.com.open.opensass.privilege.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +8,8 @@ import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeFunctio
 import cn.com.open.opensass.privilege.model.PrivilegeFunction;
 import cn.com.open.opensass.privilege.model.PrivilegeMenu;
 import cn.com.open.opensass.privilege.service.PrivilegeFunctionService;
+import cn.com.open.opensass.privilege.vo.PrivilegeFunctionVo;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -79,6 +82,20 @@ public class PrivilegeFunctionServiceImpl implements PrivilegeFunctionService {
 	@Override
 	public List<Map<String, Object>> getFunctionListByUserId(String appUserId, String appId) {
 		return privilegeFunctionRepository.getFunctionListByUserId(appUserId, appId);
+	}
+	@Override
+	public List<PrivilegeFunctionVo> getFunctionListByAppId(String appId) {
+		List<PrivilegeFunctionVo> privilegeFunctionVos=new ArrayList<PrivilegeFunctionVo>();
+		List<PrivilegeFunction> privilegeFunctions=privilegeFunctionRepository.getFunctionListByAppId(appId);
+		for(PrivilegeFunction function:privilegeFunctions){
+			PrivilegeFunctionVo functionVo=new PrivilegeFunctionVo();
+			functionVo.setFunctionId(function.id());
+			functionVo.setOptId(function.getOperationId());
+			functionVo.setOptUrl(function.getOptUrl());
+			functionVo.setResourceId(function.getResourceId());
+			privilegeFunctionVos.add(functionVo);
+		}
+		return privilegeFunctionVos;
 	}
 	
 	
