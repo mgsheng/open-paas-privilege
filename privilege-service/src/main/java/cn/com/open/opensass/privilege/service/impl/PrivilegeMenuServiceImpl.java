@@ -4,10 +4,13 @@ import java.util.*;
 
 import cn.com.open.opensass.privilege.dao.PrivilegeUrl;
 import cn.com.open.opensass.privilege.dao.cache.RedisDao;
+import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +26,14 @@ import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
 @Service("privilegeMenuService")
 public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 	private static final Logger log = LoggerFactory.getLogger(PrivilegeMenuServiceImpl.class);
-	
+	private static final String prefix = RedisConstant.USERMENU_CACHE;
+	private static final String AppMenuRedisPrefix = RedisConstant.APPMENU_CACHE;
+	@Autowired
+	private RedisClientTemplate redisClientTemplate;
     @Autowired
     private PrivilegeMenuRepository privilegeMenuRepository;
     @Autowired
     private RedisDao redisDao;
-    private static final String prefix = RedisConstant.USERMENU_CACHE;
 
 	@Override
 	public Boolean savePrivilegeMenu(PrivilegeMenu privilegeMenu) {
@@ -207,6 +212,72 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 	public PrivilegeMenu getMenuById(String menuId) {
 		
 		return privilegeMenuRepository.getMenuById(menuId);
+	}
+
+	@Override
+	public List<PrivilegeMenu> getMenuListByAppId(String appId) {
+		return privilegeMenuRepository.getMenuListByAppId(appId);
+	}
+
+	@Override
+	public PrivilegeAjaxMessage getAppMenuRedis(String appId) {
+		PrivilegeAjaxMessage ajaxMessage=new PrivilegeAjaxMessage();
+		Map<String, Object> MenuMap = new HashMap<String, Object>();
+
+		// redis key
+		String AppMenuRedisKey = AppMenuRedisPrefix + appId;
+		/* 缓存中是否存在 存在返回 */
+		log.info("获取缓存");
+		String jsonString = redisClientTemplate.getString(AppMenuRedisKey);
+		if (null != jsonString && jsonString.length() > 0) {
+			ajaxMessage.setCode("1");
+			ajaxMessage.setMessage(jsonString);
+			System.err.println("缓存");
+			return ajaxMessage;
+		}
+		
+		log.info("从数据库获取数据");
+		List<PrivilegeMenu> menuList=getMenuListByAppId(appId);
+		if(menuList.size()<=0)
+        {
+            ajaxMessage.setCode("0");
+            ajaxMessage.setMessage("MENU-IS-NULL");
+            return ajaxMessage;
+        }
+		Set<PrivilegeMenuVo> privilegeMenuListReturn = new HashSet<PrivilegeMenuVo>();
+
+		Set<PrivilegeMenuVo> privilegeMenuListData = getAllMenuByUserId(menuList,privilegeMenuListReturn);  /*缓存中是否存在*/
+        if(privilegeMenuListData.size()<=0)
+        {
+            ajaxMessage.setCode("0");
+            ajaxMessage.setMessage("MENU-IS-NULL");
+            return ajaxMessage;
+        }
+        MenuMap.put("menuList", privilegeMenuListData);
+        redisClientTemplate.setString(AppMenuRedisKey, JSONObject.fromObject(MenuMap).toString());
+		ajaxMessage.setCode("1");
+		ajaxMessage.setMessage(JSONObject.fromObject(MenuMap).toString());
+		return ajaxMessage;
+	}
+
+	@Override
+	public PrivilegeAjaxMessage delAppMenuRedis(String appId) {
+		PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
+		Boolean RoleKeyExist = redisDao.deleteRedisKey(AppMenuRedisPrefix, appId);
+		ajaxMessage.setCode("1");
+		ajaxMessage.setMessage(RoleKeyExist ? "Success" : "Failed");
+		log.info("delMenuRedis接口删除：" + RoleKeyExist);
+		return ajaxMessage;
+	}
+
+	@Override
+	public PrivilegeAjaxMessage updateAppMenuRedis(String appId) {
+		boolean RedisKeyExist = redisDao.existKeyRedis(AppMenuRedisPrefix, appId);
+		if (RedisKeyExist) {
+			delAppMenuRedis(appId);
+		}
+		log.info("更新redis");
+		return getAppMenuRedis(appId);
 	}
 
 	
