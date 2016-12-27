@@ -31,7 +31,7 @@ public class AppResRedisPrivilegeController extends BaseControllerUtil{
 	private PrivilegeResourceService privilegeResourceService;
 	@RequestMapping("getAppResRedis")
 	public void getAppResRedisPrivilege(HttpServletRequest request,HttpServletResponse response){
-		String appId=request.getParameter("appID").trim();
+		String appId=request.getParameter("appId").trim();
 		Map<String, Object> map = new HashMap<String, Object>();
 		log.info("====================redis app res start======================");
 		if (!paraMandatoryCheck(Arrays.asList(appId))) {
@@ -51,7 +51,7 @@ public class AppResRedisPrivilegeController extends BaseControllerUtil{
 	}
 	@RequestMapping("delAppResRedis")
 	public void delAppResRedisPrivilege(HttpServletRequest request,HttpServletResponse response){
-		String appId=request.getParameter("appID").trim();
+		String appId=request.getParameter("appId").trim();
 		Map<String, Object> map = new HashMap<String, Object>();
 		log.info("====================redis app res start======================");
 		if (!paraMandatoryCheck(Arrays.asList(appId))) {
@@ -71,7 +71,7 @@ public class AppResRedisPrivilegeController extends BaseControllerUtil{
 	}
 	@RequestMapping("updateAppResRedis")
 	public void updateAppResRedisPrivilege(HttpServletRequest request,HttpServletResponse response){
-		String appId=request.getParameter("appID").trim();
+		String appId=request.getParameter("appId").trim();
 		Map<String, Object> map = new HashMap<String, Object>();
 		log.info("====================redis app res start======================");
 		if (!paraMandatoryCheck(Arrays.asList(appId))) {
