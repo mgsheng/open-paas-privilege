@@ -177,6 +177,10 @@
             <p><a href="updateAppResPrivilegeRedis">应用资源缓存更新</a> <br/>应用资源缓存更新</p>
             
         </li>
+        <li>
+            <p><a href="verifyUserPrivilege">用户权限认证</a> <br/>用户权限认证</p>
+            
+        </li>
       
     </ul>
 </div>
