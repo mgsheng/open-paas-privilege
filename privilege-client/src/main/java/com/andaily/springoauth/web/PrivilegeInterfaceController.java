@@ -109,6 +109,8 @@ public class PrivilegeInterfaceController {
 	private String privilegeAppResRedisDelUrl;
 	@Value("#{properties['privilege-appres-redis-update-uri']}")
 	private String privilegeAppResRedisUpdateUrl;
+	@Value("#{properties['verify-privilege-user-uri']}")
+	private String verifyPrivilegeUserUri;
 	
 	final static String SEPARATOR = "&";
 	private Map<String, String> map = LoadPopertiesFile.loadProperties();
@@ -151,6 +153,44 @@ public class PrivilegeInterfaceController {
 		  			signature=HMacSha1.getNewResult(signature);
 		      }
 		 String fullUri = privilegeGroupDto.getFullUri()+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;;
+		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+		return "redirect:" + fullUri;
+	}
+	@RequestMapping(value = "verifyUserPrivilege", method = RequestMethod.GET)
+	public String verifyPrivilegeUser(Model model) {
+		model.addAttribute("verifyUserPrivilegeUri", verifyPrivilegeUserUri);
+		return "privilege/privilege_user_verify";
+	}
+
+	@RequestMapping(value = "verifyUserPrivilege", method = RequestMethod.POST)
+	public String verifyPrivilegeUser(HttpServletRequest request)
+			throws Exception {
+			String appId=request.getParameter("appId");
+			String appUserid=request.getParameter("appUserid");
+			String optUrl=request.getParameter("optUrl");
+		  String key=map.get(appId);
+	  	  String signature="";
+	  	  String timestamp="";
+	  	  String signatureNonce="";
+	  	  String appKey="";
+		      if(key!=null){
+		    	    appKey=map.get(key);
+		      		timestamp=DateTools.getSolrDate(new Date());
+		  		 	StringBuilder encryptText = new StringBuilder();
+		  		 	signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+		  		 	encryptText.append(appId);
+		  			encryptText.append(SEPARATOR);
+		  			if(appKey!=null){
+		  			  encryptText.append(appKey);
+		  			}
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(timestamp);
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(signatureNonce);
+		  		 	signature=HMacSha1.HmacSHA1Encrypt(encryptText.toString(), key);
+		  			signature=HMacSha1.getNewResult(signature);
+		      }
+		 String fullUri = request.getParameter("verifyUserPrivilegeUri")+"?appId="+appId+"&optUrl="+optUrl+"&appUserid="+appUserid+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;;
 		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
 		return "redirect:" + fullUri;
 	}
