@@ -199,6 +199,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/datasource/DataSo
 privilege-service/src/main/java/cn/com/open/opensass/privilege/datasource/DataSourceSwitcher.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/datasource/DynamicDataSource.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/dev/PrivilegeServiceDev.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/mybatis/AppRepositoryMyBatis.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/mybatis/PrivilegeFunctionRepositoryMyBatis.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/mybatis/PrivilegeGroupRepositoryMyBatis.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/mybatis/PrivilegeGroupResourceRepositoryMyBatis.java -text
@@ -208,6 +209,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/my
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/mybatis/PrivilegeRoleResourceRepositoryMyBatis.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/mybatis/PrivilegeUserRepositoryMyBatis.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/mybatis/PrivilegeUserRoleRepositoryMyBatis.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/repository/AppRepository.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/repository/PrivilegeFunctionRepository.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/repository/PrivilegeGroupRepository.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/repository/PrivilegeGroupResourceRepository.java -text
@@ -220,6 +222,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/re
 privilege-service/src/main/java/cn/com/open/opensass/privilege/kafka/KafkaConsumer.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/kafka/KafkaProducer.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/model/AbstractDomain.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/model/App.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/model/GuidGenerator.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/model/PivilegeToken.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/model/PrivilegeFunction.java -text
@@ -236,6 +239,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/redis/RedisDataSo
 privilege-service/src/main/java/cn/com/open/opensass/privilege/redis/impl/RedisClientTemplate.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/redis/impl/RedisConstant.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/redis/impl/RedisDataSourceImpl.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/service/AppService.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeFunctionService.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeGroupResourceService.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeGroupService.java -text
@@ -247,6 +251,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/service/Privilege
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeUserRedisService.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeUserRoleService.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeUserService.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/AppServiceImpl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeFunctionServiceImpl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeGroupResourceServiceImpl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeGroupServiceImpl.java -text
@@ -269,12 +274,14 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/DateTools.j
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/DateUtils.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/FatherCommon.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/GuidGenerator.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/HMacSha1.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/Help_Encrypt.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/HttpTools.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/MD5.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/MonitorInfo.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/MonitorTools.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/NetworkUtil.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/OauthSignatureValidateHandler.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/PropertiesTool.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/SerializeUtil.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/StringTool.java -text
@@ -294,6 +301,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeUserV
 privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/TestPrivilege.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/web/InitJob.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/web/InitKafkaMessage.java -text
+privilege-service/src/main/resources/cc/wdcy/infrastructure/mybatis/AppMapper.xml -text
 privilege-service/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeFunctionMapper.xml -text
 privilege-service/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeGroupMapper.xml -text
 privilege-service/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeGroupResourceMapper.xml -text
