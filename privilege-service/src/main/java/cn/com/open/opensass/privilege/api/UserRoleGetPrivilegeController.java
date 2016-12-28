@@ -15,17 +15,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.opensass.privilege.model.App;
 import cn.com.open.opensass.privilege.model.PrivilegeMenu;
 import cn.com.open.opensass.privilege.model.PrivilegeResource;
 import cn.com.open.opensass.privilege.model.PrivilegeRole;
 import cn.com.open.opensass.privilege.model.PrivilegeRoleResource;
 import cn.com.open.opensass.privilege.model.PrivilegeUser;
+import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
+import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
+import cn.com.open.opensass.privilege.service.AppService;
 import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
 import cn.com.open.opensass.privilege.service.PrivilegeResourceService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleResourceService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
+import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
+import cn.com.open.opensass.privilege.tools.WebUtils;
 import cn.com.open.opensass.privilege.vo.PrivilegeResourceVo;
 import cn.com.open.opensass.privilege.vo.PrivilegeRoleVo;
 import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
@@ -44,6 +50,10 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil{
 	private PrivilegeResourceService privilegeResourceService;
 	@Autowired 
 	private PrivilegeMenuService privilegeMenuService;
+	@Autowired
+	private AppService appService;
+	@Autowired
+	private RedisClientTemplate redisClient;
 	/**
 	 * 用户角色修改接口
 	 */
@@ -55,7 +65,19 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil{
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
               return;
     	}  
-
+    	App app = (App) redisClient.getObject(RedisConstant.APP_INFO+privilegeUserVo.getAppId());
+	    if(app==null)
+		   {
+			   app=appService.findById(Integer.parseInt(privilegeUserVo.getAppId()));
+			   redisClient.setObject(RedisConstant.APP_INFO+privilegeUserVo.getAppId(), app);
+		  }
+	     //认证
+    	Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
+    	
+		if(!f){
+			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
+			return;
+		}
     	List<PrivilegeMenu> menus = new ArrayList<PrivilegeMenu>();
     	List<PrivilegeRole> roles = new ArrayList<PrivilegeRole>();
     	List<PrivilegeResourceVo> resources = new ArrayList<PrivilegeResourceVo>();

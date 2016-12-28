@@ -15,10 +15,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.opensass.privilege.model.App;
 import cn.com.open.opensass.privilege.model.PrivilegeResource;
+import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
+import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
+import cn.com.open.opensass.privilege.service.AppService;
 import cn.com.open.opensass.privilege.service.PrivilegeFunctionService;
 import cn.com.open.opensass.privilege.service.PrivilegeResourceService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
+import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
+import cn.com.open.opensass.privilege.tools.WebUtils;
 
 /**
  *  权限资源查询接口
@@ -31,7 +37,10 @@ public class ResourceGetPrivilegeController extends BaseControllerUtil{
 	private PrivilegeResourceService privilegeResourceService;
 	@Autowired
 	private PrivilegeFunctionService privilegeFunctionService;
-	
+	@Autowired
+	private AppService appService;
+	@Autowired
+	private RedisClientTemplate redisClient;
     @RequestMapping("getResPrivilege")
     public void getResPrivilege(HttpServletRequest request,HttpServletResponse response) {
     	String menuId=request.getParameter("menuId");
@@ -45,6 +54,17 @@ public class ResourceGetPrivilegeController extends BaseControllerUtil{
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
               return;	
     	}
+    	App app = (App) redisClient.getObject(RedisConstant.APP_INFO+appId);
+	    if(app==null)
+		   {
+			   app=appService.findById(Integer.parseInt(appId));
+			   redisClient.setObject(RedisConstant.APP_INFO+appId, app);
+		  }
+    	Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
+		if(!f){
+			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
+			return;
+		}
     	List<PrivilegeResource>lists=privilegeResourceService.findResourcePage(menuId, appId,Integer.parseInt(start),Integer.parseInt(limit), resourceLevel);
     	if(lists!=null&&lists.size()>0){
     		Map<String, Object> resourceMap=null;
