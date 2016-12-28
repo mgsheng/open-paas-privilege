@@ -14,8 +14,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.opensass.privilege.dao.cache.RedisDao;
+import cn.com.open.opensass.privilege.model.App;
+import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
+import cn.com.open.opensass.privilege.service.AppService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
+import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
+import cn.com.open.opensass.privilege.tools.WebUtils;
 /**
  *  用户权限认证接口
  * @author Administrator
@@ -28,6 +33,10 @@ public class VerifyUserPrivilegeController extends BaseControllerUtil{
 	  private static final String prifix = RedisConstant.USERPRIVILEGES_CACHE;
 	  private static final String jsonKeyName = "urlList";
 	  @Autowired
+		private AppService appService;
+		@Autowired
+		private RedisClientTemplate redisClient;
+	  @Autowired
 	    private RedisDao redisDao;
 	  @RequestMapping("verifyUserPrivilege")
 	  public void verifyUserPrivilege(HttpServletRequest request,HttpServletResponse response){
@@ -39,6 +48,17 @@ public class VerifyUserPrivilegeController extends BaseControllerUtil{
 	            paraMandaChkAndReturn(10000, response, "必传参数中有空值");
 	            return;
 	        }
+	        App app = (App) redisClient.getObject(RedisConstant.APP_INFO+appId);
+		    if(app==null)
+			   {
+				   app=appService.findById(Integer.parseInt(appId));
+				   redisClient.setObject(RedisConstant.APP_INFO+appId, app);
+			  }
+	    	Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
+			if(!f){
+				WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
+				return;
+			}
 	        Map<String, Object> map=new HashMap<String, Object>();
  	        Boolean states=redisDao.existUrlRedis(prifix, jsonKeyName, optUrl, appId, appUserid);
 	        if (states) {
