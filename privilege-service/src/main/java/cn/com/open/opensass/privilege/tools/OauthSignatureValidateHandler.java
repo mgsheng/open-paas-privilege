@@ -17,15 +17,15 @@ public class OauthSignatureValidateHandler {
 	 * @return
 	 */
 	  public static boolean validateSignature(HttpServletRequest request,App app){
-		    String clientId=request.getParameter("client_id");
-		    String accessToken=request.getParameter("access_token");
+		    String appId=request.getParameter("appId");
+		    String appKey=request.getParameter("appKey");
 		    String signature=request.getParameter("signature");
 		    String timestamp=request.getParameter("timestamp");
 		    String signatureNonce=request.getParameter("signatureNonce");
 		 	 StringBuilder encryptText = new StringBuilder();
-		 	encryptText.append(clientId);
+		 	encryptText.append(appId);
 			encryptText.append(SEPARATOR);
-		 	encryptText.append(accessToken);
+		 	encryptText.append(appKey);
 		 	encryptText.append(SEPARATOR);
 		 	encryptText.append(timestamp);
 		 	encryptText.append(SEPARATOR);
