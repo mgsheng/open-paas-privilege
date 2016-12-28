@@ -15,9 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.opensass.privilege.model.App;
 import cn.com.open.opensass.privilege.model.PrivilegeResource;
+import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
+import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
+import cn.com.open.opensass.privilege.service.AppService;
 import cn.com.open.opensass.privilege.service.PrivilegeResourceService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
+import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
+import cn.com.open.opensass.privilege.tools.WebUtils;
 
 /**
  *  菜单添加接口
@@ -28,7 +34,10 @@ public class ResourceAddPrivilegeController extends BaseControllerUtil{
 	private static final Logger log = LoggerFactory.getLogger(ResourceAddPrivilegeController.class);
 	@Autowired
 	private PrivilegeResourceService privilegeResourceService;
-
+	@Autowired
+	private AppService appService;
+	@Autowired
+	private RedisClientTemplate redisClient;
     /**
      * 菜单添加接口
      * @return Json
@@ -63,6 +72,17 @@ public class ResourceAddPrivilegeController extends BaseControllerUtil{
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
               return;	
     	}
+    	App app = (App) redisClient.getObject(RedisConstant.APP_INFO+appId);
+	    if(app==null)
+		   {
+			   app=appService.findById(Integer.parseInt(appId));
+			   redisClient.setObject(RedisConstant.APP_INFO+appId, app);
+		  }
+    	Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
+		if(!f){
+			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
+			return;
+		}
     	PrivilegeResource pr=new PrivilegeResource();
     	pr.setAppId(appId);
     	pr.setResourceName(resourceName);
@@ -75,8 +95,8 @@ public class ResourceAddPrivilegeController extends BaseControllerUtil{
     	pr.setCreateTime(new Date());
     	pr.setCreateUser(createUser);
     	pr.setCreateUserId(createUserId);
-    	Boolean f= privilegeResourceService.savePrivilegeResource(pr);
-    	if(f){
+    	Boolean sf= privilegeResourceService.savePrivilegeResource(pr);
+    	if(sf){
     		map.put("status","1");
     		map.put("resourceId", pr.id());
     	}else{

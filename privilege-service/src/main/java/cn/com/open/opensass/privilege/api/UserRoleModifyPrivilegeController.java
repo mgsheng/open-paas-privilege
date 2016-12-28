@@ -16,15 +16,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.opensass.privilege.model.App;
 import cn.com.open.opensass.privilege.model.PrivilegeRole;
 import cn.com.open.opensass.privilege.model.PrivilegeRoleResource;
 import cn.com.open.opensass.privilege.model.PrivilegeUser;
 import cn.com.open.opensass.privilege.model.PrivilegeUserRole;
+import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
+import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
+import cn.com.open.opensass.privilege.service.AppService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserRoleService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
+import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
 import cn.com.open.opensass.privilege.tools.StringTool;
+import cn.com.open.opensass.privilege.tools.WebUtils;
 import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
 
 @Controller
@@ -35,6 +41,10 @@ public class UserRoleModifyPrivilegeController extends BaseControllerUtil{
 	private PrivilegeUserService privilegeUserService;
 	@Autowired 
 	private PrivilegeUserRoleService privilegeUserRoleService;
+	@Autowired
+	private AppService appService;
+	@Autowired
+	private RedisClientTemplate redisClient;
 	/**
 	 * 用户角色修改接口
 	 */
@@ -46,7 +56,19 @@ public class UserRoleModifyPrivilegeController extends BaseControllerUtil{
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
               return;
     	}  
-
+    	App app = (App) redisClient.getObject(RedisConstant.APP_INFO+privilegeUserVo.getAppId());
+	    if(app==null)
+		   {
+			   app=appService.findById(Integer.parseInt(privilegeUserVo.getAppId()));
+			   redisClient.setObject(RedisConstant.APP_INFO+privilegeUserVo.getAppId(), app);
+		  }
+	     //认证
+    	Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
+    	
+		if(!f){
+			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
+			return;
+		}
     	String method = privilegeUserVo.getMethod();
     	PrivilegeUser user = privilegeUserService.findByAppIdAndUserId(privilegeUserVo.getAppId(),privilegeUserVo.getAppUserId());
     	if(user==null){
@@ -74,8 +96,8 @@ public class UserRoleModifyPrivilegeController extends BaseControllerUtil{
 						userRole.setPrivilegeRoleId(roleId);
 						userRole.setCreateUserId(privilegeUserVo.getCreateUserId());
 						userRole.setCreateUser(privilegeUserVo.getCreateUser());
-						Boolean f = privilegeUserRoleService.savePrivilegeUserRole(userRole);
-						if(!f){
+						Boolean sf = privilegeUserRoleService.savePrivilegeUserRole(userRole);
+						if(!sf){
 							paraMandaChkAndReturn(10001, response,"添加角色失败");
 				            return;
 						}
@@ -83,8 +105,8 @@ public class UserRoleModifyPrivilegeController extends BaseControllerUtil{
     			}else if(("1").equals(method)){//删除角色
     				if(userRole != null){
         				roleIdList.remove(roleId);
-    					Boolean f = privilegeUserRoleService.delPrivilegeUserRole(userRole);
-    					if(!f){
+    					Boolean df = privilegeUserRoleService.delPrivilegeUserRole(userRole);
+    					if(!df){
 							paraMandaChkAndReturn(10002, response,"删除角色失败");
 				            return;
 						}

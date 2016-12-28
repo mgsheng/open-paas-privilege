@@ -13,11 +13,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.opensass.privilege.model.App;
 import cn.com.open.opensass.privilege.model.PrivilegeRole;
 import cn.com.open.opensass.privilege.model.PrivilegeRoleResource;
+import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
+import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
+import cn.com.open.opensass.privilege.service.AppService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleResourceService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
+import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
+import cn.com.open.opensass.privilege.tools.WebUtils;
 
 @Controller
 @RequestMapping("/role/")
@@ -27,6 +33,10 @@ public class RoleAddPrivilegeController extends BaseControllerUtil{
 	private PrivilegeRoleService privilegeRoleService;
 	@Autowired 
 	private PrivilegeRoleResourceService privilegeRoleResourceService;
+	@Autowired
+	private AppService appService;
+	@Autowired
+	private RedisClientTemplate redisClient;
 	/**
 	 * 角色初始创建接口
 	 */
@@ -55,7 +65,17 @@ public class RoleAddPrivilegeController extends BaseControllerUtil{
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
               return;
     	}    	
-    	
+    	App app = (App) redisClient.getObject(RedisConstant.APP_INFO+appId);
+	    if(app==null)
+		   {
+			   app=appService.findById(Integer.parseInt(appId));
+			   redisClient.setObject(RedisConstant.APP_INFO+appId, app);
+		  }
+    	Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
+		if(!f){
+			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
+			return;
+		}
     	PrivilegeRole privilegeRole=new PrivilegeRole();
     	privilegeRole.setAppId(appId);
     	privilegeRole.setRoleName(roleName);
@@ -85,8 +105,8 @@ public class RoleAddPrivilegeController extends BaseControllerUtil{
     		privilegeRole.setStatus(Integer.parseInt(status));
     	} 	
     	
-    	Boolean f = privilegeRoleService.savePrivilegeRole(privilegeRole);//添加角色表
-    	if(f){
+    	Boolean sf = privilegeRoleService.savePrivilegeRole(privilegeRole);//添加角色表
+    	if(sf){
 	    	if(rolePrivilege!=null){//添加权限资源关系表
 	    		String[] roleResources = rolePrivilege.split(",");
 	    		for(String roleResource : roleResources){

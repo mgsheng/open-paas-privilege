@@ -13,8 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.opensass.privilege.model.App;
+import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
+import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
+import cn.com.open.opensass.privilege.service.AppService;
 import cn.com.open.opensass.privilege.service.PrivilegeFunctionService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
+import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
+import cn.com.open.opensass.privilege.tools.WebUtils;
 
 /**
  * 权限功能删除接口
@@ -25,7 +31,10 @@ public class FunctionDelPrivilegeController extends BaseControllerUtil{
 	private static final Logger log = LoggerFactory.getLogger(FunctionDelPrivilegeController.class);
 	@Autowired
 	private PrivilegeFunctionService privilegeFunctionService;
-
+	@Autowired
+	private AppService appService;
+	@Autowired
+	private RedisClientTemplate redisClient;
     /**
      * 权限功能删除接口
      * @return Json
@@ -40,11 +49,22 @@ public class FunctionDelPrivilegeController extends BaseControllerUtil{
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
               return;	
     	}
+    	App app = (App) redisClient.getObject(RedisConstant.APP_INFO+appId);
+	    if(app==null)
+		   {
+			   app=appService.findById(Integer.parseInt(appId));
+			   redisClient.setObject(RedisConstant.APP_INFO+appId, app);
+		  }
+    	Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
+		if(!f){
+			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
+			return;
+		}
     	String functionIds[]=functionId.split(",");
     	
     	if(functionIds!=null&&functionIds.length>0){
-    		Boolean f=privilegeFunctionService.deleteByFunctionIds(functionIds);
-    		if(f){
+    		Boolean df=privilegeFunctionService.deleteByFunctionIds(functionIds);
+    		if(df){
     			map.put("status","1");
     		}else{
     			map.put("status","0");

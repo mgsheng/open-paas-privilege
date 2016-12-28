@@ -14,9 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.opensass.privilege.model.App;
 import cn.com.open.opensass.privilege.model.PrivilegeMenu;
+import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
+import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
+import cn.com.open.opensass.privilege.service.AppService;
 import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
+import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
+import cn.com.open.opensass.privilege.tools.WebUtils;
 
 /**
  *  菜单查询接口
@@ -27,6 +33,10 @@ public class MenuGetPrivilegeController extends BaseControllerUtil{
 	private static final Logger log = LoggerFactory.getLogger(MenuGetPrivilegeController.class);
 	@Autowired
 	private PrivilegeMenuService privilegeMenuService;
+	@Autowired
+	private AppService appService;
+	@Autowired
+	private RedisClientTemplate redisClient;
 
     /**
      * 菜单查询接口
@@ -44,6 +54,17 @@ public class MenuGetPrivilegeController extends BaseControllerUtil{
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
               return;	
     	}
+    	App app = (App) redisClient.getObject(RedisConstant.APP_INFO+appId);
+	    if(app==null)
+		   {
+			   app=appService.findById(Integer.parseInt(appId));
+			   redisClient.setObject(RedisConstant.APP_INFO+appId, app);
+		  }
+    	Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
+		if(!f){
+			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
+			return;
+		}
     	List<PrivilegeMenu>lists=privilegeMenuService.findMenuPage(menuId, appId,Integer.parseInt(start),Integer.parseInt(limit));
     	if(lists!=null&&lists.size()>0){
     		for(int i=0;i<lists.size();i++){

@@ -15,9 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.opensass.privilege.model.App;
 import cn.com.open.opensass.privilege.model.PrivilegeMenu;
+import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
+import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
+import cn.com.open.opensass.privilege.service.AppService;
 import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
+import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
+import cn.com.open.opensass.privilege.tools.WebUtils;
 
 /**
  *  菜单添加接口
@@ -28,6 +34,10 @@ public class MenuAddPrivilegeController extends BaseControllerUtil{
 	private static final Logger log = LoggerFactory.getLogger(MenuAddPrivilegeController.class);
 	@Autowired
 	private PrivilegeMenuService privilegeMenuService;
+	@Autowired
+	private AppService appService;
+	@Autowired
+	private RedisClientTemplate redisClient;
 
     /**
      * 菜单添加接口
@@ -60,6 +70,17 @@ public class MenuAddPrivilegeController extends BaseControllerUtil{
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
               return;	
     	}
+    	App app = (App) redisClient.getObject(RedisConstant.APP_INFO+appId);
+	    if(app==null)
+		   {
+			   app=appService.findById(Integer.parseInt(appId));
+			   redisClient.setObject(RedisConstant.APP_INFO+appId, app);
+		  }
+    	Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
+		if(!f){
+			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
+			return;
+		}
     	PrivilegeMenu pm=new PrivilegeMenu();
     	pm.setAppId(appId);
     	pm.setMenuName(menuName);
@@ -86,10 +107,12 @@ public class MenuAddPrivilegeController extends BaseControllerUtil{
     	}
     	pm.setMenuCode(menuCode);
     	pm.setCreateTime(new Date());
-    	Boolean f =privilegeMenuService.savePrivilegeMenu(pm);
-    	if(f){
+    	Boolean sf =privilegeMenuService.savePrivilegeMenu(pm);
+    	if(sf){
     		map.put("status","1");
     		map.put("menuId", pm.id());
+    		
+    		
     	}else{
     		map.put("status","0");
     		map.put("error_code","10001");

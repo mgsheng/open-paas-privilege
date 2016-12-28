@@ -15,9 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.opensass.privilege.model.App;
 import cn.com.open.opensass.privilege.model.PrivilegeFunction;
+import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
+import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
+import cn.com.open.opensass.privilege.service.AppService;
 import cn.com.open.opensass.privilege.service.PrivilegeFunctionService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
+import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
+import cn.com.open.opensass.privilege.tools.WebUtils;
 
 /**
  * 权限功能修改接口
@@ -29,7 +35,10 @@ public class FunctionModifyPrivilegeController extends BaseControllerUtil {
 			.getLogger(FunctionModifyPrivilegeController.class);
 	@Autowired
 	private PrivilegeFunctionService privilegeFunctionService;
-
+	@Autowired
+	private AppService appService;
+	@Autowired
+	private RedisClientTemplate redisClient;
 	/**
 	 * 权限功能修改接口
 	 * 
@@ -58,6 +67,17 @@ public class FunctionModifyPrivilegeController extends BaseControllerUtil {
 			paraMandaChkAndReturn(10000, response, "必传参数中有空值");
 			return;
 		}
+		App app = (App) redisClient.getObject(RedisConstant.APP_INFO+appId);
+	    if(app==null)
+		   {
+			   app=appService.findById(Integer.parseInt(appId));
+			   redisClient.setObject(RedisConstant.APP_INFO+appId, app);
+		  }
+    	Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
+		if(!f){
+			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
+			return;
+		}
 		PrivilegeFunction pf = privilegeFunctionService.findByFunctionId(functionId);
 		if(pf!=null){
 			pf.setCreateTime(new Date());
@@ -65,8 +85,8 @@ public class FunctionModifyPrivilegeController extends BaseControllerUtil {
 			pf.setCreateUserId(createUserid);
 			pf.setOptUrl(optUrl);
 			pf.setOperationId(operationId);	
-			Boolean f = privilegeFunctionService.updatePrivilegeFunction(pf);
-			if (f) {
+			Boolean uf = privilegeFunctionService.updatePrivilegeFunction(pf);
+			if (uf) {
 				map.put("status", "1");
 				map.put("menuId", pf.id());
 			} else {

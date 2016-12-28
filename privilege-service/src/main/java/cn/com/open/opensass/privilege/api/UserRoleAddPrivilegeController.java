@@ -13,11 +13,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.opensass.privilege.model.App;
 import cn.com.open.opensass.privilege.model.PrivilegeUser;
 import cn.com.open.opensass.privilege.model.PrivilegeUserRole;
+import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
+import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
+import cn.com.open.opensass.privilege.service.AppService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserRoleService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
+import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
+import cn.com.open.opensass.privilege.tools.WebUtils;
 import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
 
 @Controller
@@ -28,6 +34,10 @@ public class UserRoleAddPrivilegeController extends BaseControllerUtil{
 	private PrivilegeUserService privilegeUserService;
 	@Autowired 
 	private PrivilegeUserRoleService privilegeUserRoleService;
+	@Autowired
+	private AppService appService;
+	@Autowired
+	private RedisClientTemplate redisClient;
 	/**
 	 * 用户角色初始创建接口
 	 */
@@ -38,7 +48,20 @@ public class UserRoleAddPrivilegeController extends BaseControllerUtil{
     	if(!paraMandatoryCheck(Arrays.asList(privilegeUserVo.getPrivilegeRoleId(),privilegeUserVo.getAppId(),privilegeUserVo.getAppUserId(),privilegeUserVo.getAppUserName()))){
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
               return;
-    	}  
+    	} 
+    	App app = (App) redisClient.getObject(RedisConstant.APP_INFO+privilegeUserVo.getAppId());
+	    if(app==null)
+		   {
+			   app=appService.findById(Integer.parseInt(privilegeUserVo.getAppId()));
+			   redisClient.setObject(RedisConstant.APP_INFO+privilegeUserVo.getAppId(), app);
+		  }
+	     //认证
+    	Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
+    	
+		if(!f){
+			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
+			return;
+		}
     	PrivilegeUser user=null;
     	//查询是否业务用户是否已存在
     	user = privilegeUserService.findByAppIdAndUserId(privilegeUserVo.getAppId(),privilegeUserVo.getAppUserId());
@@ -57,8 +80,8 @@ public class UserRoleAddPrivilegeController extends BaseControllerUtil{
     	user.setResourceId(privilegeUserVo.getResourceId());
     	user.setPrivilegeFunId(privilegeUserVo.getResourceId());
     	
-    	Boolean f = privilegeUserService.savePrivilegeUser(user);
-    	if(f){
+    	Boolean sf = privilegeUserService.savePrivilegeUser(user);
+    	if(sf){
 	    	String[] roles=privilegeUserVo.getPrivilegeRoleId().split(",");
 	    	for(String role : roles){
 	    		PrivilegeUserRole userRole=new PrivilegeUserRole();

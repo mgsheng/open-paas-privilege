@@ -13,11 +13,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.opensass.privilege.model.App;
 import cn.com.open.opensass.privilege.model.PrivilegeRole;
 import cn.com.open.opensass.privilege.model.PrivilegeRoleResource;
+import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
+import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
+import cn.com.open.opensass.privilege.service.AppService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleResourceService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
+import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
+import cn.com.open.opensass.privilege.tools.WebUtils;
 
 @Controller
 @RequestMapping("/role/")
@@ -27,6 +33,10 @@ public class RoleModifyPrivilegeController extends BaseControllerUtil{
 	private PrivilegeRoleService privilegeRoleService;
 	@Autowired 
 	private PrivilegeRoleResourceService privilegeRoleResourceService;
+	@Autowired
+	private AppService appService;
+	@Autowired
+	private RedisClientTemplate redisClient;
 	/**
 	 * 角色权限修改接口
 	 */
@@ -56,7 +66,18 @@ public class RoleModifyPrivilegeController extends BaseControllerUtil{
     	if(!paraMandatoryCheck(Arrays.asList(appId,privilegeRoleId,method))){
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
               return;
-    	}    	
+    	} 
+    	App app = (App) redisClient.getObject(RedisConstant.APP_INFO+appId);
+	    if(app==null)
+		   {
+			   app=appService.findById(Integer.parseInt(appId));
+			   redisClient.setObject(RedisConstant.APP_INFO+appId, app);
+		  }
+    	Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
+		if(!f){
+			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
+			return;
+		}
     	//修改privilegeRole
     	PrivilegeRole privilegeRole = privilegeRoleService.findRoleById(privilegeRoleId);
     	privilegeRole.setRoleName(roleName);
@@ -106,8 +127,8 @@ public class RoleModifyPrivilegeController extends BaseControllerUtil{
 							roleResource1.setStatus(Integer.parseInt(status));
 						}						
 						roleResource1.setPrivilegeFunId(privilegeFunId);
-						Boolean f = privilegeRoleResourceService.savePrivilegeRoleResource(roleResource1);
-						if(!f){
+						Boolean sf = privilegeRoleResourceService.savePrivilegeRoleResource(roleResource1);
+						if(!sf){
 							paraMandaChkAndReturn(10003, response,"添加权限失败");
 				            return;
 						}
@@ -120,16 +141,16 @@ public class RoleModifyPrivilegeController extends BaseControllerUtil{
 							roleResource1.setStatus(Integer.parseInt(status));
 						}						
 						roleResource1.setPrivilegeFunId(privilegeFunId);
-						Boolean f = privilegeRoleResourceService.updatePrivilegeRoleResource(roleResource1);
-						if(!f){
+						Boolean uf = privilegeRoleResourceService.updatePrivilegeRoleResource(roleResource1);
+						if(!uf){
 							paraMandaChkAndReturn(10004, response,"修改权限失败");
 				            return;
 						}
 					}
     			}else if(("1").equals(method)){//删除权限
     				if(roleResource1 != null){
-    					Boolean f = privilegeRoleResourceService.delPrivilegeRoleResource(roleResource1);
-    					if(!f){
+    					Boolean df = privilegeRoleResourceService.delPrivilegeRoleResource(roleResource1);
+    					if(!df){
 							paraMandaChkAndReturn(10005, response,"删除权限失败");
 				            return;
 						}

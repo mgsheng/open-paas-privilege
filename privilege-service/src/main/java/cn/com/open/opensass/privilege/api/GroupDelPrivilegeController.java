@@ -14,9 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.opensass.privilege.model.App;
 import cn.com.open.opensass.privilege.model.PrivilegeGroupResource;
+import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
+import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
+import cn.com.open.opensass.privilege.service.AppService;
 import cn.com.open.opensass.privilege.service.PrivilegeGroupResourceService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
+import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
+import cn.com.open.opensass.privilege.tools.WebUtils;
 
 /**
  * 组织机构权限删除接口（删除当前组织机构所有权限）
@@ -27,7 +33,10 @@ public class GroupDelPrivilegeController extends BaseControllerUtil{
 	private static final Logger log = LoggerFactory.getLogger(GroupDelPrivilegeController.class);
 	@Autowired
 	private PrivilegeGroupResourceService privilegeGroupResourceService;
-
+	@Autowired
+	private AppService appService;
+	@Autowired
+	private RedisClientTemplate redisClient;
     /**
      * 组织机构权限删除接口（删除当前组织机构所有权限）
      * @return Json
@@ -42,6 +51,19 @@ public class GroupDelPrivilegeController extends BaseControllerUtil{
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
               return;	
     	}
+    	App app = (App) redisClient.getObject(RedisConstant.APP_INFO+appId);
+	    if(app==null)
+		   {
+			   app=appService.findById(Integer.parseInt(appId));
+			   redisClient.setObject(RedisConstant.APP_INFO+appId, app);
+		  }
+	     //认证
+    	Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
+    	
+		if(!f){
+			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
+			return;
+		}
     	List<PrivilegeGroupResource> lists=privilegeGroupResourceService.getPgrs(groupId);
     	if(lists!=null&&lists.size()>0){
     		privilegeGroupResourceService.deleteByGroupId(groupId);

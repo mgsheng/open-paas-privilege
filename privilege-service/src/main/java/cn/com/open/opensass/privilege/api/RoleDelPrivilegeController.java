@@ -13,9 +13,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.opensass.privilege.model.App;
+import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
+import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
+import cn.com.open.opensass.privilege.service.AppService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleResourceService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
+import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
+import cn.com.open.opensass.privilege.tools.WebUtils;
 
 @Controller
 @RequestMapping("/role/")
@@ -25,6 +31,10 @@ public class RoleDelPrivilegeController extends BaseControllerUtil{
 	private PrivilegeRoleService privilegeRoleService;
 	@Autowired 
 	private PrivilegeRoleResourceService privilegeRoleResourceService;
+	@Autowired
+	private AppService appService;
+	@Autowired
+	private RedisClientTemplate redisClient;
 	/**
 	 * 角色删除接口
 	 */
@@ -42,9 +52,19 @@ public class RoleDelPrivilegeController extends BaseControllerUtil{
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
               return;
     	}    	
-    	
-    	Boolean f = privilegeRoleService.delPrivilegeRoleById(privilegeRoleId);//删除角色表
-    	if(f){
+    	App app = (App) redisClient.getObject(RedisConstant.APP_INFO+appId);
+	    if(app==null)
+		   {
+			   app=appService.findById(Integer.parseInt(appId));
+			   redisClient.setObject(RedisConstant.APP_INFO+appId, app);
+		  }
+    	Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
+		if(!f){
+			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
+			return;
+		}
+    	Boolean df = privilegeRoleService.delPrivilegeRoleById(privilegeRoleId);//删除角色表
+    	if(df){
     		Boolean f1 = privilegeRoleResourceService.delRoleResourceByRoleId(privilegeRoleId);//删除角色资源关系表
 			if(!f1){
 				paraMandaChkAndReturn(10002, response,"角色资源关系删除失败");
