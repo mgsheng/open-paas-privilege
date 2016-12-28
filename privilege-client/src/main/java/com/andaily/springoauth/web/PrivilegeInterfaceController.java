@@ -22,6 +22,7 @@ import com.andaily.springoauth.service.dto.PrivilegeFunctionDto;
 import com.andaily.springoauth.service.dto.PrivilegeGroupDto;
 import com.andaily.springoauth.service.dto.PrivilegeMenuDto;
 import com.andaily.springoauth.service.dto.PrivilegeResourceDto;
+import com.andaily.springoauth.tools.AESUtil;
 import com.andaily.springoauth.tools.DateTools;
 import com.andaily.springoauth.tools.HMacSha1;
 import com.andaily.springoauth.tools.LoadPopertiesFile;
@@ -127,7 +128,29 @@ public class PrivilegeInterfaceController {
 	@RequestMapping(value = "addPrivilege", method = RequestMethod.POST)
 	public String addPrivilege(PrivilegeGroupDto privilegeGroupDto)
 			throws Exception {
-		 String fullUri = privilegeGroupDto.getFullUri();
+		  String key=map.get(privilegeGroupDto.getAppId());
+	  	  String signature="";
+	  	  String timestamp="";
+	  	  String signatureNonce="";
+	  	  String appKey="";
+		      if(key!=null){
+		    	    appKey=map.get(key);
+		      		timestamp=DateTools.getSolrDate(new Date());
+		  		 	StringBuilder encryptText = new StringBuilder();
+		  		 	signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+		  		 	encryptText.append(privilegeGroupDto.getAppId());
+		  			encryptText.append(SEPARATOR);
+		  			if(appKey!=null){
+		  			  encryptText.append(appKey);
+		  			}
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(timestamp);
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(signatureNonce);
+		  		 	signature=HMacSha1.HmacSHA1Encrypt(encryptText.toString(), key);
+		  			signature=HMacSha1.getNewResult(signature);
+		      }
+		 String fullUri = privilegeGroupDto.getFullUri()+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;;
 		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
 		return "redirect:" + fullUri;
 	}
