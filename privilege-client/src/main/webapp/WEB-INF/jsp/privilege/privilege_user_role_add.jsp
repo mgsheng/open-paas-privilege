@@ -178,11 +178,12 @@
 				if(data.flag){
 				    var signature=data.signature;
 				    var timestamp=data.timestamp;
-				    var signatureNonce=data.signatureNonce; 				    
+				    var signatureNonce=data.signatureNonce;
+				    var appKey=data.appKey; 				    
 					var uri=addPrivilegeUserUri+"?"+"privilegeRoleId="+privilegeRoleId+"&appId="+appId+"&appUserId="+appUserId
 							+"&appUserName="+appUserName+"&deptId="+deptId+"&groupId="+groupId+"&createUser="+createUser+"&createUserId="+createUserId
 							+"&privilegeFunId="+privilegeFunId+"&resourceId="+resourceId
-							+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
+							+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
 					$("#addPrivilegeUser").html(uri);
 				}else{
 				    jQuery("#addPrivilegeUser").html('无效数据，请重新申请');

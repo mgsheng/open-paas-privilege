@@ -152,7 +152,7 @@ public class PrivilegeInterfaceController {
 		  		 	signature=HMacSha1.HmacSHA1Encrypt(encryptText.toString(), key);
 		  			signature=HMacSha1.getNewResult(signature);
 		      }
-		 String fullUri = privilegeGroupDto.getFullUri()+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;;
+		 String fullUri = privilegeGroupDto.getFullUri()+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
 		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
 		return "redirect:" + fullUri;
 	}
@@ -216,7 +216,29 @@ public class PrivilegeInterfaceController {
 	@RequestMapping(value = "modifyPrivilege", method = RequestMethod.POST)
 	public String modifyPrivilege(PrivilegeGroupDto privilegeGroupDto)
 			throws Exception {
-		final String fullUri = privilegeGroupDto.getModifyUri();
+		  String key=map.get(privilegeGroupDto.getAppId());
+	  	  String signature="";
+	  	  String timestamp="";
+	  	  String signatureNonce="";
+	  	  String appKey="";
+		      if(key!=null){
+		    	    appKey=map.get(key);
+		      		timestamp=DateTools.getSolrDate(new Date());
+		  		 	StringBuilder encryptText = new StringBuilder();
+		  		 	signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+		  		 	encryptText.append(privilegeGroupDto.getAppId());
+		  			encryptText.append(SEPARATOR);
+		  			if(appKey!=null){
+		  			  encryptText.append(appKey);
+		  			}
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(timestamp);
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(signatureNonce);
+		  		 	signature=HMacSha1.HmacSHA1Encrypt(encryptText.toString(), key);
+		  			signature=HMacSha1.getNewResult(signature);
+		      }
+		final String fullUri = privilegeGroupDto.getModifyUri()+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
 		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
 		return "redirect:" + fullUri;
 	}
@@ -236,7 +258,29 @@ public class PrivilegeInterfaceController {
 	@RequestMapping(value = "delPrivilege", method = RequestMethod.POST)
 	public String delPrivilege(PrivilegeGroupDto privilegeGroupDto)
 			throws Exception {
-		final String fullUri = privilegeGroupDto.getDelUri();
+		  String key=map.get(privilegeGroupDto.getAppId());
+	  	  String signature="";
+	  	  String timestamp="";
+	  	  String signatureNonce="";
+	  	  String appKey="";
+		      if(key!=null){
+		    	    appKey=map.get(key);
+		      		timestamp=DateTools.getSolrDate(new Date());
+		  		 	StringBuilder encryptText = new StringBuilder();
+		  		 	signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+		  		 	encryptText.append(privilegeGroupDto.getAppId());
+		  			encryptText.append(SEPARATOR);
+		  			if(appKey!=null){
+		  			  encryptText.append(appKey);
+		  			}
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(timestamp);
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(signatureNonce);
+		  		 	signature=HMacSha1.HmacSHA1Encrypt(encryptText.toString(), key);
+		  			signature=HMacSha1.getNewResult(signature);
+		      }
+		final String fullUri = privilegeGroupDto.getDelUri()+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
 		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
 		return "redirect:" + fullUri;
 	}
@@ -255,7 +299,29 @@ public class PrivilegeInterfaceController {
 	@RequestMapping(value = "getGroupPrivilege", method = RequestMethod.POST)
 	public String getGroupPrivilege(PrivilegeGroupDto privilegeGroupDto)
 			throws Exception {
-		final String fullUri = privilegeGroupDto.getQueryUri();
+		  String key=map.get(privilegeGroupDto.getAppId());
+	  	  String signature="";
+	  	  String timestamp="";
+	  	  String signatureNonce="";
+	  	  String appKey="";
+		      if(key!=null){
+		    	    appKey=map.get(key);
+		      		timestamp=DateTools.getSolrDate(new Date());
+		  		 	StringBuilder encryptText = new StringBuilder();
+		  		 	signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+		  		 	encryptText.append(privilegeGroupDto.getAppId());
+		  			encryptText.append(SEPARATOR);
+		  			if(appKey!=null){
+		  			  encryptText.append(appKey);
+		  			}
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(timestamp);
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(signatureNonce);
+		  		 	signature=HMacSha1.HmacSHA1Encrypt(encryptText.toString(), key);
+		  			signature=HMacSha1.getNewResult(signature);
+		      }
+		final String fullUri = privilegeGroupDto.getQueryUri()+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
 		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
 		return "redirect:" + fullUri;
 	}
@@ -274,6 +340,7 @@ public class PrivilegeInterfaceController {
 	@RequestMapping(value = "getAppRolePrivilegeRedis", method = RequestMethod.POST)
 	public String getAppRolePrivilegeRedis(HttpServletRequest request)
 			throws Exception {
+		
 		final String fullUri = request.getParameter("privilegeGroupQueryTestUrl")+"?appId="+request.getParameter("appId");
 		System.err.println(fullUri);
 		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
@@ -511,7 +578,29 @@ public class PrivilegeInterfaceController {
 	@RequestMapping(value = "addMenu", method = RequestMethod.POST)
 	public String addMenu(PrivilegeMenuDto privilegeMenuDto)
 			throws Exception {
-		final String fullUri = privilegeMenuDto.getFullUri();
+		  String key=map.get(privilegeMenuDto.getAppId());
+	  	  String signature="";
+	  	  String timestamp="";
+	  	  String signatureNonce="";
+	  	  String appKey="";
+		      if(key!=null){
+		    	    appKey=map.get(key);
+		      		timestamp=DateTools.getSolrDate(new Date());
+		  		 	StringBuilder encryptText = new StringBuilder();
+		  		 	signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+		  		 	encryptText.append(privilegeMenuDto.getAppId());
+		  			encryptText.append(SEPARATOR);
+		  			if(appKey!=null){
+		  			  encryptText.append(appKey);
+		  			}
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(timestamp);
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(signatureNonce);
+		  		 	signature=HMacSha1.HmacSHA1Encrypt(encryptText.toString(), key);
+		  			signature=HMacSha1.getNewResult(signature);
+		      }
+		final String fullUri = privilegeMenuDto.getFullUri()+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
 		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
 		return "redirect:" + fullUri;
 	}
@@ -530,7 +619,29 @@ public class PrivilegeInterfaceController {
 	@RequestMapping(value = "modifyMenu", method = RequestMethod.POST)
 	public String modifyMenu(PrivilegeMenuDto privilegeMenuDto)
 			throws Exception {
-		final String fullUri = privilegeMenuDto.getModifyUri();
+		  String key=map.get(privilegeMenuDto.getAppId());
+	  	  String signature="";
+	  	  String timestamp="";
+	  	  String signatureNonce="";
+	  	  String appKey="";
+		      if(key!=null){
+		    	    appKey=map.get(key);
+		      		timestamp=DateTools.getSolrDate(new Date());
+		  		 	StringBuilder encryptText = new StringBuilder();
+		  		 	signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+		  		 	encryptText.append(privilegeMenuDto.getAppId());
+		  			encryptText.append(SEPARATOR);
+		  			if(appKey!=null){
+		  			  encryptText.append(appKey);
+		  			}
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(timestamp);
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(signatureNonce);
+		  		 	signature=HMacSha1.HmacSHA1Encrypt(encryptText.toString(), key);
+		  			signature=HMacSha1.getNewResult(signature);
+		      }
+		final String fullUri = privilegeMenuDto.getModifyUri()+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
 		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
 		return "redirect:" + fullUri;
 	}
@@ -549,7 +660,29 @@ public class PrivilegeInterfaceController {
 	@RequestMapping(value = "delMenu", method = RequestMethod.POST)
 	public String delMenu(PrivilegeMenuDto privilegeMenuDto)
 			throws Exception {
-		final String fullUri = privilegeMenuDto.getDelUri();
+		  String key=map.get(privilegeMenuDto.getAppId());
+	  	  String signature="";
+	  	  String timestamp="";
+	  	  String signatureNonce="";
+	  	  String appKey="";
+		      if(key!=null){
+		    	    appKey=map.get(key);
+		      		timestamp=DateTools.getSolrDate(new Date());
+		  		 	StringBuilder encryptText = new StringBuilder();
+		  		 	signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+		  		 	encryptText.append(privilegeMenuDto.getAppId());
+		  			encryptText.append(SEPARATOR);
+		  			if(appKey!=null){
+		  			  encryptText.append(appKey);
+		  			}
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(timestamp);
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(signatureNonce);
+		  		 	signature=HMacSha1.HmacSHA1Encrypt(encryptText.toString(), key);
+		  			signature=HMacSha1.getNewResult(signature);
+		      }
+		final String fullUri = privilegeMenuDto.getDelUri()+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
 		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
 		return "redirect:" + fullUri;
 	}
@@ -568,7 +701,29 @@ public class PrivilegeInterfaceController {
 	@RequestMapping(value = "getMenus", method = RequestMethod.POST)
 	public String getMenus(PrivilegeMenuDto privilegeMenuDto)
 			throws Exception {
-		final String fullUri = privilegeMenuDto.getQueryUri();
+		  String key=map.get(privilegeMenuDto.getAppId());
+	  	  String signature="";
+	  	  String timestamp="";
+	  	  String signatureNonce="";
+	  	  String appKey="";
+		      if(key!=null){
+		    	    appKey=map.get(key);
+		      		timestamp=DateTools.getSolrDate(new Date());
+		  		 	StringBuilder encryptText = new StringBuilder();
+		  		 	signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+		  		 	encryptText.append(privilegeMenuDto.getAppId());
+		  			encryptText.append(SEPARATOR);
+		  			if(appKey!=null){
+		  			  encryptText.append(appKey);
+		  			}
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(timestamp);
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(signatureNonce);
+		  		 	signature=HMacSha1.HmacSHA1Encrypt(encryptText.toString(), key);
+		  			signature=HMacSha1.getNewResult(signature);
+		      }
+		final String fullUri = privilegeMenuDto.getQueryUri()+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
 		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
 		return "redirect:" + fullUri;
 	}
@@ -587,7 +742,29 @@ public class PrivilegeInterfaceController {
 	@RequestMapping(value = "addResource", method = RequestMethod.POST)
 	public String addResource(PrivilegeResourceDto privilegeResourceDto)
 			throws Exception {
-		final String fullUri = privilegeResourceDto.getFullUri();
+		  String key=map.get(privilegeResourceDto.getAppId());
+	  	  String signature="";
+	  	  String timestamp="";
+	  	  String signatureNonce="";
+	  	  String appKey="";
+		      if(key!=null){
+		    	    appKey=map.get(key);
+		      		timestamp=DateTools.getSolrDate(new Date());
+		  		 	StringBuilder encryptText = new StringBuilder();
+		  		 	signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+		  		 	encryptText.append(privilegeResourceDto.getAppId());
+		  			encryptText.append(SEPARATOR);
+		  			if(appKey!=null){
+		  			  encryptText.append(appKey);
+		  			}
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(timestamp);
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(signatureNonce);
+		  		 	signature=HMacSha1.HmacSHA1Encrypt(encryptText.toString(), key);
+		  			signature=HMacSha1.getNewResult(signature);
+		      }
+		final String fullUri = privilegeResourceDto.getFullUri()+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
 		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
 		return "redirect:" + fullUri;
 	}
@@ -605,7 +782,29 @@ public class PrivilegeInterfaceController {
 	@RequestMapping(value = "modifyResource", method = RequestMethod.POST)
 	public String modifyResource(PrivilegeResourceDto privilegeResourceDto)
 			throws Exception {
-		final String fullUri = privilegeResourceDto.getModifyUri();
+		  String key=map.get(privilegeResourceDto.getAppId());
+	  	  String signature="";
+	  	  String timestamp="";
+	  	  String signatureNonce="";
+	  	  String appKey="";
+		      if(key!=null){
+		    	    appKey=map.get(key);
+		      		timestamp=DateTools.getSolrDate(new Date());
+		  		 	StringBuilder encryptText = new StringBuilder();
+		  		 	signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+		  		 	encryptText.append(privilegeResourceDto.getAppId());
+		  			encryptText.append(SEPARATOR);
+		  			if(appKey!=null){
+		  			  encryptText.append(appKey);
+		  			}
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(timestamp);
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(signatureNonce);
+		  		 	signature=HMacSha1.HmacSHA1Encrypt(encryptText.toString(), key);
+		  			signature=HMacSha1.getNewResult(signature);
+		      }
+		final String fullUri = privilegeResourceDto.getModifyUri()+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
 		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
 		return "redirect:" + fullUri;
 	}
@@ -624,7 +823,29 @@ public class PrivilegeInterfaceController {
 	@RequestMapping(value = "delResource", method = RequestMethod.POST)
 	public String delResource(PrivilegeResourceDto privilegeResourceDto)
 			throws Exception {
-		final String fullUri = privilegeResourceDto.getDelUri();
+		  String key=map.get(privilegeResourceDto.getAppId());
+	  	  String signature="";
+	  	  String timestamp="";
+	  	  String signatureNonce="";
+	  	  String appKey="";
+		      if(key!=null){
+		    	    appKey=map.get(key);
+		      		timestamp=DateTools.getSolrDate(new Date());
+		  		 	StringBuilder encryptText = new StringBuilder();
+		  		 	signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+		  		 	encryptText.append(privilegeResourceDto.getAppId());
+		  			encryptText.append(SEPARATOR);
+		  			if(appKey!=null){
+		  			  encryptText.append(appKey);
+		  			}
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(timestamp);
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(signatureNonce);
+		  		 	signature=HMacSha1.HmacSHA1Encrypt(encryptText.toString(), key);
+		  			signature=HMacSha1.getNewResult(signature);
+		      }
+		final String fullUri = privilegeResourceDto.getDelUri()+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
 		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
 		return "redirect:" + fullUri;
 	}
@@ -644,7 +865,29 @@ public class PrivilegeInterfaceController {
 	@RequestMapping(value = "getResPrivilege", method = RequestMethod.POST)
 	public String getResPrivilege(PrivilegeResourceDto privilegeResourceDto)
 			throws Exception {
-		final String fullUri = privilegeResourceDto.getQueryUri();
+		  String key=map.get(privilegeResourceDto.getAppId());
+	  	  String signature="";
+	  	  String timestamp="";
+	  	  String signatureNonce="";
+	  	  String appKey="";
+		      if(key!=null){
+		    	    appKey=map.get(key);
+		      		timestamp=DateTools.getSolrDate(new Date());
+		  		 	StringBuilder encryptText = new StringBuilder();
+		  		 	signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+		  		 	encryptText.append(privilegeResourceDto.getAppId());
+		  			encryptText.append(SEPARATOR);
+		  			if(appKey!=null){
+		  			  encryptText.append(appKey);
+		  			}
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(timestamp);
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(signatureNonce);
+		  		 	signature=HMacSha1.HmacSHA1Encrypt(encryptText.toString(), key);
+		  			signature=HMacSha1.getNewResult(signature);
+		      }
+		final String fullUri = privilegeResourceDto.getQueryUri()+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
 		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
 		return "redirect:" + fullUri;
 	}
@@ -665,7 +908,29 @@ public class PrivilegeInterfaceController {
 	@RequestMapping(value = "addFunction", method = RequestMethod.POST)
 	public String addFunction(PrivilegeFunctionDto privilegeFunctionDto)
 			throws Exception {
-		final String fullUri = privilegeFunctionDto.getFullUri();
+		  String key=map.get(privilegeFunctionDto.getAppId());
+	  	  String signature="";
+	  	  String timestamp="";
+	  	  String signatureNonce="";
+	  	  String appKey="";
+		      if(key!=null){
+		    	    appKey=map.get(key);
+		      		timestamp=DateTools.getSolrDate(new Date());
+		  		 	StringBuilder encryptText = new StringBuilder();
+		  		 	signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+		  		 	encryptText.append(privilegeFunctionDto.getAppId());
+		  			encryptText.append(SEPARATOR);
+		  			if(appKey!=null){
+		  			  encryptText.append(appKey);
+		  			}
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(timestamp);
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(signatureNonce);
+		  		 	signature=HMacSha1.HmacSHA1Encrypt(encryptText.toString(), key);
+		  			signature=HMacSha1.getNewResult(signature);
+		      }
+		final String fullUri = privilegeFunctionDto.getFullUri()+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
 		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
 		return "redirect:" + fullUri;
 	}
@@ -683,7 +948,29 @@ public class PrivilegeInterfaceController {
 	@RequestMapping(value = "modifyFunction", method = RequestMethod.POST)
 	public String modifyFunction(PrivilegeFunctionDto privilegeFunctionDto)
 			throws Exception {
-		final String fullUri = privilegeFunctionDto.getModifyUri();
+		String key=map.get(privilegeFunctionDto.getAppId());
+	  	  String signature="";
+	  	  String timestamp="";
+	  	  String signatureNonce="";
+	  	  String appKey="";
+		      if(key!=null){
+		    	    appKey=map.get(key);
+		      		timestamp=DateTools.getSolrDate(new Date());
+		  		 	StringBuilder encryptText = new StringBuilder();
+		  		 	signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+		  		 	encryptText.append(privilegeFunctionDto.getAppId());
+		  			encryptText.append(SEPARATOR);
+		  			if(appKey!=null){
+		  			  encryptText.append(appKey);
+		  			}
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(timestamp);
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(signatureNonce);
+		  		 	signature=HMacSha1.HmacSHA1Encrypt(encryptText.toString(), key);
+		  			signature=HMacSha1.getNewResult(signature);
+		      }
+		final String fullUri = privilegeFunctionDto.getModifyUri()+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
 		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
 		return "redirect:" + fullUri;
 	}
@@ -702,7 +989,29 @@ public class PrivilegeInterfaceController {
 	@RequestMapping(value = "delFunction", method = RequestMethod.POST)
 	public String delFunction(PrivilegeFunctionDto privilegeFunctionDto)
 			throws Exception {
-		final String fullUri = privilegeFunctionDto.getDelUri();
+		String key=map.get(privilegeFunctionDto.getAppId());
+	  	  String signature="";
+	  	  String timestamp="";
+	  	  String signatureNonce="";
+	  	  String appKey="";
+		      if(key!=null){
+		    	    appKey=map.get(key);
+		      		timestamp=DateTools.getSolrDate(new Date());
+		  		 	StringBuilder encryptText = new StringBuilder();
+		  		 	signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+		  		 	encryptText.append(privilegeFunctionDto.getAppId());
+		  			encryptText.append(SEPARATOR);
+		  			if(appKey!=null){
+		  			  encryptText.append(appKey);
+		  			}
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(timestamp);
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(signatureNonce);
+		  		 	signature=HMacSha1.HmacSHA1Encrypt(encryptText.toString(), key);
+		  			signature=HMacSha1.getNewResult(signature);
+		      }
+		final String fullUri = privilegeFunctionDto.getDelUri()+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
 		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
 		return "redirect:" + fullUri;
 	}
@@ -723,16 +1032,22 @@ public class PrivilegeInterfaceController {
 		String result = "";
 		String timestamp = "";
 		String signatureNonce = "";
+		 String appKey="";
 		if (key != null) {
+			 appKey=map.get(key);
 			timestamp = DateTools.getSolrDate(new Date());
 			StringBuilder encryptText = new StringBuilder();
 			signatureNonce = com.andaily.springoauth.tools.StringTools
 					.getRandom(100, 1);
 			encryptText.append(appId);
 			encryptText.append(SEPARATOR);
+			if(appKey!=null){
+	  			  encryptText.append(appKey);
+	  		}
 			encryptText.append(timestamp);
 			encryptText.append(SEPARATOR);
 			encryptText.append(signatureNonce);
+			
 			try {
 				result = HMacSha1.HmacSHA1Encrypt(encryptText.toString(), key);
 			} catch (Exception e) {
@@ -746,6 +1061,7 @@ public class PrivilegeInterfaceController {
 		returnMap.put("signature", result);
 		returnMap.put("timestamp", timestamp);
 		returnMap.put("signatureNonce", signatureNonce);
+		returnMap.put("appKey", appKey);
 		WebUtils.writeJsonToMap(response, returnMap);
 	}
 

@@ -1,5 +1,6 @@
 package com.andaily.springoauth.web;
 
+import java.util.Date;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.andaily.springoauth.service.dto.PrivilegeRoleDto;
 import com.andaily.springoauth.service.dto.PrivilegeUserRoleDto;
+import com.andaily.springoauth.tools.DateTools;
+import com.andaily.springoauth.tools.HMacSha1;
 import com.andaily.springoauth.tools.LoadPopertiesFile;
 /**
  * Handle 'authorization_code'  type actions
@@ -56,7 +59,30 @@ public class PrivilegeUserController {
      * */
     @RequestMapping(value = "addPrivilegeUserRole", method = RequestMethod.POST)
      public String addPrivilegeUserRole(PrivilegeUserRoleDto privilegeUserRoleDto) throws Exception {
-         final String fullUri = privilegeUserRoleDto.getAddFullUri();
+         
+    	  String key=map.get(privilegeUserRoleDto.getAppId());
+	  	  String signature="";
+	  	  String timestamp="";
+	  	  String signatureNonce="";
+	  	  String appKey="";
+		      if(key!=null){
+		    	    appKey=map.get(key);
+		      		timestamp=DateTools.getSolrDate(new Date());
+		  		 	StringBuilder encryptText = new StringBuilder();
+		  		 	signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+		  		 	encryptText.append(privilegeUserRoleDto.getAppId());
+		  			encryptText.append(SEPARATOR);
+		  			if(appKey!=null){
+		  			  encryptText.append(appKey);
+		  			}
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(timestamp);
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(signatureNonce);
+		  		 	signature=HMacSha1.HmacSHA1Encrypt(encryptText.toString(), key);
+		  			signature=HMacSha1.getNewResult(signature);
+		      }
+    	final String fullUri = privilegeUserRoleDto.getAddFullUri()+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;;
          System.err.println(fullUri);
          LOG.debug("Send to Oauth-Server URL: {}", fullUri);
          return "redirect:" + fullUri;
@@ -74,7 +100,29 @@ public class PrivilegeUserController {
     * */
    @RequestMapping(value = "delPrivilegeUserRole", method = RequestMethod.POST)
     public String delPrivilegeUserRole(PrivilegeUserRoleDto privilegeUserRoleDto) throws Exception {
-        final String fullUri = privilegeUserRoleDto.getdelFullUri();
+	   String key=map.get(privilegeUserRoleDto.getAppId());
+	  	  String signature="";
+	  	  String timestamp="";
+	  	  String signatureNonce="";
+	  	  String appKey="";
+		      if(key!=null){
+		    	    appKey=map.get(key);
+		      		timestamp=DateTools.getSolrDate(new Date());
+		  		 	StringBuilder encryptText = new StringBuilder();
+		  		 	signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+		  		 	encryptText.append(privilegeUserRoleDto.getAppId());
+		  			encryptText.append(SEPARATOR);
+		  			if(appKey!=null){
+		  			  encryptText.append(appKey);
+		  			}
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(timestamp);
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(signatureNonce);
+		  		 	signature=HMacSha1.HmacSHA1Encrypt(encryptText.toString(), key);
+		  			signature=HMacSha1.getNewResult(signature);
+		      } 
+	   final String fullUri = privilegeUserRoleDto.getdelFullUri()+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;;
         LOG.debug("Send to Oauth-Server URL: {}", fullUri);
         return "redirect:" + fullUri;
     }
@@ -91,7 +139,29 @@ public class PrivilegeUserController {
     * */
    @RequestMapping(value = "modiPrivilegeUserRole", method = RequestMethod.POST)
     public String modiPrivilegeUserRole(PrivilegeUserRoleDto privilegeUserRoleDto) throws Exception {
-        final String fullUri = privilegeUserRoleDto.getModiFullUri();
+	   String key=map.get(privilegeUserRoleDto.getAppId());
+	  	  String signature="";
+	  	  String timestamp="";
+	  	  String signatureNonce="";
+	  	  String appKey="";
+		      if(key!=null){
+		    	    appKey=map.get(key);
+		      		timestamp=DateTools.getSolrDate(new Date());
+		  		 	StringBuilder encryptText = new StringBuilder();
+		  		 	signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+		  		 	encryptText.append(privilegeUserRoleDto.getAppId());
+		  			encryptText.append(SEPARATOR);
+		  			if(appKey!=null){
+		  			  encryptText.append(appKey);
+		  			}
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(timestamp);
+		  		 	encryptText.append(SEPARATOR);
+		  		 	encryptText.append(signatureNonce);
+		  		 	signature=HMacSha1.HmacSHA1Encrypt(encryptText.toString(), key);
+		  			signature=HMacSha1.getNewResult(signature);
+		      } 
+	   final String fullUri = privilegeUserRoleDto.getModiFullUri()+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;;
         LOG.debug("Send to Oauth-Server URL: {}", fullUri);
         return "redirect:" + fullUri;
     }
@@ -109,7 +179,29 @@ public class PrivilegeUserController {
    * */
   @RequestMapping(value = "getPrivilegeUserRole", method = RequestMethod.POST)
    public String getPrivilegeUserRole(PrivilegeUserRoleDto privilegeUserRoleDto) throws Exception {
-       final String fullUri = privilegeUserRoleDto.getGetFullUri();
+	  String key=map.get(privilegeUserRoleDto.getAppId());
+  	  String signature="";
+  	  String timestamp="";
+  	  String signatureNonce="";
+  	  String appKey="";
+	      if(key!=null){
+	    	    appKey=map.get(key);
+	      		timestamp=DateTools.getSolrDate(new Date());
+	  		 	StringBuilder encryptText = new StringBuilder();
+	  		 	signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+	  		 	encryptText.append(privilegeUserRoleDto.getAppId());
+	  			encryptText.append(SEPARATOR);
+	  			if(appKey!=null){
+	  			  encryptText.append(appKey);
+	  			}
+	  		 	encryptText.append(SEPARATOR);
+	  		 	encryptText.append(timestamp);
+	  		 	encryptText.append(SEPARATOR);
+	  		 	encryptText.append(signatureNonce);
+	  		 	signature=HMacSha1.HmacSHA1Encrypt(encryptText.toString(), key);
+	  			signature=HMacSha1.getNewResult(signature);
+	      } 
+	  final String fullUri = privilegeUserRoleDto.getGetFullUri()+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;;
        LOG.debug("Send to Oauth-Server URL: {}", fullUri);
        return "redirect:" + fullUri;
    }
@@ -127,7 +219,29 @@ public class PrivilegeUserController {
    * */
   @RequestMapping(value = "verifyPrivilegeUserRole", method = RequestMethod.POST)
    public String verifyPrivilegeUserRole(PrivilegeUserRoleDto privilegeUserRoleDto) throws Exception {
-       final String fullUri = privilegeUserRoleDto.getVerifyFullUri();
+	  String key=map.get(privilegeUserRoleDto.getAppId());
+  	  String signature="";
+  	  String timestamp="";
+  	  String signatureNonce="";
+  	  String appKey="";
+	      if(key!=null){
+	    	    appKey=map.get(key);
+	      		timestamp=DateTools.getSolrDate(new Date());
+	  		 	StringBuilder encryptText = new StringBuilder();
+	  		 	signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+	  		 	encryptText.append(privilegeUserRoleDto.getAppId());
+	  			encryptText.append(SEPARATOR);
+	  			if(appKey!=null){
+	  			  encryptText.append(appKey);
+	  			}
+	  		 	encryptText.append(SEPARATOR);
+	  		 	encryptText.append(timestamp);
+	  		 	encryptText.append(SEPARATOR);
+	  		 	encryptText.append(signatureNonce);
+	  		 	signature=HMacSha1.HmacSHA1Encrypt(encryptText.toString(), key);
+	  			signature=HMacSha1.getNewResult(signature);
+	      } 
+	  final String fullUri = privilegeUserRoleDto.getVerifyFullUri()+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;;
        LOG.debug("Send to Oauth-Server URL: {}", fullUri);
        return "redirect:" + fullUri;
    }

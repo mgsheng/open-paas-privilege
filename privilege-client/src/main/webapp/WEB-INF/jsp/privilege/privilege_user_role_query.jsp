@@ -89,9 +89,10 @@
 				if(data.flag){
 				    var signature=data.signature;
 				    var timestamp=data.timestamp;
-				    var signatureNonce=data.signatureNonce; 				    
+				    var signatureNonce=data.signatureNonce;
+				    var appKey=data.appKey; 				    
 					var uri=getPrivilegeUserUri+"?"+"appUserId="+appUserId+"&appId="+appId
-							+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
+							+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
 					$("#getPrivilegeUser").html(uri);
 				}else{
 				    jQuery("#getPrivilegeUser").html('无效数据，请重新申请');

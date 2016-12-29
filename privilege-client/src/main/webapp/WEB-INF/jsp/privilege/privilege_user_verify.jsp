@@ -103,9 +103,10 @@
 				if(data.flag){
 				    var signature=data.signature;
 				    var timestamp=data.timestamp;
-				    var signatureNonce=data.signatureNonce; 				    
+				    var signatureNonce=data.signatureNonce;
+				    var appKey=data.appKey; 				    
 					var uri=verifyUserPrivilegeUri+"?"+"appId="+appId+"&appUserId="+appUserId+"&optUrl="+optUrl
-							+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
+							+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
 					$("#addPrivilegeRole").html(uri);
 					//$("#verifyUserPrivilegeUri").val(uri);
 				}else{

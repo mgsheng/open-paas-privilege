@@ -113,9 +113,10 @@
 				if(data.flag){
 				    var signature=data.signature;
 				    var timestamp=data.timestamp;
-				    var signatureNonce=data.signatureNonce; 				    
+				    var signatureNonce=data.signatureNonce;
+				    var appKey=data.appKey; 				    
 					var uri=privilegeMenuQueryUrl+"?"+"appId="+appId+"&limit="+limit+"&menuId="+menuId+"&start="+start
-							+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
+							+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
 					$("#queryPrivilegeMenu").html(uri);
 				}else{
 				    jQuery("#queryPrivilegeMenu").html('无效数据，请重新申请');
