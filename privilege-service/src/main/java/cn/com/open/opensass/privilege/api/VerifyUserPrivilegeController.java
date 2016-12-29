@@ -40,11 +40,11 @@ public class VerifyUserPrivilegeController extends BaseControllerUtil{
 	    private RedisDao redisDao;
 	  @RequestMapping("verifyUserPrivilege")
 	  public void verifyUserPrivilege(HttpServletRequest request,HttpServletResponse response){
-		  String appUserid=request.getParameter("appUserid").trim();
+		  String appUserId=request.getParameter("appUserId").trim();
 		  String appId=request.getParameter("appId").trim();
 		  String optUrl=request.getParameter("optUrl").trim();
 		  log.info("===================verifyUserPrivilege start======================");
-	        if (!paraMandatoryCheck(Arrays.asList(appUserid, appId,optUrl))) {
+	        if (!paraMandatoryCheck(Arrays.asList(appUserId, appId,optUrl))) {
 	            paraMandaChkAndReturn(10000, response, "必传参数中有空值");
 	            return;
 	        }
@@ -60,7 +60,7 @@ public class VerifyUserPrivilegeController extends BaseControllerUtil{
 				return;
 			}
 	        Map<String, Object> map=new HashMap<String, Object>();
- 	        Boolean states=redisDao.existUrlRedis(prifix, jsonKeyName, optUrl, appId, appUserid);
+ 	        Boolean states=redisDao.existUrlRedis(prifix, jsonKeyName, optUrl, appId, appUserId);
 	        if (states) {
 	        	map.put("status","1");
 			}else{
