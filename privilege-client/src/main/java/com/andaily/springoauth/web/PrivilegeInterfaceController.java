@@ -578,7 +578,7 @@ public class PrivilegeInterfaceController {
 	@RequestMapping(value = "addMenu", method = RequestMethod.POST)
 	public String addMenu(PrivilegeMenuDto privilegeMenuDto)
 			throws Exception {
-		  String key=map.get(privilegeMenuDto.getAppId());
+		  String key=map.get(privilegeMenuDto.getAppId()+"");
 	  	  String signature="";
 	  	  String timestamp="";
 	  	  String signatureNonce="";
@@ -619,7 +619,7 @@ public class PrivilegeInterfaceController {
 	@RequestMapping(value = "modifyMenu", method = RequestMethod.POST)
 	public String modifyMenu(PrivilegeMenuDto privilegeMenuDto)
 			throws Exception {
-		  String key=map.get(privilegeMenuDto.getAppId());
+		  String key=map.get(privilegeMenuDto.getAppId()+"");
 	  	  String signature="";
 	  	  String timestamp="";
 	  	  String signatureNonce="";
@@ -660,7 +660,7 @@ public class PrivilegeInterfaceController {
 	@RequestMapping(value = "delMenu", method = RequestMethod.POST)
 	public String delMenu(PrivilegeMenuDto privilegeMenuDto)
 			throws Exception {
-		  String key=map.get(privilegeMenuDto.getAppId());
+		  String key=map.get(privilegeMenuDto.getAppId()+"");
 	  	  String signature="";
 	  	  String timestamp="";
 	  	  String signatureNonce="";
@@ -701,7 +701,7 @@ public class PrivilegeInterfaceController {
 	@RequestMapping(value = "getMenus", method = RequestMethod.POST)
 	public String getMenus(PrivilegeMenuDto privilegeMenuDto)
 			throws Exception {
-		  String key=map.get(privilegeMenuDto.getAppId());
+		  String key=map.get(privilegeMenuDto.getAppId()+"");
 	  	  String signature="";
 	  	  String timestamp="";
 	  	  String signatureNonce="";
@@ -742,7 +742,7 @@ public class PrivilegeInterfaceController {
 	@RequestMapping(value = "addResource", method = RequestMethod.POST)
 	public String addResource(PrivilegeResourceDto privilegeResourceDto)
 			throws Exception {
-		  String key=map.get(privilegeResourceDto.getAppId());
+		  String key=map.get(privilegeResourceDto.getAppId()+"");
 	  	  String signature="";
 	  	  String timestamp="";
 	  	  String signatureNonce="";
@@ -782,7 +782,7 @@ public class PrivilegeInterfaceController {
 	@RequestMapping(value = "modifyResource", method = RequestMethod.POST)
 	public String modifyResource(PrivilegeResourceDto privilegeResourceDto)
 			throws Exception {
-		  String key=map.get(privilegeResourceDto.getAppId());
+		  String key=map.get(privilegeResourceDto.getAppId()+"");
 	  	  String signature="";
 	  	  String timestamp="";
 	  	  String signatureNonce="";
@@ -823,7 +823,7 @@ public class PrivilegeInterfaceController {
 	@RequestMapping(value = "delResource", method = RequestMethod.POST)
 	public String delResource(PrivilegeResourceDto privilegeResourceDto)
 			throws Exception {
-		  String key=map.get(privilegeResourceDto.getAppId());
+		  String key=map.get(privilegeResourceDto.getAppId()+"");
 	  	  String signature="";
 	  	  String timestamp="";
 	  	  String signatureNonce="";
@@ -865,7 +865,7 @@ public class PrivilegeInterfaceController {
 	@RequestMapping(value = "getResPrivilege", method = RequestMethod.POST)
 	public String getResPrivilege(PrivilegeResourceDto privilegeResourceDto)
 			throws Exception {
-		  String key=map.get(privilegeResourceDto.getAppId());
+		  String key=map.get(privilegeResourceDto.getAppId()+"");
 	  	  String signature="";
 	  	  String timestamp="";
 	  	  String signatureNonce="";
