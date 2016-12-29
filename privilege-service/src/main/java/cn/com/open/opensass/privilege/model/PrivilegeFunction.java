@@ -13,7 +13,7 @@ public class PrivilegeFunction extends AbstractDomain {
     /**
      *
      */
-    private String id;
+   // private String id;
     /*资源id*/
     private String resourceId;
     /*操作按钮Id*/
