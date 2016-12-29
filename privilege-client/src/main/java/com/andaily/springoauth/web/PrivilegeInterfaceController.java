@@ -196,7 +196,7 @@ public class PrivilegeInterfaceController {
 		  		 	signature=HMacSha1.HmacSHA1Encrypt(encryptText.toString(), key);
 		  			signature=HMacSha1.getNewResult(signature);
 		      }
-		 String fullUri = request.getParameter("verifyUserPrivilegeUri")+"?appId="+appId+"&optUrl="+optUrl+"&appUserId="+appUserId+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;;
+		 String fullUri = request.getParameter("verifyUserPrivilegeUri")+"?appId="+appId+"&optUrl="+optUrl+"&appUserId="+appUserId+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
 		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
 		return "redirect:" + fullUri;
 	}
