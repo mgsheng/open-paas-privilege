@@ -100,7 +100,7 @@ public class ResourceModifyPrivilegeController extends BaseControllerUtil{
         	Boolean uf= privilegeResourceService.updatePrivilegeResource(pr);
         	if(uf){
         		map.put("status","1");
-        		map.put("menuId", pr.id());
+        		//map.put("menuId", pr.id());
         	}else{
         		map.put("status","0");
         		map.put("error_code","10001");
