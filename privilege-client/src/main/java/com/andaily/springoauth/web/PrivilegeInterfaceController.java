@@ -156,6 +156,12 @@ public class PrivilegeInterfaceController {
 		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
 		return "redirect:" + fullUri;
 	}
+	/**
+	 * 用户权限认证接口
+	 * 
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = "verifyUserPrivilege", method = RequestMethod.GET)
 	public String verifyPrivilegeUser(Model model) {
 		model.addAttribute("verifyUserPrivilegeUri", verifyPrivilegeUserUri);
@@ -166,7 +172,7 @@ public class PrivilegeInterfaceController {
 	public String verifyPrivilegeUser(HttpServletRequest request)
 			throws Exception {
 			String appId=request.getParameter("appId");
-			String appUserid=request.getParameter("appUserid");
+			String appUserId=request.getParameter("appUserId");
 			String optUrl=request.getParameter("optUrl");
 		  String key=map.get(appId);
 	  	  String signature="";
@@ -190,7 +196,7 @@ public class PrivilegeInterfaceController {
 		  		 	signature=HMacSha1.HmacSHA1Encrypt(encryptText.toString(), key);
 		  			signature=HMacSha1.getNewResult(signature);
 		      }
-		 String fullUri = request.getParameter("verifyUserPrivilegeUri")+"?appId="+appId+"&optUrl="+optUrl+"&appUserid="+appUserid+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;;
+		 String fullUri = request.getParameter("verifyUserPrivilegeUri")+"?appId="+appId+"&optUrl="+optUrl+"&appUserId="+appUserId+"&appKey="+appKey+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;;
 		LOG.debug("Send to Oauth-Server URL: {}", fullUri);
 		return "redirect:" + fullUri;
 	}
