@@ -56,7 +56,7 @@ public class VerifyUserPrivilegeController extends BaseControllerUtil{
 			  }
 	    	Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
 			if(!f){
-				WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
+				WebUtils.paraMandaChkAndReturn(10001, response,"认证失败");
 				return;
 			}
 	        Map<String, Object> map=new HashMap<String, Object>();
