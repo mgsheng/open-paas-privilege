@@ -88,7 +88,7 @@ public class FunctionModifyPrivilegeController extends BaseControllerUtil {
 			Boolean uf = privilegeFunctionService.updatePrivilegeFunction(pf);
 			if (uf) {
 				map.put("status", "1");
-				map.put("menuId", pf.id());
+				//map.put("menuId", pf.id());
 			} else {
 				map.put("status", "0");
 				map.put("error_code", "10001");
