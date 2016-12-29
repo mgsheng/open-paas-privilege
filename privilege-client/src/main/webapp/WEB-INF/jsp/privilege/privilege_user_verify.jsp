@@ -21,7 +21,7 @@
         <div ng-controller="AuthorizationCodeCtrl" class="col-md-10">
 
             <form action="verifyUserPrivilege" method="post" class="form-horizontal">
-                <input type="text" name="verifyUserPrivilegeUri" id="verifyUserPrivilegeUri" value="${verifyUserPrivilegeUri}"/>
+                <input type="hidden" name="verifyUserPrivilegeUri" id="verifyUserPrivilegeUri" value="${verifyUserPrivilegeUri}"/>
                 <a href="javascript:void(0);" ng-click="showParams()">显示请求参数</a>
 
                 <div ng-show="visible">
@@ -91,7 +91,7 @@
 	    var appUserId=$("#appUserId").val();
 	    var optUrl=$("#optUrl").val();
 	    var verifyUserPrivilegeUri=$("#verifyUserPrivilegeUri").val();
-		if(appId=='' || appUserid==''||optUrl==''){
+		if(appId=='' || appUserId==''||optUrl==''){
 		    alert("请输入必传参数");
 			return;
 		}
