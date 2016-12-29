@@ -68,9 +68,8 @@
 <script type="text/javascript">
 	function btnSubmit(){
 		var appId=$("#appId").val();
-	    var groupId=$("#groupId").val();
 	    var privilegeGroupQueryTestUrl=$("#privilegeGroupQueryTestUrl").val();
-		if(appId=='' || groupId==''){
+		if(appId=='' ){
 		    alert("请输入必传参数");
 			return;
 		}
