@@ -38,11 +38,11 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">appUserid</label>
+                        <label class="col-sm-2 control-label">appUserId</label>
 
                         <div class="col-sm-10">
-                            <input type="text" name="appUserid" id="appUserid"
-                                   class="form-control" ng-model="appUseridsd"/>
+                            <input type="text" name="appUserId" id="appUserId"
+                                   class="form-control" ng-model="appUserId"/>
 
                             <p class="help-block">用户Id（必传）</p>
                         </div>
@@ -88,7 +88,7 @@
 <script type="text/javascript">
 	function btnSubmit(){
 		var appId=$("#appId").val();
-	    var appUserid=$("#appUserid").val();
+	    var appUserId=$("#appUserId").val();
 	    var optUrl=$("#optUrl").val();
 	    var verifyUserPrivilegeUri=$("#verifyUserPrivilegeUri").val();
 		if(appId=='' || appUserid==''||optUrl==''){
@@ -104,7 +104,7 @@
 				    var signature=data.signature;
 				    var timestamp=data.timestamp;
 				    var signatureNonce=data.signatureNonce; 				    
-					var uri=verifyUserPrivilegeUri+"?"+"appId="+appId
+					var uri=verifyUserPrivilegeUri+"?"+"appId="+appId+"&appUserId="+appUserId+"&optUrl="+optUrl
 							+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
 					$("#addPrivilegeRole").html(uri);
 					//$("#verifyUserPrivilegeUri").val(uri);
