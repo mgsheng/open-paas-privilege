@@ -13,8 +13,8 @@ public class PrivilegeRoleDto{
 	private String groupName;
 	private String deptId;
 	private String deptName;
-	private int roleLevel;//0-无层级  1-有层级
-	private int roleType;//1-普通用户  2-系统管理员
+	private String roleLevel;//0-无层级  1-有层级
+	private String roleType;//1-普通用户  2-系统管理员
 	private String parentRoleId;
 	private String remark;
 	private int status;
@@ -180,19 +180,19 @@ public class PrivilegeRoleDto{
 	public void setPrivilegeFunId(String privilegeFunId) {
 		this.privilegeFunId = privilegeFunId;
 	}
-	public int getRoleLevel() {
+	
+	public String getRoleLevel() {
 		return roleLevel;
 	}
-	public void setRoleLevel(int roleLevel) {
+	public void setRoleLevel(String roleLevel) {
 		this.roleLevel = roleLevel;
 	}
-	public int getRoleType() {
+	public String getRoleType() {
 		return roleType;
 	}
-	public void setRoleType(int roleType) {
+	public void setRoleType(String roleType) {
 		this.roleType = roleType;
 	}
-	
 	public String getAddFullUri() throws UnsupportedEncodingException {
         return String.format("%s?appId=%s&roleName=%s&rolePrivilege=%s&groupId=%s&groupName=%s&deptId=%s&deptName=%s&parentRoleId=%s&remark=%s&createUser=%s&createUserId=%s&status=%s&privilegeFunId=%s&roleLevel=%s&roleType=%s",
         		addPrivilegeRoleUri,appId,roleName,rolePrivilege,groupId,groupName,deptId,deptName,parentRoleId,remark,createUser,createUserId,status,privilegeFunId,roleLevel,roleType);  

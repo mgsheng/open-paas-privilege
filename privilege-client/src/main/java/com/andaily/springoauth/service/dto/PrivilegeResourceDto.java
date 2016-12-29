@@ -7,17 +7,17 @@ public class PrivilegeResourceDto {
 	/**
 	 * 资源
 	 */
-	private int appId;
+	private String appId;
 	private String menuId;
 	private String resourceName;
 	private String resourceRule;
-	private int resourceLevel;
+	private String resourceLevel;
 	private String baseUrl;
-	private int dislayOrder;
+	private String dislayOrder;
 	private Date createTime;
 	private String createUser;
 	private String createUserId;
-	private int status;
+	private String status;
 	private String privilegeResourceAddUrl;
 	private String privilegeResourceModifyUrl;
 	private String privilegeResourceQueryUrl;
@@ -84,12 +84,6 @@ public class PrivilegeResourceDto {
 	public void setStart(String start) {
 		this.start = start;
 	}
-	public int getAppId() {
-		return appId;
-	}
-	public void setAppId(int appId) {
-		this.appId = appId;
-	}
 	public String getMenuId() {
 		return menuId;
 	}
@@ -118,23 +112,11 @@ public class PrivilegeResourceDto {
 			e.printStackTrace();
 		}
 	}
-	public int getResourceLevel() {
-		return resourceLevel;
-	}
-	public void setResourceLevel(int resourceLevel) {
-		this.resourceLevel = resourceLevel;
-	}
 	public String getBaseUrl() {
 		return baseUrl;
 	}
 	public void setBaseUrl(String baseUrl) {
 		this.baseUrl = baseUrl;
-	}
-	public int getDislayOrder() {
-		return dislayOrder;
-	}
-	public void setDislayOrder(int dislayOrder) {
-		this.dislayOrder = dislayOrder;
 	}
 	public Date getCreateTime() {
 		return createTime;
@@ -159,10 +141,28 @@ public class PrivilegeResourceDto {
 	public void setCreateUserId(String createUserId) {
 		this.createUserId = createUserId;
 	}
-	public int getStatus() {
+	public String getAppId() {
+		return appId;
+	}
+	public void setAppId(String appId) {
+		this.appId = appId;
+	}
+	public String getResourceLevel() {
+		return resourceLevel;
+	}
+	public void setResourceLevel(String resourceLevel) {
+		this.resourceLevel = resourceLevel;
+	}
+	public String getDislayOrder() {
+		return dislayOrder;
+	}
+	public void setDislayOrder(String dislayOrder) {
+		this.dislayOrder = dislayOrder;
+	}
+	public String getStatus() {
 		return status;
 	}
-	public void setStatus(int status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 	

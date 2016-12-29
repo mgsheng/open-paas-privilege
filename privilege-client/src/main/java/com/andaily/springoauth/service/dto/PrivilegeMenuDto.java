@@ -11,18 +11,18 @@ public class PrivilegeMenuDto {
 	/**
 	 * 
 	 */
-	private int appId;
+	private String appId;
 	private String menuName;
 	private String menuCode;
 	private String menuRule;
-	private int menuLevel;
-	private int parentId;
-	private int dislayOrder;
+	private String menuLevel;
+	private String parentId;
+	private String dislayOrder;
 	private Date createTime;
 	private String createUser;
 	private String createUserId;
-	private int resourceType;
-	private int status;
+	private String resourceType;
+	private String status;
 	private String privilegeMenuAddUrl;
 	private String privilegeMenuModifyUrl;
 	private String privilegeMenuQueryUrl;
@@ -90,12 +90,6 @@ public class PrivilegeMenuDto {
 	public void setStart(String start) {
 		this.start = start;
 	}
-	public int getAppId() {
-		return appId;
-	}
-	public void setAppId(int appId) {
-		this.appId = appId;
-	}
 	public String getMenuName() {
 		return menuName;
 	}
@@ -124,24 +118,6 @@ public class PrivilegeMenuDto {
 			e.printStackTrace();
 		}
 	}
-	public int getMenuLevel() {
-		return menuLevel;
-	}
-	public void setMenuLevel(int menuLevel) {
-		this.menuLevel = menuLevel;
-	}
-	public int getParentId() {
-		return parentId;
-	}
-	public void setParentId(int parentId) {
-		this.parentId = parentId;
-	}
-	public int getDislayOrder() {
-		return dislayOrder;
-	}
-	public void setDislayOrder(int dislayOrder) {
-		this.dislayOrder = dislayOrder;
-	}
 	public Date getCreateTime() {
 		return createTime;
 	}
@@ -159,22 +135,47 @@ public class PrivilegeMenuDto {
 			e.printStackTrace();
 		}
 	}
+	
+	public String getAppId() {
+		return appId;
+	}
+	public void setAppId(String appId) {
+		this.appId = appId;
+	}
+	public String getMenuLevel() {
+		return menuLevel;
+	}
+	public void setMenuLevel(String menuLevel) {
+		this.menuLevel = menuLevel;
+	}
+	public String getParentId() {
+		return parentId;
+	}
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
+	public String getDislayOrder() {
+		return dislayOrder;
+	}
+	public void setDislayOrder(String dislayOrder) {
+		this.dislayOrder = dislayOrder;
+	}
 	public String getCreateUserId() {
 		return createUserId;
 	}
 	public void setCreateUserId(String createUserId) {
 		this.createUserId = createUserId;
 	}
-	public int getResourceType() {
+	public String getResourceType() {
 		return resourceType;
 	}
-	public void setResourceType(int resourceType) {
+	public void setResourceType(String resourceType) {
 		this.resourceType = resourceType;
 	}
-	public int getStatus() {
+	public String getStatus() {
 		return status;
 	}
-	public void setStatus(int status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 	

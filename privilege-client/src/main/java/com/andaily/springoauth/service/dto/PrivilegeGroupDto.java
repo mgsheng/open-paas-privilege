@@ -6,7 +6,7 @@ import java.util.Date;
 public class PrivilegeGroupDto {
 	private String groupId;
 	private String groupName;
-	private Date createTime;
+	private String createTime;
 	private String createUser;
 	private String createUserId;
 	private String appId;
@@ -119,10 +119,11 @@ public class PrivilegeGroupDto {
 			e.printStackTrace();
 		} ;
 	}
-	public Date getCreateTime() {
+	
+	public String getCreateTime() {
 		return createTime;
 	}
-	public void setCreateTime(Date createTime) {
+	public void setCreateTime(String createTime) {
 		this.createTime = createTime;
 	}
 	public String getCreateUser() {
