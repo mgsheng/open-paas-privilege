@@ -24,6 +24,7 @@ import cn.com.open.opensass.privilege.service.PrivilegeResourceService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
 import cn.com.open.opensass.privilege.tools.WebUtils;
+import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 
 /**
  *  资源修改接口
@@ -99,8 +100,14 @@ public class ResourceModifyPrivilegeController extends BaseControllerUtil{
         	pr.setCreateUserId(createUserId);
         	Boolean uf= privilegeResourceService.updatePrivilegeResource(pr);
         	if(uf){
-        		map.put("status","1");
-        		//map.put("menuId", pr.id());
+        		//更新缓存
+        		PrivilegeAjaxMessage message=privilegeResourceService.updateAppResRedis(appId);
+        		if (message.getCode().equals("1")) {
+        			map.put("status","1");
+        		} else {
+        			map.put("status", message.getCode());
+        			map.put("error_code", message.getMessage());/* 数据不存在 */
+        		}
         	}else{
         		map.put("status","0");
         		map.put("error_code","10001");

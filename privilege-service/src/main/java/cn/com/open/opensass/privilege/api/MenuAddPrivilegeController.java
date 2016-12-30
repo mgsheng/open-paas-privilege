@@ -24,6 +24,7 @@ import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
 import cn.com.open.opensass.privilege.tools.WebUtils;
+import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 
 /**
  *  菜单添加接口
@@ -109,9 +110,15 @@ public class MenuAddPrivilegeController extends BaseControllerUtil{
     	pm.setCreateTime(new Date());
     	Boolean sf =privilegeMenuService.savePrivilegeMenu(pm);
     	if(sf){
-    		map.put("status","1");
-    		map.put("menuId", pm.id());
-    		
+    		//添加缓存
+    		PrivilegeAjaxMessage message=privilegeMenuService.getAppMenuRedis(appId);
+    		if (message.getCode().equals("1")) {
+    			map.put("status","1");
+        		map.put("menuId", pm.id());
+    		} else {
+    			map.put("status", message.getCode());
+    			map.put("error_code", message.getMessage());/* 数据不存在 */
+    		}
     		
     	}else{
     		map.put("status","0");

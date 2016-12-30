@@ -22,6 +22,7 @@ import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
 import cn.com.open.opensass.privilege.tools.WebUtils;
+import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 
 /**
  * 菜单删除接口
@@ -65,7 +66,14 @@ public class MenuDelPrivilegeController extends BaseControllerUtil{
     	if(pm!=null){
     		Boolean df= privilegeMenuService.deleteByMenuId(menuId);
     		if(df){
-    			map.put("status","1");
+    			//更新缓存
+    			PrivilegeAjaxMessage message=privilegeMenuService.updateAppMenuRedis(appId);
+    			if (message.getCode().equals("1")) {
+    				map.put("status","1");
+    			} else {
+    				map.put("status", message.getCode());
+    				map.put("error_code", message.getMessage());/* 数据不存在 */
+    			}
     		}else{
     			map.put("status","0");
         		map.put("error_code","10002");	

@@ -26,6 +26,7 @@ import cn.com.open.opensass.privilege.service.PrivilegeGroupService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
 import cn.com.open.opensass.privilege.tools.WebUtils;
+import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 
 /**
  *  组织机构权限初始创建接口
@@ -109,6 +110,7 @@ public class GroupAddPrivilegeController extends BaseControllerUtil{
     	    			pgr.setStatus(1);	
     	    		}
     	    		privilegeGroupResourceService.saveprivilegeGroupResource(pgr);
+    	    		
     	    	}
     		}
     	}
@@ -131,7 +133,16 @@ public class GroupAddPrivilegeController extends BaseControllerUtil{
     			pg.setStatus(1);	
     		}
     		privilegeGroupService.savePrivilegeGroup(pg);
-    		map.put("status","1");
+    		//存放缓存
+    		PrivilegeAjaxMessage message=privilegeGroupService.findGroupPrivilege(groupId, appId);
+    		
+    		if (message.getCode().equals("1")) {
+    			map.put("status","1");
+    		} else {
+    			map.put("status", message.getCode());
+    			map.put("error_code", message.getMessage());/* 数据不存在 */
+    			writeErrorJson(response, map);
+    		}
     	}
     	if(map.get("status")=="0"){
     		writeErrorJson(response,map);

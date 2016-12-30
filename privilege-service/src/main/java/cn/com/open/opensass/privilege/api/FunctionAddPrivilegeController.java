@@ -21,9 +21,11 @@ import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import cn.com.open.opensass.privilege.service.AppService;
 import cn.com.open.opensass.privilege.service.PrivilegeFunctionService;
+import cn.com.open.opensass.privilege.service.PrivilegeResourceService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
 import cn.com.open.opensass.privilege.tools.WebUtils;
+import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 
 /**
  *  权限功能添加接口
@@ -38,6 +40,8 @@ public class FunctionAddPrivilegeController extends BaseControllerUtil{
 	private AppService appService;
 	@Autowired
 	private RedisClientTemplate redisClient;
+	@Autowired
+	private PrivilegeResourceService privilegeResourceService;
     /**
      * 权限功能添加接口
      * @return Json
@@ -83,8 +87,15 @@ public class FunctionAddPrivilegeController extends BaseControllerUtil{
         pf.setOperationId(operationId);
     	Boolean sf =privilegeFunctionService.savePrivilegeFunction(pf);
     	if(sf){
-    		map.put("status","1");
-    		map.put("menuId", pf.id());
+    		PrivilegeAjaxMessage message=privilegeResourceService.getAppResRedis(appId);
+    		if (message.getCode().equals("1")) {
+    			map.put("status","1");
+        		map.put("menuId", pf.id());
+    		} else {
+    			map.put("status", message.getCode());
+    			map.put("error_code", message.getMessage());/* 数据不存在 */
+    		}
+    		
     	}else{
     		map.put("status","0");
     		map.put("error_code","10001");

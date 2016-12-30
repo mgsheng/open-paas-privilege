@@ -18,9 +18,11 @@ import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import cn.com.open.opensass.privilege.service.AppService;
 import cn.com.open.opensass.privilege.service.PrivilegeFunctionService;
+import cn.com.open.opensass.privilege.service.PrivilegeResourceService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
 import cn.com.open.opensass.privilege.tools.WebUtils;
+import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 
 /**
  * 权限功能删除接口
@@ -35,6 +37,8 @@ public class FunctionDelPrivilegeController extends BaseControllerUtil{
 	private AppService appService;
 	@Autowired
 	private RedisClientTemplate redisClient;
+	@Autowired
+	private PrivilegeResourceService privilegeResourceService;
     /**
      * 权限功能删除接口
      * @return Json
@@ -65,7 +69,15 @@ public class FunctionDelPrivilegeController extends BaseControllerUtil{
     	if(functionIds!=null&&functionIds.length>0){
     		Boolean df=privilegeFunctionService.deleteByFunctionIds(functionIds);
     		if(df){
-    			map.put("status","1");
+    			//更新缓存
+    			PrivilegeAjaxMessage message=privilegeResourceService.updateAppResRedis(appId);
+    			if (message.getCode().equals("1")) {
+    				map.put("status","1");
+    			} else {
+    				map.put("status", message.getCode());
+    				map.put("error_code", message.getMessage());/* 数据不存在 */
+    			}
+    			
     		}else{
     			map.put("status","0");
         		map.put("error_code","10001");
