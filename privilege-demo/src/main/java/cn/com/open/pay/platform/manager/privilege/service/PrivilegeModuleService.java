@@ -1,6 +1,8 @@
 package cn.com.open.pay.platform.manager.privilege.service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegePublic;
@@ -18,5 +20,5 @@ public interface PrivilegeModuleService {
 	List<PrivilegeModule> findModuleByIds(List<Integer> ids);
 	List<TreeNode> getDepartmentTree(List<PrivilegeRoleDetails> privilegeRoleDetailslist);
 	List<TreeNode> getDepartmentTree2(List<PrivilegePublic> privilegeRoleDetailslist);
-    
+    Map<String, Object> getModuleListByroleId(String roleId);
 }
