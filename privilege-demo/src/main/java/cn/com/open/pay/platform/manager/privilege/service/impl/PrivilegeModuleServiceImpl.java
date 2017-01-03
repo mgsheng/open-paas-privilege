@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -238,5 +239,41 @@ public class PrivilegeModuleServiceImpl implements PrivilegeModuleService {
 		}
 		return node;
 	}
+	@Override
+	public Map<String, Object> getModuleListByroleId(String roleId) {
+				// 顶级菜单集合
+				Map<String, Object> pMenus = new HashMap<>();
+				// 获取所有的菜单
+				List<PrivilegeModule> sysFunctions = privilegeModuleRepository.getModulListByroleId(roleId);
+				// 将顶级菜单筛选出，并且设置子菜单
+				List<Map<String, Object>> mList=new  ArrayList<Map<String, Object>>();
+				if(sysFunctions != null && sysFunctions.size() > 0){
+					for(PrivilegeModule sysFunction:sysFunctions){
+						if(sysFunction.getParentId()==0){
+							pMenus.put("menuid", sysFunction.getId());
+							pMenus.put("menuname", sysFunction.getName());
+							pMenus.put("icon", sysFunction.getIcon());
+						}
+						for(PrivilegeModule _sysFunction:sysFunctions){
+							if(_sysFunction.getParentId()==sysFunction.getId()){
+								Map<String, Object> map2=new HashMap<String, Object>();
+								map2.put("menuid", _sysFunction.getId());
+								map2.put("menuname", _sysFunction.getName());
+								map2.put("icon", _sysFunction.getIcon());
+								map2.put("url", _sysFunction.getUrl());
+								mList.add(map2);
+								//sysFunction.getSysFunctions().add(_sysFunction);
+							}
+						}
+					}
+					pMenus.put("menus", mList);
+				}
+				return pMenus;
+
+		
+		
+		//return privilegeModuleRepository.getModulListByroleId(roleId);
+	}
+	
     
 }
