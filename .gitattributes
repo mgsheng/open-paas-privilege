@@ -808,6 +808,9 @@ privilege-demo/src/main/webapp/js/locale/easyui-lang-nl.js -text
 privilege-demo/src/main/webapp/js/locale/easyui-lang-zh_CN.js -text
 privilege-demo/src/main/webapp/js/locale/easyui-lang-zh_TW.js -text
 privilege-demo/src/main/webapp/js/outlook2.js -text
+privilege-demo/target/classes/disconf.properties -text
+privilege-demo/target/classes/mybatis.xml -text
+privilege-demo/target/classes/pay-platform-manager.properties -text
 privilege-service/.classpath -text
 privilege-service/.mymetadata -text
 privilege-service/.project -text

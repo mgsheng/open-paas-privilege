@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <settings>
+        <setting name="lazyLoadingEnabled" value="false"/>
+        <setting name="useGeneratedKeys" value="true"/>
+        <!-- 打印查询语句 -->
+        <setting name="logImpl" value="STDOUT_LOGGING" />
+    </settings>
+    <typeAliases>
+        <typeAlias alias="User" type="cn.com.open.pay.platform.manager.login.model.User"/>
+        <typeAlias alias="Privilege" type="cn.com.open.pay.platform.manager.login.model.Privilege"/>
+        <typeAlias alias="MerchantOrderInfo" type="cn.com.open.pay.platform.manager.order.model.MerchantOrderInfo"/> 
+       	<typeAlias alias="UserSerialRecord" type="cn.com.open.pay.platform.manager.order.model.UserSerialRecord"/>
+       	<typeAlias alias="PrivilegeModule" type="cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule"/>
+       	<typeAlias alias="PrivilegePublic" type="cn.com.open.pay.platform.manager.privilege.model.PrivilegePublic"/>
+       	<typeAlias alias="PrivilegeResource" type="cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource"/>
+       	<typeAlias alias="PrivilegeRole" type="cn.com.open.pay.platform.manager.privilege.model.PrivilegeRole"/>
+       	<typeAlias alias="Manager" type="cn.com.open.pay.platform.manager.privilege.model.Manager"/>
+       	<typeAlias alias="PrivilegeRoleDetails" type="cn.com.open.pay.platform.manager.privilege.model.PrivilegeRoleDetails"/>
+       	<typeAlias alias="Department" type="cn.com.open.pay.platform.manager.department.model.Department"/>	 
+       	<typeAlias alias="ChannelRate" type="cn.com.open.pay.platform.manager.paychannel.model.ChannelRate"/>
+    	<typeAlias alias="DictTradeChannel" type="cn.com.open.pay.platform.manager.department.model.DictTradeChannel"/>	 
+       	<typeAlias alias="MerchantInfo" type="cn.com.open.pay.platform.manager.department.model.MerchantInfo"/>	
+       	<typeAlias alias="PayChannelDictionary" type="cn.com.open.pay.platform.manager.paychannel.model.PayChannelDictionary"/>
+    	<typeAlias alias="PayChannelSwitch" type="cn.com.open.pay.platform.manager.paychannel.model.PayChannelSwitch"/>
+    	<typeAlias alias="PrivilegeLog" type="cn.com.open.pay.platform.manager.log.model.PrivilegeLog"/>
+        <typeAlias alias="MerchantOrderOffline" type="cn.com.open.pay.platform.manager.order.model.MerchantOrderOffline"/> 
+        <typeAlias alias="MerchantOrderRefund" type="cn.com.open.pay.platform.manager.order.model.MerchantOrderRefund"/> 
+        <typeAlias alias="DictTradePayment" type="cn.com.open.pay.platform.manager.department.model.DictTradePayment"/>
+    </typeAliases>
+    <mappers>
+        <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeModuleMapper.xml"/>
+        <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegePublicMapper.xml"/>
+        <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeResourceMapper.xml"/>
+        <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeRoleMapper.xml"/>
+        <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeRoleDetailsMapper.xml"/>
+        <mapper resource="cc/wdcy/infrastructure/mybatis/UserMapper.xml"/>
+        <mapper resource="cc/wdcy/infrastructure/mybatis/MerchantOrderInfoMapper.xml"/>
+        <mapper resource="cc/wdcy/infrastructure/mybatis/ManagerMapper.xml"/>
+      	<mapper resource="cc/wdcy/infrastructure/mybatis/UserSerialRecordMapper.xml"/>
+      	<mapper resource="cc/wdcy/infrastructure/mybatis/ManagerDepartmentMapper.xml"/>
+      	<mapper resource="cc/wdcy/infrastructure/mybatis/PayChannelRateMapper.xml"/>
+      	<mapper resource="cc/wdcy/infrastructure/mybatis/DictTradeChannelMapper.xml"/>
+    	<mapper resource="cc/wdcy/infrastructure/mybatis/MerchantInfoMapper.xml"/>
+    	<mapper resource="cc/wdcy/infrastructure/mybatis/PayChannelDictionaryMapper.xml"/>
+    	<mapper resource="cc/wdcy/infrastructure/mybatis/PayChannelSwitchMapper.xml"/>
+    	<mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeLogMapper.xml"/>
+        <mapper resource="cc/wdcy/infrastructure/mybatis/MerchantOrderOfflineMapper.xml"/>
+        <mapper resource="cc/wdcy/infrastructure/mybatis/MerchantOrderRefundMapper.xml"/>
+      	<mapper resource="cc/wdcy/infrastructure/mybatis/DictTradePaymentMapper.xml"/>
+    </mappers>
+
+</configuration>
