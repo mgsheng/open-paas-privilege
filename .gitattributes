@@ -145,6 +145,9 @@ privilege-client/src/main/webapp/index.jsp -text
 privilege-client/src/main/webapp/js/jquery-1.7.1.min.js -text
 privilege-client/src/main/webapp/js/user_register.js -text
 privilege-client/src/main/webapp/login.jsp -text
+privilege-demo/.classpath -text
+privilege-demo/.mymetadata -text
+privilege-demo/.project -text
 privilege-demo/.settings/.jsdtscope -text
 privilege-demo/.settings/com.genuitec.eclipse.j2eedt.core.prefs -text
 privilege-demo/.settings/org.eclipse.core.resources.prefs -text
@@ -154,6 +157,7 @@ privilege-demo/.settings/org.eclipse.wst.common.component -text
 privilege-demo/.settings/org.eclipse.wst.common.project.facet.core.xml -text
 privilege-demo/.settings/org.eclipse.wst.jsdt.ui.superType.container -text
 privilege-demo/.settings/org.eclipse.wst.jsdt.ui.superType.name -text
+privilege-demo/pom.xml -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/datasource/DataSourceAdvice.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/datasource/DataSourceSwitcher.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/datasource/DynamicDataSource.java -text
