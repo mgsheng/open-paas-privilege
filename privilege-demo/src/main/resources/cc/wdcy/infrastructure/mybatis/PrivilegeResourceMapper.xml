@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.pay.platform.manager.infrastructure.mybatis.PrivilegeResourceRepositoryMyBatis">
+	<resultMap type="PrivilegeResource" id="privilegeResourceMap">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Insert_Column_List">
+	  name,
+	  code,
+	  status,
+	  create_time
+	</sql>
+	<sql id="Base_Column_List">
+		id,
+		<include refid="Insert_Column_List" />
+	</sql>
+	<insert id="insert" parameterType="cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+		select last_insert_id() as id
+		</selectKey>
+		insert into privilege_resource
+		(
+			<include refid="Insert_Column_List" />
+		)
+		values 
+		(
+			#{name, jdbcType=VARCHAR},
+			#{code, jdbcType=VARCHAR},
+			#{status, jdbcType=INTEGER},
+			#{createTime, jdbcType=TIMESTAMP}
+			
+		)
+	</insert>
+ 
+	<insert id="savePrivilegeResource" parameterType="PrivilegeResource" useGeneratedKeys="true" keyProperty="id">
+        insert into privilege_resource (id,name,code,status,create_time)
+        values
+        (#{id},#{name},#{code},#{status},#{createTime})
+    </insert>
+    
+	<select id="findByName" resultType="java.util.Map">
+         select id,name,status,DATE_FORMAT(create_time,'%Y-%m-%d %T') create_time from privilege_resource
+         where  name = #{name}
+	</select>
+	<select id="getPageListByName" resultMap="privilegeResourceMap" parameterType="PrivilegeResource">
+         select * from privilege_resource
+         where  1=1
+         <if test="name != null and name !=''" >
+         and name = #{name}
+         </if>
+         limit #{startRow},#{pageSize}
+	</select>
+	
+	  <select id="findQueryCount" resultType="int">
+        select count(*) from  privilege_resource
+        where  1=1
+        <if test="name != null and name !=''" >
+        and name = #{name}
+        </if>
+    </select>
+		
+   <update id="updatePrivilegeResource" parameterType="PrivilegeResource" flushCache="true">
+        update privilege_resource set
+        <if test="name != null and name !=''" >
+        name = #{name},
+        </if>
+         <if test="code != null and code !=''" >
+         code = #{code},
+        </if>
+         <if test="status != null " >
+        status = #{status},
+        </if>
+        create_time=#{createTime}
+        where id = #{id}
+     </update> 
+     <delete id="deletePrivilegeResource" parameterType="Integer">
+        delete from privilege_resource where id=#{id}
+    </delete>
+     <select id="findAllResource" resultMap="privilegeResourceMap">
+      select * from privilege_resource
+    </select>
+     <select id="findById" resultMap="privilegeResourceMap">
+        select * from privilege_resource where id=#{id}
+     </select>
+     <select id="findByCode" resultMap="privilegeResourceMap" parameterType="String">
+         select * from privilege_resource
+         where  code = #{code}
+	</select>
+</mapper>

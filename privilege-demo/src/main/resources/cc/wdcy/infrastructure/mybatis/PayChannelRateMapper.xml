@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.pay.platform.manager.infrastructure.mybatis.PayChannelRateRepositoryMyBatis">
+	<resultMap type="ChannelRate" id="channelRateMap">
+		<id property="id" column="ID" jdbcType="INTEGER" />
+		<result property="merchantID" column="MERCHANT_ID" jdbcType="VARCHAR" />
+		<result property="payChannelCode" column="PAY_CHANNEL_CODE" jdbcType="VARCHAR" />
+		<result property="payName" column="PAY_NAME" jdbcType="VARCHAR" />
+		<result property="payRate" column="PAY_RATE" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Column_List">
+		ID,
+		MERCHANT_ID,
+		PAY_CHANNEL_CODE,
+		PAY_NAME,
+		PAY_RATE
+	</sql>
+	
+	<!-- 添加支付渠道费率 -->
+	<insert id="addPayChannelRate" parameterType="ChannelRate" >
+		insert into PAY_CHANNEL_RATE 
+				(
+					MERCHANT_ID,
+					PAY_CHANNEL_CODE,
+					PAY_NAME,
+					PAY_RATE
+				) 
+		values 
+				(
+					#{merchantID,jdbcType=VARCHAR},
+					#{payChannelCode,jdbcType=VARCHAR},
+					#{payName,jdbcType=VARCHAR},
+					#{payRate,jdbcType=VARCHAR}
+				)
+	</insert>
+	
+	<!--添加支付渠道费率前，先根据条件查询数据库是否已经存在该记录  -->
+	<select id="findChannelRate" parameterType="ChannelRate" resultMap="channelRateMap" >
+		select * from PAY_CHANNEL_RATE 
+		where 
+				MERCHANT_ID=#{merchantID,jdbcType=VARCHAR}
+		and	PAY_CHANNEL_CODE=#{payChannelCode,jdbcType=VARCHAR}
+		and	PAY_NAME=#{payName,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 根据ID删除记录 -->
+	<delete id="removeChannelRate" parameterType="cn.com.open.pay.platform.manager.paychannel.model.ChannelRate" >
+		delete from PAY_CHANNEL_RATE where ID=#{id,jdbcType=INTEGER}
+	</delete>
+	
+	
+	<!--  查询所有符合条件的记录 -->
+	<select id="findRateAll" resultMap="channelRateMap" parameterType="cn.com.open.pay.platform.manager.paychannel.model.ChannelRate" >
+		select * from PAY_CHANNEL_RATE 
+		where  1=1
+        <if test="merchantID != null and merchantID != '' ">and MERCHANT_ID =#{merchantID,jdbcType=VARCHAR}</if>
+		order by ID
+		limit #{startRow},#{pageSize}
+	</select>
+	
+	<!--  查询所有符合条件的记录条数 -->
+	<select id="findRateAllCount" resultType="int" parameterType="cn.com.open.pay.platform.manager.paychannel.model.ChannelRate" >
+		select count(*) from PAY_CHANNEL_RATE  
+		where  1=1
+        <if test="merchantID != null and merchantID != '' ">and MERCHANT_ID =#{merchantID,jdbcType=VARCHAR}</if>
+	</select>
+	
+	<!-- 根据ID更新记录 -->
+	<update id="updateRate" parameterType="cn.com.open.pay.platform.manager.paychannel.model.ChannelRate" >
+		update PAY_CHANNEL_RATE  set PAY_RATE=#{payRate,jdbcType=VARCHAR}
+		where ID=#{id,jdbcType=INTEGER}
+	</update>
+</mapper>

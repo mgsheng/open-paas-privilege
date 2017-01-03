@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.pay.platform.manager.infrastructure.mybatis.PrivilegeRoleRepositoryMyBatis">
+	<resultMap type="PrivilegeRole" id="privilegeRoleMap">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Insert_Column_List">
+	  name,
+	  status,
+	  create_time
+	</sql>
+	<sql id="Base_Column_List">
+		id,
+		<include refid="Insert_Column_List" />
+	</sql>
+	
+	<!-- 查询所有角色 -->
+	<select id="findRoleAll" resultMap="privilegeRoleMap" parameterType="cn.com.open.pay.platform.manager.privilege.model.PrivilegeRole">
+		select id,name,status from privilege_role limit #{startRow},#{pageSize}
+	</select>
+	
+	<insert id="insert" parameterType="cn.com.open.pay.platform.manager.privilege.model.PrivilegeRole">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+		select last_insert_id() as id
+		</selectKey>
+		insert into privilege_role
+		(
+			<include refid="Insert_Column_List" />
+		)
+		values 
+		(
+			#{name, jdbcType=VARCHAR},
+			#{status, jdbcType=INTEGER},
+			#{createTime, jdbcType=TIMESTAMP}
+			
+		)
+	</insert>
+ 
+	<insert id="savePrivilegeRole" parameterType="PrivilegeRole" useGeneratedKeys="true" keyProperty="id">
+        insert into privilege_role(name,status,create_time)
+        values
+        (#{name},#{status},#{createTime})
+    </insert>
+    <select id="findByRoleName" resultMap="privilegeRoleMap" parameterType="PrivilegeRole">
+         select * from privilege_role where 1=1
+         <if test="name != null and name !=''" >
+           and name=#{name} 
+        </if>
+        limit #{startRow},#{pageSize}
+     </select>
+     
+     <select id="findQueryCount" resultType="int">
+         select count(*) from privilege_role where 1=1
+         <if test="name != null and name !=''" >
+           and name=#{name} 
+        </if>
+     </select>
+	
+	<select id="findByName" resultType="java.util.Map">
+         select * from privilege_role
+         where  name = #{name}
+	</select>
+	
+	<delete id="deletePrivilegeRole" parameterType="Integer">
+        delete from privilege_role where id=#{id}
+    </delete>
+    
+    <update id="updatePrivilegeRole" parameterType="PrivilegeRole">
+		update privilege_role set
+		<if test="name != null and name !=''">
+			name = #{name}
+		</if>
+		<if test="status != null and status !=''">
+			,status = #{status}
+		</if>
+		where id = #{id}
+	</update>
+</mapper>

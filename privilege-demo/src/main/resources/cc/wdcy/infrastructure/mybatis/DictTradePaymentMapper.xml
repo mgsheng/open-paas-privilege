@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.pay.platform.manager.infrastructure.mybatis.DictTradePaymentRepositoryMyBatis">
+	<resultMap type="DictTradePayment"  id="dictTradePaymentMap">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="PAYMENT_NAME" property="paymentName" jdbcType="VARCHAR" />
+		<result column="PAYMENT_TYPE" property="paymentType" jdbcType="DECIMAL" />
+		<result column="RATE" property="rate" jdbcType="VARCHAR" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="ICON" property="icon" jdbcType="VARCHAR" />
+		<result column="PAYMENT_SORT" property="paymentSort" jdbcType="INTEGER" />
+		<result column="PAYMENT_STATUS" property="paymentStatus" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Insert_Column_List">
+	  PAYMENT_NAME,
+	  PAYMENT_TYPE,
+	  RATE,
+	  REMARK,
+	  ICON,
+	  PAYMENT_SORT,
+	  PAYMENT_STATUS
+	</sql>
+	<select id="findNameById" resultMap="dictTradePaymentMap" >
+		select ID,PAYMENT_NAME,REMARK from DICT_TRADE_PAYMENT  where ID=#{bankCode} 
+	</select>
+	<!-- 查询所有支付方式名称 -->
+	<select id="findPaymentNamesAll" resultMap="dictTradePaymentMap" >
+		select ID,PAYMENT_NAME,REMARK from DICT_TRADE_PAYMENT  where PAYMENT_STATUS=1 
+	</select>
+	<select id="findPaymentNamesByType" resultMap="dictTradePaymentMap" >
+		select ID,PAYMENT_NAME,REMARK from DICT_TRADE_PAYMENT  where PAYMENT_STATUS=1
+		<if test="paymentType == 1">
+		 and PAYMENT_TYPE=1
+		</if>
+		<if test="paymentType != 1">
+		 and PAYMENT_TYPE != 1
+		</if>
+	</select>
+</mapper>

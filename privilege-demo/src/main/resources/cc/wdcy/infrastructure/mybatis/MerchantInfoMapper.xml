@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.pay.platform.manager.infrastructure.mybatis.MerchantInfoRepositoryMyBatis">
+	<resultMap type="MerchantInfo" id="merchantInfoMap">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="MERCHANT_NAME" property="merchantName" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="DECIMAL" />
+		<result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+		<result column="OPERATER" property="operater" jdbcType="VARCHAR" />
+		<result column="NOTIFY_URL" property="notifyUrl" jdbcType="VARCHAR" />
+		<result column="RETURN_URL" property="returnUrl" jdbcType="VARCHAR" />
+		<result column="PAY_KEY" property="payKey" jdbcType="VARCHAR" />
+		<result column="PRODUCT_NAME" property="productName" jdbcType="VARCHAR" />
+		<result column="CONTACT" property="contact" jdbcType="VARCHAR" />
+		<result column="PHONE" property="phone" jdbcType="VARCHAR" />
+		<result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+		<result column="EMAIL" property="email" jdbcType="VARCHAR" />
+		<result column="DAY_NORM" property="dayNorm" jdbcType="DECIMAL" />
+		<result column="MONTH_NORM" property="monthNorm" jdbcType="DECIMAL" />
+		<result column="SINGLE_NORM" property="singleNorm" jdbcType="DECIMAL" />
+		<result column="MEMO" property="memo" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Insert_Column_List">
+	  ID,
+	  MERCHANT_NAME,
+	  STATUS,
+	  CREATE_DATE,
+	  OPERATER,
+	  NOTIFY_URL,
+	  RETURN_URL,
+	  PAY_KEY,
+	  PRODUCT_NAME,
+	  CONTACT,
+	  PHONE,
+	  MOBILE,
+	  EMAIL,
+	  DAY_NORM,
+	  MONTH_NORM,
+	  SINGLE_NORM,
+	  MEMO
+	</sql>
+	<sql id="Base_Column_List">
+		ID,
+		<include refid="Insert_Column_List" />
+	</sql>
+	
+	<!-- 查询所有商户名称，商户号 -->
+	<select id="findMerchantNamesAll" resultMap="merchantInfoMap" >
+		select ID,MERCHANT_NAME from MERCHANT_INFO where STATUS=1
+	</select>
+	
+	<insert id="insert" parameterType="cn.com.open.pay.platform.manager.department.model.MerchantInfo">
+		
+		insert into MERCHANT_INFO
+		(
+			<include refid="Insert_Column_List" />
+		)
+		values 
+		(
+			#{id, jdbcType=INTEGER},
+			#{merchantName, jdbcType=VARCHAR},
+			#{status, jdbcType=DECIMAL},
+			#{createDate, jdbcType=TIMESTAMP},
+			#{operater, jdbcType=VARCHAR},
+			#{notifyUrl, jdbcType=VARCHAR},
+			#{returnUrl, jdbcType=VARCHAR},
+			#{payKey, jdbcType=VARCHAR},
+			#{productName, jdbcType=VARCHAR},
+			#{contact, jdbcType=VARCHAR},
+			#{phone, jdbcType=VARCHAR},
+			#{mobile, jdbcType=VARCHAR},
+			#{email, jdbcType=VARCHAR},
+			#{dayNorm, jdbcType=DECIMAL},
+			#{monthNorm, jdbcType=DECIMAL},
+			#{singleNorm, jdbcType=DECIMAL},
+			#{memo, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<select id="findNameById" resultMap="merchantInfoMap">
+		select MERCHANT_NAME from MERCHANT_INFO where ID = #{merchantId}
+	</select>
+	
+	<select id="findQueryCount" resultType="int" >
+        select count(*) from  MERCHANT_INFO
+        where  1=1
+        <if test="merchantName != null and merchantName != '' ">
+        	and MERCHANT_NAME =#{merchantName,jdbcType=VARCHAR}
+        </if>
+    </select>
+	
+	<select id="findDepts" resultMap="merchantInfoMap"  >
+		select *
+		from MERCHANT_INFO where 1=1
+		<if test="merchantName != null and merchantName != '' ">
+			and MERCHANT_NAME =#{merchantName,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null and status != '' ">
+			and STATUS =#{status,jdbcType=VARCHAR}
+		</if>
+		<if test="operater != null and operater != '' ">
+			and OPERATER =#{operater,jdbcType=VARCHAR}
+		</if>
+		<if test="productName != null and productName != '' ">
+			and PRODUCT_NAME =#{productName,jdbcType=VARCHAR}
+		</if>
+		<if test="contact != null and contact != '' ">
+			and CONTACT =#{contact,jdbcType=VARCHAR}
+		</if>
+		
+		limit  #{startRow},#{pageSize}
+	</select>
+	
+	<update id="updateMerchantInfo" parameterType="MerchantInfo">
+		update MERCHANT_INFO set
+		<if test="id != null and id !=''">
+			ID = #{id}
+		</if>
+		<if test="merchantName != null and merchantName !=''">
+			,MERCHANT_NAME = #{merchantName}
+		</if>
+		<if test="status != null and status !=''">
+			,STATUS = #{status}
+		</if>
+		<if test="operater != null and operater !=''">
+			,OPERATER = #{operater}
+		</if>
+		<if test="notifyUrl != null and notifyUrl !=''">
+			,NOTIFY_URL = #{notifyUrl}
+		</if>
+		<if test="returnUrl != null and returnUrl !=''">
+			,RETURN_URL = #{returnUrl}
+		</if>
+		<if test="payKey != null and payKey !=''">
+			,PAY_KEY = #{payKey}
+		</if>
+		<if test="productName != null and productName !=''">
+			,PRODUCT_NAME = #{productName}
+		</if>
+		<if test="contact != null and contact !=''">
+			,CONTACT = #{contact}
+		</if>
+		<if test="phone != null and phone !=''">
+			,PHONE = #{phone}
+		</if>
+		<if test="mobile != null and mobile !=''">
+			,MOBILE = #{mobile}
+		</if>
+		<if test="email != null and email !=''">
+			,EMAIL = #{email}
+		</if>
+		<if test="dayNorm != null and dayNorm !=''">
+			,DAY_NORM = #{dayNorm}
+		</if>
+		<if test="monthNorm != null and monthNorm !=''">
+			,MONTH_NORM = #{monthNorm}
+		</if>
+		<if test="singleNorm != null and singleNorm !=''">
+			,SINGLE_NORM = #{singleNorm}
+		</if>
+		<if test="memo != null and memo !=''">
+			,MEMO = #{memo}
+		</if>
+		where id = #{id}
+	</update>
+	
+	<delete id="removeCommercialID"  parameterType="Integer">
+		delete from MERCHANT_INFO where id = #{id}
+	</delete>
+    <resultMap id="allInfo" type="java.util.Map">
+        <result column="sum(PAY_AMOUNT)" property="totalAmount" jdbcType="VARCHAR"/>
+    </resultMap>
+	
+	
+</mapper>

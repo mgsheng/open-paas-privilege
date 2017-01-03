@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.pay.platform.manager.infrastructure.mybatis.PrivilegeModuleRepositoryMyBatis">
+	<resultMap type="PrivilegeModule" id="privilegeModuleMap">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="INTEGER" />
+		<result column="url" property="url" jdbcType="VARCHAR" />
+		<result column="level" property="level" jdbcType="INTEGER" />
+		<result column="parent_id" property="parentId" jdbcType="INTEGER" />
+		<result column="parent_ids" property="parentIds" jdbcType="INTEGER" />
+		<result column="display_order" property="displayOrder" jdbcType="INTEGER" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="icon" property="icon" jdbcType="VARCHAR" />
+		<result column="resources" property="resources" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Insert_Column_List">
+	  name,
+	  url,
+	  level,
+	  parent_id,
+	  parent_ids,
+	  display_order,
+	  code,
+	  status,
+	  icon,
+	  resources,
+	  create_time
+	</sql>
+	
+	<sql id="Base_Column_List">
+		id,
+		<include refid="Insert_Column_List" />
+	</sql>
+	<insert id="insert" parameterType="cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+		select last_insert_id() as id
+		</selectKey>
+		insert into privilege_module
+		(
+			<include refid="Insert_Column_List" />
+		)
+		values 
+		(
+			#{name, jdbcType=VARCHAR},
+			#{url, jdbcType=VARCHAR},
+			#{level, jdbcType=INTEGER},
+			#{parentId, jdbcType=INTEGER},
+			#{parentIds, jdbcType=INTEGER},
+			#{displayOrder, jdbcType=INTEGER},
+			#{code, jdbcType=VARCHAR},
+			#{status, jdbcType=INTEGER},
+			#{icon, jdbcType=VARCHAR},
+			#{resources, jdbcType=VARCHAR},
+			#{createTime, jdbcType=TIMESTAMP}
+			
+		)
+	</insert>
+ 
+	
+	<insert id="savePrivilegeModule" parameterType="PrivilegeModule" useGeneratedKeys="true" keyProperty="id">
+        insert into privilege_module(name,url,level,parent_id,parent_ids,display_order,code,status,resources,create_time)
+        values
+        (#{name},#{url},#{level},#{parentId},#{parentIds},#{displayOrder},#{code},#{status},#{resources},#{createTime})
+    </insert>
+    	<select id="findByName" resultMap="privilegeModuleMap">
+         select * from privilege_module
+         where  name = #{name}
+         limit #{startRow},#{pageSize}
+	</select>	
+   <update id="updatePrivilegeModule" parameterType="PrivilegeModule" flushCache="true">
+        update privilege_module set
+        <if test="name != null and name !=''" >
+        name = #{name},
+        </if>
+         <if test="url != null and url !=''" >
+         url = #{url},
+        </if>
+        <if test="code != null and code !=''" >
+         code = #{code},
+        </if>
+         <if test="parentId != null " >
+        parent_id = #{parentId},
+        </if>
+         <if test="level != null " >
+        level = #{level},
+        </if>
+         <if test="parentIds != null" >
+        parent_ids = #{parentIds},
+        </if>
+         <if test="displayOrder != null" >
+        display_order = #{displayOrder},
+        </if>
+         <if test="status != null and status !=''" >
+        status = #{status},
+        </if>
+         <if test="icon != null and icon !=''" >
+        icon = #{icon},
+        </if>
+         <if test="resources != null and resources !=''" >
+        resources = #{resources},
+        </if>
+        create_time=#{createTime}
+        where id = #{id}
+     </update> 
+     <delete id="deletePrivilegeModule" parameterType="Integer">
+        delete from privilege_module where id=#{id}
+    </delete>
+    <select id="findAllModules" resultMap="privilegeModuleMap">
+      select * from privilege_module
+    </select>	
+    <select id="findModuleById" resultMap="privilegeModuleMap">
+         select * from privilege_module
+         where  id = #{id}
+	</select>
+	 <select id="findModuleByIds" resultMap="privilegeModuleMap">  
+     Select  
+     <include refid="Base_Column_List" />  
+     from privilege_module where id in  
+     <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">  
+      #{item}  
+     </foreach>  
+    </select>  
+    
+    
+	<select id="findParentId" resultType="int">
+         select count(*) from privilege_module where parent_id = #{parentId}
+         
+	</select>
+</mapper>
