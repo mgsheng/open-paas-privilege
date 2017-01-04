@@ -20,5 +20,5 @@ public interface PrivilegeModuleService {
 	List<PrivilegeModule> findModuleByIds(List<Integer> ids);
 	List<TreeNode> getDepartmentTree(List<PrivilegeRoleDetails> privilegeRoleDetailslist);
 	List<TreeNode> getDepartmentTree2(List<PrivilegePublic> privilegeRoleDetailslist);
-    Map<String, Object> getModuleListByroleId(String roleId);
+    List<Map<String, Object>> getModuleListByroleId(String roleId);
 }
