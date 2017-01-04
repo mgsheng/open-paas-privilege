@@ -66,7 +66,7 @@ public interface UserRepository extends Repository {
 	 * @return
 	 */
 	List<User> findUsers(User user);
-	
+	User findUserById(Integer id);
 	User findByUsername(String username);
 	List<User> findByEmail(String email);
 	List<User> findByPhone(String phone);
