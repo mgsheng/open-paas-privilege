@@ -57,7 +57,7 @@
         where  id = #{menuId}
     </select>
     <select id="getMenuListByUserId" resultMap="privilegeMenuMap" flushCache="true">
-        SELECT e.* FROM privilege_user a,privilege_user_role b,privilege_role_resource c,privilege_resource    d,privilege_menu e
+        SELECT distinct e.* FROM privilege_user a,privilege_user_role b,privilege_role_resource c,privilege_resource    d,privilege_menu e
 WHERE a.app_userid=#{appUserId}
          and a.app_id=#{appId}
 AND a.uid=b.user_id AND b.privilege_roleid=c.privilege_roleid AND c.resource_id=d.resource_id AND d.menu_id=e.id
