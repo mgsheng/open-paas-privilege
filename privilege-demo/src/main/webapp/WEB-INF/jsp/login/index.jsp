@@ -17,10 +17,32 @@
 	
 <script type="text/javascript"
 	src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
-<script type="text/javascript"
-	src='${pageContext.request.contextPath}/js/outlook2.js'> </script>
+
 <script type="text/javascript">
-	 var _menus = {"menus":[
+var _menus;
+
+	 $.post('${pageContext.request.contextPath}/user/getModule?userId=${userId}' ,function(data) {
+		 alert(data);
+		 console.log(data);
+		 _menus=data;
+		 $.each(_menus.menus, function(i, n) {
+				var menulist ='';
+				menulist +='<ul>';
+		        $.each(n.menus, function(j, o) {
+					menulist += '<li><div><a ref="'+o.menuid+'" href="#" rel="' + o.url + '" ><span class="icon '+o.icon+'" >&nbsp;</span><span class="nav">' + o.menuname + '</span></a></div></li> ';
+		        })
+				menulist += '</ul>';
+
+				$('#nav').accordion('add', {
+		            title: n.menuname,
+		            content: menulist,
+		            iconCls: 'icon ' + n.icon
+		        });
+
+		    });
+     });
+
+	 /* var _menus = {"menus":[
 					{"menuid":"","icon":"icon-sys","menuname":"用户管理",
 							"menus":[
 										   {"menuid":"24","menuname":"用户信息列表","icon":"icon-man","url":"${pageContext.request.contextPath}/managerUser/userList"}							]
@@ -31,7 +53,7 @@
 									 {"menuid":"29","menuname":"公共权限","icon":"icon-set","url":"${pageContext.request.contextPath}/privilegePublic/index"}
 								   ]
 						}
-				]};
+				]}; */
         //设置登录窗口
         function openPwd() {
             $('#w').window({
@@ -108,7 +130,8 @@
         });
 		
     </script>
-
+<script type="text/javascript"
+	src='${pageContext.request.contextPath}/js/outlook2.js'> </script>
 </head>
 <body class="easyui-layout" style="overflow-y: hidden" scroll="no">
 	<noscript>
