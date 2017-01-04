@@ -76,5 +76,5 @@ public interface UserService {
 	List<User>findByYear(String startTime,String endTime);
 	HashMap<String, Object> getTotalAmountByTime(String startTime, String endTime,String appId,String paymentId,String channelId);
 	Boolean updateUser(User user);
-	
+	User findUserById(Integer id);
 }
