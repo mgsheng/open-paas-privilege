@@ -23,7 +23,7 @@ import cn.com.open.opensass.privilege.service.PrivilegeRoleResourceService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
-import cn.com.open.opensass.privilege.tools.WebUtils;
+import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 
 @Controller
 @RequestMapping("/role/")
@@ -68,48 +68,14 @@ public class RoleModifyPrivilegeController extends BaseControllerUtil{
               return;
     	} 
     	App app = (App) redisClient.getObject(RedisConstant.APP_INFO+appId);
-	    if(app==null)
-		   {
-			   app=appService.findById(Integer.parseInt(appId));
-			   redisClient.setObject(RedisConstant.APP_INFO+appId, app);
-		  }
+	    if(app==null){
+		   app=appService.findById(Integer.parseInt(appId));
+		   redisClient.setObject(RedisConstant.APP_INFO+appId, app);
+	    }
     	Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
 		if(!f){
-			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
+			paraMandaChkAndReturn(10006, response,"认证失败");
 			return;
-		}
-    	//修改privilegeRole
-    	PrivilegeRole privilegeRole = privilegeRoleService.findRoleById(privilegeRoleId);
-    	privilegeRole.setRoleName(roleName);
-    	privilegeRole.setGroupId(groupId);
-    	privilegeRole.setGroupName(groupName);
-    	privilegeRole.setDeptId(deptId);
-    	privilegeRole.setDeptName(deptName);
-    	if(parentRoleId==null || ("0").equals(parentRoleId)){
-    		privilegeRole.setRoleLevel(0);
-    		privilegeRole.setParentRoleId("0");
-    	}else{
-    		PrivilegeRole privilegeRole1=privilegeRoleService.findRoleById(parentRoleId);
-    		if(privilegeRole1 == null){
-    			paraMandaChkAndReturn(10001, response,"父角色id不存在");
-                return;
-    		}
-    		privilegeRole.setRoleLevel(1);
-        	privilegeRole.setParentRoleId(parentRoleId);
-    	}
-    	if(roleType!=null){
-    		privilegeRole.setRoleType(Integer.parseInt(roleType));
-    	}
-    	privilegeRole.setRemark(remark);
-    	privilegeRole.setCreateUser(createUser);
-    	privilegeRole.setCreateUserId(createUserId);
-    	if(status!=null){
-    		privilegeRole.setStatus(Integer.parseInt(status));
-    	}
-    	Boolean f1 = privilegeRoleService.updatePrivilegeRole(privilegeRole);//更新role
-    	if(!f1){
-			paraMandaChkAndReturn(10002, response,"修改角色失败");
-            return;
 		}
     	if(rolePrivilege!=null){
     		String[] roleResources = rolePrivilege.split(",");
@@ -159,13 +125,51 @@ public class RoleModifyPrivilegeController extends BaseControllerUtil{
     		} 
     	}
     	
-    	map.put("status", 1);
-    	
-    	if(map.get("status")=="0"){
-    		writeErrorJson(response,map);
+
+    	//修改privilegeRole
+    	PrivilegeRole privilegeRole = privilegeRoleService.findRoleById(privilegeRoleId);
+    	privilegeRole.setRoleName(roleName);
+    	privilegeRole.setGroupId(groupId);
+    	privilegeRole.setGroupName(groupName);
+    	privilegeRole.setDeptId(deptId);
+    	privilegeRole.setDeptName(deptName);
+    	if(parentRoleId==null || ("0").equals(parentRoleId)){
+    		privilegeRole.setRoleLevel(0);
+    		privilegeRole.setParentRoleId("0");
     	}else{
-    		writeSuccessJson(response,map);
+    		PrivilegeRole privilegeRole1=privilegeRoleService.findRoleById(parentRoleId);
+    		if(privilegeRole1 == null){
+    			paraMandaChkAndReturn(10001, response,"父角色id不存在");
+                return;
+    		}
+    		privilegeRole.setRoleLevel(1);
+        	privilegeRole.setParentRoleId(parentRoleId);
     	}
+    	if(roleType!=null){
+    		privilegeRole.setRoleType(Integer.parseInt(roleType));
+    	}
+    	privilegeRole.setRemark(remark);
+    	privilegeRole.setCreateUser(createUser);
+    	privilegeRole.setCreateUserId(createUserId);
+    	if(status!=null){
+    		privilegeRole.setStatus(Integer.parseInt(status));
+    	}
+    	Boolean f1 = privilegeRoleService.updatePrivilegeRole(privilegeRole);//更新role
+    	if(!f1){
+			paraMandaChkAndReturn(10002, response,"修改角色失败");
+            return;
+		}
+    	//更新缓存
+		PrivilegeAjaxMessage message=privilegeRoleService.updateAppRoleRedis(appId);
+		if (message.getCode().equals("1")) {
+			map.put("status","1");
+		} else {
+			map.put("status", message.getCode());
+			map.put("error_code", message.getMessage());/* 数据不存在 */
+		}
+    	
+    	map.put("status", 1);
+    	writeSuccessJson(response,map);
         return;
     }
 }

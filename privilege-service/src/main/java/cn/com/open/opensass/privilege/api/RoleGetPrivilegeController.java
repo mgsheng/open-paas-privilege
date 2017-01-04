@@ -29,7 +29,6 @@ import cn.com.open.opensass.privilege.service.PrivilegeRoleResourceService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
-import cn.com.open.opensass.privilege.tools.WebUtils;
 import cn.com.open.opensass.privilege.vo.PrivilegeFunctionVo;
 import cn.com.open.opensass.privilege.vo.PrivilegeResourceVo;
 import cn.com.open.opensass.privilege.vo.PrivilegeRoleVo;
@@ -77,7 +76,7 @@ public class RoleGetPrivilegeController extends BaseControllerUtil{
 		  }
     	Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
 		if(!f){
-			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
+			paraMandaChkAndReturn(10001, response,"认证失败");
 			return;
 		}
     	List<PrivilegeRoleVo> roles = new ArrayList<PrivilegeRoleVo>();
@@ -142,12 +141,8 @@ public class RoleGetPrivilegeController extends BaseControllerUtil{
     	map.put("roleList", roles);
     	map.put("count", count);
     	map.put("status", 1);
-		writeErrorJson(response,map);
     	
-    	if(map.get("status")=="0"){
-    	}else{
-    		writeSuccessJson(response,map);
-    	}
+    	writeSuccessJson(response,map);
         return;
     }
 }

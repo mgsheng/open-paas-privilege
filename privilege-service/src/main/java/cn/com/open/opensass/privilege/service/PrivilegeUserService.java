@@ -17,6 +17,6 @@ public interface PrivilegeUserService {
 	
 	PrivilegeUser findByAppIdAndUserId(String appUserId, String appId);
 
-	void updatePrivilegeUser(PrivilegeUser user);
+	Boolean updatePrivilegeUser(PrivilegeUser user);
 	ArrayList<String> findUserResources(String appId, String appUserId); 
 }

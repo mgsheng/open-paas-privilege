@@ -22,11 +22,13 @@ import cn.com.open.opensass.privilege.model.PrivilegeUserRole;
 import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import cn.com.open.opensass.privilege.service.AppService;
+import cn.com.open.opensass.privilege.service.PrivilegeUserRedisService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserRoleService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
 import cn.com.open.opensass.privilege.tools.StringTool;
+import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
 
 @Controller
@@ -37,6 +39,8 @@ public class UserRoleModifyPrivilegeController extends BaseControllerUtil{
 	private PrivilegeUserService privilegeUserService;
 	@Autowired 
 	private PrivilegeUserRoleService privilegeUserRoleService;
+	@Autowired
+	private PrivilegeUserRedisService privilegeUserRedisService;
 	@Autowired
 	private AppService appService;
 	@Autowired
@@ -116,7 +120,17 @@ public class UserRoleModifyPrivilegeController extends BaseControllerUtil{
         	user.setResourceId(privilegeUserVo.getResourceId());
         	user.setPrivilegeFunId(privilegeUserVo.getPrivilegeFunId());
         	//更新用户信息
-        	privilegeUserService.updatePrivilegeUser(user);
+        	boolean uf = privilegeUserService.updatePrivilegeUser(user);
+        	if(uf){
+        		//更新缓存
+    			PrivilegeAjaxMessage message=privilegeUserRedisService.updateUserRoleRedis(privilegeUserVo.getAppId(), privilegeUserVo.getAppUserId());
+    			if (message.getCode().equals("1")) {
+    				map.put("status","1");
+    			} else {
+    				map.put("status", message.getCode());
+    				map.put("error_code", message.getMessage());/* 数据不存在 */
+    			}
+        	}
     	}
     	
     	map.put("status", 1);

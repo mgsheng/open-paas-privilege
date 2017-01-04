@@ -19,6 +19,7 @@ import cn.com.open.opensass.privilege.model.PrivilegeUserRole;
 import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import cn.com.open.opensass.privilege.service.AppService;
+import cn.com.open.opensass.privilege.service.PrivilegeUserRedisService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserRoleService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
@@ -34,6 +35,8 @@ public class UserRoleAddPrivilegeController extends BaseControllerUtil{
 	private PrivilegeUserService privilegeUserService;
 	@Autowired 
 	private PrivilegeUserRoleService privilegeUserRoleService;
+	@Autowired
+	private PrivilegeUserRedisService privilegeUserRedisService;
 	@Autowired
 	private AppService appService;
 	@Autowired
@@ -94,7 +97,7 @@ public class UserRoleAddPrivilegeController extends BaseControllerUtil{
 	    			paraMandaChkAndReturn(10003, response,"用户角色关系添加失败");
 	                return;
 	    		}
-	    	}	    	
+	    	}	  
     	}else{
     		paraMandaChkAndReturn(10002, response,"用户添加失败");
             return;

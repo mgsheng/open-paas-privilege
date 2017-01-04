@@ -18,10 +18,12 @@ import cn.com.open.opensass.privilege.model.PrivilegeUser;
 import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import cn.com.open.opensass.privilege.service.AppService;
+import cn.com.open.opensass.privilege.service.PrivilegeUserRedisService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserRoleService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
+import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
 
 @Controller
@@ -32,6 +34,8 @@ public class UserRoleDelPrivilegeController extends BaseControllerUtil{
 	private PrivilegeUserService privilegeUserService;
 	@Autowired 
 	private PrivilegeUserRoleService privilegeUserRoleService;
+	@Autowired
+	private PrivilegeUserRedisService privilegeUserRedisService;
 	@Autowired
 	private AppService appService;
 	@Autowired
@@ -71,6 +75,14 @@ public class UserRoleDelPrivilegeController extends BaseControllerUtil{
     			paraMandaChkAndReturn(10003, response,"删除用户角色关系失败");
                 return;
     		}
+    		//删除缓存
+			PrivilegeAjaxMessage message=privilegeUserRedisService.delUserRoleRedis(privilegeUserVo.getAppId(), privilegeUserVo.getAppUserId());
+			if (message.getCode().equals("1")) {
+				map.put("status","1");
+			} else {
+				map.put("status", message.getCode());
+				map.put("error_code", message.getMessage());/* 数据不存在 */
+			}
     	}else{
     		paraMandaChkAndReturn(10002, response,"删除用户失败");
             return;

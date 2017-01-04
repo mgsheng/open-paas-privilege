@@ -21,7 +21,7 @@ import cn.com.open.opensass.privilege.service.PrivilegeRoleResourceService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
-import cn.com.open.opensass.privilege.tools.WebUtils;
+import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 
 @Controller
 @RequestMapping("/role/")
@@ -53,14 +53,13 @@ public class RoleDelPrivilegeController extends BaseControllerUtil{
               return;
     	}    	
     	App app = (App) redisClient.getObject(RedisConstant.APP_INFO+appId);
-	    if(app==null)
-		   {
-			   app=appService.findById(Integer.parseInt(appId));
-			   redisClient.setObject(RedisConstant.APP_INFO+appId, app);
-		  }
+	    if(app==null){
+		   app=appService.findById(Integer.parseInt(appId));
+		   redisClient.setObject(RedisConstant.APP_INFO+appId, app);
+	    }
     	Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
 		if(!f){
-			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
+			paraMandaChkAndReturn(10003, response,"认证失败");
 			return;
 		}
     	Boolean df = privilegeRoleService.delPrivilegeRoleById(privilegeRoleId);//删除角色表
@@ -80,18 +79,21 @@ public class RoleDelPrivilegeController extends BaseControllerUtil{
 	    			}
     			}
     		}*/
+			//删除缓存
+			PrivilegeAjaxMessage message=privilegeRoleService.delAppRoleRedis(appId);
+			if (message.getCode().equals("1")) {
+				map.put("status","1");
+			} else {
+				map.put("status", message.getCode());
+				map.put("error_code", message.getMessage());/* 数据不存在 */
+			}
     	}else{
     		paraMandaChkAndReturn(10001, response,"角色删除失败");
             return;
     	}
     	
     	map.put("status", 1);
-    	
-    	if(map.get("status")=="0"){
-    		writeErrorJson(response,map);
-    	}else{
-    		writeSuccessJson(response,map);
-    	}
+    	writeSuccessJson(response,map);
         return;
     }
 }

@@ -60,8 +60,15 @@ public class PrivilegeUserServiceImpl implements PrivilegeUserService {
 	}
 
 	@Override
-	public void updatePrivilegeUser(PrivilegeUser user) {
-		privilegeUserRepository.updatePrivilegeUser(user);
+	public Boolean updatePrivilegeUser(PrivilegeUser user) {
+		try{
+			privilegeUserRepository.updatePrivilegeUser(user);
+			return true;
+		}catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
+		
 	}
 
 	@Override

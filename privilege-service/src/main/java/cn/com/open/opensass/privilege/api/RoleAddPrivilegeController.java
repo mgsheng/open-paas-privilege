@@ -23,7 +23,6 @@ import cn.com.open.opensass.privilege.service.PrivilegeRoleResourceService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
-import cn.com.open.opensass.privilege.tools.WebUtils;
 
 @Controller
 @RequestMapping("/role/")
@@ -66,14 +65,13 @@ public class RoleAddPrivilegeController extends BaseControllerUtil{
               return;
     	}    	
     	App app = (App) redisClient.getObject(RedisConstant.APP_INFO+appId);
-	    if(app==null)
-		   {
-			   app=appService.findById(Integer.parseInt(appId));
-			   redisClient.setObject(RedisConstant.APP_INFO+appId, app);
-		  }
+	    if(app==null){
+		   app=appService.findById(Integer.parseInt(appId));
+		   redisClient.setObject(RedisConstant.APP_INFO+appId, app);
+	    }
     	Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
 		if(!f){
-			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
+			paraMandaChkAndReturn(10004, response,"认证失败");
 			return;
 		}
     	PrivilegeRole privilegeRole=new PrivilegeRole();
