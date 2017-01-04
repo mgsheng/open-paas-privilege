@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import cn.com.open.opensass.privilege.dao.cache.RedisDao;
 import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeRoleRepository;
 import cn.com.open.opensass.privilege.model.PrivilegeRole;
-import cn.com.open.opensass.privilege.model.PrivilegeUser;
 import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleService;

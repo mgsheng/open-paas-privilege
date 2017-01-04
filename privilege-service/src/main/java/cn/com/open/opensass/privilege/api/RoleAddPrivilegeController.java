@@ -23,6 +23,7 @@ import cn.com.open.opensass.privilege.service.PrivilegeRoleResourceService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
+import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 
 @Controller
 @RequestMapping("/role/")
@@ -123,13 +124,19 @@ public class RoleAddPrivilegeController extends BaseControllerUtil{
 	    			}
 	    		}
 	    	}
+	    	//存放缓存
+    		PrivilegeAjaxMessage message=privilegeRoleService.getAppRoleRedis(appId);
+    		if (message.getCode().equals("1")) {
+    			map.put("status","1");
+        		map.put("privilegeRoleid", privilegeRole.getPrivilegeRoleId());
+    		} else {
+    			map.put("status", message.getCode());
+    			map.put("error_code", message.getMessage());/* 数据不存在 */
+    		}
     	}else{
     		paraMandaChkAndReturn(10002, response,"角色添加失败");
             return;
     	}
-    	
-    	map.put("status", 1);
-    	map.put("privilegeRoleid", privilegeRole.getPrivilegeRoleId());
     	
     	if(map.get("status")=="0"){
     		writeErrorJson(response,map);

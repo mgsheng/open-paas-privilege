@@ -91,9 +91,11 @@ public class RoleDelPrivilegeController extends BaseControllerUtil{
     		paraMandaChkAndReturn(10001, response,"角色删除失败");
             return;
     	}
-    	
-    	map.put("status", 1);
-    	writeSuccessJson(response,map);
+    	if(map.get("status")=="0"){
+    		writeErrorJson(response,map);
+    	}else{
+    		writeSuccessJson(response,map);
+    	}
         return;
     }
 }

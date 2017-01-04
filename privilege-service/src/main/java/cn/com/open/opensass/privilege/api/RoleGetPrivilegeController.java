@@ -140,9 +140,13 @@ public class RoleGetPrivilegeController extends BaseControllerUtil{
     	
     	map.put("roleList", roles);
     	map.put("count", count);
-    	map.put("status", 1);
-    	
-    	writeSuccessJson(response,map);
+    	map.put("status", "1");
+
+    	if(map.get("status")=="0"){
+    		writeErrorJson(response,map);
+    	}else{
+    		writeSuccessJson(response,map);
+    	}
         return;
     }
 }

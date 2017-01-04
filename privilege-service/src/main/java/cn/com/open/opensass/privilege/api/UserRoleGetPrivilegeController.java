@@ -81,7 +81,7 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil{
 			paraMandaChkAndReturn(10002, response,"用户不存在");
 			return;
 		}else{
-			map.put("status", 1);
+			map.put("status", "1");
 	    	map.put("appId", user.getAppId());
 	    	map.put("appUserId", user.getAppUserId());
 	    	map.put("appUserName", user.getAppUserName());
@@ -129,8 +129,12 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil{
 		}
 		map.putAll(menuMap);
 		map.putAll(roleMap);
-		
-    	writeSuccessJson(response,map);
+
+    	if(map.get("status")=="0"){
+    		writeErrorJson(response,map);
+    	}else{
+    		writeSuccessJson(response,map);
+    	}
         return;
     }
 }

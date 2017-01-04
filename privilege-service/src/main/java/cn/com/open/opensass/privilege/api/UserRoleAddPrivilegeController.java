@@ -24,6 +24,7 @@ import cn.com.open.opensass.privilege.service.PrivilegeUserRoleService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
+import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
 
 
@@ -97,14 +98,25 @@ public class UserRoleAddPrivilegeController extends BaseControllerUtil{
 	    			paraMandaChkAndReturn(10003, response,"用户角色关系添加失败");
 	                return;
 	    		}
-	    	}	  
+	    	}
+	    	//添加缓存
+			PrivilegeAjaxMessage message=privilegeUserRedisService.getRedisUserRole(privilegeUserVo.getAppId(), privilegeUserVo.getAppUserId());
+			if (message.getCode().equals("1")) {
+				map.put("status","1");
+			} else {
+				map.put("status", message.getCode());
+				map.put("error_code", message.getMessage());/* 数据不存在 */
+			}
     	}else{
     		paraMandaChkAndReturn(10002, response,"用户添加失败");
             return;
     	}
-    	
-    	map.put("status", 1);
-    	writeSuccessJson(response,map);
+
+    	if(map.get("status")=="0"){
+    		writeErrorJson(response,map);
+    	}else{
+    		writeSuccessJson(response,map);
+    	}
         return;
     }
 }

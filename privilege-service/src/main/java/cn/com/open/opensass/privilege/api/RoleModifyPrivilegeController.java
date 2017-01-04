@@ -167,9 +167,12 @@ public class RoleModifyPrivilegeController extends BaseControllerUtil{
 			map.put("status", message.getCode());
 			map.put("error_code", message.getMessage());/* 数据不存在 */
 		}
-    	
-    	map.put("status", 1);
-    	writeSuccessJson(response,map);
+
+    	if(map.get("status")=="0"){
+    		writeErrorJson(response,map);
+    	}else{
+    		writeSuccessJson(response,map);
+    	}
         return;
     }
 }
