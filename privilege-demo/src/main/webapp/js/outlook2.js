@@ -17,7 +17,7 @@ $(function(){
 function InitLeftMenu() {
 	$("#nav").accordion({animate:false});
 
-    $.each(_menus.menus, function(i, n) {
+    /*$.each(_menus.menus, function(i, n) {
 		var menulist ='';
 		menulist +='<ul>';
         $.each(n.menus, function(j, o) {
@@ -31,7 +31,7 @@ function InitLeftMenu() {
             iconCls: 'icon ' + n.icon
         });
 
-    });
+    });*/
 
 	$('.easyui-accordion li a').click(function(){
 		var tabTitle = $(this).children('.nav').text();
