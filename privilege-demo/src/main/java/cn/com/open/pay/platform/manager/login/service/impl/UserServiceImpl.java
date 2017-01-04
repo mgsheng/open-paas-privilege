@@ -180,5 +180,11 @@ public class UserServiceImpl implements UserService {
 	public List<Department> findAllDepts() {
 		return managerDepartmentRepository.findAllDepts();
 	}
+
+	@Override
+	public User findUserById(Integer id) {
+		// TODO Auto-generated method stub
+		return userRepository.findUserById(id);
+	}
   
 }
