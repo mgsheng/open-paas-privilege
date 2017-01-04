@@ -20,53 +20,44 @@
 
 <script type="text/javascript">
 var _menus;
-
-	 $.post('${pageContext.request.contextPath}/user/getModule?userId=${userId}' ,function(data) {
-		 console.log(data);
+		
+	 $.post('http://localhost:8080/privilege-service/userRole/getUserPrivilege?appId=23&appUserId=cbfb25e6c0d611e6a6df0050568c069a' ,function(data) {
 		 _menus=data;
-		 /* $.each(_menus.menus, function(i, n) {
-				var menulist ='';
-				menulist +='<ul>';
-		        $.each(n.menus, function(j, o) {
-		        	console.log(o.url);
-					menulist += '<li><div><a ref="'+o.menuid+'" href="#" rel="' + o.url + '" ><span class="icon '+o.icon+'" >&nbsp;</span><span class="nav">' + o.menuname + '</span></a></div></li> ';
-		        })
-				menulist += '</ul>';
-
-				$('#nav').accordion('add', {
-		            title: n.menuname,
-		            content: menulist,
-		            iconCls: 'icon ' + n.icon
-		        });
-
-		    }); */
-		    
-		    	$("#nav").accordion({animate:false});
-
-		        $.each(_menus.menus, function(i, n) {
-		    		var menulist ='';
-		    		menulist +='<ul>';
-		            $.each(n.menus, function(j, o) {
-		    			menulist += '<li><div><a ref="'+o.menuid+'" href="#" rel="' + o.url + '" ><span class="icon '+o.icon+'" >&nbsp;</span><span class="nav">' + o.menuname + '</span></a></div></li> ';
-		            })
-		    		menulist += '</ul>';
-
-		    		$('#nav').accordion('add', {
-		                title: n.menuname,
-		                content: menulist,
-		                iconCls: 'icon ' + n.icon
-		            });
-
-		        });
-
-		    	$('.easyui-accordion li a').click(function(){
+		 var a = [];// 创建数组
+		 $.each(data.menuList, function(i, o) {
+				  var menu = new Object();
+				  var menulist='<ul>';
+				  if(o.parentId=="0"){
+					  menu.title = o.menuName;
+					 $.each(data.menuList, function(j, n) {
+					  	if(n.parentId==o.menuId){
+					  		$.each(data.resourceList, function(i, m) {
+					  			if(m.menuId==n.menuId){
+							 	menulist += '<li><div><a ref="'+n.menuId+'" href="#" rel="' + m.baseUrl + '" ><span class="icon '+n.icon+'" >&nbsp;</span><span class="nav">' + n.menuName + '</span></a></div></li>';
+					  			}
+					  	  });
+						 }
+					  });
+					  menulist+='</ul>';
+						console.log(menulist);
+					  menu.content = menulist;
+					  a.push(menu);
+				  }
+			 }); 
+			 $.each(a,function(i){
+				 $('#nav').accordion('add', {
+		             title: a[i].title,
+		             content: a[i].content,
+		             //iconCls: 'icon ' 
+		         });
+			 })
+			$('.easyui-accordion li a').click(function(){
 		    		var tabTitle = $(this).children('.nav').text();
-		    			alert("sss");
 		    		var url = $(this).attr("rel");
 		    		var menuid = $(this).attr("ref");
-		    		var icon = getIcon(menuid,icon);
+		    		//var icon = getIcon(menuid,icon);
 
-		    		addTab(tabTitle,url,icon);
+		    		addTab(tabTitle,url,"");
 		    		$('.easyui-accordion li div').removeClass("selected");
 		    		$(this).parent().addClass("selected");
 		    	}).hover(function(){
@@ -78,7 +69,7 @@ var _menus;
 		    	//选中第一个
 		    	var panels = $('#nav').accordion('panels');
 		    	var t = panels[0].panel('options').title;
-		        $('#nav').accordion('select', t);
+		        $('#nav').accordion('select', t);    
 		    
      });
 
