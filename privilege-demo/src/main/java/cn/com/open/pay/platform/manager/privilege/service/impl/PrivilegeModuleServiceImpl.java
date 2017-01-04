@@ -242,7 +242,7 @@ public class PrivilegeModuleServiceImpl implements PrivilegeModuleService {
 	@Override
 	public List<Map<String, Object>> getModuleListByroleId(String roleId) {
 				// 顶级菜单集合
-				List<Map<String, Object>> pMenus = new ArrayList<>();
+				List<Map<String, Object>> pMenus = new ArrayList<Map<String, Object>>();
 				// 获取所有的菜单
 				List<PrivilegeModule> sysFunctions = privilegeModuleRepository.getModulListByroleId(roleId);
 				// 将顶级菜单筛选出，并且设置子菜单
@@ -251,8 +251,8 @@ public class PrivilegeModuleServiceImpl implements PrivilegeModuleService {
 					for(PrivilegeModule sysFunction:sysFunctions){
 						List<Map<String, Object>> mList=null;
 						if(sysFunction.getParentId()==0){
-							mList=new ArrayList<>();
-							map=new HashMap<>();
+							mList=new ArrayList<Map<String, Object>>();
+							map=new HashMap<String,Object>();
 							map.put("menuid", sysFunction.getId());
 							map.put("menuname", sysFunction.getName());
 							map.put("icon", sysFunction.getIcon());

@@ -181,7 +181,7 @@ public class UserLoginController extends BaseControllerUtil {
 				System.err.println(roleIds1.toString());
 				/*List<String> roleIdList = new ArrayList<String>();
 				Collections.addAll(roleIdList, roleIds1);*/
-				List<Map<String, Object>> moduleList = new ArrayList<>();
+				List<Map<String, Object>> moduleList = new ArrayList<Map<String,Object>>();
 				for (String roleId : roleIds1) {
 					List<Map<String, Object>> modules = privilegeModuleService.getModuleListByroleId(roleId);
 					moduleList.addAll(modules);
