@@ -186,6 +186,8 @@ privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/myb
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/PayChannelDictionaryRepositoryMyBatis.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/PayChannelRateRepositoryMyBatis.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/PayChannelSwitchRepositoryMyBatis.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/PrivilegeGroupRepositoryMyBatis.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/PrivilegeGroupResourceRepositoryMyBatis.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/PrivilegeLogRepositoryMyBatis.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/PrivilegeModuleRepositoryMyBatis.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/PrivilegePublicRepositoryMyBatis.java -text
@@ -205,6 +207,8 @@ privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/rep
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/PayChannelDictionaryRepository.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/PayChannelRateRepository.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/PayChannelSwitchRepository.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/PrivilegeGroupRepository.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/PrivilegeGroupResourceRepository.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/PrivilegeLogRepository.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/PrivilegeModuleRepository.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/PrivilegePublicRepository.java -text
@@ -241,8 +245,11 @@ privilege-demo/src/main/java/cn/com/open/pay/platform/manager/paychannel/service
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/paychannel/service/impl/PayChannelDictionaryServiceImpl.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/paychannel/service/impl/PayChannelRateServiceImpl.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/paychannel/service/impl/PayChannelSwitchServiceImpl.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/AbstractDomain.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/Common.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/Manager.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/PrivilegeGroup.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/PrivilegeGroupResource.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/PrivilegeModule.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/PrivilegePublic.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/PrivilegeResource.java -text
@@ -250,12 +257,16 @@ privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/Pr
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/PrivilegeRoleDetails.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/TreeNode.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/ManagerService.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/PrivilegeGroupResourceService.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/PrivilegeGroupService.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/PrivilegeModuleService.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/PrivilegePublicService.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/PrivilegeResourceService.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/PrivilegeRoleDetailsService.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/PrivilegeRoleService.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/impl/ManagerServiceImpl.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/impl/PrivilegeGroupResourceServiceImpl.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/impl/PrivilegeGroupServiceImpl.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/impl/PrivilegeModuleServiceImpl.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/impl/PrivilegePublicServiceImpl.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/impl/PrivilegeResourceServiceImpl.java -text
@@ -310,6 +321,7 @@ privilege-demo/src/main/java/cn/com/open/pay/platform/manager/web/ManagerUserCon
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/web/MerchantOrderOfflineController.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/web/MerchantOrderRefundController.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/web/PayChannelRateController.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/web/PrivilegeGroupController.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/web/PrivilegeLogController.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/web/PrivilegeModuleController.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/web/PrivilegePublicController.java -text
@@ -328,6 +340,8 @@ privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantOrderRe
 privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/PayChannelDictionaryMapper.xml -text
 privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/PayChannelRateMapper.xml -text
 privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/PayChannelSwitchMapper.xml -text
+privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeGroupMapper.xml -text
+privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeGroupResourceMapper.xml -text
 privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeLogMapper.xml -text
 privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeModuleMapper.xml -text
 privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegePublicMapper.xml -text

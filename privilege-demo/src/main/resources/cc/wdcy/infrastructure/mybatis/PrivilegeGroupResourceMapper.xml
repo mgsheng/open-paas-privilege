@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.pay.platform.manager.infrastructure.mybatis.PrivilegeGroupResourceRepositoryMyBatis">
+	<resultMap type="PrivilegeGroupResource" id="privilegeGroupResourceMap">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="group_id" property="groupId" jdbcType="VARCHAR" />
+		<result column="resource_id" property="resourceId" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
+		<result column="create_userid" property="createUserId" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+	</resultMap>
+		<sql id="Base_Column_List">
+		  id,
+		  group_id,
+		  resource_id,
+		  create_time,
+		  create_user,
+		  create_userid,
+		  status
+	</sql>
+	<select id="findByGroupIdAndResourceId" resultMap="privilegeGroupResourceMap" flushCache="true">
+         select 
+           <include refid="Base_Column_List" />
+           from privilege_group_resource
+         where  group_id = #{groupId}
+         <if test="resourceId != null and resourceId !=''">
+         and resource_id=#{resourceId}
+         </if>
+	</select>
+    <update id="updatePrivilegeGroupResource" parameterType="cn.com.open.pay.platform.manager.privilege.model.PrivilegeGroupResource" flushCache="true">
+        update privilege_group_resource set
+        <if test="groupId != null and groupId !=''">
+        group_id = #{groupId},
+        </if>
+         <if test="resourceId != null and resourceId !=''" >
+        resource_id = #{resourceId},
+        </if>
+     
+         <if test="createUser != null and createUser !=''" >
+        create_user = #{createUser},
+        </if>
+         <if test="createUserId != null and createUserId !=''" >
+        create_userid = #{createUserId},
+        </if>
+        create_time = #{createTime}
+        where id = #{id}
+    </update>
+	<insert id="saveprivilegeGroupResource" parameterType="PrivilegeGroupResource" useGeneratedKeys="true" keyProperty="id">
+        insert into privilege_group_resource
+        (group_id,resource_id,create_time,create_user,create_userid,status)
+        values
+        (#{groupId},#{resourceId},#{createTime},#{createUser},#{createUserId},#{status})
+    </insert>
+      <delete id="deleteResource">
+        delete from privilege_group_resource where group_id=#{groupId} and resource_id = #{resourceId} 
+    </delete>
+      <delete id="deleteByGroup">
+        delete from privilege_group_resource where group_id=#{groupId}
+    </delete>
+    <select id="findGprs" parameterType="String" resultMap="privilegeGroupResourceMap">
+          select 
+           <include refid="Base_Column_List" />
+           from privilege_group_resource
+         where  group_id = #{groupId}
+	</select>
+	<select id="findResourceIdsByGroupId" parameterType="String" resultType="String" flushCache="true">
+         select 
+           resource_id
+           from privilege_group_resource
+         where  group_id = #{groupId}
+	</select>
+		<select id="findGprPage" resultMap="privilegeGroupResourceMap" flushCache="true">
+         select * from privilege_group_resource
+         where  group_id = #{groupId}
+         limit #{startRow},#{pageSize} 
+	</select>
+</mapper>

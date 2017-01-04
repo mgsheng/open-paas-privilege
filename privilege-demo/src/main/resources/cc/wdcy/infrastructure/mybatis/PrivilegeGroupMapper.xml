@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.pay.platform.manager.infrastructure.mybatis.PrivilegeGroupRepositoryMyBatis">
+	<resultMap type="PrivilegeGroup" id="privilegeGroupMap">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="group_id" property="groupId" jdbcType="VARCHAR" />
+		<result column="group_name" property="groupName" jdbcType="VARCHAR" />
+		<result column="app_id" property="appId" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
+		<result column="create_userid" property="createUserId" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Insert_Column_List">
+	  id,
+	  group_id,
+	  group_name,
+	  app_id,
+	  create_time,
+	  create_user,
+	  create_userid,
+	  status
+	</sql>
+	<select id="findByGroupId" resultMap="privilegeGroupMap" flushCache="true">
+         select * from privilege_group
+         where  group_id = #{groupId}
+         and app_id=#{appId}
+	</select>
+	<select id="findGroupPage" resultMap="privilegeGroupMap" flushCache="true">
+         select * from privilege_group
+         where  group_id = #{groupId}
+         and app_id=#{appId}
+         limit #{startRow},#{pageSize} 
+	</select>
+    <update id="updatePrivilegeGroup" parameterType="PrivilegeGroup" flushCache="true">
+        update privilege_group set
+        <if test="groupId != null and groupId !=''">
+        group_id = #{groupId},
+        </if>
+         <if test="groupName != null and groupName !=''" >
+        group_name = #{groupName},
+        </if>
+         <if test="appId != null and appId !=''" >
+        app_id = #{appId},
+        </if>
+         <if test="createTime != null" >
+        create_time = #{createTime},
+        </if>
+         <if test="createUser != null and createUser !=''" >
+        create_user = #{createUser},
+        </if>
+         <if test="createUserId != null and createUserId !=''" >
+        create_userid = #{createUserId},
+        </if>
+         <if test="status != null " >
+        status = #{status},
+        </if>
+        where id = #{id}
+    </update>
+	<insert id="savePrivilegeGroup" parameterType="PrivilegeGroup" flushCache="true">
+        insert into privilege_group
+        (id,group_id,group_name,app_id,create_time,create_user,create_userid,status)
+        values
+        (#{id},#{groupId},#{groupName},#{appId},#{createTime},#{createUser},#{createUserId},#{status})
+    </insert>
+	
+</mapper>

@@ -31,8 +31,12 @@
         <typeAlias alias="MerchantOrderOffline" type="cn.com.open.pay.platform.manager.order.model.MerchantOrderOffline"/> 
         <typeAlias alias="MerchantOrderRefund" type="cn.com.open.pay.platform.manager.order.model.MerchantOrderRefund"/> 
         <typeAlias alias="DictTradePayment" type="cn.com.open.pay.platform.manager.department.model.DictTradePayment"/>
+        <typeAlias alias="PrivilegeGroup" type="cn.com.open.pay.platform.manager.privilege.model.PrivilegeGroup"/>
+        <typeAlias alias="PrivilegeGroupResource" type="cn.com.open.pay.platform.manager.privilege.model.PrivilegeGroupResource"/>
     </typeAliases>
     <mappers>
+        <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeGroupMapper.xml"/>
+        <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeGroupResourceMapper.xml"/>
         <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeModuleMapper.xml"/>
         <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegePublicMapper.xml"/>
         <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeResourceMapper.xml"/>
