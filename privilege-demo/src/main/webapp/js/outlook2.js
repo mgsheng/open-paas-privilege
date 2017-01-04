@@ -17,7 +17,7 @@ $(function(){
 function InitLeftMenu() {
 	$("#nav").accordion({animate:false});
 
-    /*$.each(_menus.menus, function(i, n) {
+   /* $.each(_menus.menus, function(i, n) {
 		var menulist ='';
 		menulist +='<ul>';
         $.each(n.menus, function(j, o) {
@@ -33,9 +33,8 @@ function InitLeftMenu() {
 
     });*/
 
-	$('.easyui-accordion li a').click(function(){
+	/*$('.easyui-accordion li a').click(function(){
 		var tabTitle = $(this).children('.nav').text();
-
 		var url = $(this).attr("rel");
 		var menuid = $(this).attr("ref");
 		var icon = getIcon(menuid,icon);
@@ -52,7 +51,7 @@ function InitLeftMenu() {
 	//选中第一个
 	var panels = $('#nav').accordion('panels');
 	var t = panels[0].panel('options').title;
-    $('#nav').accordion('select', t);
+    $('#nav').accordion('select', t);*/
 }
 //获取左侧导航的图标
 function getIcon(menuid){
