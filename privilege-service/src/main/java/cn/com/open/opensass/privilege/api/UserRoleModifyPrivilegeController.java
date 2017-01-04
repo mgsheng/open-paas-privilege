@@ -17,20 +17,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.opensass.privilege.model.App;
-import cn.com.open.opensass.privilege.model.PrivilegeRole;
-import cn.com.open.opensass.privilege.model.PrivilegeRoleResource;
 import cn.com.open.opensass.privilege.model.PrivilegeUser;
 import cn.com.open.opensass.privilege.model.PrivilegeUserRole;
 import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import cn.com.open.opensass.privilege.service.AppService;
-import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserRoleService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
 import cn.com.open.opensass.privilege.tools.StringTool;
-import cn.com.open.opensass.privilege.tools.WebUtils;
 import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
 
 @Controller
@@ -57,16 +53,15 @@ public class UserRoleModifyPrivilegeController extends BaseControllerUtil{
               return;
     	}  
     	App app = (App) redisClient.getObject(RedisConstant.APP_INFO+privilegeUserVo.getAppId());
-	    if(app==null)
-		   {
-			   app=appService.findById(Integer.parseInt(privilegeUserVo.getAppId()));
-			   redisClient.setObject(RedisConstant.APP_INFO+privilegeUserVo.getAppId(), app);
-		  }
+	    if(app==null){
+		   app=appService.findById(Integer.parseInt(privilegeUserVo.getAppId()));
+		   redisClient.setObject(RedisConstant.APP_INFO+privilegeUserVo.getAppId(), app);
+	    }
 	     //认证
     	Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
     	
 		if(!f){
-			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
+			paraMandaChkAndReturn(10003, response,"认证失败");
 			return;
 		}
     	String method = privilegeUserVo.getMethod();
@@ -125,12 +120,7 @@ public class UserRoleModifyPrivilegeController extends BaseControllerUtil{
     	}
     	
     	map.put("status", 1);
-    	
-    	if(map.get("status")=="0"){
-    		writeErrorJson(response,map);
-    	}else{
-    		writeSuccessJson(response,map);
-    	}
+    	writeSuccessJson(response,map);
         return;
     }
 }

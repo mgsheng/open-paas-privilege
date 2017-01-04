@@ -9,8 +9,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.json.JSONObject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.opensass.privilege.model.App;
-import cn.com.open.opensass.privilege.model.PrivilegeFunction;
 import cn.com.open.opensass.privilege.model.PrivilegeMenu;
-import cn.com.open.opensass.privilege.model.PrivilegeResource;
-import cn.com.open.opensass.privilege.model.PrivilegeRole;
-import cn.com.open.opensass.privilege.model.PrivilegeRoleResource;
 import cn.com.open.opensass.privilege.model.PrivilegeUser;
 import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
@@ -30,14 +24,10 @@ import cn.com.open.opensass.privilege.service.AppService;
 import cn.com.open.opensass.privilege.service.PrivilegeFunctionService;
 import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
 import cn.com.open.opensass.privilege.service.PrivilegeResourceService;
-import cn.com.open.opensass.privilege.service.PrivilegeRoleResourceService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
-import cn.com.open.opensass.privilege.tools.WebUtils;
-import cn.com.open.opensass.privilege.vo.PrivilegeResourceVo;
-import cn.com.open.opensass.privilege.vo.PrivilegeRoleVo;
 import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
 
 @Controller
@@ -66,7 +56,7 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil{
 	 * 用户角色权限获取接口
 	 */
 	@RequestMapping(value = "getUserPrivilege")
-    public void modifyPrivilege(HttpServletRequest request,HttpServletResponse response,PrivilegeUserVo privilegeUserVo) {
+    public void getPrivilege(HttpServletRequest request,HttpServletResponse response,PrivilegeUserVo privilegeUserVo) {
     	Map<String, Object> map=new HashMap<String, Object>();
     	log.info("====================get user privilege start======================");    	
     	if(!paraMandatoryCheck(Arrays.asList(privilegeUserVo.getAppId(),privilegeUserVo.getAppUserId()))){
@@ -104,8 +94,8 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil{
 		//redisClient.del(prefixRole+user.getAppId()+SIGN+user.getuId());
 		
 		//从redis中获取usermenu,userrole信息
-		Map<String, Object> menuMap=(Map<String, Object>) redisClient.getObject(prefixRole+user.getAppId()+SIGN+user.getuId());
-		Map<String, Object> roleMap=(Map<String, Object>) redisClient.getObject(prefixMenu+user.getAppId()+SIGN+user.getuId());
+		Map<String, Object> roleMap=(Map<String, Object>) redisClient.getObject(prefixRole+user.getAppId()+SIGN+user.getuId());
+		Map<String, Object> menuMap=(Map<String, Object>) redisClient.getObject(prefixMenu+user.getAppId()+SIGN+user.getuId());
 		
 		if(roleMap == null){//redis中没有，从数据库中查询并存入redis
 			roleMap = new HashMap<String,Object>();
@@ -140,11 +130,7 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil{
 		map.putAll(menuMap);
 		map.putAll(roleMap);
 		
-    	if(map.get("status")=="0"){
-    		writeErrorJson(response,map);
-    	}else{
-    		writeSuccessJson(response,map);
-    	}
+    	writeSuccessJson(response,map);
         return;
     }
 }

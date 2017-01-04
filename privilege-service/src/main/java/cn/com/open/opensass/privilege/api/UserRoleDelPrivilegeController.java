@@ -22,7 +22,6 @@ import cn.com.open.opensass.privilege.service.PrivilegeUserRoleService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
-import cn.com.open.opensass.privilege.tools.WebUtils;
 import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
 
 @Controller
@@ -49,16 +48,15 @@ public class UserRoleDelPrivilegeController extends BaseControllerUtil{
               return;
     	}  
     	App app = (App) redisClient.getObject(RedisConstant.APP_INFO+privilegeUserVo.getAppId());
-	    if(app==null)
-		   {
-			   app=appService.findById(Integer.parseInt(privilegeUserVo.getAppId()));
-			   redisClient.setObject(RedisConstant.APP_INFO+privilegeUserVo.getAppId(), app);
-		  }
+	    if(app==null){
+		   app=appService.findById(Integer.parseInt(privilegeUserVo.getAppId()));
+		   redisClient.setObject(RedisConstant.APP_INFO+privilegeUserVo.getAppId(), app);
+	    }
 	     //认证
     	Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
     	
 		if(!f){
-			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
+			paraMandaChkAndReturn(10004, response,"认证失败");
 			return;
 		}
     	PrivilegeUser user = privilegeUserService.findByAppIdAndUserId(privilegeUserVo.getAppId(),privilegeUserVo.getAppUserId());
@@ -79,12 +77,7 @@ public class UserRoleDelPrivilegeController extends BaseControllerUtil{
     	}
     	
     	map.put("status", 1);
-    	
-    	if(map.get("status")=="0"){
-    		writeErrorJson(response,map);
-    	}else{
-    		writeSuccessJson(response,map);
-    	}
+    	writeSuccessJson(response,map);
         return;
     }
 }
