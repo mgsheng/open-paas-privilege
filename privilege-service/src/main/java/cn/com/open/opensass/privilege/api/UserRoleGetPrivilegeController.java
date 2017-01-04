@@ -69,11 +69,11 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil{
 		   redisClient.setObject(RedisConstant.APP_INFO+privilegeUserVo.getAppId(), app);
 		}
 	     //认证
-    	Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
+    	/*Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
 		if(!f){
 			paraMandaChkAndReturn(10001, response,"认证失败");
 			return;
-		}
+		}*/
 		
 		//获取当前用户信息
 		PrivilegeUser user = privilegeUserService.findByAppIdAndUserId(privilegeUserVo.getAppId(),privilegeUserVo.getAppUserId());
@@ -113,10 +113,10 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil{
 		if(menuMap == null){//redis中没有，从数据库中查询并存入redis
 			menuMap = new HashMap<String,Object>();
 			List<PrivilegeMenu> menuList = privilegeMenuService.getMenuListByUserId(user.getAppUserId(), user.getAppId());
-			Map<String,Object> menumap = new HashMap<String,Object>();
 			List<Map<String,Object>> menus = new ArrayList<Map<String,Object>>();
 			for(PrivilegeMenu menu:menuList){
-				menumap.put("menuId", menu.getMenuId());
+				Map<String,Object> menumap = new HashMap<String,Object>();
+				menumap.put("menuId", menu.id());
 				menumap.put("parentId", menu.getParentId());
 				menumap.put("menuName", menu.getMenuName());
 				menumap.put("menuRule", menu.getMenuRule());
@@ -124,7 +124,7 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil{
 				menumap.put("displayOrder", menu.getDisplayOrder());
 				menus.add(menumap);
 			}
-			menuMap.put("muneList", menus);
+			menuMap.put("menuList", menus);
 			redisClient.setObject(prefixMenu+user.getAppId()+SIGN+user.getuId(),roleMap);
 		}
 		map.putAll(menuMap);
