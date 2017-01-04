@@ -22,7 +22,6 @@
 var _menus;
 
 	 $.post('${pageContext.request.contextPath}/user/getModule?userId=${userId}' ,function(data) {
-		 alert(data);
 		 console.log(data);
 		 _menus=data;
 		 $.each(_menus.menus, function(i, n) {
