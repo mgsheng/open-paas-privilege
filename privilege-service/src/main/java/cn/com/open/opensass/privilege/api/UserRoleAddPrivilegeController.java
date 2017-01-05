@@ -81,7 +81,7 @@ public class UserRoleAddPrivilegeController extends BaseControllerUtil{
     	user.setDeptId(privilegeUserVo.getDeptId());
     	user.setGroupId(privilegeUserVo.getGroupId());
     	user.setResourceId(privilegeUserVo.getResourceId());
-    	user.setPrivilegeFunId(privilegeUserVo.getResourceId());
+    	user.setPrivilegeFunId(privilegeUserVo.getPrivilegeFunId());
     	
     	Boolean sf = privilegeUserService.savePrivilegeUser(user);
     	if(sf){

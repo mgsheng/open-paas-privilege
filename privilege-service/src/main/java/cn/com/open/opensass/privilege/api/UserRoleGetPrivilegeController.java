@@ -2,9 +2,12 @@ package cn.com.open.opensass.privilege.api;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.opensass.privilege.model.App;
 import cn.com.open.opensass.privilege.model.PrivilegeMenu;
+import cn.com.open.opensass.privilege.model.PrivilegeResource;
 import cn.com.open.opensass.privilege.model.PrivilegeUser;
 import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
@@ -28,6 +32,8 @@ import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
+import cn.com.open.opensass.privilege.tools.StringTool;
+import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
 import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
 
 @Controller
@@ -90,8 +96,8 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil{
 	    	map.put("privilegeFunId", user.getPrivilegeFunId());
 		}
 		
-		//redisClient.del(prefixMenu+user.getAppId()+SIGN+user.getuId());
-		//redisClient.del(prefixRole+user.getAppId()+SIGN+user.getuId());
+		redisClient.del(prefixMenu+user.getAppId()+SIGN+user.getuId());
+		redisClient.del(prefixRole+user.getAppId()+SIGN+user.getuId());
 		
 		//从redis中获取usermenu,userrole信息
 		Map<String, Object> roleMap=(Map<String, Object>) redisClient.getObject(prefixRole+user.getAppId()+SIGN+user.getuId());
@@ -112,20 +118,11 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil{
 		}
 		if(menuMap == null){//redis中没有，从数据库中查询并存入redis
 			menuMap = new HashMap<String,Object>();
-			List<PrivilegeMenu> menuList = privilegeMenuService.getMenuListByUserId(user.getAppUserId(), user.getAppId());
-			List<Map<String,Object>> menus = new ArrayList<Map<String,Object>>();
-			for(PrivilegeMenu menu:menuList){
-				Map<String,Object> menumap = new HashMap<String,Object>();
-				menumap.put("menuId", menu.id());
-				menumap.put("parentId", menu.getParentId());
-				menumap.put("menuName", menu.getMenuName());
-				menumap.put("menuRule", menu.getMenuRule());
-				menumap.put("menuLevel", menu.getMenuLevel());
-				menumap.put("displayOrder", menu.getDisplayOrder());
-				menus.add(menumap);
-			}
-			menuMap.put("menuList", menus);
-			redisClient.setObject(prefixMenu+user.getAppId()+SIGN+user.getuId(),roleMap);
+			List<PrivilegeMenu> privilegeMenuList = privilegeMenuService.getMenuListByUserId(user.getAppUserId(), user.getAppId());
+			Set<PrivilegeMenuVo> privilegeMenuListReturn = new HashSet<PrivilegeMenuVo>();
+			Set<PrivilegeMenuVo> privilegeMenuListData = privilegeMenuService.getAllMenuByUserId(privilegeMenuList,privilegeMenuListReturn);  /*缓存中是否存在*/
+			menuMap.put("menuList", privilegeMenuListData);
+			redisClient.setObject(prefixMenu+user.getAppId()+SIGN+user.getuId(),menuMap);
 		}
 		map.putAll(menuMap);
 		map.putAll(roleMap);
