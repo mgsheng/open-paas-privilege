@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.opensass.privilege.model.App;
 import cn.com.open.opensass.privilege.model.PrivilegeMenu;
+import cn.com.open.opensass.privilege.model.PrivilegeRole;
 import cn.com.open.opensass.privilege.model.PrivilegeUser;
 import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
@@ -28,6 +29,7 @@ import cn.com.open.opensass.privilege.service.PrivilegeResourceService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
+import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
 import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
 import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
 
@@ -70,11 +72,11 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil{
 		   redisClient.setObject(RedisConstant.APP_INFO+privilegeUserVo.getAppId(), app);
 		}
 	     //认证
-    	/*Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
+    	Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
 		if(!f){
 			paraMandaChkAndReturn(10001, response,"认证失败");
 			return;
-		}*/
+		}
 		
 		//获取当前用户信息
 		PrivilegeUser user = privilegeUserService.findByAppIdAndUserId(privilegeUserVo.getAppId(),privilegeUserVo.getAppUserId());
@@ -104,7 +106,20 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil{
 			List<Map<String, Object>> roles = privilegeRoleService.getRoleListByUserId(user.getAppUserId(), user.getAppId());
 			roleMap.put("roleList", roles);
 			// resourceList
-			List<Map<String, Object>> resourceList = privilegeResourceService.getResourceListByUserId(user.getAppUserId(), user.getAppId());
+			List<PrivilegeRole> roleList = privilegeRoleService.getRoleListByUserIdAndAppId(user.getAppUserId(), user.getAppId());
+			List resourceList=null;
+			Boolean boo=false;
+			for (PrivilegeRole role : roleList) {
+				if (role.getRoleType() == 2) {// 若角色为系统管理员 则把app拥有的所有资源放入缓存
+					resourceList = privilegeResourceService.getResourceListByAppId(user.getAppId());
+					boo=true;
+				}
+
+			}
+			// resourceList
+			if (!boo) {
+				resourceList = privilegeResourceService.getResourceListByUserId(user.getAppUserId(), user.getAppId());
+			}
 			roleMap.put("resourceList", resourceList);
 			// functionList
 			List<Map<String, Object>> functionList = privilegeFunctionService.getFunctionListByUserId(user.getAppUserId(), user.getAppId());
