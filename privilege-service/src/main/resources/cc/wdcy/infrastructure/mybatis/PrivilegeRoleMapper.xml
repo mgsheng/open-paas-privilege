@@ -8,7 +8,7 @@
 		<result column="dept_id" property="deptId" jdbcType="VARCHAR" />
 		<result column="group_id" property="groupId" jdbcType="VARCHAR" />
 		<result column="role_level" property="roleLevel" jdbcType="INTEGER" />
-		<result column="role_type" property="roleLevel" jdbcType="INTEGER" />
+		<result column="role_type" property="roleType" jdbcType="INTEGER" />
 		<result column="parent_roleId" property="parentRoleId" jdbcType="VARCHAR" />
 		<result column="remark" property="remark" jdbcType="VARCHAR" />
 		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
@@ -43,7 +43,14 @@
 	<select id="getRoleListByUserId" resultType="java.util.HashMap" flushCache="true">
 		SELECT c.app_id as appId,c.dept_id  as deptId,c.dept_name as deptName,c.group_id as groupId,
 		c.group_name as groupName,c.privilege_roleid as privilegeRoleId,c.parent_roleId as parentRoleId,
-		c.remark as remark,c.role_level as roleLevel,c.role_name as roleName,c.status as status
+		c.remark as remark,c.role_level as roleLevel,c.role_name as roleName,c.status as status,
+		c.role_type as roleType FROM privilege_user a,privilege_user_role b,privilege_role c
+		WHERE a.app_userid=#{appUserId}
+         and a.app_id=#{appId}
+		AND a.uid=b.user_id AND b.privilege_roleid=c.privilege_roleid 
+	</select>
+	<select id="getRoleListByUserIdAndAppId" resultMap="privilegeRoleMap" flushCache="true">
+		SELECT c.*
 		 FROM privilege_user a,privilege_user_role b,privilege_role c
 		WHERE a.app_userid=#{appUserId}
          and a.app_id=#{appId}
