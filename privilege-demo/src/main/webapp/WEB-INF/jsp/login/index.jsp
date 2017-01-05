@@ -24,14 +24,14 @@ var signature;
 var timestamp;
 var signatureNonce;
 var appKey;
-		$.post('http://localhost:8080/privilege-client/getSignature',{appId:'23'},function(data){
+		/* $.post('http://localhost:8080/privilege-client/getSignature',{appId:'23'},function(data){
 			  signature=data.signature;
 			     timestamp=data.timestamp;
 			     signatureNonce=data.signatureNonce;
 			     appKey=data.appKey; 
 			    console.log("timestamp="+timestamp+"---appKey="+appKey+"--signatureNonce="+signatureNonce+"--signature="+signature);
-		 });
-			    $.post('http://localhost:8080/privilege-service/userRole/getUserPrivilege?appId=23&appUserId=cbfb25e6c0d611e6a6df0050568c069a&appKey='+
+		 }); */
+			    $.post('http://localhost:8080/privilege-service/userRole/getUserPrivilege?appId=${appId}&appUserId=${appUserId}&appKey='+
 						 appKey+"&signatureNonce="+signatureNonce+"&timestamp="+timestamp+"&signature="+signature ,function(data) {
 					 _menus=data;
 					 //是否为系统管理员
@@ -49,6 +49,7 @@ var appKey;
 					 }
 					    
 			     });
+		/* 是系统管理员 显示所有菜单 */
 		function showAllMenu(appid){
 			var resData;
 			$.post('http://localhost:8080/privilege-service/AppRes/getAppResRedis',{appId:appid},function(data){
