@@ -32,4 +32,5 @@ public interface PrivilegeRoleService {
 	List<Map<String, Object>> getRoleListByAppId(String appId);
 	PrivilegeAjaxMessage delAppRoleRedis(String appId);
 	PrivilegeAjaxMessage updateAppRoleRedis(String appId);
+	List<PrivilegeRole> getRoleListByUserIdAndAppId(String appUserId,String appId);
 }
