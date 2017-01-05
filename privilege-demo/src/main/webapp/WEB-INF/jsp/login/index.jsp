@@ -20,58 +20,141 @@
 
 <script type="text/javascript">
 var _menus;
-		
-	 $.post('http://localhost:8080/privilege-service/userRole/getUserPrivilege?appId=23&appUserId=cbfb25e6c0d611e6a6df0050568c069a' ,function(data) {
-		 _menus=data;
-		 var a = [];// 创建数组
-		 $.each(data.menuList, function(i, o) {
-				  var menu = new Object();
-				  var menulist='<ul>';
-				  if(o.parentId=="0"){
-					  menu.title = o.menuName;
-					 $.each(data.menuList, function(j, n) {
-					  	if(n.parentId==o.menuId){
-					  		$.each(data.resourceList, function(i, m) {
-					  			if(m.menuId==n.menuId){
-							 	menulist += '<li><div><a ref="'+n.menuId+'" href="#" rel="' + m.baseUrl + '" ><span class="icon '+n.icon+'" >&nbsp;</span><span class="nav">' + n.menuName + '</span></a></div></li>';
-					  			}
-					  	  });
+var signature;
+var timestamp;
+var signatureNonce;
+var appKey;
+		$.post('http://localhost:8080/privilege-client/getSignature',{appId:'23'},function(data){
+			  signature=data.signature;
+			     timestamp=data.timestamp;
+			     signatureNonce=data.signatureNonce;
+			     appKey=data.appKey; 
+			    console.log("timestamp="+timestamp+"---appKey="+appKey+"--signatureNonce="+signatureNonce+"--signature="+signature);
+		 });
+			    $.post('http://localhost:8080/privilege-service/userRole/getUserPrivilege?appId=23&appUserId=cbfb25e6c0d611e6a6df0050568c069a&appKey='+
+						 appKey+"&signatureNonce="+signatureNonce+"&timestamp="+timestamp+"&signature="+signature ,function(data) {
+					 _menus=data;
+					 //是否为系统管理员
+					 var isAdministrator=false;
+					 $.each(data.roleList, function(i, o) {
+						 if(o.roleType==2){
+							 isAdministrator=true;
 						 }
-					  });
-					  menulist+='</ul>';
-						console.log(menulist);
-					  menu.content = menulist;
-					  a.push(menu);
-				  }
-			 }); 
+					 });
+					 if(!isAdministrator){
+						 showMenu(data);
+					 }else{
+						 console.log('${appId}');
+						 showAllMenu('${appId}');
+					 }
+					    
+			     });
+		function showAllMenu(appid){
+			var resData;
+			$.post('http://localhost:8080/privilege-service/AppRes/getAppResRedis',{appId:appid},function(data){
+				resData=data;
+				console.log(data);
+			},"json");
+			$.post('http://localhost:8080/privilege-service/AppMenu/getAppMenuRedis',{appId:appid},function(data){
+				var a = [];// 创建数组
+				console.log(resData);
+				$.each(data.menuList, function(i, o) {
+					var menu = new Object();
+					var menulist='<ul>';
+					if(o.parentId=="0"){
+						menu.title = o.menuName;
+					 	$.each(data.menuList, function(j, n) {
+							if(n.parentId==o.menuId){
+								$.each(resData.resourceList, function(i, m) {
+							  		if(m.menuId==n.menuId){
+									 	menulist += '<li><div><a ref="'+n.menuId+'" href="#" rel="' + m.baseUrl + '" ><span class="icon '+n.icon+'" >&nbsp;</span><span class="nav">' + n.menuName + '</span></a></div></li>';
+							  			}
+							  	  });
+							}
+						});
+							  menulist+='</ul>';
+							  menu.content = menulist;
+							  a.push(menu);
+					}
+				}); 
+				 $.each(a,function(i){
+				 	$('#nav').accordion('add', {
+				    	title: a[i].title,
+				    	content: a[i].content,
+				             //iconCls: 'icon ' 
+				         });
+				 });
+				 $('.easyui-accordion li a').click(function(){
+			    		var tabTitle = $(this).children('.nav').text();
+			    		var url = $(this).attr("rel");
+			    		var menuid = $(this).attr("ref");
+			    		//var icon = getIcon(menuid,icon);
+
+			    		addTab(tabTitle,url,"");
+			    		$('.easyui-accordion li div').removeClass("selected");
+			    		$(this).parent().addClass("selected");
+			    	}).hover(function(){
+			    		$(this).parent().addClass("hover");
+			    	},function(){
+			    		$(this).parent().removeClass("hover");
+			    	});
+
+			    	//选中第一个
+			    	var panels = $('#nav').accordion('panels');
+			    	var t = panels[0].panel('options').title;
+			        $('#nav').accordion('select', t);  
+			},"json");
+		}
+		function showMenu(data){
+			console.log(data);
+			var a = [];// 创建数组
+			$.each(data.menuList, function(i, o) {
+				var menu = new Object();
+				var menulist='<ul>';
+				if(o.parentId=="0"){
+					menu.title = o.menuName;
+				 	$.each(data.menuList, function(j, n) {
+						if(n.parentId==o.menuId){
+							$.each(data.resourceList, function(i, m) {
+						  		if(m.menuId==n.menuId){
+								 	menulist += '<li><div><a ref="'+n.menuId+'" href="#" rel="' + m.baseUrl + '" ><span class="icon '+n.icon+'" >&nbsp;</span><span class="nav">' + n.menuName + '</span></a></div></li>';
+						  			}
+						  	  });
+						}
+					});
+						  menulist+='</ul>';
+						  console.log(menulist);
+						  menu.content = menulist;
+						  a.push(menu);
+				}
+			}); 
 			 $.each(a,function(i){
-				 $('#nav').accordion('add', {
-		             title: a[i].title,
-		             content: a[i].content,
-		             //iconCls: 'icon ' 
-		         });
-			 })
-			$('.easyui-accordion li a').click(function(){
-		    		var tabTitle = $(this).children('.nav').text();
-		    		var url = $(this).attr("rel");
-		    		var menuid = $(this).attr("ref");
-		    		//var icon = getIcon(menuid,icon);
+			 	$('#nav').accordion('add', {
+			    	title: a[i].title,
+			    	content: a[i].content,
+			             //iconCls: 'icon ' 
+			         });
+			 });
+				 $('.easyui-accordion li a').click(function(){
+			    		var tabTitle = $(this).children('.nav').text();
+			    		var url = $(this).attr("rel");
+			    		var menuid = $(this).attr("ref");
+			    		//var icon = getIcon(menuid,icon);
 
-		    		addTab(tabTitle,url,"");
-		    		$('.easyui-accordion li div').removeClass("selected");
-		    		$(this).parent().addClass("selected");
-		    	}).hover(function(){
-		    		$(this).parent().addClass("hover");
-		    	},function(){
-		    		$(this).parent().removeClass("hover");
-		    	});
+			    		addTab(tabTitle,url,"");
+			    		$('.easyui-accordion li div').removeClass("selected");
+			    		$(this).parent().addClass("selected");
+			    	}).hover(function(){
+			    		$(this).parent().addClass("hover");
+			    	},function(){
+			    		$(this).parent().removeClass("hover");
+			    	});
 
-		    	//选中第一个
-		    	var panels = $('#nav').accordion('panels');
-		    	var t = panels[0].panel('options').title;
-		        $('#nav').accordion('select', t);    
-		    
-     });
+			    	//选中第一个
+			    	var panels = $('#nav').accordion('panels');
+			    	var t = panels[0].panel('options').title;
+			        $('#nav').accordion('select', t);  
+		}
 
 	 /* var _menus = {"menus":[
 					{"menuid":"","icon":"icon-sys","menuname":"用户管理",
