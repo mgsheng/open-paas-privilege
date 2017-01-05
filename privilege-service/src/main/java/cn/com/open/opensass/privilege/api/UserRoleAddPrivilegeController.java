@@ -94,7 +94,7 @@ public class UserRoleAddPrivilegeController extends BaseControllerUtil{
 	    		userRole.setCreateUser(privilegeUserVo.getCreateUser());
 	    		userRole.setCreateUserId(privilegeUserVo.getCreateUserId());
 	    		Boolean f1 = privilegeUserRoleService.savePrivilegeUserRole(userRole);
-	    		if(f1){
+	    		if(!f1){
 	    			paraMandaChkAndReturn(10003, response,"用户角色关系添加失败");
 	                return;
 	    		}
