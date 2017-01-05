@@ -16,7 +16,7 @@ import cn.com.open.opensass.privilege.vo.PrivilegeResourceVo;
 public interface PrivilegeResourceService {
 	Boolean savePrivilegeResource(PrivilegeResource privilegeResource);
 	PrivilegeResource findByResourceId(String resourceId,String appId);
-	PrivilegeResource findByResourceId(String resourceId);
+	PrivilegeResourceVo findByResourceId(String resourceId);
 	PrivilegeResource findByResourceCode(String resourceId,String appId);
 	List<PrivilegeResource>findResourcePage(String menuId,String appId,int startRow,int pageSize,String resourceLevel);
 	Boolean updatePrivilegeResource(PrivilegeResource privilegeResource);
