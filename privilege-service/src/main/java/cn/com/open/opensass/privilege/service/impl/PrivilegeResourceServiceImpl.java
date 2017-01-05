@@ -95,9 +95,19 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 
 
 	@Override
-	public PrivilegeResource findByResourceId(String resourceId) {
-		// TODO Auto-generated method stub
-		return privilegeResourceRepository.findByResource_Id(resourceId);
+	public PrivilegeResourceVo findByResourceId(String resourceId) {
+		PrivilegeResourceVo resourceVo=new PrivilegeResourceVo();
+		PrivilegeResource resource=privilegeResourceRepository.findByResource_Id(resourceId);
+		resourceVo.setAppId(resource.getAppId());
+		resourceVo.setBaseUrl(resource.getBaseUrl());
+		resourceVo.setDisplayOrder(resource.getDisplayOrder());
+		resourceVo.setMenuId(resource.getMenuId());
+		resourceVo.setResourceId(resource.getResourceId());
+		resourceVo.setResourceLevel(String.valueOf(resource.getResourceLevel()));
+		resourceVo.setResourceName(resource.getResourceName());
+		resourceVo.setResourceRule(resource.getResourceRule());
+		resourceVo.setStatus(resource.getStatus());
+		return resourceVo;
 	}
 
 
