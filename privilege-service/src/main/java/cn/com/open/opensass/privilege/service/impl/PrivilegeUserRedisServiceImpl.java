@@ -7,10 +7,10 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.quartz.AdaptableJobFactory;
 import org.springframework.stereotype.Repository;
 
 import cn.com.open.opensass.privilege.dao.cache.RedisDao;
+import cn.com.open.opensass.privilege.model.PrivilegeRole;
 import cn.com.open.opensass.privilege.model.PrivilegeUser;
 import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
@@ -67,8 +67,22 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 		log.info("从数据库获取数据");
 		List<Map<String, Object>> roles = privilegeRoleService.getRoleListByUserId(appUserId, appId);
 		roleMap.put("roleList", roles);
+		List<PrivilegeRole> roleList = privilegeRoleService.getRoleListByUserIdAndAppId(appUserId, appId);
+		List resourceList=null;
+		Boolean boo=false;
+		for (PrivilegeRole role : roleList) {
+			if (role.getRoleType() == 2) {// 若角色为系统管理员 则把app拥有的所有资源放入缓存
+				resourceList = privilegeResourceService.getResourceListByAppId(appId);
+				boo=true;
+			}
+
+		}
+
 		// resourceList
-		List<Map<String, Object>> resourceList = privilegeResourceService.getResourceListByUserId(appUserId, appId);
+		if (!boo) {
+			
+			resourceList = privilegeResourceService.getResourceListByUserId(appUserId, appId);
+		}
 		roleMap.put("resourceList", resourceList);
 		// functionList
 		List<Map<String, Object>> functionList = privilegeFunctionService.getFunctionListByUserId(appUserId, appId);
