@@ -160,4 +160,10 @@ public class PrivilegeRoleServiceImpl implements PrivilegeRoleService {
 		return getAppRoleRedis(appId);
 	}
 
+	@Override
+	public List<PrivilegeRole> getRoleListByUserIdAndAppId(String appUserId, String appId) {
+		// TODO Auto-generated method stub
+		return privilegeRoleRepository.getRoleListByUserIdAndAppId(appUserId, appId);
+	}
+
 }
