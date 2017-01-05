@@ -63,12 +63,13 @@ public class UserLoginController extends BaseControllerUtil {
 	@RequestMapping("loginVerify")
 	public void verify(HttpServletRequest request, HttpServletResponse response, String username, String password) {
 		log.info("-----------------------login start----------------");
-		boolean flag = false;
-		String errorCode = "";
+		//boolean flag = false;
+		Boolean flag=true;
+		String errorCode = "ok";
 		User user = null;
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
-		user = checkUsername(username, userService);
-		if (user != null) {
+		//user = checkUsername(username, userService);
+		/*if (user != null) {
 			if (user.checkPasswod(password)) {
 				flag = true;
 				errorCode = "ok";
@@ -90,11 +91,11 @@ public class UserLoginController extends BaseControllerUtil {
 				// }
 				// }
 				// }
-				HttpSession session = request.getSession();
+				//HttpSession session = request.getSession();
 				// session.setAttribute("serverHost",payManagerDev.getServer_host());
 				// session.setAttribute("manager",manager);
 				// session.setAttribute("modules",modules);
-				session.setAttribute("user", user);
+				//session.setAttribute("user", user);
 
 			} else {
 				errorCode = "error";
@@ -102,7 +103,7 @@ public class UserLoginController extends BaseControllerUtil {
 
 		} else {
 			errorCode = "error";
-		}
+		}*/
 		map.put("flag", flag);
 		map.put("errorCode", errorCode);
 		WebUtils.writeJsonToMap(response, map);
@@ -118,23 +119,23 @@ public class UserLoginController extends BaseControllerUtil {
 	 */
 	@RequestMapping(value = "login")
 	public String login(HttpServletRequest request, HttpServletResponse response, Model model) {
-		User user = (User) request.getSession().getAttribute("user");
-		String username = request.getParameter("userName");
-		if (user != null && user.getUsername().equals(username)) {
-			model.addAttribute("userName", username);
-			model.addAttribute("realName", user.getRealName());
-			model.addAttribute("userId", user.getId());
-			model.addAttribute("appId","23");
-			model.addAttribute("appUserId", "cbfb25e6c0d611e6a6df0050568c069a");
+		//User user = (User) request.getSession().getAttribute("user");
+		//String username = request.getParameter("userName");
+		//if (user != null && user.getUsername().equals(username)) {
+			//model.addAttribute("userName", username);
+			//model.addAttribute("realName", user.getRealName());
+		//	model.addAttribute("userId", user.getId());
+			model.addAttribute("appId",request.getParameter("appId"));
+			model.addAttribute("appUserId", request.getParameter("appUserId"));
 			HttpSession session = request.getSession();
 
 			// session.setAttribute("serverHost",payManagerDev.getServer_host());
 			// session.setAttribute("manager",manager);
 			// session.setAttribute("modules",modules);
-			session.setAttribute("user",user);
+			//session.setAttribute("user",user);
 			return "login/index";
 
-		}
+		//}
 
 		// String username = request.getParameter("userName");
 		// User user=null;
@@ -146,7 +147,7 @@ public class UserLoginController extends BaseControllerUtil {
 		//
 		// }
 		//
-		return "/index";
+		//return "/index";
 	}
 
 	/**
@@ -169,8 +170,7 @@ public class UserLoginController extends BaseControllerUtil {
 		userService.updateUser(user);
 	}
 
-	@ResponseBody
-	@RequestMapping("getModule")
+	@RequestMapping("lgn")
 	public void getModule(HttpServletRequest request, HttpServletResponse response) {
 		// User user=(User) request.getSession(false).getAttribute("user");
 		Integer id = Integer.parseInt(request.getParameter("userId"));
@@ -181,8 +181,6 @@ public class UserLoginController extends BaseControllerUtil {
 			if (roleIds != null && !("").equals(user.getRole())) {
 				String[] roleIds1 = roleIds.split(",");// RoleId字段数组转list
 				System.err.println(roleIds1.toString());
-				/*List<String> roleIdList = new ArrayList<String>();
-				Collections.addAll(roleIdList, roleIds1);*/
 				List<Map<String, Object>> moduleList = new ArrayList<Map<String,Object>>();
 				for (String roleId : roleIds1) {
 					List<Map<String, Object>> modules = privilegeModuleService.getModuleListByroleId(roleId);
@@ -192,7 +190,6 @@ public class UserLoginController extends BaseControllerUtil {
 				map.put("menus", moduleList);
 
 			}
-			System.err.println(JSONObject.fromObject(map).toString());
 
 			writeSuccessJson(response, map);
 		}
