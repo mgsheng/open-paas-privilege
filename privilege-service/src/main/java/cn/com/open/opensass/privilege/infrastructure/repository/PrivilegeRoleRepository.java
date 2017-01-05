@@ -31,5 +31,6 @@ public interface PrivilegeRoleRepository extends Repository {
 	List<PrivilegeRole> findRoleNoPage(@Param("privilegeRoleId") String privilegeRoleId, @Param("appId") String appId);
 	
 	List<PrivilegeRole> getRoleListByAppId(@Param("appId") String appId);
+	List<PrivilegeRole> getRoleListByUserIdAndAppId(@Param("appUserId")String appUserId,@Param("appId")String appId);
 	
 }
