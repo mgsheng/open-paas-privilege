@@ -23,11 +23,17 @@
     <div class="login_box">
         <div class="login_title">登录</div>
         <ul>
-            <li class="placeHolder userIcon">
+            <!-- <li class="placeHolder userIcon">
                 <input value="admin" id="username" name="username" placeholder="请输入用户名" class="username" type="text">
             </li>
             <li class="placeHolder pwdIcon">
                 <input id="password" name="password" placeholder="请输入密码" class="pwd" type="password">
+            </li> -->
+             <li class="placeHolder userIcon">
+                <input value="23" id="appId" name="appId" placeholder="请输入appId" class="username" type="text">
+            </li>
+            <li class="placeHolder pwdIcon">
+                <input id="appUserId" name="appUserId" placeholder="请输appUserId" class="pwd" type="text">
             </li>
             <li>
                 <div style="color: red;text-align: center;padding: 10px 0px 0px" id="error_code"></div>
@@ -76,11 +82,14 @@
     	function btnSubmit(){
 				var username=$('#username').val();
 				var password=$('#password').val();
+				var appId=$('#appId').val();
+				var appUserId=$('#appUserId').val();
 				$.post("${pageContext.request.contextPath}/user/loginVerify",
 					{username:username,password:password},
 	   				function(data){
-	   					if(data.flag){
-	   						window.location.href="${pageContext.request.contextPath}/user/login?userName="+username;
+	   					//if(data.flag){
+	   					if(true){
+	   						window.location.href="${pageContext.request.contextPath}/user/login?userName="+username+"&appId="+appId+"&appUserId="+appUserId;
 	   						// location.href="${pageContext.request.contextPath}/login/index.jsp"
 	   					}
 	   					else{
