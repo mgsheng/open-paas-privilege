@@ -124,6 +124,8 @@ public class UserLoginController extends BaseControllerUtil {
 			model.addAttribute("userName", username);
 			model.addAttribute("realName", user.getRealName());
 			model.addAttribute("userId", user.getId());
+			model.addAttribute("appId","23");
+			model.addAttribute("appUserId", "cbfb25e6c0d611e6a6df0050568c069a");
 			HttpSession session = request.getSession();
 
 			// session.setAttribute("serverHost",payManagerDev.getServer_host());
