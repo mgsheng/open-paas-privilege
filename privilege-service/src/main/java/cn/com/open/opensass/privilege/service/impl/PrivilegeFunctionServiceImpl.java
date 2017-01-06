@@ -1,6 +1,7 @@
 package cn.com.open.opensass.privilege.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -80,7 +81,18 @@ public class PrivilegeFunctionServiceImpl implements PrivilegeFunctionService {
 	}
 	@Override
 	public List<Map<String, Object>> getFunctionListByUserId(String appUserId, String appId) {
-		return privilegeFunctionRepository.getFunctionListByUserId(appUserId, appId);
+		List<PrivilegeFunction> privilegeFunctions=privilegeFunctionRepository.getFunctionListByUserId(appUserId, appId);
+		List<Map<String, Object>> list=new ArrayList<Map<String,Object>>();
+		for(PrivilegeFunction function:privilegeFunctions){
+			Map<String, Object> map=new HashMap<String, Object>();
+			map.put("resourceId", function.getResourceId());
+			map.put("functionId", function.id());
+			map.put("optId", function.getOperationId());
+			map.put("optUrl", function.getOptUrl());
+			list.add(map);
+		}
+		
+		return list;
 	}
 	@Override
 	public List<Map<String, Object>> getFunctionMap(String resourceId) {
