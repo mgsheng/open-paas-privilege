@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -49,20 +51,37 @@ public class ManagerRoleController  extends BaseControllerUtil {
 	private PrivilegeRoleDetailsService privilegeRoleDetailsService;
 	@Autowired
 	private PrivilegeModuleService privilegeModuleService;
-	
 	@Autowired
 	private PrivilegeResourceService privilegeResourceService;
-	
-	
 	@Autowired
 	private PrivilegeLogService privilegeLogService;
+	
 	/**
 	 * 跳转到查询角色的页面
 	 * @return 返回的是 jsp文件名路径及文件名
 	 */
 	@RequestMapping(value="roleMessage")
-	public String showSearch(){
+	public String showSearch(HttpServletRequest request,HttpServletResponse response,Model model){
 		log.info("-------------------------showSearch         start------------------------------------");
+		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+		String appId=request.getParameter("appId");
+		//String appUserId=request.getParameter("appUserId");
+		sParaTemp.put("appId", appId);
+		String data=sendPost("http://localhost:8080/privilege-demo/signature/getSignature",sParaTemp);
+		JSONObject o=JSONObject.fromObject(data);
+		//sParaTemp.put("appUserId", appUserId);
+		String signature=o.getString("signature");
+		String timestamp=o.getString("timestamp");
+		String signatureNonce=o.getString("signatureNonce");
+		String appKey=o.getString("appKey"); 
+		sParaTemp.put("signature", signature);
+		sParaTemp.put("timestamp", timestamp);
+		sParaTemp.put("signatureNonce", signatureNonce);
+		sParaTemp.put("appKey", appKey);
+		String s = sendPost("http://localhost:8080/privilege-service/AppRole/getAppRoleRedis",sParaTemp);
+		JSONObject job=JSONObject.fromObject(s);
+		model.addAttribute("appId",appId);
+		model.addAttribute("roleList", job.get("roleList"));
 		return "privilege/role/roleMessage";
 	}
 	

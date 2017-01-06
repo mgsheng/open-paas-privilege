@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <head>
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/themes/default/easyui.css">
@@ -7,8 +8,7 @@
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/dataList.css">
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
-	<script type="text/javascript"
-	src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
 </head>
 <body>
 
@@ -18,25 +18,31 @@
 			data-options="rownumbers:true,singleSelect:true,url:'',method:'get',toolbar:'#tb'">
 		<thead>
 			<tr>
-				<th data-options="field:'id',width:200" hidden="true">ID</th>
-				<th data-options="field:'name',width:400">名称</th>
-				<th data-options="field:'statusName',width:240,align:'right'">状态</th>
-				<th data-options="field:'create_Time',width:250,align:'right'">创建时间</th>
+				<th data-options="field:'privilegeRoleId',width:200">ID</th>
+				<th data-options="field:'roleName',width:400">名称</th>
+				<th data-options="field:'status',width:240,align:'right'">状态</th>
 			</tr>
 		</thead>
+		 <c:forEach items="${roleList}" var="role">
+          <tr>
+              <td>${role.privilegeRoleId}</td>
+              <td>${role.roleName} </td>
+              <td><c:if test="${role.status=='0'}">有效</c:if><c:if test="${role.status!='0'}">无效</c:if></td>
+          </tr>  
+       </c:forEach> 
 	</table>
 	<div id="tb" style="padding:2px 5px;">
-	   <span style="margin-left: 75%;">
+	   <%--<span style="margin-left: 75%;">
 		名称: 
 		<input class="easyui-textbox" name="name" id="name" style="width:110px;">
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="#" class="easyui-linkbutton" iconCls="icon-search " plain="true"  onclick="onsearch();" id="search"></a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="add"></a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" id="edit" onclick="editMessage();"></a>
+		--%><%--<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="add"></a>
+		--%><%--<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" id="edit" onclick="editMessage();"></a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" id="delete" onclick="removeit();"></a>
-		</span>
+		--%></span>
 	</div>
-	<div id="w" class="easyui-window" title="角色添加" collapsible="false"
+	<%--<div id="w" class="easyui-window" title="角色添加" collapsible="false"
 		minimizable="false" maximizable="false" icon="icon-save"
 		style="width: 300px; height: 150px; padding: 5px;
         background: #fafafa;">
@@ -55,19 +61,17 @@
 						<td>状态：</td>
 						<td>
 			                <select  id="status" name="status" id="status" style="width:100%">
-								<option value="1">启用</option>
-								<option value="2">禁用</option>
+								<option value="0">有效</option>
+								<option value="1">无效</option>
 							</select> 
 						</td>
 					</tr>
-					
-					
 				</table>
 								  
 			
 			<div class="easyui-panel" style="padding:5px;height: 80%;widows:300px;margin-top:5px;overflow-x:scroll;">
 				  <ul id="deptree1"  style="height: 100%;width: 200px" class="easyui-tree" 
-					 data-options="method:'get'"> 
+					 data-options="method:'post'"> 
 			 	  </ul>
 			</div>
 			</div>
@@ -79,12 +83,96 @@
 					href="javascript:void(0)">取消</a>
 			</div>
 		</div>
-	</div>
+	--%></div>
 </body>
 
-<script>
+<script><%--
+	$(document).ready(function(){
+		openPwd();
+		$('#add').click(function() {
+		   	document.getElementById("resourceName").value=""; 
+		   	document.getElementById("id").value=""; 
+		    $('#w').window('open');
+		});
+	});
+	//设置登录窗口
+    function openPwd() {
+       $('#w').window({
+           title: '角色添加',
+           width: 400,
+           modal: true,
+           shadow: true,
+           closed: true,
+           height: 500,
+           resizable:false
+       });
+       var id = $('#id').val();
+       $('#deptree1').tree({ 
+      	 lines:true,//显示虚线效果 
+      	 animate: true,
+      	  checkbox:true,
+            url: '${pageContext.request.contextPath}/managerRole/tree?appId=${appId}',  
+        });
+    }
+    //关闭登录窗口
+    function closePwd() {
+       $('#w').window('close');
+    }
+--%></script>
+
+<script><%--
+$(function(){  
+	/*$('#dg').datagrid({
+		collapsible:true,
+		rownumbers:true,
+		pagination:true,
+        url: "http://localhost:8080/privilege-service/userRole/getUserPrivilege?appId=23&appUserId=10001",  
+        pagination: true,
+        onLoadSuccess:function(data){
+           if (data.total<1){
+                  $.messager.alert("提示","没有符合查询条件的数据!");
+           }
+           
+         }
+    }); */
+    var signature;
+    var timestamp;
+    var signatureNonce;
+    var appKey;
+    var roleList;
+    $.post('http://localhost:8080/privilege-service/userRole/getUserPrivilege?appId=23&appUserId=10001&appKey='+
+			 appKey+"&signatureNonce="+signatureNonce+"&timestamp="+timestamp+"&signature="+signature ,function(data) {
+   		roleList = data.roleList;
+   		for(var i=0;i<roleList.length;i++){
+   			var tr = "{privilegeRoleId:"+roleList[i].privilegeRoleId+",roleName:"+roleList[i].roleName;
+   			var status=roleList[i].status;
+   			if(status == '0'){
+   				status='有效';
+   			}else{
+   				status='无效';
+   			}
+   			$('#dg').datagrid('appendRow',{
+   				privilegeRoleId:roleList[i].privilegeRoleId,
+   				roleName:roleList[i].roleName,
+   				status:status
+   			});
+   		}
+    });
+    
+    openPwd();
+    $('#add').click(function() {
+   	 document.getElementById("resourceName").value=""; 
+   	 document.getElementById("id").value=""; 
+       $('#w').window('open');
+   });
+   $('#btnEp').click(function() {
+   	serverUpdate();
+   });
+	$('#btnCancel').click(function(){closePwd();});
+});
+
          //设置登录窗口
-        function openPwd() {
+         function openPwd() {
             $('#w').window({
                 title: '角色添加',
                 width: 400,
@@ -164,7 +252,7 @@
         }
         
       //修改
-        function serverUpdate() {
+       /* function serverUpdate() {
         	var checkIds='';
         	var bool=false;
         	var ui = $('#deptree1').tree('getChecked', ['checked','indeterminate']);
@@ -389,8 +477,8 @@
 			            $(this).pagination('loaded');
 			        } 
 			    }); 
-			}
+			}*/
 		
 	  
-	</script>
+	--%></script>
 </html>
