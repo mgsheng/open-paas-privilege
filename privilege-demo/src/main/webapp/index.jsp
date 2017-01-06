@@ -49,7 +49,7 @@
     </form>
 </div>
 <script type="text/javascript">
-    var login = {};
+    /* var login = {};
     login.restoreCookies = function(){
         var username=document.getElementById("username");
         if(!username.value){
@@ -77,19 +77,19 @@
         login.setCookie("username",document.getElementById("username").value);
         return true;
     };
-    login.init("username");
+    login.init("username"); */
     
     	function btnSubmit(){
-				var username=$('#username').val();
-				var password=$('#password').val();
+				//var username=$('#username').val();
+				//var password=$('#password').val();
 				var appId=$('#appId').val();
 				var appUserId=$('#appUserId').val();
 				$.post("${pageContext.request.contextPath}/user/loginVerify",
-					{username:username,password:password},
+					{username:appId,password:appUserId},
 	   				function(data){
 	   					//if(data.flag){
 	   					if(true){
-	   						window.location.href="${pageContext.request.contextPath}/user/login?userName="+username+"&appId="+appId+"&appUserId="+appUserId;
+	   						window.location.href="${pageContext.request.contextPath}/user/login?userName="+appId+"&appId="+appId+"&appUserId="+appUserId;
 	   						// location.href="${pageContext.request.contextPath}/login/index.jsp"
 	   					}
 	   					else{
