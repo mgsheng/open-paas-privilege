@@ -1,5 +1,6 @@
 package cn.com.open.opensass.privilege.api;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.opensass.privilege.model.App;
 import cn.com.open.opensass.privilege.model.PrivilegeMenu;
+import cn.com.open.opensass.privilege.model.PrivilegeResource;
 import cn.com.open.opensass.privilege.model.PrivilegeRole;
 import cn.com.open.opensass.privilege.model.PrivilegeUser;
 import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
@@ -31,6 +33,7 @@ import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
 import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
+import cn.com.open.opensass.privilege.vo.PrivilegeResourceVo;
 import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
 
 @Controller
@@ -72,11 +75,11 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil{
 		   redisClient.setObject(RedisConstant.APP_INFO+privilegeUserVo.getAppId(), app);
 		}
 	     //认证
-    	Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
+    	/*Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
 		if(!f){
 			paraMandaChkAndReturn(10001, response,"认证失败");
 			return;
-		}
+		}*/
 		
 		//获取当前用户信息
 		PrivilegeUser user = privilegeUserService.findByAppIdAndUserId(privilegeUserVo.getAppId(),privilegeUserVo.getAppUserId());
@@ -99,8 +102,11 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil{
 		//从redis中获取usermenu,userrole信息
 		Map<String, Object> roleMap=(Map<String, Object>) redisClient.getObject(prefixRole+user.getAppId()+SIGN+user.getuId());
 		Map<String, Object> menuMap=(Map<String, Object>) redisClient.getObject(prefixMenu+user.getAppId()+SIGN+user.getuId());
+
+		Boolean boo=false;//存放是否有管理员角色标志 true-有，false-没有
 		
-		if(roleMap == null){//redis中没有，从数据库中查询并存入redis
+		//redis中没有roleMap，从数据库中查询并存入redis
+		if(roleMap == null){
 			roleMap = new HashMap<String,Object>();
 			// roleList
 			List<Map<String, Object>> roles = privilegeRoleService.getRoleListByUserId(user.getAppUserId(), user.getAppId());
@@ -108,15 +114,12 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil{
 			// resourceList
 			List<PrivilegeRole> roleList = privilegeRoleService.getRoleListByUserIdAndAppId(user.getAppUserId(), user.getAppId());
 			List resourceList=null;
-			Boolean boo=false;
 			for (PrivilegeRole role : roleList) {
 				if (role.getRoleType() == 2) {// 若角色为系统管理员 则把app拥有的所有资源放入缓存
 					resourceList = privilegeResourceService.getResourceListByAppId(user.getAppId());
 					boo=true;
 				}
-
 			}
-			// resourceList
 			if (!boo) {
 				resourceList = privilegeResourceService.getResourceListByUserId(user.getAppUserId(), user.getAppId());
 			}
@@ -126,14 +129,22 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil{
 			roleMap.put("functionList", functionList);
 			redisClient.setObject(prefixRole+user.getAppId()+SIGN+user.getuId(),roleMap);
 		}
-		if(menuMap == null){//redis中没有，从数据库中查询并存入redis
+		
+		//redis中没有menuMap，从数据库中查询并存入redis
+		if(menuMap == null){
 			menuMap = new HashMap<String,Object>();
-			List<PrivilegeMenu> privilegeMenuList = privilegeMenuService.getMenuListByUserId(user.getAppUserId(), user.getAppId());
+			List<PrivilegeMenu> privilegeMenuList = new ArrayList<PrivilegeMenu>();
+			if(boo){//有管理员角色获取所有应用下菜单
+				privilegeMenuList = privilegeMenuService.getMenuListByAppId(user.getAppId());
+			}else{//无管理员角色获取相应权限菜单
+				privilegeMenuList = privilegeMenuService.getMenuListByUserId(user.getAppUserId(), user.getAppId());
+			}			
 			Set<PrivilegeMenuVo> privilegeMenuListReturn = new HashSet<PrivilegeMenuVo>();
 			Set<PrivilegeMenuVo> privilegeMenuListData = privilegeMenuService.getAllMenuByUserId(privilegeMenuList,privilegeMenuListReturn);  /*缓存中是否存在*/
 			menuMap.put("menuList", privilegeMenuListData);
 			redisClient.setObject(prefixMenu+user.getAppId()+SIGN+user.getuId(),menuMap);
 		}
+		
 		map.putAll(menuMap);
 		map.putAll(roleMap);
 
