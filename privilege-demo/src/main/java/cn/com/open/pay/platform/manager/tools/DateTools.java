@@ -4,6 +4,7 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.regex.Pattern;
 
 public class DateTools {
@@ -72,7 +73,18 @@ public class DateTools {
         }
         return d;
     }
-
+    /**
+	 * 获取UTC时间 格式：YYYY-MM-DDThh:mm:ssZ
+	 * @param date
+	 * @return
+	 */
+	public static String getSolrDate(Date date) {  
+		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");  
+		SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm:ss");  
+		sdf2.setTimeZone(TimeZone.getTimeZone("UTC"));  
+		String result = sdf1.format(date) + "T" + sdf2.format(date) + "Z";  
+		return result; 
+    }
     /**
      * 把符合日期格式的字符串转换为日期类型
      */
