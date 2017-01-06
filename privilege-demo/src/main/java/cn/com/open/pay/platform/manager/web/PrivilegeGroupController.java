@@ -25,7 +25,7 @@ import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGroupService;
  *
  */
 @Controller
-@RequestMapping("/resource/")
+@RequestMapping("/group/")
 public class PrivilegeGroupController {
 	@Autowired
 	private PrivilegeGroupService privilegeGroupService;
