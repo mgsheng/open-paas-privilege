@@ -37,12 +37,12 @@
 		<input class="easyui-textbox" name="name" id="name" style="width:110px;">
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="#" class="easyui-linkbutton" iconCls="icon-search " plain="true"  onclick="onsearch();" id="search"></a>
-		--%><%--<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="add"></a>
-		--%><%--<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" id="edit" onclick="editMessage();"></a>
+		--%><a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="add"></a>
+		<%--<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" id="edit" onclick="editMessage();"></a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" id="delete" onclick="removeit();"></a>
 		--%></span>
 	</div>
-	<%--<div id="w" class="easyui-window" title="角色添加" collapsible="false"
+	<div id="w" class="easyui-window" title="角色添加" collapsible="false"
 		minimizable="false" maximizable="false" icon="icon-save"
 		style="width: 300px; height: 150px; padding: 5px;
         background: #fafafa;">
@@ -83,10 +83,10 @@
 					href="javascript:void(0)">取消</a>
 			</div>
 		</div>
-	--%></div>
+	</div>
 </body>
 
-<script><%--
+<script>
 	$(document).ready(function(){
 		openPwd();
 		$('#add').click(function() {
@@ -118,7 +118,7 @@
     function closePwd() {
        $('#w').window('close');
     }
---%></script>
+</script>
 
 <script><%--
 $(function(){  

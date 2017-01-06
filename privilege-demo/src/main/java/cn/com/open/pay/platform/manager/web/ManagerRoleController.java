@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.pay.platform.manager.log.service.PrivilegeLogService;
 import cn.com.open.pay.platform.manager.login.model.User;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRole;
@@ -338,13 +339,74 @@ public class ManagerRoleController  extends BaseControllerUtil {
     
     @RequestMapping(value = "tree")
 	public void getModelTree(HttpServletRequest request,HttpServletResponse response) {
-		List<TreeNode> nodes = privilegeModuleService.getDepartmentTree();//见方法02
+		/*List<TreeNode> nodes = privilegeModuleService.getDepartmentTree();//见方法02
 		 //buildTree(nodes)见方法01，return返回值自动转为json,不懂的话看下面紫色部分，懂的略过
 		List<PrivilegeResource> privilegeResourceList = privilegeResourceService.findAllResource();
 		JSONArray jsonArr = JSONArray.fromObject(buildTree(nodes,privilegeResourceList));
-    	WebUtils.writeJson(response,jsonArr);
+    	WebUtils.writeJson(response,jsonArr);*/
+    	SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+		String appId=request.getParameter("appId");
+		sParaTemp.put("appId", appId);
+		String data=sendPost("http://localhost:8080/privilege-demo/signature/getSignature",sParaTemp);
+		JSONObject o=JSONObject.fromObject(data);
+		String signature=o.getString("signature");
+		String timestamp=o.getString("timestamp");
+		String signatureNonce=o.getString("signatureNonce");
+		String appKey=o.getString("appKey"); 
+		sParaTemp.put("signature", signature);
+		sParaTemp.put("timestamp", timestamp);
+		sParaTemp.put("signatureNonce", signatureNonce);
+		sParaTemp.put("appKey", appKey);
+		String s = sendPost("http://localhost:8080/privilege-service/AppMenu/getAppMenuRedis",sParaTemp);
+		JSONObject obj = JSONObject.fromObject(s);//将json字符串转换为json对象
+		JSONArray objArray=JSONArray.fromObject(obj.get("menuList"));
+		//将json对象转换为java对象
+		List<PrivilegeMenu> menuList = JSONArray.toList(objArray,PrivilegeMenu.class);
+		String s1 = sendPost("http://localhost:8080/privilege-service/AppRes/getAppResRedis",sParaTemp);
+		JSONObject obj1 = new JSONObject().fromObject(s1);//将json字符串转换为json对象
+		JSONArray obj1Array=JSONArray.fromObject(obj1.get("resourceList"));
+		//将json对象转换为java对象
+		List<PrivilegeResource> resourceList = JSONArray.toList(obj1Array,PrivilegeResource.class);
+		List<TreeNode> nodes = convertTreeNodeList(menuList);		
+		JSONArray jsonArr = JSONArray.fromObject(buildTree1(nodes,resourceList));
+		WebUtils.writeJson(response,jsonArr);
+    }
+
+	private List<TreeNode> convertTreeNodeList(List<PrivilegeMenu> modules) {
+			List<TreeNode> nodes = null;
+			
+			if(modules != null){
+				nodes = new ArrayList<TreeNode>();
+				for(PrivilegeMenu menu:modules){
+					TreeNode node = convertTreeNode(menu);
+					if(node != null){
+						nodes.add(node);
+					}
+				}
+			}
+			
+			return nodes;
+		}
+	
+	/**
+	* @param departments
+	* @return
+	*/
+	private TreeNode convertTreeNode(PrivilegeMenu privilegeMenu){
+		TreeNode node = null;
+		if(privilegeMenu != null){
+			node = new TreeNode();
+			node.setId(String.valueOf(privilegeMenu.getMenuId()));//菜单ID
+			node.setChecked(false);
+			node.setText(privilegeMenu.getMenuName());//菜单名称
+			node.setTarget("");
+			node.setPid(String.valueOf(privilegeMenu.getParentId()));//父级菜单ID
+			node.setResource("");
+			Map<String,Object> map = new HashMap<String,Object>();
+			node.setAttributes(map);
+		}
+		return node;
 	}
-    
     
     /**
 	* 构建树
@@ -407,7 +469,67 @@ public class ManagerRoleController  extends BaseControllerUtil {
 
 		return results;
 	}
-	
+	/**
+	* 构建树
+	* @param treeNodes
+	* @return
+	*/
+	protected List<TreeNode> buildTree1(List<TreeNode> treeNodes,List<PrivilegeResource> resourceList ) {
+		List<TreeNode> results = new ArrayList<TreeNode>();
+
+		Map<String, TreeNode> aidMap = new LinkedHashMap<String, TreeNode>();
+		for (TreeNode node : treeNodes) {
+			aidMap.put(node.getId(), node);
+		}
+		treeNodes = null;
+
+		Set<Entry<String, TreeNode>> entrySet = aidMap.entrySet();
+		for (Entry<String, TreeNode> entry : entrySet) {
+			String pid = entry.getValue().getPid();
+			TreeNode node = aidMap.get(pid);
+			if (node == null) {
+				results.add(entry.getValue());
+			} else {
+				List<TreeNode> children = node.getChildren();
+				
+				if (children == null) {
+					children = new ArrayList<TreeNode>();
+					node.setChildren(children);
+					node.setState("closed");
+				}
+//				else{
+					/*//添加三级
+					String resource = entry.getValue().getResource();
+					List<TreeNode> treeNodeList = new ArrayList<TreeNode>();
+					if(resource!=null){
+						String[] resourceStrArray = resource.split(",");
+						for(int i=0;i<resourceStrArray.length;i++){
+							String vl = resourceStrArray[i];
+							for(int j=0;j<resourceList.size();j++){
+								int id = Integer.parseInt(resourceList.get(j).getResourceId());
+								String nameValue = resourceList.get(j).getResourceName();
+								TreeNode treeNode=new TreeNode();
+								if(Integer.parseInt(vl)==id){
+									treeNode.setId(vl);
+									treeNode.setText(nameValue);
+//									treeNode.setState("closed");
+									treeNode.setIsmodule("1");
+									treeNodeList.add(treeNode);
+								}
+								
+							}
+						}
+					}
+					*/
+					//entry.getValue().setChildren(treeNodeList);
+//				}
+				children.add(entry.getValue());
+			}
+		}
+		aidMap = null;
+
+		return results;
+	}
 	
 	
 	 @RequestMapping(value = "tree1")
