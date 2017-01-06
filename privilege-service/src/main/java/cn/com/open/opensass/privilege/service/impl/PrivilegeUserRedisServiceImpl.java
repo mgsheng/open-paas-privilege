@@ -3,8 +3,10 @@ package cn.com.open.opensass.privilege.service.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,7 @@ import cn.com.open.opensass.privilege.service.PrivilegeUserRedisService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 import cn.com.open.opensass.privilege.vo.PrivilegeResourceVo;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Repository("privilegeUserRedisService")
@@ -83,9 +86,12 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 			}
 
 		}
+		
 
 		// resourceList
+		Set resourceSet=new HashSet();
 		if (!boo) {
+			
 			resourceList = privilegeResourceService.getResourceListByUserId(appUserId, appId);
 			if (privilegeResourceIds != null && !("").equals(privilegeResourceIds)) {
 				String[] resourceIds1 = privilegeResourceIds.split(",");// 将当前user
@@ -93,8 +99,6 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 				List<String> resourceIdList = new ArrayList<String>();
 				Collections.addAll(resourceIdList, resourceIds1);
 				PrivilegeResourceVo resource = null;
-				// List<Map<String, Object>> resourceList = new
-				// ArrayList<Map<String, Object>>();
 				for (String resourceId : resourceIdList) {
 					Map<String, Object> map2 = new HashMap<String, Object>();
 					resource = privilegeResourceService.findByResourceId(resourceId);
@@ -110,32 +114,32 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 					resourceList.add(map2);
 
 				}
-				// roleMap.put("resourceList", resourceList);
 			}
 		}
-		roleMap.put("resourceList", resourceList);
+		resourceSet.addAll(resourceList);
+		roleMap.put("resourceList", resourceSet);
 		// functionList
 		List<Map<String, Object>> functionList = privilegeFunctionService.getFunctionListByUserId(appUserId, appId);
-		// functionList
+		Set<Map<String, Object>> functionSet=new HashSet<Map<String,Object>>();
+		functionSet.addAll(functionList);
 		if (privilegeFunctionIds != null && !("").equals(privilegeFunctionIds)) {
 			String[] functionIds1 = privilegeFunctionIds.split(",");
 			List<String> functionIdList = new ArrayList<String>();
 			Collections.addAll(functionIdList, functionIds1);
 			PrivilegeFunction function = null;
-			// List<Map<String, Object>> functionList = new
-			// ArrayList<Map<String, Object>>();
 			for (String functionId : functionIdList) {
 				Map<String, Object> map2 = new HashMap<String, Object>();
 				function = privilegeFunctionService.findByFunctionId(functionId);
 				map2.put("resourceId", function.getResourceId());
 				map2.put("functionId", function.getId());
-				map2.put("optId", function.getOperationId());
+				map2.put("optId", function.getOperationId()+"");
 				map2.put("optUrl", function.getOptUrl());
-				functionList.add(map2);
+				functionSet.add(map2);
 			}
-			//roleMap.put("functionList", functionList);
 		}
-		roleMap.put("functionList", functionList);
+		//functionSet.addAll(functionList);
+		System.err.println("set"+JSONArray.fromObject(functionSet).toString());
+		roleMap.put("functionList", functionSet);
 
 		redisClientTemplate.setString(userCacheRoleKey, JSONObject.fromObject(roleMap).toString());
 		ajaxMessage.setCode("1");
