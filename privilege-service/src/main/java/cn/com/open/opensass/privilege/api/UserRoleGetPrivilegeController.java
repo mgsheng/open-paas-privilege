@@ -75,11 +75,11 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil{
 		   redisClient.setObject(RedisConstant.APP_INFO+privilegeUserVo.getAppId(), app);
 		}
 	     //认证
-    	/*Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
+    	Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
 		if(!f){
 			paraMandaChkAndReturn(10001, response,"认证失败");
 			return;
-		}*/
+		}
 		
 		//获取当前用户信息
 		PrivilegeUser user = privilegeUserService.findByAppIdAndUserId(privilegeUserVo.getAppId(),privilegeUserVo.getAppUserId());
