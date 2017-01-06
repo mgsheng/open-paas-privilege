@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,7 +52,14 @@ public class UserLoginController extends BaseControllerUtil {
 	private PrivilegeRoleDetailsService privilegeRoleDetailsService;
 	@Autowired
 	private PrivilegeModuleService privilegeModuleService;
-
+	@Value("#{properties['get-privilege-user-uri']}")
+	private String getUserPrivilegeUrl;
+	@Value("#{properties['privilege-appres-redis-query-uri']}")
+	private String appResRedisUrl;
+	@Value("#{properties['privilege-appmenu-redis-query-uri']}")
+	private String appMenuRedisUrl;
+	@Value("#{properties['getSignature-uri']}")
+	private String getSignatureUrl;
 	/**
 	 * 登录验证
 	 * 
@@ -127,6 +135,11 @@ public class UserLoginController extends BaseControllerUtil {
 		//	model.addAttribute("userId", user.getId());
 			model.addAttribute("appId",request.getParameter("appId"));
 			model.addAttribute("appUserId", request.getParameter("appUserId"));
+			model.addAttribute("getUserPrivilegeUrl", getUserPrivilegeUrl);
+			model.addAttribute("appResRedisUrl",appResRedisUrl);
+			model.addAttribute("appMenuRedisUrl", appMenuRedisUrl);
+			model.addAttribute("getSignatureUrl", getSignatureUrl);
+			System.err.println(getSignatureUrl+"==url");
 			HttpSession session = request.getSession();
 
 			// session.setAttribute("serverHost",payManagerDev.getServer_host());
