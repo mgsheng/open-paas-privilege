@@ -21,7 +21,7 @@ public interface PrivilegeResourceRepository extends Repository {
 	List<PrivilegeResource> findResourcePage(@Param("menuId")String menuId,@Param("appId")String appId,@Param("startRow")int startRow,@Param("pageSize")int pageSize,@Param("resourceLevel")String resourceLevel);
 	void deleteByResourceId(@Param("resourceId")String resourceId);
 	List<PrivilegeResource> findByGroupIdAndAppId(@Param("groupId")String groupId,@Param("appId")String appId);
-	List<Map<String, Object>> getResourceListByUserId(@Param("appUserId")String appUserId,@Param("appId")String appId);
+	List<PrivilegeResource> getResourceListByUserId(@Param("appUserId")String appUserId,@Param("appId")String appId);
 	List<PrivilegeResource> findResourceList(@Param("resourceIds")String [] resourceIds);
 	List<Map<String, Object>> findResourceMap(@Param("resourceIds")String [] resourceIds);
 	List<PrivilegeResource> getResourceListByAppId(@Param("appId")String appId);
