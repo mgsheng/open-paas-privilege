@@ -328,6 +328,7 @@ privilege-demo/src/main/java/cn/com/open/pay/platform/manager/web/PrivilegeLogCo
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/web/PrivilegeModuleController.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/web/PrivilegePublicController.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/web/PrivilegeResourceController.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/web/PrivilegeSignatureController.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/web/UserDataStatsController.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/web/UserLoginController.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/web/UserQueryDownloadManage.java -text
