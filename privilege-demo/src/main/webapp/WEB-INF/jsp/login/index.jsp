@@ -68,7 +68,7 @@ var appKey;
 							if(n.parentId==o.menuId){
 								$.each(resData.resourceList, function(i, m) {
 							  		if(m.menuId==n.menuId){
-									 	menulist += '<li><div><a ref="'+n.menuId+'" href="#" rel="' + m.baseUrl + '" ><span class="icon '+n.icon+'" >&nbsp;</span><span class="nav">' + n.menuName + '</span></a></div></li>';
+									 	menulist += '<li><div><a ref="'+n.menuId+'" href="#" rel="' + '${pageContext.request.contextPath}'+m.baseUrl + '" ><span class="icon '+n.icon+'" >&nbsp;</span><span class="nav">' + n.menuName + '</span></a></div></li>';
 							  			}
 							  	  });
 							}
@@ -118,7 +118,7 @@ var appKey;
 						if(n.parentId==o.menuId){
 							$.each(data.resourceList, function(i, m) {
 						  		if(m.menuId==n.menuId){
-								 	menulist += '<li><div><a ref="'+n.menuId+'" href="#" rel="' + m.baseUrl + '" ><span class="icon '+n.icon+'" >&nbsp;</span><span class="nav">' + n.menuName + '</span></a></div></li>';
+								 	menulist += '<li><div><a ref="'+n.menuId+'" href="#" rel="' +'${pageContext.request.contextPath}'+ m.baseUrl + '" ><span class="icon '+n.icon+'" >&nbsp;</span><span class="nav">' + n.menuName + '</span></a></div></li>';
 						  			}
 						  	  });
 						}
