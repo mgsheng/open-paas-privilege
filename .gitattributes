@@ -293,6 +293,7 @@ privilege-demo/src/main/java/cn/com/open/pay/platform/manager/tools/FatherCommon
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/tools/GuidGenerator.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/tools/Help_Encrypt.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/tools/HttpTools.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/tools/LoadPopertiesFile.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/tools/MD5.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/tools/MonitorInfo.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/tools/MonitorTools.java -text
