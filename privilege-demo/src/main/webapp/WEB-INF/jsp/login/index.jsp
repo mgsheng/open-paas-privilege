@@ -24,17 +24,15 @@ var signature;
 var timestamp;
 var signatureNonce;
 var appKey;
-		/* $.post('http://localhost:8080/privilege-client/getSignature',{appId:'23'},function(data){
+		 $.post('http://localhost:8080/privilege-demo/signature/getSignature',{appId:'${appId}'},function(data){
 			  signature=data.signature;
 			     timestamp=data.timestamp;
 			     signatureNonce=data.signatureNonce;
 			     appKey=data.appKey; 
-			    console.log("timestamp="+timestamp+"---appKey="+appKey+"--signatureNonce="+signatureNonce+"--signature="+signature);
-		 }); */
-			    $.post('http://localhost:8080/privilege-service/userRole/getUserPrivilege?appId=${appId}&appUserId=${appUserId}&appKey='+
+			     $.post('${getUserPrivilegeUrl}?appId=${appId}&appUserId=${appUserId}&appKey='+
 						 appKey+"&signatureNonce="+signatureNonce+"&timestamp="+timestamp+"&signature="+signature ,function(data) {
-					 _menus=data;
-					 //是否为系统管理员
+			    console.log("timestamp="+timestamp+"---appKey="+appKey+"--signatureNonce="+signatureNonce+"--signature="+signature);
+			    	//是否为系统管理员
 					 var isAdministrator=false;
 					 $.each(data.roleList, function(i, o) {
 						 if(o.roleType==2){
@@ -49,14 +47,33 @@ var appKey;
 					 }
 					    
 			     });
+		 }); 
+			   /*  $.post('${getUserPrivilegeUrl}?appId=${appId}&appUserId=${appUserId}&appKey='+
+						 appKey+"&signatureNonce="+signatureNonce+"&timestamp="+timestamp+"&signature="+signature ,function(data) {
+			    console.log("timestamp="+timestamp+"---appKey="+appKey+"--signatureNonce="+signatureNonce+"--signature="+signature);
+			    	//是否为系统管理员
+					 var isAdministrator=false;
+					 $.each(data.roleList, function(i, o) {
+						 if(o.roleType==2){
+							 isAdministrator=true;
+						 }
+					 });
+					 if(!isAdministrator){
+						 showMenu(data);
+					 }else{
+						 console.log('${appId}');
+						 showAllMenu('${appId}');
+					 }
+					    
+			     }); */
 		/* 是系统管理员 显示所有菜单 */
 		function showAllMenu(appid){
 			var resData;
-			$.post('http://localhost:8080/privilege-service/AppRes/getAppResRedis',{appId:appid},function(data){
+			$.post('${appResRedisUrl}',{appId:appid},function(data){
 				resData=data;
 				console.log(data);
 			},"json");
-			$.post('http://localhost:8080/privilege-service/AppMenu/getAppMenuRedis',{appId:appid},function(data){
+			$.post('${appMenuRedisUrl}',{appId:appid},function(data){
 				var a = [];// 创建数组
 				console.log(resData);
 				$.each(data.menuList, function(i, o) {
