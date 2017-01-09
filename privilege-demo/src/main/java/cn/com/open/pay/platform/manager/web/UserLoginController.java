@@ -134,10 +134,10 @@ public class UserLoginController extends BaseControllerUtil {
 		map.put("appId", appId);
 		map.put("appUserId", appUserId);
 		String result = getModule(map);
+		Map<String, Object> menus=new HashMap<String, Object>();
 		if (result!=null&&!("").equals(result)) {
 			JSONObject  jasonObject = JSONObject.fromObject(result);
 			Map JsonMap = (Map)jasonObject;
-			Map<String, Object> menus=new HashMap<String, Object>();
 			if ("0".equals(JsonMap.get("status"))) {
 				menus.put("status", "0");
 				menus.put("errMsg", JsonMap.get("errMsg"));
@@ -148,6 +148,10 @@ public class UserLoginController extends BaseControllerUtil {
 				menus.put("menus", list);
 				model.addAttribute("menus", JSONObject.fromObject(menus));
 			}
+		}else {
+			menus.put("status", "0");
+			menus.put("errMsg", "没有相应菜单");
+			model.addAttribute("menus", JSONObject.fromObject(menus));
 		}
 		
 		
@@ -212,7 +216,7 @@ public class UserLoginController extends BaseControllerUtil {
 		List<Map<String, Object>> resourceList=(List<Map<String, Object>>) JsonMap.get("resourceList");
 		List<Map<String, Object>> menulists=(List<Map<String, Object>>) JsonMap.get("menuList");
 		System.err.println(menulists.size());
-		if(resourceList.size()<=0||menulists.size()<=0){
+		if(menulists.size()<=0){
 			return null;
 		}
 		// 顶级菜单集合
