@@ -53,7 +53,7 @@
 					<input id="id" type="hidden" />
 					<tr style="height: 60px">
 						<td>名称：</td>
-						<td><input id="resourceName" type="text" class="txt01" value=""/>
+						<td><input id="roleName" type="text" class="txt01" value=""/>
 						</td>
 					</tr>
 					
@@ -90,12 +90,11 @@
 	$(document).ready(function(){
 		openPwd();
 		$('#add').click(function() {
-		   	document.getElementById("resourceName").value=""; 
-		   	document.getElementById("id").value=""; 
+		   	document.getElementById("roleName").value=""; 
 		    $('#w').window('open');
 		});
 		$('#btnEp').click(function() {
-	   		serverUpdate();
+	   		serverAdd();
 	    });
 		$('#btnCancel').click(function(){closePwd();});
 	});
@@ -134,8 +133,8 @@
 					   var url="${pageContext.request.contextPath}/managerRole/deleteRole?id="+id+"&appId="+appId;
 			            $.post(url, function(data) {
 			                if(data.status=='1'){
-			                 msgShow('系统提示', '恭喜，删除成功！', 'info');
-			               //刷新
+			                  msgShow('系统提示', '恭喜，删除成功！', 'info');
+			                  //刷新
 				              var url='${pageContext.request.contextPath}/managerRole/roleMessage';
 				              reload(url,appId);
 			                }else{
@@ -147,14 +146,62 @@
 			}
 		}
 		function reload(url,appId){
-		$('#dg').datagrid('reload',{
-           url: url, queryParams:{appId:appId}, method: "post"
-         }); 
+			var url=url+"?appId="+appId;
+			$.post(url, function(data) {});
 		}
 		//弹出信息窗口 title:标题 msgString:提示信息 msgType:信息类型 [error,info,question,warning]
 		function msgShow(title, msgString, msgType) {
 			$.messager.alert(title, msgString, msgType);
 		}
+		
+        //添加
+        function serverAdd() {   
+        	var appId=${appId};
+        	var checkIds='';
+        	var bool=false;
+        	var ui = $('#deptree1').tree('getChecked', ['checked','indeterminate']);
+        	for(var i = 0;i<ui.length;i++){
+       			if(i>0){
+       				//模块节点(ismodule自定义参数=0标记的是模块)
+       				if(ui[i].ismodule=="0"){
+       					checkIds+=",,,";//模块与模块区分
+       					bool=false;
+       				}else if(bool){
+       					checkIds+=",";//资源与资源区分
+       				}else{
+       					checkIds+=",,";//模块与资源区分
+       					bool=true;
+       				}
+        		}
+       		    //去掉带r标示的id（用于区分资源和模块id）
+    			checkIds+=ui[i].id.replace('r','');
+        	}
+        	alert(checkIds);
+        	
+            var roleName = $('#roleName').val();
+            var status= $('#status').val();
+            if (roleName == '') {
+                msgShow('系统提示', '请输入名称！', 'warning');
+                return false;
+            }
+            var url=encodeURI('${pageContext.request.contextPath}/managerRole/addRole?appId='+appId+'&roleName='+roleName+'&status='+status+'&temp='+checkIds);
+            $.post(url, function(data) {
+            	alert(data.status);
+            	alert(data.status=='1');
+                if(data.status=='1'){
+	                 msgShow('系统提示', '恭喜，添加成功！', 'info');
+	                 close();
+	                 $('#w').window('close');
+				     var url='${pageContext.request.contextPath}/managerRole/roleMessage';
+				     reload(url,appId);
+                }else if(data.status=='0'){
+                	msgShow('系统提示', '添加失败！', 'info');
+	                close();
+	                $('#w').window('close');
+                }
+            });
+        }
+		
 </script>
 
 <script><%--

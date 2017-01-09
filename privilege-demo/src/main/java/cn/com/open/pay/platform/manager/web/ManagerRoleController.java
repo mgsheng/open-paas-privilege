@@ -31,9 +31,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.pay.platform.manager.log.service.PrivilegeLogService;
 import cn.com.open.pay.platform.manager.login.model.User;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeFunction;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource1;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRole;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRoleDetails;
 import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
@@ -60,8 +62,6 @@ public class ManagerRoleController  extends BaseControllerUtil {
 	private PrivilegeLogService privilegeLogService;
 	@Autowired
 	private PrivilegeGetSignatureService privilegeGetSignatureService;
-	@Value("#{properties['getSignature-uri']}")
-	private String getSignatureUrl;
 	@Value("#{properties['privilege-approle-redis-query-uri']}")
 	private String appRoleRedisUrl;
 	@Value("#{properties['privilege-appres-redis-query-uri']}")
@@ -70,6 +70,8 @@ public class ManagerRoleController  extends BaseControllerUtil {
 	private String appMenuRedisUrl;
 	@Value("#{properties['privilege-role-del-uri']}")
 	private String roleDelUrl;
+	@Value("#{properties['privilege-role-add-uri']}")
+	private String roleAddUrl;
 	
 	/**
 	 * 跳转到查询角色的页面
@@ -97,43 +99,15 @@ public class ManagerRoleController  extends BaseControllerUtil {
 	 */
 	@RequestMapping("QueryRoleMessage")
 	public String QueryRoleMessage(HttpServletRequest request,HttpServletResponse response,Model model){
-		log.info("-------------------------searchUser         start------------------------------------");
-		//当前第几页
-		String page=request.getParameter("page");
-		//每页显示的记录数
-	    String rows=request.getParameter("rows"); 
-		//当前页  
-		int currentPage = Integer.parseInt((page == null || page == "0") ? "1":page);  
-		//每页显示条数  
-		int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10":rows);  
-		//每页的开始记录  第一页为1  第二页为number +1   
-	    int startRow = (currentPage-1)*pageSize;
-		String roleName = request.getParameter("name");
-		PrivilegeRole privilegeRole=new PrivilegeRole();
-		privilegeRole.setName(roleName);
-		privilegeRole.setPageSize(pageSize);
-		privilegeRole.setStartRow(startRow);
-		List<PrivilegeRole> privilegeRoleList=roleService.findByRoleName(privilegeRole);
-		int countNum= roleService.findQueryCount(privilegeRole);
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); 
-		for(int i=0;i<privilegeRoleList.size();i++){
-			PrivilegeRole privilegeRole1 = privilegeRoleList.get(i);
-			int status = privilegeRole1.getStatus();
-			if(status==1){
-				privilegeRoleList.get(i).setStatusName("启用");
-			}else{
-				privilegeRoleList.get(i).setStatusName("禁用");
-			}
-			Date createTime = privilegeRole1.getCreateTime();
-			privilegeRole1.setCreate_Time(df.format(createTime));//交易时间
-		}
-		JSONArray jsonArr = JSONArray.fromObject(privilegeRoleList);
-		 JSONObject jsonObjArr = new JSONObject();  
-		 jsonObjArr.put("total", countNum);
-		 jsonObjArr.put("rows", jsonArr);
-		 System.out.println(jsonArr);
-	     WebUtils.writeJson(response,jsonObjArr);
-	     return "privilege/role/roleMessage";
+		log.info("-------------------------Search         start------------------------------------");
+		String appId=request.getParameter("appId");
+		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
+		map.put("appId", appId);
+		String s = sendPost(appRoleRedisUrl,map);
+		JSONObject job=JSONObject.fromObject(s);
+		model.addAttribute("appId",appId);
+		model.addAttribute("roleList", job.get("roleList"));
+		return "privilege/role/roleMessage";
 	}
 	
 	
@@ -147,7 +121,31 @@ public class ManagerRoleController  extends BaseControllerUtil {
      */
     @RequestMapping(value = "addRole")
 	public void addRole(HttpServletRequest request,HttpServletResponse response) throws UnsupportedEncodingException {
-    	String  id= request.getParameter("id");
+    	log.info("-------------------------add         start------------------------------------");
+		String appId=request.getParameter("appId");
+		String roleName=request.getParameter("roleName");
+		String status=request.getParameter("status");
+		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
+		map.put("appId", appId);
+		map.put("roleName", roleName);
+		map.put("status", status);
+		map.put("rolePrivilege", "");
+		map.put("privilegeFunId", "");
+		map.put("groupId", "");
+		map.put("groupName", "");
+		map.put("deptId", "");
+		map.put("deptName", "");
+		map.put("roleLevel", "");
+		map.put("roleType", "");
+		map.put("parentRoleId", "");
+		map.put("remark", "");
+		map.put("createUser", "");
+		map.put("createUserId", "");
+		
+		String s = sendPost(roleAddUrl,map);
+		JSONObject job=JSONObject.fromObject(s);
+    	
+    	/*String  id= request.getParameter("id");
     	String  status= request.getParameter("status");
     	String  roleTreeNodeIds= request.getParameter("temp");
 
@@ -207,8 +205,8 @@ public class ManagerRoleController  extends BaseControllerUtil {
     		roleService.updatePrivilegeRole(privilegeRole);
     		privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),oneLevels,towLevels,privilegeResource.getId()+"",operator+"修改‘"+name+"’角色",operatorId);
     		map.put("returnMsg", "2");
-    	}
-    	WebUtils.writeErrorJson(response, map);
+    	}*/
+    	WebUtils.writeErrorJson(response, job);
     }
     
     
@@ -325,11 +323,6 @@ public class ManagerRoleController  extends BaseControllerUtil {
     
     @RequestMapping(value = "tree")
 	public void getModelTree(HttpServletRequest request,HttpServletResponse response) {
-		/*List<TreeNode> nodes = privilegeModuleService.getDepartmentTree();//见方法02
-		 //buildTree(nodes)见方法01，return返回值自动转为json,不懂的话看下面紫色部分，懂的略过
-		List<PrivilegeResource> privilegeResourceList = privilegeResourceService.findAllResource();
-		JSONArray jsonArr = JSONArray.fromObject(buildTree(nodes,privilegeResourceList));
-    	WebUtils.writeJson(response,jsonArr);*/
 		String appId=request.getParameter("appId");
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
 		map.put("appId", appId);
@@ -341,26 +334,26 @@ public class ManagerRoleController  extends BaseControllerUtil {
 		String s1 = sendPost(appResRedisUrl,map);
 		JSONObject obj1 = new JSONObject().fromObject(s1);//将json字符串转换为json对象
 		JSONArray obj1Array=JSONArray.fromObject(obj1.get("resourceList"));
+		JSONArray obj2Array=JSONArray.fromObject(obj1.get("functionList"));
 		//将json对象转换为java对象
-		List<PrivilegeResource> resourceList = JSONArray.toList(obj1Array,PrivilegeResource.class);
-		List<TreeNode> nodes = convertTreeNodeList(menuList);		
-		JSONArray jsonArr = JSONArray.fromObject(buildTree1(nodes,resourceList));
+		List<PrivilegeResource1> resourceList = JSONArray.toList(obj1Array,PrivilegeResource1.class);
+		List<PrivilegeFunction> functionList = JSONArray.toList(obj2Array,PrivilegeFunction.class);
+		List<TreeNode> nodes = convertTreeNodeList(menuList,resourceList);		
+		JSONArray jsonArr = JSONArray.fromObject(buildTree1(nodes,functionList));
 		WebUtils.writeJson(response,jsonArr);
     }
 
-	private List<TreeNode> convertTreeNodeList(List<PrivilegeMenu> modules) {
+	private List<TreeNode> convertTreeNodeList(List<PrivilegeMenu> modules,List<PrivilegeResource1> resources) {
 			List<TreeNode> nodes = null;
-			
 			if(modules != null){
 				nodes = new ArrayList<TreeNode>();
 				for(PrivilegeMenu menu:modules){
-					TreeNode node = convertTreeNode(menu);
+					TreeNode node = convertTreeNode(menu,resources);
 					if(node != null){
 						nodes.add(node);
 					}
 				}
 			}
-			
 			return nodes;
 		}
 	
@@ -368,16 +361,20 @@ public class ManagerRoleController  extends BaseControllerUtil {
 	* @param departments
 	* @return
 	*/
-	private TreeNode convertTreeNode(PrivilegeMenu privilegeMenu){
+	private TreeNode convertTreeNode(PrivilegeMenu privilegeMenu,List<PrivilegeResource1> resources){
 		TreeNode node = null;
 		if(privilegeMenu != null){
 			node = new TreeNode();
 			node.setId(String.valueOf(privilegeMenu.getMenuId()));//菜单ID
+			for(PrivilegeResource1 resource : resources){
+				if(Integer.parseInt(privilegeMenu.getMenuId())== Integer.parseInt(resource.getMenuId())){
+					node.setResource(resource.getResourceId()+",");
+				}
+			}
 			node.setChecked(false);
 			node.setText(privilegeMenu.getMenuName());//菜单名称
 			node.setTarget("");
 			node.setPid(String.valueOf(privilegeMenu.getParentId()));//父级菜单ID
-			node.setResource("");
 			Map<String,Object> map = new HashMap<String,Object>();
 			node.setAttributes(map);
 		}
@@ -450,7 +447,7 @@ public class ManagerRoleController  extends BaseControllerUtil {
 	* @param treeNodes
 	* @return
 	*/
-	protected List<TreeNode> buildTree1(List<TreeNode> treeNodes,List<PrivilegeResource> resourceList ) {
+	protected List<TreeNode> buildTree1(List<TreeNode> treeNodes,List<PrivilegeFunction> functionList ) {
 		List<TreeNode> results = new ArrayList<TreeNode>();
 
 		Map<String, TreeNode> aidMap = new LinkedHashMap<String, TreeNode>();
@@ -473,22 +470,21 @@ public class ManagerRoleController  extends BaseControllerUtil {
 					node.setChildren(children);
 					node.setState("closed");
 				}
-//				else{
-					/*//添加三级
-					String resource = entry.getValue().getResource();
-					List<TreeNode> treeNodeList = new ArrayList<TreeNode>();
-					if(resource!=null){
-						String[] resourceStrArray = resource.split(",");
-						for(int i=0;i<resourceStrArray.length;i++){
-							String vl = resourceStrArray[i];
-							for(int j=0;j<resourceList.size();j++){
-								int id = Integer.parseInt(resourceList.get(j).getResourceId());
-								String nameValue = resourceList.get(j).getResourceName();
+				//添加三级
+				String resource = entry.getValue().getResource();
+				List<TreeNode> treeNodeList = new ArrayList<TreeNode>();
+				if(resource!=null){
+					String[] resourceStrArray = resource.split(",");
+					for(int i=0;i<resourceStrArray.length;i++){
+						String vl = resourceStrArray[i];
+							if(!("").equals(vl)){
+							for(int j=0;j<functionList.size();j++){
+								int id = Integer.parseInt(functionList.get(j).getResourceId());
+								String nameValue = functionList.get(j).getOptId();
 								TreeNode treeNode=new TreeNode();
 								if(Integer.parseInt(vl)==id){
 									treeNode.setId(vl);
 									treeNode.setText(nameValue);
-//									treeNode.setState("closed");
 									treeNode.setIsmodule("1");
 									treeNodeList.add(treeNode);
 								}
@@ -496,9 +492,8 @@ public class ManagerRoleController  extends BaseControllerUtil {
 							}
 						}
 					}
-					*/
-					//entry.getValue().setChildren(treeNodeList);
-//				}
+				}
+				entry.getValue().setChildren(treeNodeList);
 				children.add(entry.getValue());
 			}
 		}
