@@ -31,4 +31,5 @@ public interface PrivilegeFunctionService {
 	List<Map<String, Object>>getFunctionMap(String resourceId);
 	List<Map<String, Object>> getFunctionListByUserId(String appUserId,String appId);
 	List<PrivilegeFunctionVo> getFunctionListByAppId(String appId);
+	List<Map<String, Object>> getFunctionListByFunctionIds(String[] functionIds); 
 }
