@@ -19,72 +19,46 @@
 	src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
 
 <script type="text/javascript">
-	var _menus;
-	var signature;
-	var timestamp;
-	var signatureNonce;
-	var appKey;
-		 $.post('${getSignatureUrl}',{appId:'${appId}'},function(data){
-			  signature=data.signature;
-			     timestamp=data.timestamp;
-			     signatureNonce=data.signatureNonce;
-			     appKey=data.appKey; 
-			     $.post('${getUserPrivilegeUrl}?appId=${appId}&appUserId=${appUserId}&appKey='+
-						 appKey+"&signatureNonce="+signatureNonce+"&timestamp="+timestamp+"&signature="+signature ,function(data) {
-			    		console.log("timestamp="+timestamp+"---appKey="+appKey+"--signatureNonce="+signatureNonce+"--signature="+signature);
-						 showMenu(data);
-			     });
-		 }); 
-			   
-	
-		function showMenu(data){
-			var a = [];// 创建数组
-			$.each(data.menuList, function(i, o) {
-				var menu = new Object();
-				var menulist='<ul>';
-				if(o.parentId=="0"){
-					menu.title = o.menuName;
-				 	$.each(data.menuList, function(j, n) {
-						if(n.parentId==o.menuId){
-							$.each(data.resourceList, function(i, m) {
-						  		if(m.menuId==n.menuId){
-								 	menulist += '<li><div><a ref="'+n.menuId+'" href="#" rel="' +'${pageContext.request.contextPath}'+ m.baseUrl + '?appId=${appId}&appUserId=${appUserId}" ><span class="icon '+n.icon+'" >&nbsp;</span><span class="nav">' + n.menuName + '</span></a></div></li>';
-						  			}
-						  	  });
-						}
-					});
-						  menulist+='</ul>';
-						  menu.content = menulist;
-						  a.push(menu);
-				}
-			}); 
-			 $.each(a,function(i){
-			 	$('#nav').accordion('add', {
-			    	title: a[i].title,
-			    	content: a[i].content,
-			             //iconCls: 'icon ' 
-			         });
-			 });
-				 $('.easyui-accordion li a').click(function(){
-			    		var tabTitle = $(this).children('.nav').text();
-			    		var url = $(this).attr("rel");
-			    		var menuid = $(this).attr("ref");
-			    		//var icon = getIcon(menuid,icon);
+function InitLeftMenu(_menus) {
+	console.log(_menus);
+	$("#nav").accordion({animate:false});
 
-			    		addTab(tabTitle,url,"");
-			    		$('.easyui-accordion li div').removeClass("selected");
-			    		$(this).parent().addClass("selected");
-			    	}).hover(function(){
-			    		$(this).parent().addClass("hover");
-			    	},function(){
-			    		$(this).parent().removeClass("hover");
-			    	});
+	$.each(_menus.menus, function(i, n) {
+		var menulist ='';
+		menulist +='<ul>';
+        $.each(n.menus, function(j, o) {
+			menulist += '<li><div><a ref="'+o.menuid+'" href="#" rel="' + o.url + '" ><span class="icon '+o.icon+'" >&nbsp;</span><span class="nav">' + o.menuname + '</span></a></div></li> ';
+        })
+		menulist += '</ul>';
 
-			    	//选中第一个
-			    	var panels = $('#nav').accordion('panels');
-			    	var t = panels[0].panel('options').title;
-			        $('#nav').accordion('select', t);  
-		}
+		$('#nav').accordion('add', {
+            title: n.menuname,
+            content: menulist,
+            iconCls: 'icon ' + n.icon
+        });
+
+    });
+
+	$('.easyui-accordion li a').click(function(){
+		var tabTitle = $(this).children('.nav').text();
+		var url = '${pageContext.request.contextPath}'+$(this).attr("rel");
+		var menuid = $(this).attr("ref");
+		//var icon = getIcon(menuid,icon);
+
+		addTab(tabTitle,url,"");
+		$('.easyui-accordion li div').removeClass("selected");
+		$(this).parent().addClass("selected");
+	}).hover(function(){
+		$(this).parent().addClass("hover");
+	},function(){
+		$(this).parent().removeClass("hover");
+	});
+
+	//选中第一个
+	var panels = $('#nav').accordion('panels');
+	var t = panels[0].panel('options').title;
+    $('#nav').accordion('select', t);
+}	
 
 	 /* var _menus = {"menus":[
 					{"menuid":"","icon":"icon-sys","menuname":"用户管理",
@@ -147,7 +121,12 @@
         }
 
         $(function() {
-
+        	var data=${menus};
+        	if(data.status=="0"){
+        		alert(data.errMsg);
+        	}else {
+        		InitLeftMenu(data);
+        	}
             openPwd();
 
             $('#editpass').click(function() {
