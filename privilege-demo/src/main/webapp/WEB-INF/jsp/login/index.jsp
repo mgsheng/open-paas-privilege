@@ -124,12 +124,16 @@ function InitLeftMenu(_menus) {
         }
 
         $(function() {
-        	var data=${menus};
-        	if(data.status=="0"){
-        		alert(data.errMsg);
-        	}else {
-        		InitLeftMenu(data);
+        	
+        	if(${menus}!=null){
+        		var data=${menus};
+        		if(data.status=="0"){
+            		alert(data.errMsg);
+            	}else {
+            		InitLeftMenu(data);
+            	}
         	}
+        	
             openPwd();
 
             $('#editpass').click(function() {
