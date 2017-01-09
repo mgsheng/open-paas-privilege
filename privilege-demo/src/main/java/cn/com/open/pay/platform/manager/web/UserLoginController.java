@@ -134,19 +134,22 @@ public class UserLoginController extends BaseControllerUtil {
 		map.put("appId", appId);
 		map.put("appUserId", appUserId);
 		String result = getModule(map);
-		JSONObject  jasonObject = JSONObject.fromObject(result);
-		Map JsonMap = (Map)jasonObject;
-		Map<String, Object> menus=new HashMap<String, Object>();
-		if ("0".equals(JsonMap.get("status"))) {
-			menus.put("status", "0");
-			menus.put("errMsg", JsonMap.get("errMsg"));
-			model.addAttribute("menus", JSONObject.fromObject(menus));
-		}else {
-			List<Map<String, Object>> list=getMenu(result);
-			//Map<String, Object> menus=new HashMap<String, Object>();
-			menus.put("menus", list);
-			model.addAttribute("menus", JSONObject.fromObject(menus));
+		if (result!=null&&!("").equals(result)) {
+			JSONObject  jasonObject = JSONObject.fromObject(result);
+			Map JsonMap = (Map)jasonObject;
+			Map<String, Object> menus=new HashMap<String, Object>();
+			if ("0".equals(JsonMap.get("status"))) {
+				menus.put("status", "0");
+				menus.put("errMsg", JsonMap.get("errMsg"));
+				model.addAttribute("menus", JSONObject.fromObject(menus));
+			}else {
+				List<Map<String, Object>> list=getMenu(result);
+				//Map<String, Object> menus=new HashMap<String, Object>();
+				menus.put("menus", list);
+				model.addAttribute("menus", JSONObject.fromObject(menus));
+			}
 		}
+		
 		
 		
 		return "login/index";
