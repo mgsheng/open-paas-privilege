@@ -535,14 +535,14 @@ public class BaseControllerUtil {
      *            请求参数，Map类型。 
      * @return 远程响应结果 
      */  
-    public static String sendPost(String url, SortedMap<Object,Object> sParaTemp) {  
+    public static String sendPost(String url, Map<String, Object> map) {  
         String result = "";// 返回的结果  
         BufferedReader in = null;// 读取响应输入流  
         PrintWriter out = null;  
         StringBuffer sb = new StringBuffer();// 处理请求参数  
         String params="";
         try {  
-		Set es = sParaTemp.entrySet();//所有参与传参的参数按照accsii排序（升序）
+		Set es = map.entrySet();//所有参与传参的参数按照accsii排序（升序）
 		Iterator it = es.iterator();
 		while(it.hasNext()) {
 			Map.Entry entry = (Map.Entry)it.next();
