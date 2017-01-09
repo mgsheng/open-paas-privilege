@@ -46,7 +46,6 @@ public class PrivilegeGetSignatureServiceImpl implements PrivilegeGetSignatureSe
 			}
 		}
 		Map<String, Object> returnMap = new HashMap<String, Object>();
-		returnMap.put("flag", flag);
 		returnMap.put("signature", signature);
 		returnMap.put("timestamp", timestamp);
 		returnMap.put("signatureNonce", signatureNonce);
