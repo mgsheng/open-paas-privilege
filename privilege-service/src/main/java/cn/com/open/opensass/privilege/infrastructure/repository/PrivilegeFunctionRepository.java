@@ -18,8 +18,9 @@ public interface PrivilegeFunctionRepository {
 	void deleteByFunctionId(@Param("functionId")String functionId);
 	void deleteByFunctionIds(@Param("functionIds")String[] functionIds);
 	List<PrivilegeFunction> findFunctionPage(@Param("functionId")String functionId,@Param("startRow")String startRow,@Param("pageSize")String pageSize);
-	List<PrivilegeFunction>getFunctionByRId(@Param("resourceId")String resourceId);
-	List<Map<String, Object>>getFunctionMap(@Param("resourceId")String resourceId);
+	List<PrivilegeFunction> getFunctionByRId(@Param("resourceId")String resourceId);
+	List<PrivilegeFunction> getFunctionMap(@Param("resourceId")String resourceId);
 	List<PrivilegeFunction> getFunctionListByUserId(@Param("appUserId")String appUserId,@Param("appId")String appId);
 	List<PrivilegeFunction> getFunctionListByAppId(@Param("appId")String appId);
+	List<PrivilegeFunction> getFunctionListByFunctionIds(@Param("functionIds")String[] functionIds);
 }
