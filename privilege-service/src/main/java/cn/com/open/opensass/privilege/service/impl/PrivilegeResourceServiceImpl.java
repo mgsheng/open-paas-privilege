@@ -2,8 +2,10 @@ package cn.com.open.opensass.privilege.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,13 +14,16 @@ import org.springframework.stereotype.Service;
 
 import cn.com.open.opensass.privilege.dao.cache.RedisDao;
 import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeResourceRepository;
+import cn.com.open.opensass.privilege.model.PrivilegeMenu;
 import cn.com.open.opensass.privilege.model.PrivilegeResource;
 import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import cn.com.open.opensass.privilege.service.PrivilegeFunctionService;
+import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
 import cn.com.open.opensass.privilege.service.PrivilegeResourceService;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 import cn.com.open.opensass.privilege.vo.PrivilegeFunctionVo;
+import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
 import cn.com.open.opensass.privilege.vo.PrivilegeResourceVo;
 import net.sf.json.JSONObject;
 
@@ -37,7 +42,9 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 	private PrivilegeFunctionService privilegeFunctionService;
     @Autowired
     private PrivilegeResourceRepository privilegeResourceRepository;
-
+    @Autowired
+	private PrivilegeMenuService privilegeMenuService;
+    
 	@Override
 	public Boolean savePrivilegeResource(PrivilegeResource privilegeResource) {
 	  try {
@@ -228,6 +235,67 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 		}
 		log.info("更新redis");
 		return getAppResRedis(appId);
+	}
+
+	@Override
+	public List<Map<String, Object>> getResourceListByFunIds(String[] functionIds) {
+		List<Map<String, Object>> list=new ArrayList<Map<String,Object>>();
+		List<PrivilegeResource> resources=privilegeResourceRepository.getResourceListByFunIds(functionIds);
+		for(PrivilegeResource resource:resources){
+			Map<String, Object> map=new HashMap<String, Object>();
+			map.put("appId", resource.getAppId());
+			map.put("resourceId", resource.getResourceId());
+			map.put("resourceLevel", resource.getResourceLevel()+"");
+			map.put("resourceName", resource.getResourceName());
+			map.put("resourceRule", resource.getResourceRule());
+			map.put("dislayOrder ", resource.getDisplayOrder());
+			map.put("menuId", resource.getMenuId());
+			map.put("baseUrl", resource.getBaseUrl());
+			map.put("status", resource.getStatus());
+			list.add(map);
+		}
+		return list;
+	}
+
+	@Override
+	public List<Map<String, Object>> getAllResource(List<Map<String, Object>> resources) {
+		List<PrivilegeMenu> menuList=new ArrayList<PrivilegeMenu>();
+		Set<PrivilegeMenuVo> privilegeMenuVoSet=new HashSet<PrivilegeMenuVo>();
+		for(Map<String, Object> map:resources){
+			List<PrivilegeMenu> menus=privilegeMenuService.getMenuListByResourceId(""+map.get("resourceId"));
+			menuList.addAll(menus);
+		}
+		privilegeMenuVoSet=privilegeMenuService.getAllMenuByUserId(menuList, privilegeMenuVoSet);
+		for(PrivilegeMenuVo privilegeMenuVo:privilegeMenuVoSet){
+			if(null != privilegeMenuVo.getParentId() && privilegeMenuVo.getParentId().length() > 0){
+				if (privilegeMenuVo.getParentId().equals("0")) {
+					List<Map<String, Object>> list=getResourceListByMenuId(privilegeMenuVo.getMenuId());
+					resources.addAll(list);
+				}
+			}
+		}
+		return resources;
+	}
+
+	@Override
+	public List<Map<String, Object>> getResourceListByMenuId(String menuId) {
+		List<Map<String, Object>> list=new ArrayList<Map<String,Object>>();
+		List<PrivilegeResource> resources=privilegeResourceRepository.getResourceListByMenuId(menuId);
+		for(PrivilegeResource resource:resources){
+			Map<String, Object> map=new HashMap<String, Object>();
+			map.put("appId", resource.getAppId());
+			map.put("resourceId", resource.getResourceId());
+			map.put("resourceLevel", resource.getResourceLevel()+"");
+			map.put("resourceName", resource.getResourceName());
+			map.put("resourceRule", resource.getResourceRule());
+			map.put("dislayOrder ", resource.getDisplayOrder());
+			map.put("menuId", resource.getMenuId());
+			map.put("baseUrl", resource.getBaseUrl());
+			map.put("status", resource.getStatus());
+			list.add(map);
+		}
+		return list;
+	
 	}
 
 }
