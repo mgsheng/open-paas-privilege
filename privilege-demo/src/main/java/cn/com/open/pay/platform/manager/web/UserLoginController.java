@@ -208,6 +208,10 @@ public class UserLoginController extends BaseControllerUtil {
 		Map JsonMap = (Map)jasonObject;
 		List<Map<String, Object>> resourceList=(List<Map<String, Object>>) JsonMap.get("resourceList");
 		List<Map<String, Object>> menulists=(List<Map<String, Object>>) JsonMap.get("menuList");
+		System.err.println(menulists.size());
+		if(resourceList.size()<=0||menulists.size()<=0){
+			return null;
+		}
 		// 顶级菜单集合
 		List<Map<String, Object>> pMenus = new ArrayList<Map<String, Object>>();
 		Map<String, Object> map1=null;
