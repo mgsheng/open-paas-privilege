@@ -105,6 +105,7 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 	public PrivilegeResourceVo findByResourceId(String resourceId) {
 		PrivilegeResourceVo resourceVo=new PrivilegeResourceVo();
 		PrivilegeResource resource=privilegeResourceRepository.findByResource_Id(resourceId);
+		if(resource!=null){
 		resourceVo.setAppId(resource.getAppId());
 		resourceVo.setBaseUrl(resource.getBaseUrl());
 		resourceVo.setDisplayOrder(resource.getDisplayOrder());
@@ -114,6 +115,7 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 		resourceVo.setResourceName(resource.getResourceName());
 		resourceVo.setResourceRule(resource.getResourceRule());
 		resourceVo.setStatus(resource.getStatus());
+		}
 		return resourceVo;
 	}
 
@@ -197,6 +199,7 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 		String AppResRedisKey = AppResRedisPrefix + appId;
 		String jsonString = redisClientTemplate.getString(AppResRedisKey);
 		//取缓存
+		jsonString = null;
 		if (null != jsonString && jsonString.length() > 0) {
 			ajaxMessage.setCode("1");
 			ajaxMessage.setMessage(jsonString);
