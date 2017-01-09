@@ -14,13 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import cn.com.open.opensass.privilege.dao.cache.RedisDao;
-import cn.com.open.opensass.privilege.model.PrivilegeFunction;
 import cn.com.open.opensass.privilege.model.PrivilegeRole;
 import cn.com.open.opensass.privilege.model.PrivilegeUser;
 import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import cn.com.open.opensass.privilege.service.PrivilegeFunctionService;
 import cn.com.open.opensass.privilege.service.PrivilegeResourceService;
+import cn.com.open.opensass.privilege.service.PrivilegeRoleResourceService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserRedisService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserService;
@@ -44,6 +44,8 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 	private PrivilegeFunctionService privilegeFunctionService;
 	@Autowired
 	private RedisClientTemplate redisClientTemplate;
+	@Autowired
+	private PrivilegeRoleResourceService privilegeRoleResourceService;
 	@Autowired
 	private RedisDao redisDao;
 
@@ -86,13 +88,18 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 			}
 
 		}
-		
-
+		// user表多余的resourceId
+		List<String> resourceIds = new ArrayList<String>();
 		// resourceList
-		Set resourceSet=new HashSet();
+		Set resourceSet = new HashSet();
 		if (!boo) {
-			
 			resourceList = privilegeResourceService.getResourceListByUserId(appUserId, appId);
+			// 通过user表functionId 查 resource
+			String[] FunctionIds = privilegeFunctionIds.split(",");
+			if (FunctionIds != null && FunctionIds.length > 0) {
+				List<Map<String, Object>> resources = privilegeResourceService.getResourceListByFunIds(FunctionIds);
+				resourceList.addAll(resources);
+			}
 			if (privilegeResourceIds != null && !("").equals(privilegeResourceIds)) {
 				String[] resourceIds1 = privilegeResourceIds.split(",");// 将当前user
 																		// privilegeResourceIds字段数组转list
@@ -111,36 +118,49 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 					map2.put("menuId", resource.getMenuId());
 					map2.put("baseUrl", resource.getBaseUrl());
 					map2.put("status", resource.getStatus());
+					// 通过查roleResource表 user表中functionId 获取的resource 是否包含
+					// user表中resource
+					if (!resourceList.contains(map2)) {
+						System.err.println(resourceId);
+						resourceIds.add(resourceId);
+					}
 					resourceList.add(map2);
-
 				}
 			}
+			// 获取所有的resource
+			List<Map<String, Object>> list = privilegeResourceService.getAllResource(resourceList);
+			resourceList.addAll(list);
 		}
 		resourceSet.addAll(resourceList);
 		roleMap.put("resourceList", resourceSet);
 		// functionList
-		List<Map<String, Object>> functionList = privilegeFunctionService.getFunctionListByUserId(appUserId, appId);
-		Set<Map<String, Object>> functionSet=new HashSet<Map<String,Object>>();
-		functionSet.addAll(functionList);
+		// roleResource表中functionIds
+		List<String> FunIds = privilegeRoleResourceService.findUserResourcesFunId(appId, appUserId);
+		// 加入 user表中functionIds
 		if (privilegeFunctionIds != null && !("").equals(privilegeFunctionIds)) {
-			String[] functionIds1 = privilegeFunctionIds.split(",");
-			List<String> functionIdList = new ArrayList<String>();
-			Collections.addAll(functionIdList, functionIds1);
-			PrivilegeFunction function = null;
-			for (String functionId : functionIdList) {
-				Map<String, Object> map2 = new HashMap<String, Object>();
-				function = privilegeFunctionService.findByFunctionId(functionId);
-				map2.put("resourceId", function.getResourceId());
-				map2.put("functionId", function.getId());
-				map2.put("optId", function.getOperationId()+"");
-				map2.put("optUrl", function.getOptUrl());
-				functionSet.add(map2);
+			FunIds.add(privilegeFunctionIds);
+		}
+		// 查询相应function
+		List<Map<String, Object>> privilegeFunctions = new ArrayList<Map<String, Object>>();
+		if (FunIds != null) {
+			for (String funIds : FunIds) {
+				String[] functionIds = funIds.split(",");
+				List<Map<String, Object>> functions = privilegeFunctionService.getFunctionListByFunctionIds(functionIds);
+				privilegeFunctions.addAll(functions);
 			}
 		}
-		//functionSet.addAll(functionList);
-		System.err.println("set"+JSONArray.fromObject(functionSet).toString());
+		// 查询单独的resource 包含的function
+		if (resourceIds.size() > 0) {
+			for (String resourceId : resourceIds) {
+				List<Map<String, Object>> list = privilegeFunctionService.getFunctionMap(resourceId);
+				privilegeFunctions.addAll(list);
+			}
+		}
+		Set<Map<String, Object>> functionSet = new HashSet<Map<String, Object>>();
+		functionSet.addAll(privilegeFunctions);
+		System.err.println("set" + JSONArray.fromObject(functionSet).toString());
 		roleMap.put("functionList", functionSet);
-
+		// 放入缓存
 		redisClientTemplate.setString(userCacheRoleKey, JSONObject.fromObject(roleMap).toString());
 		ajaxMessage.setCode("1");
 		ajaxMessage.setMessage(JSONObject.fromObject(roleMap).toString());
