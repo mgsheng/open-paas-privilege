@@ -7,17 +7,18 @@ init loading
 
 
 $(function(){
-	InitLeftMenu();
+	//InitLeftMenu();
 	tabClose();
 	tabCloseEven();
 
 })
 
 //初始化左侧
-function InitLeftMenu() {
+/*function InitLeftMenu() {
+	console.log(_menus);
 	$("#nav").accordion({animate:false});
 
-   /* $.each(_menus.menus, function(i, n) {
+	$.each(_menus.menus, function(i, n) {
 		var menulist ='';
 		menulist +='<ul>';
         $.each(n.menus, function(j, o) {
@@ -31,9 +32,9 @@ function InitLeftMenu() {
             iconCls: 'icon ' + n.icon
         });
 
-    });*/
+    });
 
-	/*$('.easyui-accordion li a').click(function(){
+	$('.easyui-accordion li a').click(function(){
 		var tabTitle = $(this).children('.nav').text();
 		var url = $(this).attr("rel");
 		var menuid = $(this).attr("ref");
@@ -51,8 +52,8 @@ function InitLeftMenu() {
 	//选中第一个
 	var panels = $('#nav').accordion('panels');
 	var t = panels[0].panel('options').title;
-    $('#nav').accordion('select', t);*/
-}
+    $('#nav').accordion('select', t);
+}*/
 //获取左侧导航的图标
 function getIcon(menuid){
 	var icon = 'icon ';
