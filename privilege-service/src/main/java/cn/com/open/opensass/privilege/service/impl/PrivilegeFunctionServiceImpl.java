@@ -96,8 +96,17 @@ public class PrivilegeFunctionServiceImpl implements PrivilegeFunctionService {
 	}
 	@Override
 	public List<Map<String, Object>> getFunctionMap(String resourceId) {
-		// TODO Auto-generated method stub
-		return privilegeFunctionRepository.getFunctionMap(resourceId);
+		List<Map<String, Object>> list=new ArrayList<Map<String, Object>>();
+		List<PrivilegeFunction> functions=privilegeFunctionRepository.getFunctionMap(resourceId);
+		for(PrivilegeFunction function:functions){
+			Map<String, Object> map=new HashMap<String, Object>();
+			map.put ("resourceId", function.getResourceId());
+			map.put("functionId", function.id());
+			map.put("optId", function.getOperationId() + "");
+			map.put("optUrl", function.getOptUrl());
+			list.add(map);
+		}
+		return list;
 	}
 	@Override
 	public List<PrivilegeFunctionVo> getFunctionListByAppId(String appId) {
@@ -112,6 +121,21 @@ public class PrivilegeFunctionServiceImpl implements PrivilegeFunctionService {
 			privilegeFunctionVos.add(functionVo);
 		}
 		return privilegeFunctionVos;
+	}
+	@Override
+	public List<Map<String, Object>> getFunctionListByFunctionIds(String[] functionIds) {
+		List<Map<String, Object>> privilegefunctions=new ArrayList<Map<String, Object>>();
+		List<PrivilegeFunction> functions= privilegeFunctionRepository.getFunctionListByFunctionIds(functionIds);
+		for(PrivilegeFunction function:functions){
+			Map<String, Object> map=new HashMap<String, Object>();
+			map.put ("resourceId", function.getResourceId());
+			map.put("functionId", function.getId());
+			map.put("optId", function.getOperationId() + "");
+			map.put("optUrl", function.getOptUrl());
+			privilegefunctions.add(map);
+		}
+		
+		return privilegefunctions;
 	}
 	
 	
