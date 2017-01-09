@@ -19,8 +19,10 @@ import org.springframework.stereotype.Service;
 import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeMenuRepository;
 import cn.com.open.opensass.privilege.model.PrivilegeMenu;
 import cn.com.open.opensass.privilege.model.PrivilegeRole;
+import cn.com.open.opensass.privilege.model.PrivilegeUser;
 import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
+import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 
 /**
  * 
@@ -39,6 +41,8 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 	private RedisDao redisDao;
 	@Autowired
 	private PrivilegeRoleService privilegeRoleService;
+	@Autowired
+	private PrivilegeUserService privilegeUserService;
 
 	@Override
 	public Boolean savePrivilegeMenu(PrivilegeMenu privilegeMenu) {
@@ -96,6 +100,13 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 	@Override
 	public PrivilegeAjaxMessage getMenuRedis(String appId, String appUserId) {
 		PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
+		/* 验证用户是否存在 */
+		PrivilegeUser user = privilegeUserService.findByAppIdAndUserId(appId, appUserId);
+		if (null == user) {
+			ajaxMessage.setCode("0");
+			ajaxMessage.setMessage("User Is Null");
+			return ajaxMessage;
+		}
 		//判断用户角色是否是系统管理员  
 		List<PrivilegeRole> roles = privilegeRoleService.getRoleListByUserIdAndAppId(appUserId, appId);
 		for (PrivilegeRole role : roles) {
@@ -116,6 +127,21 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 
 		{
 			List<PrivilegeMenu> privilegeMenuList = getMenuListByUserId(appUserId, appId);
+			//根据user表中functionId resourceId 查询菜单
+			String functionIds = user.getPrivilegeFunId();
+			String resourceIds = user.getResourceId();
+			if (functionIds != null && !("").equals(functionIds)) {
+				String[] funIds = functionIds.split(",");
+				List<PrivilegeMenu> menus = getMenuListByFunctionId(funIds);
+				privilegeMenuList.addAll(menus);
+			}
+			if (resourceIds != null && !("").equals(resourceIds)) {
+				String[] resIds = resourceIds.split(",");
+				for (String id : resIds) {
+					List<PrivilegeMenu> menus = getMenuListByResourceId(id);
+					privilegeMenuList.addAll(menus);
+				}
+			}
 			if (privilegeMenuList.size() <= 0) {
 				ajaxMessage.setCode("0");
 				ajaxMessage.setMessage("MENU-IS-NULL");
@@ -288,6 +314,16 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 		}
 		log.info("更新redis");
 		return getAppMenuRedis(appId);
+	}
+
+	@Override
+	public List<PrivilegeMenu> getMenuListByResourceId(String resourceId) {
+		return privilegeMenuRepository.getMenuListByResourceId(resourceId);
+	}
+
+	@Override
+	public List<PrivilegeMenu> getMenuListByFunctionId(String[] functionIds) {
+		return privilegeMenuRepository.getMenuListByFunctionId(functionIds);
 	}
 
 }
