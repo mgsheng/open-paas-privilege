@@ -35,4 +35,6 @@ public interface PrivilegeMenuRepository extends Repository {
 	PrivilegeMenu getMenuById(@Param("menuId")String menuId);
 	List<PrivilegeMenu> findMenuByGroupIdAndAppId(@Param("groupId")String groupId,@Param("appId")String appId);
 	List<PrivilegeMenu> getMenuListByAppId(@Param("appId")String appId);
+	List<PrivilegeMenu> getMenuListByFunctionId(@Param("functionIds")String[] functionIds);
+	List<PrivilegeMenu> getMenuListByResourceId(@Param("resourceId")String resourceId);
 }
