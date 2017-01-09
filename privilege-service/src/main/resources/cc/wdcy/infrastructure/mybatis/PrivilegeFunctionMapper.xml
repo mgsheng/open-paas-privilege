@@ -23,6 +23,12 @@
         SELECT * FROM  privilege_function
         where  id = #{functionId}
     </select>
+    <select id="getFunctionListByFunctionIds" resultMap="privilegeFunctionMap" flushCache="true">
+   		SELECT * FROM privilege_function WHERE id in  
+   		<foreach item="item" index="index" collection="functionIds" open="(" separator="," close=")">  
+          #{item}  
+        </foreach>
+    </select>
     <select id="getFunctionListByUserId" resultMap="privilegeFunctionMap" flushCache="true">
     	SELECT DISTINCT d.* FROM privilege_user a,privilege_user_role b,privilege_role_resource c,
     	privilege_function d WHERE a.app_userid=#{appUserId}
@@ -71,8 +77,8 @@
          select * from privilege_function
          where  resource_id = #{resourceId}
 	</select>
-	  <select id="getFunctionMap" resultType="java.util.Map" flushCache="true">
-         select resource_id as resourceId,id as functionId ,operation_id as optId,opt_url as optUrl from privilege_function
+	  <select id="getFunctionMap" resultMap="privilegeFunctionMap" flushCache="true">
+         select * from privilege_function
          where  resource_id = #{resourceId}
 	</select>
 	
