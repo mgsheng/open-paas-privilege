@@ -39,6 +39,18 @@
 		pg.app_id=#{appId}
 		AND #{groupId}=pgr.group_id AND pgr.resource_id=pr.resource_id AND pr.menu_id=pm.id
 	</select>
+	<select id="getMenuListByResourceId" resultMap="privilegeMenuMap" flushCache="true">
+       		SELECT pm.* FROM privilege_menu pm,privilege_resource pr 
+			WHERE pr.resource_id=#{resourceId} AND pr.menu_id=pm.id
+    </select>
+	<select id="getMenuListByFunctionId" resultMap="privilegeMenuMap" flushCache="true">
+      		 SELECT pm.* FROM privilege_function pf,privilege_resource pr,privilege_menu pm
+			 WHERE pf.id in
+        	<foreach item="item" index="index" collection="functionIds" open="(" separator="," close=")">  
+          	#{item}  
+        	</foreach>
+			AND pf.resource_id=pr.resource_id AND pr.menu_id=pm.id
+    </select>
 	<select id="findByMenuId" resultMap="privilegeMenuMap" flushCache="true">
          select * from privilege_menu
          where  id = #{menuId}
