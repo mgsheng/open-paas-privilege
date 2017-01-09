@@ -146,11 +146,13 @@ public class UserLoginController extends BaseControllerUtil {
 				List<Map<String, Object>> list=getMenu(result);
 				//Map<String, Object> menus=new HashMap<String, Object>();
 				menus.put("menus", list);
+				model.addAttribute("appId",appId);
 				model.addAttribute("menus", JSONObject.fromObject(menus));
 			}
 		}else {
 			menus.put("status", "0");
 			menus.put("errMsg", "没有相应菜单");
+			model.addAttribute("appId",appId);
 			model.addAttribute("menus", JSONObject.fromObject(menus));
 		}
 		

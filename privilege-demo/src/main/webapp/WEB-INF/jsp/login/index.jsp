@@ -43,7 +43,7 @@ function InitLeftMenu(_menus) {
 
 	$('.easyui-accordion li a').click(function(){
 		var tabTitle = $(this).children('.nav').text();
-		var url = '${pageContext.request.contextPath}'+$(this).attr("rel");
+		var url = '${pageContext.request.contextPath}'+$(this).attr("rel")+"?appId=${appId}";
 		var menuid = $(this).attr("ref");
 		//var icon = getIcon(menuid,icon);
 
