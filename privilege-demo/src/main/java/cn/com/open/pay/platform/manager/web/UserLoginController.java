@@ -2,7 +2,6 @@ package cn.com.open.pay.platform.manager.web;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -12,6 +11,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +37,12 @@ import cn.com.open.pay.platform.manager.privilege.model.Manager;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRoleDetails;
 import cn.com.open.pay.platform.manager.privilege.service.ManagerService;
+import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGetSignatureService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeRoleDetailsService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 /**
@@ -44,6 +55,8 @@ public class UserLoginController extends BaseControllerUtil {
 
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private PrivilegeGetSignatureService privilegeGetSignatureService;
 	@Autowired
 	private ManagerService managerService;
 	@Autowired
@@ -60,6 +73,7 @@ public class UserLoginController extends BaseControllerUtil {
 	private String appMenuRedisUrl;
 	@Value("#{properties['getSignature-uri']}")
 	private String getSignatureUrl;
+
 	/**
 	 * 登录验证
 	 * 
@@ -71,47 +85,34 @@ public class UserLoginController extends BaseControllerUtil {
 	@RequestMapping("loginVerify")
 	public void verify(HttpServletRequest request, HttpServletResponse response, String username, String password) {
 		log.info("-----------------------login start----------------");
-		//boolean flag = false;
-		Boolean flag=true;
+		// boolean flag = false;
+		Boolean flag = true;
 		String errorCode = "ok";
 		User user = null;
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
-		//user = checkUsername(username, userService);
-		/*if (user != null) {
-			if (user.checkPasswod(password)) {
-				flag = true;
-				errorCode = "ok";
-				// Manager manager=managerService.getManagerById(user.getId());
-				// int role=0;
-				// List<PrivilegeRoleDetails> list=null;
-				// List<PrivilegeModule> modules=null;
-				// if(manager!=null){
-				// role=manager.getRole();
-				// list=privilegeRoleDetailsService.findRoleDetailsByRoleId(role);
-				// List<Integer>ids=new ArrayList<Integer>(list.size());
-				// for(int i=0;i<list.size();i++){
-				// ids.add(list.get(i).getModuleId());
-				// }
-				// if(ids!=null&&list.size()>0){
-				// modules= privilegeModuleService.findModuleByIds(ids);
-				// for(int j=0;j<modules.size();j++){
-				//
-				// }
-				// }
-				// }
-				//HttpSession session = request.getSession();
-				// session.setAttribute("serverHost",payManagerDev.getServer_host());
-				// session.setAttribute("manager",manager);
-				// session.setAttribute("modules",modules);
-				//session.setAttribute("user", user);
-
-			} else {
-				errorCode = "error";
-			}
-
-		} else {
-			errorCode = "error";
-		}*/
+		// user = checkUsername(username, userService);
+		/*
+		 * if (user != null) { if (user.checkPasswod(password)) { flag = true;
+		 * errorCode = "ok"; // Manager
+		 * manager=managerService.getManagerById(user.getId()); // int role=0;
+		 * // List<PrivilegeRoleDetails> list=null; // List<PrivilegeModule>
+		 * modules=null; // if(manager!=null){ // role=manager.getRole(); //
+		 * list=privilegeRoleDetailsService.findRoleDetailsByRoleId(role); //
+		 * List<Integer>ids=new ArrayList<Integer>(list.size()); // for(int
+		 * i=0;i<list.size();i++){ // ids.add(list.get(i).getModuleId()); // }
+		 * // if(ids!=null&&list.size()>0){ // modules=
+		 * privilegeModuleService.findModuleByIds(ids); // for(int
+		 * j=0;j<modules.size();j++){ // // } // } // } //HttpSession session =
+		 * request.getSession(); //
+		 * session.setAttribute("serverHost",payManagerDev.getServer_host()); //
+		 * session.setAttribute("manager",manager); //
+		 * session.setAttribute("modules",modules);
+		 * //session.setAttribute("user", user);
+		 * 
+		 * } else { errorCode = "error"; }
+		 * 
+		 * } else { errorCode = "error"; }
+		 */
 		map.put("flag", flag);
 		map.put("errorCode", errorCode);
 		WebUtils.writeJsonToMap(response, map);
@@ -127,40 +128,30 @@ public class UserLoginController extends BaseControllerUtil {
 	 */
 	@RequestMapping(value = "login")
 	public String login(HttpServletRequest request, HttpServletResponse response, Model model) {
-		//User user = (User) request.getSession().getAttribute("user");
-		//String username = request.getParameter("userName");
-		//if (user != null && user.getUsername().equals(username)) {
-			//model.addAttribute("userName", username);
-			//model.addAttribute("realName", user.getRealName());
-		//	model.addAttribute("userId", user.getId());
-			model.addAttribute("appId",request.getParameter("appId"));
-			model.addAttribute("appUserId", request.getParameter("appUserId"));
-			model.addAttribute("getUserPrivilegeUrl", getUserPrivilegeUrl);
-			model.addAttribute("appResRedisUrl",appResRedisUrl);
-			model.addAttribute("appMenuRedisUrl", appMenuRedisUrl);
-			model.addAttribute("getSignatureUrl", getSignatureUrl);
-			System.err.println(getSignatureUrl+"==url");
-			HttpSession session = request.getSession();
+		String appId = request.getParameter("appId");
+		String appUserId = request.getParameter("appUserId");
+		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
+		map.put("appId", appId);
+		map.put("appUserId", appUserId);
+		String result = getModule(map);
+		JSONObject  jasonObject = JSONObject.fromObject(result);
+		Map JsonMap = (Map)jasonObject;
+		Map<String, Object> menus=new HashMap<String, Object>();
+		if ("0".equals(JsonMap.get("status"))) {
+			menus.put("status", "0");
+			menus.put("errMsg", JsonMap.get("errMsg"));
+			model.addAttribute("menus", JSONObject.fromObject(menus));
+		}else {
+			List<Map<String, Object>> list=getMenu(result);
+			//Map<String, Object> menus=new HashMap<String, Object>();
+			menus.put("menus", list);
+			model.addAttribute("menus", JSONObject.fromObject(menus));
+		}
+		
+		
+		return "login/index";
 
-			// session.setAttribute("serverHost",payManagerDev.getServer_host());
-			// session.setAttribute("manager",manager);
-			// session.setAttribute("modules",modules);
-			//session.setAttribute("user",user);
-			return "login/index";
-
-		//}
-
-		// String username = request.getParameter("userName");
-		// User user=null;
-		// user=userService.findByUsername(username);
-		// if(user != null){
-		// model.addAttribute("userName",username);
-		// model.addAttribute("realName",user.getRealName());
-		// }else{
-		//
-		// }
-		//
-		//return "/index";
+		
 	}
 
 	/**
@@ -183,31 +174,74 @@ public class UserLoginController extends BaseControllerUtil {
 		userService.updateUser(user);
 	}
 
-	@RequestMapping("lgn")
-	public void getModule(HttpServletRequest request, HttpServletResponse response) {
-		// User user=(User) request.getSession(false).getAttribute("user");
-		Integer id = Integer.parseInt(request.getParameter("userId"));
-		User user = userService.findUserById(id);//获取user
-		Map<String, Object> map = new HashMap<String, Object>();
-		if (user != null) {
-			String roleIds = user.getRole();
-			if (roleIds != null && !("").equals(user.getRole())) {
-				String[] roleIds1 = roleIds.split(",");// RoleId字段数组转list
-				System.err.println(roleIds1.toString());
-				List<Map<String, Object>> moduleList = new ArrayList<Map<String,Object>>();
-				for (String roleId : roleIds1) {
-					List<Map<String, Object>> modules = privilegeModuleService.getModuleListByroleId(roleId);
-					moduleList.addAll(modules);
-
-				}
-				map.put("menus", moduleList);
-
+	public String getModule(Map<String, Object> map) {
+		String url = getUserPrivilegeUrl;
+		String result="";
+		// POST的URL
+		HttpPost httppost = new HttpPost(url);
+		// 建立HttpPost对象
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		// 建立一个NameValuePair数组，用于存储欲传送的参数
+		params.add(new BasicNameValuePair("appId", (String) map.get("appId")));
+		params.add(new BasicNameValuePair("appUserId", (String) map.get("appUserId")));
+		params.add(new BasicNameValuePair("appKey", (String) map.get("appKey")));
+		params.add(new BasicNameValuePair("signatureNonce", (String) map.get("signatureNonce")));
+		params.add(new BasicNameValuePair("timestamp", (String) map.get("timestamp")));
+		params.add(new BasicNameValuePair("signature", (String) map.get("signature")));
+		try {
+			// 添加参数
+			httppost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+			// 设置编码
+			HttpResponse response = new DefaultHttpClient().execute(httppost);
+			// 发送Post,并返回一个HttpResponse对象
+			if (response.getStatusLine().getStatusCode() == 200) {// 如果状态码为200,就是正常返回
+				 result = EntityUtils.toString(response.getEntity());
 			}
-
-			writeSuccessJson(response, map);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
-		return;
+		System.err.println("返回结果"+result);
+		return result;
 	}
-
+	public List<Map<String, Object>> getMenu(String result) {
+		JSONObject  jasonObject = JSONObject.fromObject(result);
+		Map JsonMap = (Map)jasonObject;
+		List<Map<String, Object>> resourceList=(List<Map<String, Object>>) JsonMap.get("resourceList");
+		List<Map<String, Object>> menulists=(List<Map<String, Object>>) JsonMap.get("menuList");
+		// 顶级菜单集合
+		List<Map<String, Object>> pMenus = new ArrayList<Map<String, Object>>();
+		Map<String, Object> map1=null;
+		for(Map<String, Object> map2:menulists){
+			String menuId=(String) map2.get("menuId");
+			String menuname=(String) map2.get("menuName");
+			List<Map<String, Object>> mList=null;
+			if (map2.get("parentId").equals("0")) {
+				map1=new HashMap<String,Object>();
+				mList=new ArrayList<Map<String, Object>>();
+				map1.put("menuid", (String) map2.get("menuId"));
+				map1.put("menuname", (String) map2.get("menuName"));
+				map1.put("icon","");
+				pMenus.add(map1);
+			}
+			for(Map<String, Object> map3:menulists){
+				if(map3.get("parentId").equals(map2.get("menuId"))){
+					for(Map<String, Object> map6:resourceList){
+						if (map6.get("menuId").equals(map3.get("menuId"))) {
+							Map<String, Object> map4=new HashMap<String, Object>();
+							map4.put("menuid", map3.get("menuId"));
+							map4.put("menuname", map3.get("menuName"));
+							map4.put("icon", map3.get("icon"));
+							map4.put("url",map6.get("baseUrl"));
+							mList.add(map4);
+							map1.put("menus", mList);
+						}
+					}
+					
+				}
+			}
+		}
+		//Map<String, Object> map5=new HashMap<>();
+		//map5.put("menus", pMenus);
+		return pMenus;
+	}
 }
