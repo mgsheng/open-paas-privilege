@@ -22,7 +22,7 @@
 function InitLeftMenu(_menus) {
 	console.log(_menus);
 	$("#nav").accordion({animate:false});
-
+	if(_menus.menus!=null&&_menus.menus.length>0){
 	$.each(_menus.menus, function(i, n) {
 		var menulist ='';
 		menulist +='<ul>';
@@ -58,6 +58,9 @@ function InitLeftMenu(_menus) {
 	var panels = $('#nav').accordion('panels');
 	var t = panels[0].panel('options').title;
     $('#nav').accordion('select', t);
+	}else{
+		alert("没有相应菜单");
+	}
 }	
 
 	 /* var _menus = {"menus":[
