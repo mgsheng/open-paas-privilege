@@ -248,12 +248,14 @@ privilege-demo/src/main/java/cn/com/open/pay/platform/manager/paychannel/service
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/AbstractDomain.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/Common.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/Manager.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/PrivilegeFunction.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/PrivilegeGroup.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/PrivilegeGroupResource.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/PrivilegeMenu.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/PrivilegeModule.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/PrivilegePublic.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/PrivilegeResource.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/PrivilegeResource1.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/PrivilegeRole.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/PrivilegeRoleDetails.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/TreeNode.java -text
