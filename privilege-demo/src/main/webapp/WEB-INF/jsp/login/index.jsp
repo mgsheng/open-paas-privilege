@@ -26,9 +26,11 @@ function InitLeftMenu(_menus) {
 	$.each(_menus.menus, function(i, n) {
 		var menulist ='';
 		menulist +='<ul>';
-        $.each(n.menus, function(j, o) {
-			menulist += '<li><div><a ref="'+o.menuid+'" href="#" rel="' + o.url + '" ><span class="icon '+o.icon+'" >&nbsp;</span><span class="nav">' + o.menuname + '</span></a></div></li> ';
-        })
+		if(n.menus!=null&&n.menus.length>0){
+        	$.each(n.menus, function(j, o) {
+				menulist += '<li><div><a ref="'+o.menuid+'" href="#" rel="' + o.url + '" ><span class="icon '+o.icon+'" >&nbsp;</span><span class="nav">' + o.menuname + '</span></a></div></li> ';
+        	});
+		}
 		menulist += '</ul>';
 
 		$('#nav').accordion('add', {
