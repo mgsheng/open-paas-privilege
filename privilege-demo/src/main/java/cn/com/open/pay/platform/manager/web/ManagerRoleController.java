@@ -24,6 +24,7 @@ import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +37,7 @@ import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRole;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRoleDetails;
 import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
+import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGetSignatureService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeResourceService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeRoleDetailsService;
@@ -56,6 +58,18 @@ public class ManagerRoleController  extends BaseControllerUtil {
 	private PrivilegeResourceService privilegeResourceService;
 	@Autowired
 	private PrivilegeLogService privilegeLogService;
+	@Autowired
+	private PrivilegeGetSignatureService privilegeGetSignatureService;
+	@Value("#{properties['getSignature-uri']}")
+	private String getSignatureUrl;
+	@Value("#{properties['privilege-approle-redis-query-uri']}")
+	private String appRoleRedisUrl;
+	@Value("#{properties['privilege-appres-redis-query-uri']}")
+	private String appResRedisUrl;
+	@Value("#{properties['privilege-appmenu-redis-query-uri']}")
+	private String appMenuRedisUrl;
+	@Value("#{properties['privilege-role-del-uri']}")
+	private String roleDelUrl;
 	
 	/**
 	 * 跳转到查询角色的页面
@@ -64,22 +78,10 @@ public class ManagerRoleController  extends BaseControllerUtil {
 	@RequestMapping(value="roleMessage")
 	public String showSearch(HttpServletRequest request,HttpServletResponse response,Model model){
 		log.info("-------------------------showSearch         start------------------------------------");
-		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
 		String appId=request.getParameter("appId");
-		//String appUserId=request.getParameter("appUserId");
-		sParaTemp.put("appId", appId);
-		String data=sendPost("http://localhost:8080/privilege-demo/signature/getSignature",sParaTemp);
-		JSONObject o=JSONObject.fromObject(data);
-		//sParaTemp.put("appUserId", appUserId);
-		String signature=o.getString("signature");
-		String timestamp=o.getString("timestamp");
-		String signatureNonce=o.getString("signatureNonce");
-		String appKey=o.getString("appKey"); 
-		sParaTemp.put("signature", signature);
-		sParaTemp.put("timestamp", timestamp);
-		sParaTemp.put("signatureNonce", signatureNonce);
-		sParaTemp.put("appKey", appKey);
-		String s = sendPost("http://localhost:8080/privilege-service/AppRole/getAppRoleRedis",sParaTemp);
+		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
+		map.put("appId", appId);
+		String s = sendPost(appRoleRedisUrl,map);
 		JSONObject job=JSONObject.fromObject(s);
 		model.addAttribute("appId",appId);
 		model.addAttribute("roleList", job.get("roleList"));
@@ -274,32 +276,16 @@ public class ManagerRoleController  extends BaseControllerUtil {
      */
     @RequestMapping(value = "deleteRole")
 	public void deleteRole(HttpServletRequest request,HttpServletResponse response,String id) {
-//    	String id = request.getParameter("id");
-    	//添加日志
-		PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(82);
-		PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
-		String  towLevels = privilegeModule.getName();
-		String   oneLevels= privilegeModule1.getName();
-		User user1 = (User)request.getSession().getAttribute("user");
-		String operator = user1.getUsername(); //操作人
-		String operatorId = user1.getId()+""; //操作人Id
-		PrivilegeResource privilegeResource = privilegeResourceService.findByCode("delete");
-				
-    			
-    	Map<String,Object> map = new HashMap<String, Object>();
-    	try {
-    		if(nullEmptyBlankJudge(id)){
-       		 map.put("returnMsg", "0");//不存在	
-       		}else{
-       			roleService.deletePrivilegeRole(Integer.parseInt(id));
-       			privilegeRoleDetailsService.deletePrivilegeRoleDetail(id);
-       			privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),oneLevels,towLevels,privilegeResource.getId()+"",operator+"删除id为"+id+"权限",operatorId);
-           		map.put("returnMsg", "1");//修改成功	
-       		}
-			} catch (Exception e) {
-				 map.put("returnMsg", "0");//不存在	
-			}
-    	WebUtils.writeErrorJson(response, map);
+		String appId=request.getParameter("appId");
+		String privilegeRoleId = request.getParameter("id");
+		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
+		map.put("appId", appId);
+		map.put("privilegeRoleId", privilegeRoleId);
+		map.put("createUser", "");
+		map.put("createUserId", "");
+		String s = sendPost(roleDelUrl,map);
+		JSONObject job=JSONObject.fromObject(s);
+    	WebUtils.writeErrorJson(response, job);
     }
 	
     
@@ -344,25 +330,15 @@ public class ManagerRoleController  extends BaseControllerUtil {
 		List<PrivilegeResource> privilegeResourceList = privilegeResourceService.findAllResource();
 		JSONArray jsonArr = JSONArray.fromObject(buildTree(nodes,privilegeResourceList));
     	WebUtils.writeJson(response,jsonArr);*/
-    	SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
 		String appId=request.getParameter("appId");
-		sParaTemp.put("appId", appId);
-		String data=sendPost("http://localhost:8080/privilege-demo/signature/getSignature",sParaTemp);
-		JSONObject o=JSONObject.fromObject(data);
-		String signature=o.getString("signature");
-		String timestamp=o.getString("timestamp");
-		String signatureNonce=o.getString("signatureNonce");
-		String appKey=o.getString("appKey"); 
-		sParaTemp.put("signature", signature);
-		sParaTemp.put("timestamp", timestamp);
-		sParaTemp.put("signatureNonce", signatureNonce);
-		sParaTemp.put("appKey", appKey);
-		String s = sendPost("http://localhost:8080/privilege-service/AppMenu/getAppMenuRedis",sParaTemp);
+		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
+		map.put("appId", appId);
+		String s = sendPost(appMenuRedisUrl,map);
 		JSONObject obj = JSONObject.fromObject(s);//将json字符串转换为json对象
 		JSONArray objArray=JSONArray.fromObject(obj.get("menuList"));
 		//将json对象转换为java对象
 		List<PrivilegeMenu> menuList = JSONArray.toList(objArray,PrivilegeMenu.class);
-		String s1 = sendPost("http://localhost:8080/privilege-service/AppRes/getAppResRedis",sParaTemp);
+		String s1 = sendPost(appResRedisUrl,map);
 		JSONObject obj1 = new JSONObject().fromObject(s1);//将json字符串转换为json对象
 		JSONArray obj1Array=JSONArray.fromObject(obj1.get("resourceList"));
 		//将json对象转换为java对象

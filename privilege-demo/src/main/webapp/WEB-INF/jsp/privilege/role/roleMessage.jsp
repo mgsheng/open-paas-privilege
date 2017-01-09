@@ -38,9 +38,9 @@
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="#" class="easyui-linkbutton" iconCls="icon-search " plain="true"  onclick="onsearch();" id="search"></a>
 		--%><a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="add"></a>
-		<%--<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" id="edit" onclick="editMessage();"></a>
+		<%--<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" id="edit" onclick="editMessage();"></a>--%>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" id="delete" onclick="removeit();"></a>
-		--%></span>
+		</span>
 	</div>
 	<div id="w" class="easyui-window" title="角色添加" collapsible="false"
 		minimizable="false" maximizable="false" icon="icon-save"
@@ -94,6 +94,10 @@
 		   	document.getElementById("id").value=""; 
 		    $('#w').window('open');
 		});
+		$('#btnEp').click(function() {
+	   		serverUpdate();
+	    });
+		$('#btnCancel').click(function(){closePwd();});
 	});
 	//设置登录窗口
     function openPwd() {
@@ -118,6 +122,39 @@
     function closePwd() {
        $('#w').window('close');
     }
+    
+    function removeit(){
+		 var roleName=$("#roleName").val();
+		 var appId=${appId};
+		 var row = $('#dg').datagrid('getSelected');
+		 if (row){
+			$.messager.confirm('系统提示', '是否确定删除?', function(r){
+				if (r){
+					   var id=row.privilegeRoleId;
+					   var url="${pageContext.request.contextPath}/managerRole/deleteRole?id="+id+"&appId="+appId;
+			            $.post(url, function(data) {
+			                if(data.status=='1'){
+			                 msgShow('系统提示', '恭喜，删除成功！', 'info');
+			               //刷新
+				              var url='${pageContext.request.contextPath}/managerRole/roleMessage';
+				              reload(url,appId);
+			                }else{
+			                  msgShow('系统提示', '删除失败！', 'info');
+			                }
+			            });
+				}
+			   });
+			}
+		}
+		function reload(url,appId){
+		$('#dg').datagrid('reload',{
+           url: url, queryParams:{appId:appId}, method: "post"
+         }); 
+		}
+		//弹出信息窗口 title:标题 msgString:提示信息 msgType:信息类型 [error,info,question,warning]
+		function msgShow(title, msgString, msgType) {
+			$.messager.alert(title, msgString, msgType);
+		}
 </script>
 
 <script><%--
@@ -423,7 +460,7 @@ $(function(){
 		
 		function removeit(){
 		 var name=$("#name").val();
-		var row = $('#dg').datagrid('getSelected');
+		 var row = $('#dg').datagrid('getSelected');
 			if (row){
 			$.messager.confirm('系统提示', '是否确定删除?', function(r){
 				if (r){
