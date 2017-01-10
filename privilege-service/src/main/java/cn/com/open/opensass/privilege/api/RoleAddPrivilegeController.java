@@ -28,6 +28,7 @@ import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 @Controller
 @RequestMapping("/role/")
 public class RoleAddPrivilegeController extends BaseControllerUtil{
+	private static final String AppRoleRedisPrefix = RedisConstant.APPROLE_CACHE;
 	private static final Logger log = LoggerFactory.getLogger(RoleAddPrivilegeController.class); 
 	@Autowired
 	private PrivilegeRoleService privilegeRoleService;
@@ -123,16 +124,32 @@ public class RoleAddPrivilegeController extends BaseControllerUtil{
 	    	            return;
 	    			}
 	    		}
+	    	}else if(privilegeFunId!=null){
+	    		PrivilegeRoleResource privilegeRoleResource = new PrivilegeRoleResource();
+    			privilegeRoleResource.setPrivilegeRoleId(privilegeRole.getPrivilegeRoleId());
+    			privilegeRoleResource.setPrivilegeFunId(privilegeFunId);
+    			privilegeRoleResource.setCreateUser(createUser);
+    			privilegeRoleResource.setCreateUserId(createUserId);
+    			privilegeRoleResource.setStatus(Integer.parseInt(status));
+    			
+    			Boolean f1 = privilegeRoleResourceService.savePrivilegeRoleResource(privilegeRoleResource);
+    			if(!f1){
+    				paraMandaChkAndReturn(10003, response,"角色资源关系添加失败");
+    	            return;
+    			}
 	    	}
 	    	//存放缓存
-    		PrivilegeAjaxMessage message=privilegeRoleService.getAppRoleRedis(appId);
-    		if (message.getCode().equals("1")) {
-    			map.put("status","1");
-        		map.put("privilegeRoleid", privilegeRole.getPrivilegeRoleId());
-    		} else {
-    			map.put("status", message.getCode());
-    			map.put("error_code", message.getMessage());/* 数据不存在 */
-    		}
+	    	PrivilegeAjaxMessage message1=privilegeRoleService.delAppRoleRedis(appId);
+	    	if (message1.getCode().equals("1")) {
+	    		PrivilegeAjaxMessage message=privilegeRoleService.getAppRoleRedis(appId);
+	    		if (message.getCode().equals("1")) {
+	    			map.put("status","1");
+	        		map.put("privilegeRoleid", privilegeRole.getPrivilegeRoleId());
+	    		} else {
+	    			map.put("status", message.getCode());
+	    			map.put("error_code", message.getMessage());/* 数据不存在 */
+	    		}
+	    	}
     	}else{
     		paraMandaChkAndReturn(10002, response,"角色添加失败");
             return;
