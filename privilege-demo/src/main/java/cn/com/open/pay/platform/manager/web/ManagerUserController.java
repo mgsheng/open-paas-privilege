@@ -10,7 +10,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -23,7 +22,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 import cn.com.open.pay.platform.manager.department.model.Department;
 import cn.com.open.pay.platform.manager.log.service.PrivilegeLogService;
@@ -31,7 +29,6 @@ import cn.com.open.pay.platform.manager.login.model.User;
 import cn.com.open.pay.platform.manager.login.service.UserService;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
-import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRole;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGetSignatureService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeResourceService;
@@ -96,8 +93,8 @@ public class ManagerUserController extends BaseControllerUtil {
 		String id = request.getParameter("id");
 		String role = request.getParameter("role");
 		String userName = request.getParameter("userName");
-		System.err.println("userName===" + userName);
 		Boolean boo = false;
+		JSONObject jsonobj = new JSONObject();
 		// 查找当前用户角色
 		Map<String, Object> Signature = privilegeGetSignatureService.getSignature(appId);
 		Signature.put("appId", appId);
@@ -125,25 +122,27 @@ public class ManagerUserController extends BaseControllerUtil {
 						JsnMap = (Map) jsonObject;
 						if (!("0").equals(JsnMap.get("status"))) {
 							boo = true;
-							JSONObject jsonobj = new JSONObject();
 							jsonobj.put("result", boo);
 							WebUtils.writeJson(response, jsonobj);
 							return;
 						} else {
 							boo = false;
-							JSONObject jsonobj = new JSONObject();
 							jsonobj.put("result", boo);
 							WebUtils.writeJson(response, jsonobj);
 							return;
 						}
+					}else {
+						boo=false;
 					}
 				}
 				System.err.println("该用户没有角色");
 			}
+		}else {
+			boo=false;
 		}
 		// 用户当前角色ids
 		StringBuffer oldRoleIds = new StringBuffer();
-		if (userRoleList != null) {
+		if (userRoleList != null&&userRoleList.size()>0) {
 			for (Map<String, Object> map : userRoleList) {
 				oldRoleIds.append(map.get("privilegeRoleId"));
 				oldRoleIds.append(",");
@@ -167,6 +166,8 @@ public class ManagerUserController extends BaseControllerUtil {
 					boo = false;
 					System.err.println("删除失败");
 				}
+			}else {
+				boo=false;
 			}
 		}
 
@@ -195,6 +196,8 @@ public class ManagerUserController extends BaseControllerUtil {
 					System.err.println("添加失败");
 					boo = false;
 				}
+			}else {
+				boo = false;
 			}
 		}
 		System.out.println("****************id:" + id + "****************role:" + role);
@@ -216,7 +219,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		 * "给"+""+"用户授权失败",operatorId); }
 		 */
 		// result = true表示该用户授权角色成功
-		JSONObject jsonobj = new JSONObject();
+		
 		jsonobj.put("result", boo);
 		WebUtils.writeJson(response, jsonobj);
 		return;
