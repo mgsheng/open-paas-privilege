@@ -133,7 +133,8 @@ public class UserLoginController extends BaseControllerUtil {
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
 		map.put("appId", appId);
 		map.put("appUserId", appUserId);
-		String result = getModule(map);
+		
+		String result =sendPost(getUserPrivilegeUrl, map);
 		Map<String, Object> menus=new HashMap<String, Object>();
 		if (result!=null&&!("").equals(result)) {
 			JSONObject  jasonObject = JSONObject.fromObject(result);
@@ -183,35 +184,7 @@ public class UserLoginController extends BaseControllerUtil {
 		userService.updateUser(user);
 	}
 
-	public String getModule(Map<String, Object> map) {
-		String url = getUserPrivilegeUrl;
-		String result="";
-		// POST的URL
-		HttpPost httppost = new HttpPost(url);
-		// 建立HttpPost对象
-		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		// 建立一个NameValuePair数组，用于存储欲传送的参数
-		params.add(new BasicNameValuePair("appId", (String) map.get("appId")));
-		params.add(new BasicNameValuePair("appUserId", (String) map.get("appUserId")));
-		params.add(new BasicNameValuePair("appKey", (String) map.get("appKey")));
-		params.add(new BasicNameValuePair("signatureNonce", (String) map.get("signatureNonce")));
-		params.add(new BasicNameValuePair("timestamp", (String) map.get("timestamp")));
-		params.add(new BasicNameValuePair("signature", (String) map.get("signature")));
-		try {
-			// 添加参数
-			httppost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-			// 设置编码
-			HttpResponse response = new DefaultHttpClient().execute(httppost);
-			// 发送Post,并返回一个HttpResponse对象
-			if (response.getStatusLine().getStatusCode() == 200) {// 如果状态码为200,就是正常返回
-				 result = EntityUtils.toString(response.getEntity());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		System.err.println("返回结果"+result);
-		return result;
-	}
+	
 	public List<Map<String, Object>> getMenu(String result) {
 		JSONObject  jasonObject = JSONObject.fromObject(result);
 		Map JsonMap = (Map)jasonObject;
