@@ -149,7 +149,7 @@ public class ManagerRoleController  extends BaseControllerUtil {
 						String[] mres=moduleRes[i].split(",");//模块与资源拆分
 						for(int k=0;k<mres.length;k++){
 							if(mres[k]!=null && !mres[k].equals("")){
-								functionIds+=mres[k]+",";;
+								functionIds+=mres[k]+",";
 							}
 						}
 					}
