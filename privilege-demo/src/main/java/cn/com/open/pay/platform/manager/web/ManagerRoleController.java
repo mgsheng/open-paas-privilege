@@ -315,10 +315,13 @@ public class ManagerRoleController  extends BaseControllerUtil {
      * @return
      */
     @RequestMapping(value = "QueryRoleDetails")
-	public void QueryRoleDetails(HttpServletRequest request,HttpServletResponse response,String id) {
+	public void QueryRoleDetails(HttpServletRequest request,HttpServletResponse response) {
+    	
+    	String appId=request.getParameter("appId");
+    	String privilegeRoleId=request.getParameter("id");
     	List<Map<String,String>> listMap = new LinkedList<Map<String,String>>();
     	PrivilegeRoleDetails privilegeRoleDetails=new PrivilegeRoleDetails();
-    	privilegeRoleDetails.setRoleId(Integer.parseInt(id));
+    	//privilegeRoleDetails.setRoleId(Integer.parseInt(id));
     	List<PrivilegeRoleDetails> list = privilegeRoleDetailsService.QueryRoleDetails(privilegeRoleDetails);
 //    	String id = request.getParameter("id");
     	if(list!=null && list.size()>0){
@@ -358,43 +361,37 @@ public class ManagerRoleController  extends BaseControllerUtil {
 		//将json对象转换为java对象
 		List<PrivilegeResource1> resourceList = JSONArray.toList(obj1Array,PrivilegeResource1.class);
 		List<PrivilegeFunction> functionList = JSONArray.toList(obj2Array,PrivilegeFunction.class);
-		List<TreeNode> nodes = convertTreeNodeList(menuList,resourceList);		
-		JSONArray jsonArr = JSONArray.fromObject(buildTree1(nodes,functionList));
+		List<TreeNode> nodes = convertTreeNodeList(menuList);
+		JSONArray jsonArr = JSONArray.fromObject(buildTree2(nodes,resourceList,functionList));
 		WebUtils.writeJson(response,jsonArr);
     }
-
-	private List<TreeNode> convertTreeNodeList(List<PrivilegeMenu> modules,List<PrivilegeResource1> resources) {
-			List<TreeNode> nodes = null;
-			if(modules != null){
-				nodes = new ArrayList<TreeNode>();
-				for(PrivilegeMenu menu:modules){
-					TreeNode node = convertTreeNode(menu,resources);
-					if(node != null){
-						nodes.add(node);
-					}
+    private List<TreeNode> convertTreeNodeList(List<PrivilegeMenu> modules) {
+		List<TreeNode> nodes = null;
+		if(modules != null){
+			nodes = new ArrayList<TreeNode>();
+			for(PrivilegeMenu menu:modules){
+				TreeNode node = convertTreeNode(menu);
+				if(node != null){
+					nodes.add(node);
 				}
 			}
-			return nodes;
 		}
-	
+		return nodes;
+	}
 	/**
 	* @param departments
 	* @return
 	*/
-	private TreeNode convertTreeNode(PrivilegeMenu privilegeMenu,List<PrivilegeResource1> resources){
+	private TreeNode convertTreeNode(PrivilegeMenu privilegeMenu){
 		TreeNode node = null;
 		if(privilegeMenu != null){
 			node = new TreeNode();
 			node.setId(String.valueOf(privilegeMenu.getMenuId()));//菜单ID
-			for(PrivilegeResource1 resource : resources){
-				if(Integer.parseInt(privilegeMenu.getMenuId())== Integer.parseInt(resource.getMenuId())){
-					node.setResource(resource.getResourceId()+",");
-				}
-			}
 			node.setIsmodule("0");
 			node.setChecked(false);
 			node.setText(privilegeMenu.getMenuName());//菜单名称
 			node.setTarget("");
+			node.setResource("");
 			node.setPid(String.valueOf(privilegeMenu.getParentId()));//父级菜单ID
 			Map<String,Object> map = new HashMap<String,Object>();
 			node.setAttributes(map);
@@ -402,6 +399,70 @@ public class ManagerRoleController  extends BaseControllerUtil {
 		return node;
 	}
     
+	/**
+	* 添加时构建树
+	* @param treeNodes
+	* @return
+	*/
+	protected List<TreeNode> buildTree2(List<TreeNode> treeNodes,List<PrivilegeResource1> resourceList,List<PrivilegeFunction> functionList) {
+		List<TreeNode> results = new ArrayList<TreeNode>();
+		Map<String, TreeNode> aidMap = new LinkedHashMap<String, TreeNode>();
+		for (TreeNode node : treeNodes) {
+			aidMap.put(node.getId(), node);
+		}
+		treeNodes = null;
+		Set<Entry<String, TreeNode>> entrySet = aidMap.entrySet();
+		for (Entry<String, TreeNode> entry : entrySet) {
+			String pid = entry.getValue().getPid();
+			TreeNode node = aidMap.get(pid);
+			if (node == null) {
+				results.add(entry.getValue());
+			} else {
+				List<TreeNode> children = node.getChildren();
+				if (children == null) {
+					children = new ArrayList<TreeNode>();
+					node.setChildren(children);
+					node.setState("closed");
+				}
+				
+				String menuId = entry.getValue().getId();
+				List<TreeNode> treeNodeList = new ArrayList<TreeNode>();
+				for(PrivilegeResource1 res:resourceList){
+					TreeNode treeNode=new TreeNode();
+					if((menuId).equals(res.getMenuId())){
+						treeNode.setId(res.getResourceId());
+						treeNode.setText(res.getResourceName());
+						treeNode.setIsmodule("1");
+						List<TreeNode> treeNodeList1 = new ArrayList<TreeNode>();
+						for(PrivilegeFunction func:functionList){
+							String optId=func.getOptId();								
+							Map<String, Object> map = new HashMap<String,Object>();
+							map.put("optId", optId);
+							String s = sendPost(getOperationNameUri,map);
+							JSONObject o = JSONObject.fromObject(s);
+							String nameValue = o.getString("optName");
+							TreeNode treeNode1=new TreeNode();
+							if((res.getResourceId()).equals(func.getResourceId())){
+								treeNode1.setId(func.getOptId());
+								treeNode1.setText(nameValue);
+								treeNode1.setIsmodule("2");
+							}
+							treeNodeList1.add(treeNode1);
+						}
+						treeNode.setChildren(treeNodeList1);
+						treeNodeList.add(treeNode);
+					}
+				}
+				entry.getValue().setChildren(treeNodeList);
+				children.add(entry.getValue());
+			}
+		}
+		aidMap = null;
+
+		return results;
+	}
+	
+	
     /**
 	* 构建树
 	* @param treeNodes
@@ -463,70 +524,7 @@ public class ManagerRoleController  extends BaseControllerUtil {
 
 		return results;
 	}
-	/**
-	* 构建树
-	* @param treeNodes
-	* @return
-	*/
-	protected List<TreeNode> buildTree1(List<TreeNode> treeNodes,List<PrivilegeFunction> functionList ) {
-		List<TreeNode> results = new ArrayList<TreeNode>();
 
-		Map<String, TreeNode> aidMap = new LinkedHashMap<String, TreeNode>();
-		for (TreeNode node : treeNodes) {
-			aidMap.put(node.getId(), node);
-		}
-		treeNodes = null;
-
-		Set<Entry<String, TreeNode>> entrySet = aidMap.entrySet();
-		for (Entry<String, TreeNode> entry : entrySet) {
-			String pid = entry.getValue().getPid();
-			TreeNode node = aidMap.get(pid);
-			if (node == null) {
-				results.add(entry.getValue());
-			} else {
-				List<TreeNode> children = node.getChildren();
-				
-				if (children == null) {
-					children = new ArrayList<TreeNode>();
-					node.setChildren(children);
-					node.setState("closed");
-				}
-				//添加三级
-				String resource = entry.getValue().getResource();
-				List<TreeNode> treeNodeList = new ArrayList<TreeNode>();
-				if(resource!=null){
-					String[] resourceStrArray = resource.split(",");
-					for(int i=0;i<resourceStrArray.length;i++){
-						String vl = resourceStrArray[i];
-							if(!("").equals(vl)){
-							for(int j=0;j<functionList.size();j++){
-								int id = Integer.parseInt(functionList.get(j).getResourceId());
-								String optId=functionList.get(j).getOptId();								
-								Map<String, Object> map = new HashMap<String,Object>();
-								map.put("optId", optId);
-								String s = sendPost(getOperationNameUri,map);
-								JSONObject o = JSONObject.fromObject(s);
-								String nameValue = o.getString("optName");
-								TreeNode treeNode=new TreeNode();
-								if(Integer.parseInt(vl)==id){
-									treeNode.setId(functionList.get(j).getFunctionId());
-									treeNode.setText(nameValue);
-									treeNode.setIsmodule("1");
-									treeNodeList.add(treeNode);
-								}
-							}
-						}
-					}
-				}
-				entry.getValue().setChildren(treeNodeList);
-				children.add(entry.getValue());
-			}
-		}
-		aidMap = null;
-
-		return results;
-	}
-	
 	
 	 @RequestMapping(value = "tree1")
 		public void getModelTree1(HttpServletRequest request,HttpServletResponse response,String id) {
