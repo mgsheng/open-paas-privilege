@@ -72,6 +72,9 @@ public class ManagerRoleController  extends BaseControllerUtil {
 	private String roleDelUrl;
 	@Value("#{properties['privilege-role-add-uri']}")
 	private String roleAddUrl;
+	@Value("#{properties['privilege-operation-name-uri']}")
+	private String getOperationNameUri;
+	
 	
 	/**
 	 * 跳转到查询角色的页面
@@ -125,12 +128,29 @@ public class ManagerRoleController  extends BaseControllerUtil {
 		String appId=request.getParameter("appId");
 		String roleName=request.getParameter("roleName");
 		String status=request.getParameter("status");
+		String treeNodeIds=request.getParameter("temp");
+		String resourceIds="";
+		String functionIds="";
+		if(treeNodeIds!=null && !treeNodeIds.equals("")){
+			String[] moduleRes=treeNodeIds.split(",,,");//模块与模块拆分
+			for(int i=0;i<moduleRes.length;i++){
+				if(moduleRes[i]!=null && !moduleRes[i].equals("") && moduleRes[i].contains(",,")){
+					String[] mres=moduleRes[i].split(",,");//模块与资源拆分
+					if(mres[0]!=null && !mres[0].equals("")){
+						resourceIds+=mres[0]+",";
+						if(mres.length>1 && mres[1]!=null && !mres[1].equals("")){
+							functionIds=mres[1].replace(",", ",");
+						}
+					}
+				}
+			}
+		}
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
 		map.put("appId", appId);
 		map.put("roleName", roleName);
 		map.put("status", status);
-		map.put("rolePrivilege", "");
-		map.put("privilegeFunId", "");
+		map.put("rolePrivilege", resourceIds);
+		map.put("privilegeFunId", functionIds);
 		map.put("groupId", "");
 		map.put("groupName", "");
 		map.put("deptId", "");
@@ -371,6 +391,7 @@ public class ManagerRoleController  extends BaseControllerUtil {
 					node.setResource(resource.getResourceId()+",");
 				}
 			}
+			node.setIsmodule("0");
 			node.setChecked(false);
 			node.setText(privilegeMenu.getMenuName());//菜单名称
 			node.setTarget("");
@@ -480,15 +501,19 @@ public class ManagerRoleController  extends BaseControllerUtil {
 							if(!("").equals(vl)){
 							for(int j=0;j<functionList.size();j++){
 								int id = Integer.parseInt(functionList.get(j).getResourceId());
-								String nameValue = functionList.get(j).getOptId();
+								String optId=functionList.get(j).getOptId();								
+								Map<String, Object> map = new HashMap<String,Object>();
+								map.put("optId", optId);
+								String s = sendPost(getOperationNameUri,map);
+								JSONObject o = JSONObject.fromObject(s);
+								String nameValue = o.getString("optName");
 								TreeNode treeNode=new TreeNode();
 								if(Integer.parseInt(vl)==id){
-									treeNode.setId(vl);
+									treeNode.setId(functionList.get(j).getFunctionId());
 									treeNode.setText(nameValue);
 									treeNode.setIsmodule("1");
 									treeNodeList.add(treeNode);
 								}
-								
 							}
 						}
 					}

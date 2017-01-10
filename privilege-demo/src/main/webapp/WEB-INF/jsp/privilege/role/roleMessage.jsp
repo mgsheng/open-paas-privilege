@@ -176,7 +176,6 @@
        		    //去掉带r标示的id（用于区分资源和模块id）
     			checkIds+=ui[i].id.replace('r','');
         	}
-        	alert(checkIds);
         	
             var roleName = $('#roleName').val();
             var status= $('#status').val();
@@ -186,8 +185,6 @@
             }
             var url=encodeURI('${pageContext.request.contextPath}/managerRole/addRole?appId='+appId+'&roleName='+roleName+'&status='+status+'&temp='+checkIds);
             $.post(url, function(data) {
-            	alert(data.status);
-            	alert(data.status=='1');
                 if(data.status=='1'){
 	                 msgShow('系统提示', '恭喜，添加成功！', 'info');
 	                 close();
