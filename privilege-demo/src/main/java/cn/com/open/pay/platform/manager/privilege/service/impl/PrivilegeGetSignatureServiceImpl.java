@@ -40,7 +40,7 @@ public class PrivilegeGetSignatureServiceImpl implements PrivilegeGetSignatureSe
 			try {
 				signature = cn.com.open.pay.platform.manager.tools.HMacSha1.HmacSHA1Encrypt(encryptText.toString(),
 						key);
-				//signature = cn.com.open.pay.platform.manager.tools.HMacSha1.getNewResult(signature);
+				signature = cn.com.open.pay.platform.manager.tools.HMacSha1.getNewResult(signature);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
