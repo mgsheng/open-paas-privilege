@@ -78,9 +78,13 @@ public class UserRoleModifyPrivilegeController extends BaseControllerUtil{
     	String privilegeRoleId = "";//最终更新到 user privilegeRoleId 字段
     	
     	if(privilegeUserVo.getPrivilegeRoleId()!=null){
-    		String[] roleIds1 = privilegeRoleIds.split(",");//将当前user privilegeRoleId字段数组转list
+    		String[] roleIds1 =null;
     		List<String> roleIdList = new ArrayList<String>();
-    		Collections.addAll(roleIdList, roleIds1);
+    		if (privilegeRoleIds!=null&&!("").equals(privilegeRoleIds)) {
+				
+    			 roleIds1 = privilegeRoleIds.split(",");//将当前user privilegeRoleId字段数组转list
+    			 Collections.addAll(roleIdList, roleIds1);
+			}
     		
     		String[] roleIds = privilegeUserVo.getPrivilegeRoleId().split(",");
     		PrivilegeUserRole userRole=null;
