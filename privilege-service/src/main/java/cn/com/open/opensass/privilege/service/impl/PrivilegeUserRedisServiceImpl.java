@@ -95,10 +95,12 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 		if (!boo) {
 			resourceList = privilegeResourceService.getResourceListByUserId(appUserId, appId);
 			// 通过user表functionId 查 resource
-			String[] FunctionIds = privilegeFunctionIds.split(",");
-			if (FunctionIds != null && FunctionIds.length > 0) {
-				List<Map<String, Object>> resources = privilegeResourceService.getResourceListByFunIds(FunctionIds);
-				resourceList.addAll(resources);
+			if (privilegeFunctionIds != null && !("").equals(privilegeFunctionIds)) {
+				String[] FunctionIds = privilegeFunctionIds.split(",");
+				if (FunctionIds != null && FunctionIds.length > 0) {
+					List<Map<String, Object>> resources = privilegeResourceService.getResourceListByFunIds(FunctionIds);
+					resourceList.addAll(resources);
+				}
 			}
 			if (privilegeResourceIds != null && !("").equals(privilegeResourceIds)) {
 				String[] resourceIds1 = privilegeResourceIds.split(",");// 将当前user
