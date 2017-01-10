@@ -862,6 +862,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/api/MenuDelPrivil
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/MenuGetPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/MenuModifyPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/MenuRedisPrivilegeController.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/api/PrivilegeOperationController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/ResourceAddPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/ResourceDelPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/ResourceGetPrivilegeController.java -text
@@ -892,6 +893,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/my
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/mybatis/PrivilegeGroupRepositoryMyBatis.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/mybatis/PrivilegeGroupResourceRepositoryMyBatis.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/mybatis/PrivilegeMenuRepositoryMyBatis.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/mybatis/PrivilegeOperationRepositoryMyBatis.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/mybatis/PrivilegeResourceRepositoryMyBatis.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/mybatis/PrivilegeRoleRepositoryMyBatis.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/mybatis/PrivilegeRoleResourceRepositoryMyBatis.java -text
@@ -902,6 +904,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/re
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/repository/PrivilegeGroupRepository.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/repository/PrivilegeGroupResourceRepository.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/repository/PrivilegeMenuRepository.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/repository/PrivilegeOperationRepository.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/repository/PrivilegeResourceRepository.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/repository/PrivilegeRoleRepository.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/repository/PrivilegeRoleResourceRepository.java -text
@@ -917,6 +920,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/model/PrivilegeFu
 privilege-service/src/main/java/cn/com/open/opensass/privilege/model/PrivilegeGroup.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/model/PrivilegeGroupResource.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/model/PrivilegeMenu.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/model/PrivilegeOperation.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/model/PrivilegeResource.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/model/PrivilegeRole.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/model/PrivilegeRoleResource.java -text
@@ -932,6 +936,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/service/Privilege
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeGroupResourceService.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeGroupService.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeMenuService.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeOperationService.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeResourceService.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeRoleResourceService.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/PrivilegeRoleService.java -text
@@ -944,6 +949,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/Priv
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeGroupResourceServiceImpl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeGroupServiceImpl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeMenuServiceImpl.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeOperationServiceImpl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeResourceServiceImpl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeRoleResourceServiceImpl.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/service/impl/PrivilegeRoleServiceImpl.java -text
@@ -994,6 +1000,7 @@ privilege-service/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeFun
 privilege-service/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeGroupMapper.xml -text
 privilege-service/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeGroupResourceMapper.xml -text
 privilege-service/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeMenuMapper.xml -text
+privilege-service/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeOperationMapper.xml -text
 privilege-service/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeResourceMapper.xml -text
 privilege-service/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeRoleMapper.xml -text
 privilege-service/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeRoleResourceMapper.xml -text
