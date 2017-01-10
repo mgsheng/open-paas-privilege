@@ -82,10 +82,13 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 		List resourceList = null;
 		Boolean boo = false;
 		for (PrivilegeRole role : roleList) {
-			if (role.getRoleType() == 2) {// 若角色为系统管理员 则把app拥有的所有资源放入缓存
-				resourceList = privilegeResourceService.getResourceListByAppId(appId);
-				boo = true;
+			if (role.getRoleType()!=null) {
+				if (role.getRoleType() == 2) {// 若角色为系统管理员 则把app拥有的所有资源放入缓存
+					resourceList = privilegeResourceService.getResourceListByAppId(appId);
+					boo = true;
+				}
 			}
+			
 
 		}
 		// user表多余的resourceId
