@@ -101,14 +101,23 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil{
 	    	map.put("groupId",user.getGroupId());
 	    	map.put("privilegeFunId", user.getPrivilegeFunId());
 		}
-		
-		redisClient.del(prefixMenu+user.getAppId()+SIGN+user.getuId());
-		redisClient.del(prefixRole+user.getAppId()+SIGN+user.getuId());
-		
-		//从redis中获取usermenu,userrole信息
-		Map<String, Object> roleMap=(Map<String, Object>) redisClient.getObject(prefixRole+user.getAppId()+SIGN+user.getuId());
-		Map<String, Object> menuMap=(Map<String, Object>) redisClient.getObject(prefixMenu+user.getAppId()+SIGN+user.getuId());
+		try {
+			redisClient.del(prefixMenu+user.getAppId()+SIGN+user.getuId());
+			redisClient.del(prefixRole+user.getAppId()+SIGN+user.getuId());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		Map<String, Object> roleMap=null;
+		Map<String, Object> menuMap=null;
+		try {
+			//从redis中获取usermenu,userrole信息
+			roleMap=(Map<String, Object>) redisClient.getObject(prefixRole+user.getAppId()+SIGN+user.getuId());
+			menuMap=(Map<String, Object>) redisClient.getObject(prefixMenu+user.getAppId()+SIGN+user.getuId());
 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		Boolean boo=false;//存放是否有管理员角色标志 true-有，false-没有
 		String privilegeResourceIds = user.getResourceId();
 		String privilegeFunctionIds = user.getPrivilegeFunId();
@@ -123,11 +132,14 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil{
 			List<PrivilegeRole> roleList = privilegeRoleService.getRoleListByUserIdAndAppId(user.getAppUserId(), user.getAppId());
 			List resourceList= new ArrayList<PrivilegeResource>();
 			for (PrivilegeRole role:roleList) {
-				System.out.println(role.getRoleType() == 2);
-				if (role.getRoleType() == 2) {// 若角色为系统管理员 则把app拥有的所有资源放入缓存
-					resourceList = privilegeResourceService.getResourceListByAppId(user.getAppId());
-					boo=true;
+				if (role.getRoleType()!=null) {
+					System.out.println(role.getRoleType() == 2);
+					if (role.getRoleType() == 2) {// 若角色为系统管理员 则把app拥有的所有资源放入缓存
+						resourceList = privilegeResourceService.getResourceListByAppId(user.getAppId());
+						boo=true;
+					}
 				}
+				
 			}
 			// user表多余的resourceId
 			List<String> resourceIds = new ArrayList<String>();
@@ -203,7 +215,11 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil{
 			System.err.println("set" + JSONArray.fromObject(functionSet).toString());
 			//List<Map<String, Object>> functionList = privilegeFunctionService.getFunctionListByUserId(user.getAppUserId(), user.getAppId());
 			roleMap.put("functionList", functionSet);
-			redisClient.setObject(prefixRole+user.getAppId()+SIGN+user.getuId(),roleMap);
+			try {
+				redisClient.setObject(prefixRole+user.getAppId()+SIGN+user.getuId(),roleMap);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 		//redis中没有menuMap，从数据库中查询并存入redis
@@ -231,7 +247,12 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil{
 			Set<PrivilegeMenuVo> privilegeMenuListReturn = new HashSet<PrivilegeMenuVo>();
 			Set<PrivilegeMenuVo> privilegeMenuListData = privilegeMenuService.getAllMenuByUserId(privilegeMenuList,privilegeMenuListReturn);  /*缓存中是否存在*/
 			menuMap.put("menuList", privilegeMenuListData);
-			redisClient.setObject(prefixMenu+user.getAppId()+SIGN+user.getuId(),menuMap);
+			try {
+				redisClient.setObject(prefixMenu+user.getAppId()+SIGN+user.getuId(),menuMap);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 		map.putAll(menuMap);
