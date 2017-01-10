@@ -55,7 +55,7 @@
 									{ field: 'name', title: '角色名称',align:'center',sortable:true,width:'20%'},
 									{ field: 'status', title: '状态',align:'center',sortable:true,width:'20%',
 										formatter : function(value, row, index) {  
-						                    if(value==1){  
+						                    if(value==0){  
 						                     	return '<span title="启用"><font color=green>启用</font></span>';     
 						                    }else{  
 						                     	return '<span title="禁用"><font color=gray>禁用</font></span>';     
