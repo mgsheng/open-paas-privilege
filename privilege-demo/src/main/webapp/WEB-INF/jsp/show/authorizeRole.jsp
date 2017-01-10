@@ -101,17 +101,17 @@
 			 if(role==""){
 			 	role = null;
 			 }
-			 var url='${pageContext.request.contextPath}/managerUser/authorizeRole?id='+${id}+'&role='+role;
+			 var url='${pageContext.request.contextPath}/managerUser/authorizeRole?id='+${id}+'&role='+role+'&userName=${userName}';
             $.post(url, function(data) {
                 if(data.result==true){
                  	msgShow('系统提示', '恭喜，授权角色成功！', 'info');
                  	//刷新
-                 	var url='${pageContext.request.contextPath}/managerUser/role?id='+${id};
+                 	var url='${pageContext.request.contextPath}/managerUser/role?id='+${id}+'&userName=${userName}';
                  	reload(url,name);
                 }else{
                   	msgShow('系统提示', '授权角色失败！', 'error');
                   	//刷新
-                 	var url='${pageContext.request.contextPath}/managerUser/role?id='+${id};
+                 	var url='${pageContext.request.contextPath}/managerUser/role?id='+${id}+'&userName=${userName}';
                  	reload(url,name);
                 }
             });
