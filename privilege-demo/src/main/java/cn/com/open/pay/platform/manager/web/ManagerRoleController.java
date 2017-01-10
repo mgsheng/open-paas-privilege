@@ -74,6 +74,8 @@ public class ManagerRoleController  extends BaseControllerUtil {
 	private String roleAddUrl;
 	@Value("#{properties['privilege-operation-name-uri']}")
 	private String getOperationNameUri;
+	@Value("#{properties['get-role-privilege-uri']}")
+	private String getRolePrivilegeUrl;
 	
 	
 	/**
@@ -127,6 +129,7 @@ public class ManagerRoleController  extends BaseControllerUtil {
     	log.info("-------------------------add         start------------------------------------");
 		String appId=request.getParameter("appId");
 		String roleName=request.getParameter("roleName");
+		roleName=java.net.URLEncoder.encode(roleName,"UTF-8");
 		String status=request.getParameter("status");
 		String treeNodeIds=request.getParameter("temp");
 		String resourceIds="";
@@ -134,12 +137,20 @@ public class ManagerRoleController  extends BaseControllerUtil {
 		if(treeNodeIds!=null && !treeNodeIds.equals("")){
 			String[] moduleRes=treeNodeIds.split(",,,");//模块与模块拆分
 			for(int i=0;i<moduleRes.length;i++){
-				if(moduleRes[i]!=null && !moduleRes[i].equals("") && moduleRes[i].contains(",,")){
-					String[] mres=moduleRes[i].split(",,");//模块与资源拆分
-					if(mres[0]!=null && !mres[0].equals("")){
-						resourceIds+=mres[0]+",";
-						if(mres.length>1 && mres[1]!=null && !mres[1].equals("")){
-							functionIds=mres[1].replace(",", ",");
+				if(moduleRes[i]!=null && !moduleRes[i].equals("")){
+					if(moduleRes[i].contains(",,")){
+						String[] mres=moduleRes[i].split(",,");//模块与资源拆分
+						for(int j=0;j<mres.length;j++){
+							if(mres[j]!=null && !mres[j].equals("")){
+								resourceIds+=mres[j]+",";
+							}
+						}
+					}else{
+						String[] mres=moduleRes[i].split(",");//模块与资源拆分
+						for(int k=0;k<mres.length;k++){
+							if(mres[k]!=null && !mres[k].equals("")){
+								functionIds+=mres[k]+",";;
+							}
 						}
 					}
 				}
@@ -164,68 +175,6 @@ public class ManagerRoleController  extends BaseControllerUtil {
 		
 		String s = sendPost(roleAddUrl,map);
 		JSONObject job=JSONObject.fromObject(s);
-    	
-    	/*String  id= request.getParameter("id");
-    	String  status= request.getParameter("status");
-    	String  roleTreeNodeIds= request.getParameter("temp");
-
-    	Map<String,Object> map = new HashMap<String, Object>();
-    	String name=new String(request.getParameter("name").getBytes("iso-8859-1"),"utf-8");
-    	//添加日志
-		PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(82);
-		PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
-		String  towLevels = privilegeModule.getName();
-		String  oneLevels = privilegeModule1.getName();
-		User user1 = (User)request.getSession().getAttribute("user");
-		String operator = user1.getUsername(); //操作人
-		String operatorId = user1.getId()+""; //操作人Id
-		
-    	if(id==""){
-    		PrivilegeResource privilegeResource = privilegeResourceService.findByCode("add");
-			List <PrivilegeRole> list= roleService.findByName(name);
-			if(list!=null&& list.size()>0){
-				map.put("returnMsg", "0");
-			}else{
-				PrivilegeRole privilegeRole=new PrivilegeRole();
-				privilegeRole.setName(name);
-				privilegeRole.setCreateTime(new Date());
-				if(nullEmptyBlankJudge(status)){
-					status="0";
-				}
-				privilegeRole.setStatus(Integer.parseInt(status));
-				roleService.savePrivilegeRole(privilegeRole);
-				int roleId = privilegeRole.getId(); //获取角色id
-				if(roleTreeNodeIds!=null && !roleTreeNodeIds.equals("")){
-					PrivilegeRoleDetails roleDetails=null;//角色权限实体
-					String[] moduleRes=roleTreeNodeIds.split(",,,");//模块与模块拆分
-					for(int i=0;i<moduleRes.length;i++){
-						if(moduleRes[i]!=null && !moduleRes[i].equals("")){
-							String[] mres=moduleRes[i].split(",,");//模块与资源拆分
-							if(mres[0]!=null && !mres[0].equals("")){
-								roleDetails=new PrivilegeRoleDetails();
-								roleDetails.setRoleId(roleId);
-								roleDetails.setModuleId(Integer.parseInt(mres[0]));
-								if(mres.length>1 && mres[1]!=null && !mres[1].equals("")){
-									roleDetails.setResources(mres[1].replace(",", ","));
-								}
-								privilegeRoleDetailsService.savePrivilegeRole(roleDetails);
-							}
-						}
-					}
-				}
-				privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),oneLevels,towLevels,privilegeResource.getId()+"",operator+"添加‘"+name+"’角色",operatorId);
-				map.put("returnMsg", "1");
-			}
-    	}else{
-    		PrivilegeResource privilegeResource = privilegeResourceService.findByCode("update");
-    		PrivilegeRole privilegeRole=new PrivilegeRole();
-    		privilegeRole.setId(Integer.parseInt(id));
-    		privilegeRole.setName(name);
-    		privilegeRole.setStatus(Integer.parseInt(status));
-    		roleService.updatePrivilegeRole(privilegeRole);
-    		privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),oneLevels,towLevels,privilegeResource.getId()+"",operator+"修改‘"+name+"’角色",operatorId);
-    		map.put("returnMsg", "2");
-    	}*/
     	WebUtils.writeErrorJson(response, job);
     }
     
@@ -316,10 +265,41 @@ public class ManagerRoleController  extends BaseControllerUtil {
      */
     @RequestMapping(value = "QueryRoleDetails")
 	public void QueryRoleDetails(HttpServletRequest request,HttpServletResponse response) {
-    	
     	String appId=request.getParameter("appId");
     	String privilegeRoleId=request.getParameter("id");
-    	List<Map<String,String>> listMap = new LinkedList<Map<String,String>>();
+    	Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
+		map.put("appId", appId);
+		map.put("privilegeRoleId", privilegeRoleId);
+		map.put("start", "0");
+		map.put("limit", "50");
+		map.put("deptId", "");
+		map.put("groupId", "");
+		String s = sendPost(getRolePrivilegeUrl,map);
+		JSONObject o =JSONObject.fromObject(s);    
+		JSONArray roleo = JSONArray.fromObject(JSONObject.fromObject(o.get("roleList")));
+		//List<PrivilegeResource1> resources=JSONArray.fromObject(roleo.get("resourceList"));
+		//List<PrivilegeFunction> funcs=JSONArray.fromObject(roleo.get("functionList"));
+		List<Map<String,String>> listMap = new LinkedList<Map<String,String>>();
+		Map<String,String> nodeMap = new HashMap<String,String>();
+		String optIds="";
+		/*for(PrivilegeResource1 res:resources){
+			nodeMap.put("menuId", res.getMenuId());
+			nodeMap.put("resourceId", res.getResourceId());
+			for(PrivilegeFunction func:funcs){
+				if((res.getResourceId()).equals(func.getResourceId())){
+					optIds=func.getOptId()+",";
+				}
+			}
+			nodeMap.put("optIds", optIds);
+		}*/
+		listMap.add(nodeMap);
+		Map<String, Object> map1 = new LinkedHashMap<String, Object>();
+		map.put("list", listMap);
+		JSONArray jsonArr = JSONArray.fromObject(map1);
+		WebUtils.writeJson(response,jsonArr);
+    	
+    	
+    	/*List<Map<String,String>> listMap = new LinkedList<Map<String,String>>();
     	PrivilegeRoleDetails privilegeRoleDetails=new PrivilegeRoleDetails();
     	//privilegeRoleDetails.setRoleId(Integer.parseInt(id));
     	List<PrivilegeRoleDetails> list = privilegeRoleDetailsService.QueryRoleDetails(privilegeRoleDetails);
@@ -339,7 +319,7 @@ public class ManagerRoleController  extends BaseControllerUtil {
 		map.put("list", listMap);
 //		JsonUtil.writeJson(response,JsonUtil.getContentData(map));
 		JSONArray jsonArr = JSONArray.fromObject(map);
-		WebUtils.writeJson(response,jsonArr);
+		WebUtils.writeJson(response,jsonArr);*/
 		
 	
     }
@@ -443,11 +423,11 @@ public class ManagerRoleController  extends BaseControllerUtil {
 							String nameValue = o.getString("optName");
 							TreeNode treeNode1=new TreeNode();
 							if((res.getResourceId()).equals(func.getResourceId())){
-								treeNode1.setId(func.getOptId());
+								treeNode1.setId(func.getFunctionId());
 								treeNode1.setText(nameValue);
 								treeNode1.setIsmodule("2");
+								treeNodeList1.add(treeNode1);
 							}
-							treeNodeList1.add(treeNode1);
 						}
 						treeNode.setChildren(treeNodeList1);
 						treeNodeList.add(treeNode);
