@@ -27,14 +27,13 @@ import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
 
-
 @Controller
 @RequestMapping("/userRole/")
-public class UserRoleAddPrivilegeController extends BaseControllerUtil{
-	private static final Logger log = LoggerFactory.getLogger(UserRoleAddPrivilegeController.class); 
+public class UserRoleAddPrivilegeController extends BaseControllerUtil {
+	private static final Logger log = LoggerFactory.getLogger(UserRoleAddPrivilegeController.class);
 	@Autowired
 	private PrivilegeUserService privilegeUserService;
-	@Autowired 
+	@Autowired
 	private PrivilegeUserRoleService privilegeUserRoleService;
 	@Autowired
 	private PrivilegeUserRedisService privilegeUserRedisService;
@@ -42,81 +41,86 @@ public class UserRoleAddPrivilegeController extends BaseControllerUtil{
 	private AppService appService;
 	@Autowired
 	private RedisClientTemplate redisClient;
+
 	/**
 	 * 用户角色初始创建接口
 	 */
 	@RequestMapping(value = "addRole")
-    public void addRole(HttpServletRequest request,HttpServletResponse response,PrivilegeUserVo privilegeUserVo) {
-    	Map<String, Object> map=new HashMap<String, Object>();
-    	log.info("====================add user role start======================");    	
-    	if(!paraMandatoryCheck(Arrays.asList(privilegeUserVo.getPrivilegeRoleId(),privilegeUserVo.getAppId(),privilegeUserVo.getAppUserId(),privilegeUserVo.getAppUserName()))){
-    		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
-              return;
-    	} 
-    	App app = (App) redisClient.getObject(RedisConstant.APP_INFO+privilegeUserVo.getAppId());
-	    if(app==null){
-		   app=appService.findById(Integer.parseInt(privilegeUserVo.getAppId()));
-		   redisClient.setObject(RedisConstant.APP_INFO+privilegeUserVo.getAppId(), app);
-		}
-	     //认证
-    	Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
-    	
-		if(!f){
-			paraMandaChkAndReturn(10004, response,"认证失败");
+	public void addRole(HttpServletRequest request, HttpServletResponse response, PrivilegeUserVo privilegeUserVo) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		log.info("====================add user role start======================");
+		if (!paraMandatoryCheck(Arrays.asList(privilegeUserVo.getAppId(), privilegeUserVo.getAppUserId(),
+				privilegeUserVo.getAppUserName()))) {
+			paraMandaChkAndReturn(10000, response, "必传参数中有空值");
 			return;
 		}
-    	PrivilegeUser user=null;
-    	//查询业务用户是否已存在
-    	user = privilegeUserService.findByAppIdAndUserId(privilegeUserVo.getAppId(),privilegeUserVo.getAppUserId());
-    	if(user!=null){
-    		 paraMandaChkAndReturn(10001, response,"该业务用户已存在");
-             return;
-    	}
-    	//存储用户
-    	user=new PrivilegeUser();
-    	user.setAppId(privilegeUserVo.getAppId());
-    	user.setPrivilegeRoleId(privilegeUserVo.getPrivilegeRoleId());
-    	user.setAppUserId(privilegeUserVo.getAppUserId());
-    	user.setAppUserName(privilegeUserVo.getAppUserName());
-    	user.setDeptId(privilegeUserVo.getDeptId());
-    	user.setGroupId(privilegeUserVo.getGroupId());
-    	user.setResourceId(privilegeUserVo.getResourceId());
-    	user.setPrivilegeFunId(privilegeUserVo.getPrivilegeFunId());
-    	
-    	Boolean sf = privilegeUserService.savePrivilegeUser(user);
-    	if(sf){
-    		//存储用户角色关系
-	    	String[] roles=privilegeUserVo.getPrivilegeRoleId().split(",");
-	    	for(String role : roles){
-	    		PrivilegeUserRole userRole=new PrivilegeUserRole();
-	    		userRole.setUserId(user.getuId());
-	    		userRole.setPrivilegeRoleId(role);
-	    		userRole.setCreateUser(privilegeUserVo.getCreateUser());
-	    		userRole.setCreateUserId(privilegeUserVo.getCreateUserId());
-	    		Boolean f1 = privilegeUserRoleService.savePrivilegeUserRole(userRole);
-	    		if(!f1){
-	    			paraMandaChkAndReturn(10003, response,"用户角色关系添加失败");
-	                return;
-	    		}
-	    	}
-	    	//添加缓存
-			PrivilegeAjaxMessage message=privilegeUserRedisService.getRedisUserRole(privilegeUserVo.getAppId(), privilegeUserVo.getAppUserId());
-			if (message.getCode().equals("1")) {
-				map.put("status","1");
-			} else {
-				map.put("status", message.getCode());
-				map.put("error_code", message.getMessage());/* 数据不存在 */
-			}
-    	}else{
-    		paraMandaChkAndReturn(10002, response,"用户添加失败");
-            return;
-    	}
+		App app = (App) redisClient.getObject(RedisConstant.APP_INFO + privilegeUserVo.getAppId());
+		if (app == null) {
+			app = appService.findById(Integer.parseInt(privilegeUserVo.getAppId()));
+			redisClient.setObject(RedisConstant.APP_INFO + privilegeUserVo.getAppId(), app);
+		}
+		// 认证
+		Boolean f = OauthSignatureValidateHandler.validateSignature(request, app);
 
-    	if(map.get("status")=="0"){
-    		writeErrorJson(response,map);
-    	}else{
-    		writeSuccessJson(response,map);
-    	}
-        return;
-    }
+		if (!f) {
+			paraMandaChkAndReturn(10004, response, "认证失败");
+			return;
+		}
+		PrivilegeUser user = null;
+		// 查询业务用户是否已存在
+		user = privilegeUserService.findByAppIdAndUserId(privilegeUserVo.getAppId(), privilegeUserVo.getAppUserId());
+		if (user != null) {
+			paraMandaChkAndReturn(10001, response, "该业务用户已存在");
+			return;
+		}
+		// 存储用户
+		user = new PrivilegeUser();
+		user.setAppId(privilegeUserVo.getAppId());
+		user.setPrivilegeRoleId(privilegeUserVo.getPrivilegeRoleId());
+		user.setAppUserId(privilegeUserVo.getAppUserId());
+		user.setAppUserName(privilegeUserVo.getAppUserName());
+		user.setDeptId(privilegeUserVo.getDeptId());
+		user.setGroupId(privilegeUserVo.getGroupId());
+		user.setResourceId(privilegeUserVo.getResourceId());
+		user.setPrivilegeFunId(privilegeUserVo.getPrivilegeFunId());
+
+		Boolean sf = privilegeUserService.savePrivilegeUser(user);
+		if (privilegeUserVo.getPrivilegeRoleId() != null && !("").equals(privilegeUserVo.getPrivilegeRoleId())) {
+			if (sf) {
+				// 存储用户角色关系
+				String[] roles = privilegeUserVo.getPrivilegeRoleId().split(",");
+				for (String role : roles) {
+					PrivilegeUserRole userRole = new PrivilegeUserRole();
+					userRole.setUserId(user.getuId());
+					userRole.setPrivilegeRoleId(role);
+					userRole.setCreateUser(privilegeUserVo.getCreateUser());
+					userRole.setCreateUserId(privilegeUserVo.getCreateUserId());
+					Boolean f1 = privilegeUserRoleService.savePrivilegeUserRole(userRole);
+					if (!f1) {
+						paraMandaChkAndReturn(10003, response, "用户角色关系添加失败");
+						return;
+					}
+				}
+				// 添加缓存
+				PrivilegeAjaxMessage message = privilegeUserRedisService.getRedisUserRole(privilegeUserVo.getAppId(),
+						privilegeUserVo.getAppUserId());
+				if (message.getCode().equals("1")) {
+					map.put("status", "1");
+				} else {
+					map.put("status", message.getCode());
+					map.put("error_code", message.getMessage());/* 数据不存在 */
+				}
+			} else {
+				paraMandaChkAndReturn(10002, response, "用户添加失败");
+				return;
+			}
+		}
+
+		if (map.get("status") == "0") {
+			writeErrorJson(response, map);
+		} else {
+			writeSuccessJson(response, map);
+		}
+		return;
+	}
 }
