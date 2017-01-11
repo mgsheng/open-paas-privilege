@@ -159,19 +159,21 @@
         	var ui = $('#deptree1').tree('getChecked', ['checked','checked']);
         	for(var i = 0;i<ui.length;i++){
        		    //去掉带r标示的id（用于区分资源和模块id）
-    			checkIds+=ui[i].id.replace('r','');
-     			//模块节点(ismodule自定义参数=0标记的是模块)
+     			id=ui[i].id.replace('r','');
+    			//模块节点(ismodule自定义参数=0标记的是模块)
      			if(ui[i].ismodule=="0"){
-     				checkIds=checkIds+",,,";//模块与模块区分
+     				if(checkIds.split(",").length!=0 || checkIds.split(",,").length!=0){
+     					checkIds+="=";
+     				}
+     				checkIds=checkIds+id+",,,";//模块与模块区分
      				bool=false;
      			}else if(ui[i].ismodule=="2"){
-     				checkIds=checkIds+",";//资源与资源区分
+     				checkIds=checkIds+id+",";//资源与资源区分
      			}else{
-     				checkIds=checkIds+",,";//模块与资源区分
+     				checkIds=checkIds+id+",,";//模块与资源区分
      				bool=true;
      			}
-        	}        
-        	alert(checkIds);
+        	}
             var roleName = $('#roleName').val();
             var status= $('#status').val();
             if (roleName == '') {

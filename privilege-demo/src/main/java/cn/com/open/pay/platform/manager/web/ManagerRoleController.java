@@ -135,25 +135,36 @@ public class ManagerRoleController  extends BaseControllerUtil {
 		String resourceIds="";
 		String functionIds="";
 		if(treeNodeIds!=null && !treeNodeIds.equals("")){
-			String[] moduleRes=treeNodeIds.split(",,,");//模块与模块拆分
-			for(int i=0;i<moduleRes.length;i++){
-				if(moduleRes[i]!=null && !moduleRes[i].equals("")){
-					if(moduleRes[i].contains(",,")){
-						String[] mres=moduleRes[i].split(",,");//模块与资源拆分
-						for(int j=0;j<mres.length;j++){
-							if(mres[j]!=null && !mres[j].equals("")){
-								resourceIds+=mres[j]+",";
-							}
-						}
-					}else{
-						String[] mres=moduleRes[i].split(",");//模块与资源拆分
-						for(int k=0;k<mres.length;k++){
-							if(mres[k]!=null && !mres[k].equals("")){
-								functionIds+=mres[k]+",";
+			String[] menus=treeNodeIds.split("=");//菜单组之间分隔
+			for(int a=0;a<menus.length;a++){
+				if(menus[a]!=null && !menus[a].equals("")){
+					String[] moduleRes=menus[a].split(",,,");//模块与模块拆分
+					for(int i=0;i<moduleRes.length;i++){
+						if(moduleRes[i]!=null && !moduleRes[i].equals("")){
+							if(moduleRes[i].contains(",,")){
+								String[] mres=moduleRes[i].split(",,");//模块与资源拆分
+								for(int j=0;j<mres.length;j++){
+									if(mres[j]!=null && !mres[j].equals("")){
+										resourceIds+=mres[j]+",";
+									}
+								}
+							}else if(moduleRes[i].contains(",")){
+								String[] mres=moduleRes[i].split(",");//模块与资源拆分
+								for(int k=0;k<mres.length;k++){
+									if(mres[k]!=null && !mres[k].equals("")){
+										functionIds+=mres[k]+",";
+									}
+								}
 							}
 						}
 					}
 				}
+			}
+			if(resourceIds!=null && !("").equals(resourceIds)){
+				resourceIds=resourceIds.substring(0, resourceIds.length()-1);
+			}
+			if(functionIds!=null && !("").equals(functionIds)){
+				functionIds=functionIds.substring(0, functionIds.length()-1);
 			}
 		}
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
@@ -621,9 +632,5 @@ public class ManagerRoleController  extends BaseControllerUtil {
 			aidMap = null;
 
 			return results;
-		}
-	
-	
-
-	
+		}	
 }
