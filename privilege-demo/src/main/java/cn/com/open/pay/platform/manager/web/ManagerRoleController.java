@@ -73,9 +73,11 @@ public class ManagerRoleController  extends BaseControllerUtil {
 	@Value("#{properties['privilege-role-add-uri']}")
 	private String roleAddUrl;
 	@Value("#{properties['privilege-operation-name-uri']}")
-	private String getOperationNameUri;
+	private String getOperationNameUrl;
 	@Value("#{properties['get-role-privilege-uri']}")
 	private String getRolePrivilegeUrl;
+	@Value("#{properties['privilege-role-modi-uri']}")
+	private String roleModiUrl;
 	
 	
 	/**
@@ -215,49 +217,70 @@ public class ManagerRoleController  extends BaseControllerUtil {
      */
     @RequestMapping(value = "updateRole")
 	public void updateRole(HttpServletRequest request,HttpServletResponse response) throws UnsupportedEncodingException {
-    	String  id= request.getParameter("id");
-    	String  status= request.getParameter("status");
-    	String  roleTreeNodeIds= request.getParameter("temp");
-
-    	Map<String,Object> map = new HashMap<String, Object>();
-    	String name=new String(request.getParameter("name").getBytes("iso-8859-1"),"utf-8");
-    	
-		PrivilegeRole privilegeRole=new PrivilegeRole();
-		privilegeRole.setId(Integer.parseInt(id));
-		privilegeRole.setName(name);
-		privilegeRole.setStatus(Integer.parseInt(status));
-		roleService.updatePrivilegeRole(privilegeRole);
-		privilegeRoleDetailsService.deletePrivilegeRoleDetail(id);
-		if(roleTreeNodeIds!=null && !roleTreeNodeIds.equals("")){
-			PrivilegeRoleDetails roleDetails=null;//角色权限实体
-			String[] moduleRes=roleTreeNodeIds.split(",,,");//模块与模块拆分
-			for(int i=0;i<moduleRes.length;i++){
-				if(moduleRes[i]!=null && !moduleRes[i].equals("")){
-					String[] mres=moduleRes[i].split(",,");//模块与资源拆分
-					if(mres[0]!=null && !mres[0].equals("")){
-						roleDetails=new PrivilegeRoleDetails();
-						roleDetails.setRoleId(Integer.parseInt(id));
-						roleDetails.setModuleId(Integer.parseInt(mres[0]));
-						if(mres.length>1 && mres[1]!=null && !mres[1].equals("")){
-							roleDetails.setResources(mres[1].replace(",", ","));
+    	log.info("-------------------------update        start------------------------------------");
+    	String appId=request.getParameter("appId");
+		String privilegeRoleId=request.getParameter("privilegeRoleId");
+		String roleName=request.getParameter("roleName");
+		roleName=java.net.URLEncoder.encode(roleName,"UTF-8");
+		String status=request.getParameter("status");
+		String treeNodeIds=request.getParameter("temp");
+		String resourceIds="";
+		String functionIds="";
+		if(treeNodeIds!=null && !treeNodeIds.equals("")){
+			String[] menus=treeNodeIds.split("=");//菜单组之间分隔
+			for(int a=0;a<menus.length;a++){
+				if(menus[a]!=null && !menus[a].equals("")){
+					String[] moduleRes=menus[a].split(",,,");//模块与模块拆分
+					for(int i=0;i<moduleRes.length;i++){
+						if(moduleRes[i]!=null && !moduleRes[i].equals("")){
+							if(moduleRes[i].contains(",,")){
+								String[] mres=moduleRes[i].split(",,");//模块与资源拆分
+								for(int j=0;j<mres.length;j++){
+									if(mres[j]!=null && !mres[j].equals("")){
+										resourceIds+=mres[j]+",";
+									}
+								}
+							}else if(moduleRes[i].contains(",")){
+								String[] mres=moduleRes[i].split(",");//模块与资源拆分
+								for(int k=0;k<mres.length;k++){
+									if(mres[k]!=null && !mres[k].equals("")){
+										functionIds+=mres[k]+",";
+									}
+								}
+							}
 						}
-						privilegeRoleDetailsService.savePrivilegeRole(roleDetails);
 					}
 				}
 			}
+			if(resourceIds!=null && !("").equals(resourceIds)){
+				resourceIds=resourceIds.substring(0, resourceIds.length()-1);
+			}
+			if(functionIds!=null && !("").equals(functionIds)){
+				functionIds=functionIds.substring(0, functionIds.length()-1);
+			}
 		}
-		//添加日志
-		PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(82);
-		PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
-		String towLevels = privilegeModule.getName();
-		String  oneLevels = privilegeModule1.getName();
-		User user1 = (User)request.getSession().getAttribute("user");
-		String operator = user1.getUsername(); //操作人
-		String operatorId = user1.getId()+""; //操作人Id
-		PrivilegeResource privilegeResource = privilegeResourceService.findByCode("update");
-		privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),oneLevels,towLevels,privilegeResource.getId()+"",operator+"修改‘"+name+"’角色",operatorId);
-		map.put("returnMsg", "2");
-    	WebUtils.writeErrorJson(response, map);
+		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
+		map.put("privilegeRoleId", privilegeRoleId);
+		map.put("appId", appId);
+		map.put("method", 0);//0-添加权限，1-删除权限
+		map.put("roleName", roleName);
+		map.put("status", status);
+		map.put("rolePrivilege", resourceIds);
+		map.put("privilegeFunId", functionIds);
+		map.put("groupId", "");
+		map.put("groupName", "");
+		map.put("deptId", "");
+		map.put("deptName", "");
+		map.put("roleLevel", "");
+		map.put("roleType", "");
+		map.put("parentRoleId", "");
+		map.put("remark", "");
+		map.put("createUser", "");
+		map.put("createUserId", "");
+		
+		String s = sendPost(roleModiUrl,map);
+		JSONObject job=JSONObject.fromObject(s);
+    	WebUtils.writeErrorJson(response, job);
     }
     
     /**
@@ -302,52 +325,34 @@ public class ManagerRoleController  extends BaseControllerUtil {
 		map.put("groupId", "");
 		String s = sendPost(getRolePrivilegeUrl,map);
 		JSONObject o =JSONObject.fromObject(s);    
-		JSONArray roleo = JSONArray.fromObject(JSONObject.fromObject(o.get("roleList")));
-		//List<PrivilegeResource1> resources=JSONArray.fromObject(roleo.get("resourceList"));
-		//List<PrivilegeFunction> funcs=JSONArray.fromObject(roleo.get("functionList"));
+		List<Map<String,Object>> roles = JSONArray.fromObject(o.get("roleList"));
+		Map<String,Object> m=roles.get(0);
+		List<Map<String,Object>> resources=JSONArray.fromObject(m.get("resourceList"));
+		List<Map<String,Object>> functions=JSONArray.fromObject(m.get("functionList"));
 		List<Map<String,String>> listMap = new LinkedList<Map<String,String>>();
-		Map<String,String> nodeMap = new HashMap<String,String>();
-		String optIds="";
-		/*for(PrivilegeResource1 res:resources){
-			nodeMap.put("menuId", res.getMenuId());
-			nodeMap.put("resourceId", res.getResourceId());
-			for(PrivilegeFunction func:funcs){
-				if((res.getResourceId()).equals(func.getResourceId())){
-					optIds=func.getOptId()+",";
-				}
-			}
-			nodeMap.put("optIds", optIds);
-		}*/
-		listMap.add(nodeMap);
-		Map<String, Object> map1 = new LinkedHashMap<String, Object>();
-		map.put("list", listMap);
-		JSONArray jsonArr = JSONArray.fromObject(map1);
-		WebUtils.writeJson(response,jsonArr);
-    	
-    	
-    	/*List<Map<String,String>> listMap = new LinkedList<Map<String,String>>();
-    	PrivilegeRoleDetails privilegeRoleDetails=new PrivilegeRoleDetails();
-    	//privilegeRoleDetails.setRoleId(Integer.parseInt(id));
-    	List<PrivilegeRoleDetails> list = privilegeRoleDetailsService.QueryRoleDetails(privilegeRoleDetails);
-//    	String id = request.getParameter("id");
-    	if(list!=null && list.size()>0){
-			Map<String,String> map = null;
-			for(PrivilegeRoleDetails roleDetail : list){
-				map = new HashMap<String,String>();
-				map.put("id", roleDetail.getId()+"");
-				map.put("moduleId", roleDetail.getModuleId()+"");
-				map.put("resources", roleDetail.getResources()==null?"":roleDetail.getResources());
-				listMap.add(map);
+		Map<String,String> nodeMap = null;
+		if(resources.size()>0){
+			for(Map<String,Object> resMap:resources){
+				nodeMap = new HashMap<String,String>();
+				nodeMap.put("menuId", "m"+(String)(resMap.get("menuId")));
+				nodeMap.put("resourceId", "r"+(String)(resMap.get("resourceId")));
+				nodeMap.put("funcId", "");
+				listMap.add(nodeMap);
 			}
 		}
-		//返回
-		Map<String, Object> map = new LinkedHashMap<String, Object>();
-		map.put("list", listMap);
-//		JsonUtil.writeJson(response,JsonUtil.getContentData(map));
-		JSONArray jsonArr = JSONArray.fromObject(map);
-		WebUtils.writeJson(response,jsonArr);*/
-		
-	
+		if(functions.size()>0){
+			for(Map<String,Object> funcMap:functions){
+				nodeMap = new HashMap<String,String>();
+				nodeMap.put("menuId", "");
+				nodeMap.put("resourceId", "r"+(String)funcMap.get("resourceId"));
+				nodeMap.put("funcId", "f"+(String)funcMap.get("functionId"));
+				listMap.add(nodeMap);
+			}
+		}
+		map.clear();
+		map.put("nodeList", listMap);
+		JSONObject jsonObj = JSONObject.fromObject(map);
+		WebUtils.writeJson(response,jsonObj);
     }
     
     @RequestMapping(value = "tree")
@@ -392,13 +397,13 @@ public class ManagerRoleController  extends BaseControllerUtil {
 		TreeNode node = null;
 		if(privilegeMenu != null){
 			node = new TreeNode();
-			node.setId(String.valueOf(privilegeMenu.getMenuId()));//菜单ID
+			node.setId("m"+String.valueOf(privilegeMenu.getMenuId()));//菜单ID
 			node.setIsmodule("0");
 			node.setChecked(false);
 			node.setText(privilegeMenu.getMenuName());//菜单名称
 			node.setTarget("");
 			node.setResource("");
-			node.setPid(String.valueOf(privilegeMenu.getParentId()));//父级菜单ID
+			node.setPid("m"+String.valueOf(privilegeMenu.getParentId()));//父级菜单ID
 			Map<String,Object> map = new HashMap<String,Object>();
 			node.setAttributes(map);
 		}
@@ -435,8 +440,8 @@ public class ManagerRoleController  extends BaseControllerUtil {
 				List<TreeNode> treeNodeList = new ArrayList<TreeNode>();
 				for(PrivilegeResource1 res:resourceList){
 					TreeNode treeNode=new TreeNode();
-					if((menuId).equals(res.getMenuId())){
-						treeNode.setId(res.getResourceId());
+					if((menuId).equals("m"+res.getMenuId())){
+						treeNode.setId("r"+res.getResourceId());
 						treeNode.setText(res.getResourceName());
 						treeNode.setIsmodule("1");
 						List<TreeNode> treeNodeList1 = new ArrayList<TreeNode>();
@@ -444,12 +449,12 @@ public class ManagerRoleController  extends BaseControllerUtil {
 							String optId=func.getOptId();								
 							Map<String, Object> map = new HashMap<String,Object>();
 							map.put("optId", optId);
-							String s = sendPost(getOperationNameUri,map);
+							String s = sendPost(getOperationNameUrl,map);
 							JSONObject o = JSONObject.fromObject(s);
 							String nameValue = o.getString("optName");
 							TreeNode treeNode1=new TreeNode();
 							if((res.getResourceId()).equals(func.getResourceId())){
-								treeNode1.setId(func.getFunctionId());
+								treeNode1.setId("f"+func.getFunctionId());
 								treeNode1.setText(nameValue);
 								treeNode1.setIsmodule("2");
 								treeNodeList1.add(treeNode1);

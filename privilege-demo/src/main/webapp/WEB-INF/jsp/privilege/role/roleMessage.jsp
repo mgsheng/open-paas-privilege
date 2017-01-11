@@ -23,14 +23,7 @@
 				<th data-options="field:'status',width:240,align:'right'">状态</th>
 			</tr>
 		</thead>
-		 <%--<c:forEach items="${roleList}" var="role">
-          <tr>
-              <td>${role.privilegeRoleId}</td>
-              <td>${role.roleName} </td>
-              <td><c:if test="${role.status=='0'}">有效</c:if><c:if test="${role.status!='0'}">无效</c:if></td>
-          </tr>  
-       </c:forEach> 
-	--%></table>
+	</table>
 	<div id="tb" style="padding:2px 5px;">
 	   <%--<span style="margin-left: 75%;">
 		名称: 
@@ -72,7 +65,7 @@
 			
 			<div class="easyui-panel" style="padding:5px;height: 80%;widows:300px;margin-top:5px;overflow-x:scroll;">
 				  <ul id="deptree1"  style="height: 100%;width: 200px" class="easyui-tree" 
-					 data-options="method:'post'"> 
+					 data-options="method:'get'"> 
 			 	  </ul>
 			</div>
 			</div>
@@ -96,7 +89,7 @@
 		    $('#w').window('open');
 		});
 		$('#btnEp').click(function() {
-	   		serverAdd();
+	   		serverUpdate();
 	    });
 		$('#btnCancel').click(function(){closePwd();});
 	});
@@ -109,17 +102,7 @@
 	        onLoadSuccess:function(data){
 	           if (data.total<1){
 	                  $.messager.alert("提示","没有符合查询条件的数据!");
-	           }/*else{
-	        	   roleList = data.rows;
-	          		for(var i=0;i<roleList.length;i++){
-	          			var status=roleList[i].status;
-	          			if(status == '0'){
-	          				status='有效';
-	          			}else{
-	          				status='无效';
-	           			}
-	          		}
-	         	}*/
+	           }
 	      	}
 	    }); 
 	}
@@ -175,27 +158,26 @@
 			$.messager.alert(title, msgString, msgType);
 		}
 		
-        //添加
-        function serverAdd() {   
+        //添加/修改
+        function serverUpdate() { 
+        	var privilegeRoleId=$("#id").val();
         	var appId=${appId};
         	var checkIds='';
-        	var bool=false;
         	var ui = $('#deptree1').tree('getChecked', ['checked','checked']);
         	for(var i = 0;i<ui.length;i++){
-       		    //去掉带r标示的id（用于区分资源和模块id）
-     			id=ui[i].id.replace('r','');
     			//模块节点(ismodule自定义参数=0标记的是模块)
      			if(ui[i].ismodule=="0"){
      				if(checkIds.split(",").length!=0 || checkIds.split(",,").length!=0){
      					checkIds+="=";
      				}
+     				id=ui[i].id.replace('m','');
      				checkIds=checkIds+id+",,,";//模块与模块区分
-     				bool=false;
      			}else if(ui[i].ismodule=="2"){
+     				id=ui[i].id.replace('f','');
      				checkIds=checkIds+id+",";//资源与资源区分
      			}else{
+     				id=ui[i].id.replace('r','');
      				checkIds=checkIds+id+",,";//模块与资源区分
-     				bool=true;
      			}
         	}
             var roleName = $('#roleName').val();
@@ -204,10 +186,19 @@
                 msgShow('系统提示', '请输入名称！', 'warning');
                 return false;
             }
-            var url='${pageContext.request.contextPath}/managerRole/addRole?appId='+appId+'&roleName='+roleName+'&status='+status+'&temp='+checkIds;
+            var url;
+            if(privilegeRoleId==null || privilegeRoleId==""){
+                url='${pageContext.request.contextPath}/managerRole/addRole?appId='+appId+'&roleName='+roleName+'&status='+status+'&temp='+checkIds;
+            }else{
+            	url='${pageContext.request.contextPath}/managerRole/updateRole?appId='+appId+'&roleName='+roleName+'&status='+status+'&temp='+checkIds+'&privilegeRoleId='+privilegeRoleId;
+            }
             $.post(url, function(data) {
                 if(data.status=='1'){
-	                 msgShow('系统提示', '恭喜，添加成功！', 'info');
+                	 if(privilegeRoleId==null || privilegeRoleId==""){
+	                 	msgShow('系统提示', '恭喜，添加成功！', 'info');
+                	 }else{
+                		msgShow('系统提示', '恭喜，修改成功！', 'info');
+                	 }
 	                 close();
 	                 $('#w').window('close');
 				     var url='${pageContext.request.contextPath}/managerRole/getRoleMessage';
@@ -220,7 +211,7 @@
             });
         }
         //修改
-        /*function editMessage(){
+        function editMessage(){
    			var row = $('#dg').datagrid('getSelected');
 	   		if(row==null){
 	   			msgShow('系统提示', '请选中要修改的数据', 'info');
@@ -237,29 +228,25 @@
    					   $.ajax({
    						    url:"${pageContext.request.contextPath}/managerRole/QueryRoleDetails?appId=${appId}&id="+id, 
 	   						success: function(data) {
-	   							alert(data);
 	   							var node;
-	   				            $(data[0].list).each(function(){
-	   				            	if(this.optIds!=null && this.optIds!=""){
-	   				            		var optId=this.optIds.split(",");
-	   				            		for(var i=0;i<optId.length;i++){
-	   				            			node = zTree.getNodeByParam("searchId",("m"+this.resourceId+"r"+optId[i]));
-	   				            			if(node!=null){
-	   											if(!node.isParent){
-	   												zTree.checkNode(node,true,true);
-	   											}
-	   										}
-	   				            		}
+	   							$(data.nodeList).each(function(){
+	   				            	if(this.funcId!=null && this.funcId!=""){
+	   				            		node=$('#deptree1').tree('find',this.funcId);
+	   				            		$('#deptree1').tree('check', node.target);
+	   				            		var node1=$('#deptree1').tree('getParent', node.target);
+	   				            		var node2=$('#deptree1').tree('getParent', node1.target);
+	   				            		var node3=$('#deptree1').tree('getParent', node2.target);
+	   				            		$('#deptree1').tree('expand', node3.target);
 	   				            	}else{
-	   				            		node = zTree.getNodeByParam("searchId",("m"+this.menuId));
-	   				            		if(node!=null){
-	   										zTree.checkNode(node,true,true);
-	   									}
+	   				            		node=$('#deptree1').tree('find',this.resourceId);
+	   				            		$('#deptree1').tree('check', node.target);
+	   				            		var node1=$('#deptree1').tree('getParent', node.target);
+	   				            		var node2=$('#deptree1').tree('getParent', node1.target);
+	   				            		$('#deptree1').tree('expand', node2.target);
 	   				            	}
 	   							});
 	   						}
    					   });
-	  					//openPwd();
 	  					$('#w').window({
 			                title: '角色修改',
 			                width: 400,
@@ -269,23 +256,13 @@
 			                height: 500,
 			                resizable:false
 			            });
-	  					var id = $('#id').val();
-	  		            $('#deptree1').tree({ 
-	  		           	 lines:true,//显示虚线效果 
-	  		           	 animate: true,
-	  		           	  checkbox:true,
-	  		                 url: '${pageContext.request.contextPath}/managerRole/tree?appId=${appId}',  
-	  		             });
 	  					$('#w').window('open');
-   				}
+   					}
    			   });
    			}
-   		}*/
+   		}
 
 		function reload(url,appId){
-   			//var url=url+"?appId="+appId;
-   			//$.post(url, function(data) {});
-			//window.location.reload();
    			$('#dg').datagrid('reload',{url: url, queryParams:{ appId:appId}, method: "post"}); 
    		}
 </script>
