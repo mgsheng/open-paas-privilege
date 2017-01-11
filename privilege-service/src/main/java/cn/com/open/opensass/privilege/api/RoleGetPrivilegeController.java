@@ -103,24 +103,24 @@ public class RoleGetPrivilegeController extends BaseControllerUtil{
 					privilegeResourceVo.setBaseUrl(privilegeResource.getBaseUrl());
 					privilegeResourceVo.setStatus(privilegeResource.getStatus());
 					resources.add(privilegeResourceVo);//添加到资源List
-					if(privilegeRoleResource.getPrivilegeFunId()!=null){
-						String[] funcIds = privilegeRoleResource.getPrivilegeFunId().split(",");
-						for(String funcId : funcIds){
-							if(!funcIdList.contains(funcId)){
-								funcIdList.add(funcId);
-								PrivilegeFunction privilegeFunction = privilegeFunctionService.findByFunctionId(funcId);
-								if(privilegeFunction != null){
-									PrivilegeFunctionVo privilegeFunctionVo = new PrivilegeFunctionVo();
-		    						privilegeFunctionVo.setFunctionId(privilegeFunction.getId());
-		    						privilegeFunctionVo.setOptId(privilegeFunction.getOperationId());
-		    						privilegeFunctionVo.setResourceId(privilegeFunction.getResourceId());
-		    						privilegeFunctionVo.setOptUrl(privilegeFunction.getOptUrl());
-		    						functions.add(privilegeFunctionVo);//添加到方法List
-		    					}
-							}
-						}
-					} 
 				}
+				if(privilegeRoleResource.getPrivilegeFunId()!=null){
+					String[] funcIds = privilegeRoleResource.getPrivilegeFunId().split(",");
+					for(String funcId : funcIds){
+						if(!funcIdList.contains(funcId)){
+							funcIdList.add(funcId);
+							PrivilegeFunction privilegeFunction = privilegeFunctionService.findByFunctionId(funcId);
+							if(privilegeFunction != null){
+								PrivilegeFunctionVo privilegeFunctionVo = new PrivilegeFunctionVo();
+	    						privilegeFunctionVo.setFunctionId(privilegeFunction.getId());
+	    						privilegeFunctionVo.setOptId(privilegeFunction.getOperationId());
+	    						privilegeFunctionVo.setResourceId(privilegeFunction.getResourceId());
+	    						privilegeFunctionVo.setOptUrl(privilegeFunction.getOptUrl());
+	    						functions.add(privilegeFunctionVo);//添加到方法List
+	    					}
+						}
+					}
+				} 
 			}
 			PrivilegeRoleVo privilegeRoleVo = new PrivilegeRoleVo();
 			privilegeRoleVo.setAppId(privilegeRole.getAppId());
