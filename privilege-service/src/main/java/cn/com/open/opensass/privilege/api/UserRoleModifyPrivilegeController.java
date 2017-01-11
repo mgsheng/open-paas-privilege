@@ -135,7 +135,23 @@ public class UserRoleModifyPrivilegeController extends BaseControllerUtil{
     				map.put("error_code", message.getMessage());/* 数据不存在 */
     			}
         	}
-    	}
+    	}else {
+    		user.setDeptId(privilegeUserVo.getDeptId());
+        	user.setGroupId(privilegeUserVo.getGroupId());
+        	user.setResourceId(privilegeUserVo.getResourceId());
+        	user.setPrivilegeFunId(privilegeUserVo.getPrivilegeFunId());
+        	boolean uf = privilegeUserService.updatePrivilegeUser(user);
+        	if(uf){
+        		//更新缓存
+    			PrivilegeAjaxMessage message=privilegeUserRedisService.updateUserRoleRedis(privilegeUserVo.getAppId(), privilegeUserVo.getAppUserId());
+    			if (message.getCode().equals("1")) {
+    				map.put("status","1");
+    			} else {
+    				map.put("status", message.getCode());
+    				map.put("error_code", message.getMessage());/* 数据不存在 */
+    			}
+        	}
+		}
     	
     	if(map.get("status")=="0"){
     		writeErrorJson(response,map);
