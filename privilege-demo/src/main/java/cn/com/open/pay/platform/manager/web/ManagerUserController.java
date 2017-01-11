@@ -112,19 +112,19 @@ public class ManagerUserController extends BaseControllerUtil {
 				System.err.println("该应用没有res");
 			}
 		}
-		List<Map<String, Object>> pareRes = new ArrayList<>();
+		List<Map<String, Object>> pareRes = new ArrayList<Map<String, Object>>();
 
 		if (resourceList != null) {
 			for (Map<String, Object> reslist : resourceList) {
-				List<Map<String, Object>> mList = new ArrayList<>();
-				Map<String, Object> map = new HashMap<>();
+				List<Map<String, Object>> mList = new ArrayList<Map<String, Object>>();
+				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("resourceId", reslist.get("resourceId"));
 				map.put("resourceName", reslist.get("resourceName"));
 				map.put("status", reslist.get("status"));
 				if (functionList != null) {
 					for (Map<String, Object> fun : functionList) {
 						if (fun.get("resourceId").equals(reslist.get("resourceId"))) {
-							Map<String, Object> fMap = new HashMap<>();
+							Map<String, Object> fMap = new HashMap<String,Object>();
 							fMap.put("functionId", fun.get("functionId"));
 							mList.add(fMap);
 							map.put("menus", mList);
@@ -136,7 +136,7 @@ public class ManagerUserController extends BaseControllerUtil {
 			}
 		}
 
-		Map<String, Object> aMap = new HashMap<>();
+		Map<String, Object> aMap = new HashMap<String,Object>();
 		aMap.put("menus", pareRes);
 		model.addAttribute("menus", JSONObject.fromObject(aMap));
 		System.err.println(JSONObject.fromObject(aMap).toString());
@@ -394,7 +394,7 @@ public class ManagerUserController extends BaseControllerUtil {
 				System.err.println("该用户没有功能");
 			}
 		}
-		Map<String, Object> aMap = new HashMap<>();
+		Map<String, Object> aMap = new HashMap<String,Object>();
 		aMap.put("resourceList", userResourceList);
 		aMap.put("functionList", userFunctionList);
 		System.err.println(JSONObject.fromObject(aMap).toString());
