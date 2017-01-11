@@ -64,6 +64,10 @@
 											<span style="font-weight:bold;">授权角色</span>
 											<span class="icon-edit">&nbsp;&nbsp;&nbsp;&nbsp;</span>
 										</a>
+										<a href="javascript:void(0)" class="easyui-linkbutton" onclick="openWinFunction();" style="margin-left:2%;padding-bottom:0.6%;display:inline; ">
+											<span style="font-weight:bold;">授权功能</span>
+											<span class="icon-edit">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+										</a>
 									</div>
 								</form>
 							</div>
@@ -210,7 +214,22 @@
 					 cache:true
 				 });
 			}
-		}	
+		}
+		//添加tab页面
+		function addPanel2(userName,userId){
+			if ($('#tt').tabs('exists', userName)){
+			 	$('#tt').tabs('select', userName);
+			} else {
+				 var url = '${pageContext.request.contextPath}/managerUser/toFunction?id='+userId+'&userName='+userName;
+			 	 var content = '<iframe scrolling="auto" frameborder="0" src="'+url+'" style="width:100%;height:100%;"></iframe>';
+				 $('#tt').tabs('add',{
+					 title:userName,
+					 content:content,
+					 closable:true,
+					 cache:true
+				 });
+			}
+		}
 		//移除tab页面
 		function removePanel(){
 			var tab = $('#tt').tabs('getSelected');
@@ -219,7 +238,21 @@
 				$('#tt').tabs('close', index);
 			}
 		}
-		
+		//打开授权功能窗口
+		function openWinFunction() {
+			var row = $('#dg').datagrid('getSelected');
+			if (row){
+				$.messager.confirm('系统提示', '是否确定授权?', function(r){
+					if(r){
+						var userId = row.id;
+						var userName=row.username;
+						addPanel2(userName,userId);
+					}
+				});
+			}else{
+            	msgShow('系统提示', '请选择用户！', 'warning');
+            }
+		}
 		//打开授权角色窗口
 		function openWinRole(){
 			var row = $('#dg').datagrid('getSelected');
