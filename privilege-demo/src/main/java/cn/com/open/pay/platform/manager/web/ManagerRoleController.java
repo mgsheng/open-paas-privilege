@@ -86,13 +86,28 @@ public class ManagerRoleController  extends BaseControllerUtil {
 	public String showSearch(HttpServletRequest request,HttpServletResponse response,Model model){
 		log.info("-------------------------showSearch         start------------------------------------");
 		String appId=request.getParameter("appId");
+		model.addAttribute("appId",appId);
+		return "privilege/role/roleMessage";
+	}
+	@RequestMapping(value="getRoleMessage")
+	public void showSearch1(HttpServletRequest request,HttpServletResponse response,Model model){
+		log.info("-------------------------showSearch         start------------------------------------");
+		String appId=request.getParameter("appId");
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
 		map.put("appId", appId);
 		String s = sendPost(appRoleRedisUrl,map);
 		JSONObject job=JSONObject.fromObject(s);
-		model.addAttribute("appId",appId);
-		model.addAttribute("roleList", job.get("roleList"));
-		return "privilege/role/roleMessage";
+		map.clear();
+		List<Map<String,Object>> roles = JSONArray.fromObject(job.get("roleList"));
+		for(Map<String,Object> m : roles){
+			if((Integer)(m.get("status"))==0){
+				m.put("status","有效");
+			}else{
+				m.put("status","无效");
+			}
+		}
+		map.put("rows", roles);
+		WebUtils.writeErrorJson(response, map);
 	}
 	
 	/**

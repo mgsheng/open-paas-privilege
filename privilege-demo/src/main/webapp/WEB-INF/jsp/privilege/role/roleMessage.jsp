@@ -23,14 +23,14 @@
 				<th data-options="field:'status',width:240,align:'right'">状态</th>
 			</tr>
 		</thead>
-		 <c:forEach items="${roleList}" var="role">
+		 <%--<c:forEach items="${roleList}" var="role">
           <tr>
               <td>${role.privilegeRoleId}</td>
               <td>${role.roleName} </td>
               <td><c:if test="${role.status=='0'}">有效</c:if><c:if test="${role.status!='0'}">无效</c:if></td>
           </tr>  
        </c:forEach> 
-	</table>
+	--%></table>
 	<div id="tb" style="padding:2px 5px;">
 	   <%--<span style="margin-left: 75%;">
 		名称: 
@@ -89,6 +89,7 @@
 
 <script>
 	$(document).ready(function(){
+		loadData();
 		openPwd();
 		$('#add').click(function() {
 		   	document.getElementById("roleName").value=""; 
@@ -99,6 +100,29 @@
 	    });
 		$('#btnCancel').click(function(){closePwd();});
 	});
+	//加载数据
+	function loadData(){
+		$('#dg').datagrid({
+			collapsible:true,
+			rownumbers:true,
+	        url: "${pageContext.request.contextPath}/managerRole/getRoleMessage?appId=${appId}",  
+	        onLoadSuccess:function(data){
+	           if (data.total<1){
+	                  $.messager.alert("提示","没有符合查询条件的数据!");
+	           }/*else{
+	        	   roleList = data.rows;
+	          		for(var i=0;i<roleList.length;i++){
+	          			var status=roleList[i].status;
+	          			if(status == '0'){
+	          				status='有效';
+	          			}else{
+	          				status='无效';
+	           			}
+	          		}
+	         	}*/
+	      	}
+	    }); 
+	}
 	//设置登录窗口
     function openPwd() {
        $('#w').window({
@@ -136,7 +160,7 @@
 			                if(data.status=='1'){
 			                  msgShow('系统提示', '恭喜，删除成功！', 'info');
 			                  //刷新
-				              var url='${pageContext.request.contextPath}/managerRole/roleMessage';
+				              var url='${pageContext.request.contextPath}/managerRole/getRoleMessage';
 				              reload(url,appId);
 			                }else{
 			                  msgShow('系统提示', '删除失败！', 'info');
@@ -186,7 +210,7 @@
 	                 msgShow('系统提示', '恭喜，添加成功！', 'info');
 	                 close();
 	                 $('#w').window('close');
-				     var url='${pageContext.request.contextPath}/managerRole/roleMessage';
+				     var url='${pageContext.request.contextPath}/managerRole/getRoleMessage';
 				     reload(url,appId);
                 }else if(data.status=='0'){
                 	msgShow('系统提示', '添加失败！', 'info');
@@ -259,9 +283,11 @@
    		}*/
 
 		function reload(url,appId){
-			var url=url+"?appId="+appId;
-			$.post(url, function(data) {});
-		}
+   			//var url=url+"?appId="+appId;
+   			//$.post(url, function(data) {});
+			//window.location.reload();
+   			$('#dg').datagrid('reload',{url: url, queryParams:{ appId:appId}, method: "post"}); 
+   		}
 </script>
 
 <script><%--
