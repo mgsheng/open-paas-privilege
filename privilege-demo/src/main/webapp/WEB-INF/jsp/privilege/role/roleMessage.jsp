@@ -349,19 +349,14 @@
 	   				            		node=$('#deptree1').tree('find',this.funcId);
 	   				            		if(node!=null){
 		   				            		$('#deptree1').tree('check', node.target);
-		   				            		var node1=$('#deptree1').tree('getParent', node.target);
-		   				            		var node2=$('#deptree1').tree('getParent', node1.target);
-		   				            		var node3=$('#deptree1').tree('getParent', node2.target);
-		   				            		$('#deptree1').tree('expand', node3.target);
+		   				            		expand(node);//展开相应菜单
 	   				            		}
 	   				            		initialFunIds+=this.funcId.replace('f','')+",";
 	   				            	}else{
 	   				            		node=$('#deptree1').tree('find',this.resourceId);
 	   				            		if(node!=null){
 		   				            		$('#deptree1').tree('check', node.target);
-		   				            		var node1=$('#deptree1').tree('getParent', node.target);
-		   				            		var node2=$('#deptree1').tree('getParent', node1.target);
-		   				            		$('#deptree1').tree('expand', node2.target);
+		   				            		expand(node);//展开相应菜单
 	   				            		}
 	   				            		initialResIds+=this.resourceId.replace('r','')+",";
 	   				            	}
@@ -383,6 +378,16 @@
    			}
    		}
 
+        function expand(node){
+        	if($('#deptree1').tree('isLeaf', node.target)){
+        		node=$('#deptree1').tree('getParent', node.target);
+        	}
+       		while(node!=null){
+       			$('#deptree1').tree('expand', node.target);
+           		node=$('#deptree1').tree('getParent', node.target);
+       		}
+        }
+        
 		function reload(url,appId){
    			$('#dg').datagrid('reload',{url: url, queryParams:{ appId:appId}, method: "post"}); 
    		}
