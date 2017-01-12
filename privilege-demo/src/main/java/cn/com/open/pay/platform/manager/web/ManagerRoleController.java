@@ -1,10 +1,7 @@
 package cn.com.open.pay.platform.manager.web;
 
 import java.io.UnsupportedEncodingException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -12,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,22 +23,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import cn.com.open.pay.platform.manager.log.service.PrivilegeLogService;
-import cn.com.open.pay.platform.manager.login.model.User;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeFunction;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
-import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource1;
-import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRole;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRoleDetails;
 import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGetSignatureService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeResourceService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeRoleDetailsService;
-import cn.com.open.pay.platform.manager.privilege.service.PrivilegeRoleService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
 @Controller
@@ -51,15 +40,11 @@ import cn.com.open.pay.platform.manager.tools.WebUtils;
 public class ManagerRoleController  extends BaseControllerUtil {
 	private static final Logger log = LoggerFactory.getLogger(UserLoginController.class);
 	@Autowired
-	private PrivilegeRoleService roleService;
-	@Autowired
 	private PrivilegeRoleDetailsService privilegeRoleDetailsService;
 	@Autowired
 	private PrivilegeModuleService privilegeModuleService;
 	@Autowired
 	private PrivilegeResourceService privilegeResourceService;
-	@Autowired
-	private PrivilegeLogService privilegeLogService;
 	@Autowired
 	private PrivilegeGetSignatureService privilegeGetSignatureService;
 	@Value("#{properties['privilege-approle-redis-query-uri']}")
@@ -119,7 +104,7 @@ public class ManagerRoleController  extends BaseControllerUtil {
 	 * @param model
 	 * @return  查询完毕后返回查询结果
 	 */
-	@RequestMapping("QueryRoleMessage")
+	/*@RequestMapping("QueryRoleMessage")
 	public String QueryRoleMessage(HttpServletRequest request,HttpServletResponse response,Model model){
 		log.info("-------------------------Search         start------------------------------------");
 		String appId=request.getParameter("appId");
@@ -130,7 +115,7 @@ public class ManagerRoleController  extends BaseControllerUtil {
 		model.addAttribute("appId",appId);
 		model.addAttribute("roleList", job.get("roleList"));
 		return "privilege/role/roleMessage";
-	}
+	}*/
 	
 	
 	 /**
@@ -147,6 +132,18 @@ public class ManagerRoleController  extends BaseControllerUtil {
 		String appId=request.getParameter("appId");
 		String roleName=request.getParameter("roleName");
 		roleName=java.net.URLEncoder.encode(roleName,"UTF-8");
+		String deptName=request.getParameter("deptName");
+		if(deptName!=null){
+			deptName=java.net.URLEncoder.encode(deptName,"UTF-8");
+		}
+		String groupName=request.getParameter("groupName");
+		if(groupName!=null){
+			groupName=java.net.URLEncoder.encode(groupName,"UTF-8");
+		}
+		String remark=request.getParameter("remark");
+		if(remark!=null){
+			remark=java.net.URLEncoder.encode(remark,"UTF-8");
+		}
 		String status=request.getParameter("status");
 		String treeNodeIds=request.getParameter("temp");
 		String resourceIds="";
@@ -191,13 +188,13 @@ public class ManagerRoleController  extends BaseControllerUtil {
 		map.put("rolePrivilege", resourceIds);
 		map.put("privilegeFunId", functionIds);
 		map.put("groupId", "");
-		map.put("groupName", "");
+		map.put("groupName", groupName);
 		map.put("deptId", "");
-		map.put("deptName", "");
+		map.put("deptName", deptName);
 		map.put("roleLevel", "");
 		map.put("roleType", "");
 		map.put("parentRoleId", "");
-		map.put("remark", "");
+		map.put("remark", remark);
 		map.put("createUser", "");
 		map.put("createUserId", "");
 		
@@ -222,6 +219,18 @@ public class ManagerRoleController  extends BaseControllerUtil {
 		String privilegeRoleId=request.getParameter("privilegeRoleId");
 		String roleName=request.getParameter("roleName");
 		roleName=java.net.URLEncoder.encode(roleName,"UTF-8");
+		String deptName=request.getParameter("deptName");
+		if(deptName!=null){
+			deptName=java.net.URLEncoder.encode(deptName,"UTF-8");
+		}
+		String groupName=request.getParameter("groupName");
+		if(groupName!=null){
+			groupName=java.net.URLEncoder.encode(groupName,"UTF-8");
+		}
+		String remark=request.getParameter("remark");
+		if(remark!=null){
+			remark=java.net.URLEncoder.encode(remark,"UTF-8");
+		}
 		String status=request.getParameter("status");
 		String addNodeIds=request.getParameter("addIds");
 		String delNodeIds=request.getParameter("delIds");
@@ -235,15 +244,16 @@ public class ManagerRoleController  extends BaseControllerUtil {
 		map.put("roleName", roleName);
 		map.put("status", status);
 		map.put("groupId", "");
-		map.put("groupName", "");
+		map.put("groupName", groupName);
 		map.put("deptId", "");
-		map.put("deptName", "");
+		map.put("deptName", deptName);
 		map.put("roleLevel", "");
 		map.put("roleType", "");
 		map.put("parentRoleId", "");
-		map.put("remark", "");
+		map.put("remark", remark);
 		map.put("createUser", "");
 		map.put("createUserId", "");
+		if((addNodeIds!=null && !addNodeIds.equals("")) || (delNodeIds!=null && !delNodeIds.equals(""))){
 		if(addNodeIds!=null && !addNodeIds.equals("")){//添加权限
 			String[] mres=addNodeIds.split(",,");//资源与方法拆分
 			for(int j=0;j<mres.length;j++){
@@ -300,7 +310,11 @@ public class ManagerRoleController  extends BaseControllerUtil {
 			map.put("method", 1);//0-添加权限，1-删除权限
 			s2 = sendPost(roleModiUrl,map);
 		}
-
+		}else{
+			map.put("method", 0);//如果没有添加或删除权限，默认给一个值
+			s1 = sendPost(roleModiUrl,map);
+		}
+		
 		JSONObject job1=null;
 		JSONObject job2=null;
 		Map<String,Object> m =new HashMap<String,Object>();

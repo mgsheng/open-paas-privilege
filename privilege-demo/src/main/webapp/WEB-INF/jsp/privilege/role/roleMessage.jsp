@@ -18,9 +18,12 @@
 			data-options="rownumbers:true,singleSelect:true,url:'',method:'get',toolbar:'#tb'">
 		<thead>
 			<tr>
-				<th data-options="field:'privilegeRoleId',width:200">ID</th>
-				<th data-options="field:'roleName',width:400">名称</th>
-				<th data-options="field:'status',width:240,align:'right'">状态</th>
+				<th data-options="field:'privilegeRoleId',width:280">ID</th>
+				<th data-options="field:'roleName',width:200">名称</th>
+				<th data-options="field:'deptName',width:150">部门名称</th>
+				<th data-options="field:'groupName',width:150">机构名称</th>
+				<th data-options="field:'remark',width:100">备注</th>
+				<th data-options="field:'status',width:100,align:'right'">状态</th>
 			</tr>
 		</thead>
 	</table>
@@ -45,13 +48,18 @@
 				style="padding: 10px; background: #fff; border: 1px solid #ccc;">
 				<table cellpadding=3>
 					<input id="id" type="hidden" />
-					<tr style="height: 60px">
+					<tr style="height: 40px">
 						<td>名称：</td>
 						<td><input id="roleName" type="text" class="txt01" value=""/>
 						</td>
+						<td>部门名称：</td>
+						<td><input id="deptName" type="text" class="txt01" value=""/>
+						</td>
 					</tr>
-					
-					<tr style="height: 20px">
+					<tr style="height: 40px">
+						<td>机构名称：</td>
+						<td><input id="groupName" type="text" class="txt01" value=""/>
+						</td>
 						<td>状态：</td>
 						<td>
 			                <select  id="status" name="status" id="status" style="width:100%">
@@ -60,10 +68,15 @@
 							</select> 
 						</td>
 					</tr>
+					<tr style="height: 40px">
+						<td>备注：</td>
+						<td colspan="3"><textarea id="remark" rows="2" cols="60"></textarea>
+						</td>
+					</tr>
 				</table>
 								  
 			
-			<div class="easyui-panel" style="padding:5px;height: 80%;widows:300px;margin-top:5px;overflow-x:scroll;">
+			<div class="easyui-panel" style="padding:5px;height: 65%;widows:300px;margin-top:5px;overflow-y:scroll;">
 				  <ul id="deptree1"  style="height: 100%;width: 200px" class="easyui-tree" 
 					 data-options="method:'get'"> 
 			 	  </ul>
@@ -94,6 +107,12 @@
 		openPwd();
 		$('#add').click(function() {
 		   	document.getElementById("roleName").value=""; 
+			document.getElementById("id").value=""; 
+		    document.getElementById("roleName").value=""; 
+		    document.getElementById("deptName").value=""; 
+		    document.getElementById("groupName").value=""; 
+		    document.getElementById("remark").value=""; 
+		    $("#status").get(0).selectedIndex = 0;//index为索引值
 		   	clearChoose();
 		   	$('#w').window('open');
 		});
@@ -102,6 +121,7 @@
 	    });
 		$('#btnCancel').click(function(){closePwd();});
 	});
+	//清空树选中节点并收起
 	function clearChoose(){  
 	    $('#deptree1').tree('collapseAll');
 	    var node = $('#deptree1').tree('getChecked', ['checked','checked']);
@@ -126,7 +146,7 @@
     function openPwd() {
        $('#w').window({
            title: '角色添加',
-           width: 400,
+           width: 550,
            modal: true,
            shadow: true,
            closed: true,
@@ -204,16 +224,19 @@
         	}
             var roleName = $('#roleName').val();
             var status= $('#status').val();
+            var deptName=$('#deptName').val();
+            var groupName=$('#groupName').val();
+            var remark=$('#remark').val();
             if (roleName == '') {
                 msgShow('系统提示', '请输入名称！', 'warning');
                 return false;
             }
             var url;
             if(privilegeRoleId==null || privilegeRoleId==""){
-                url='${pageContext.request.contextPath}/managerRole/addRole?appId='+appId+'&roleName='+roleName+'&status='+status+'&temp='+checkIds;
+                url='${pageContext.request.contextPath}/managerRole/addRole?appId='+appId+'&roleName='+roleName+'&status='+status+'&temp='+checkIds+'&deptName='+deptName+'&groupName='+groupName+'&remark='+remark;
             }else{
             	getIds();
-            	url='${pageContext.request.contextPath}/managerRole/updateRole?appId='+appId+'&roleName='+roleName+'&status='+status+'&addIds='+addIds+'&delIds='+delIds+'&privilegeRoleId='+privilegeRoleId;
+            	url='${pageContext.request.contextPath}/managerRole/updateRole?appId='+appId+'&roleName='+roleName+'&status='+status+'&addIds='+addIds+'&delIds='+delIds+'&privilegeRoleId='+privilegeRoleId+'&deptName='+deptName+'&groupName='+groupName+'&remark='+remark;
             }
             $.post(url, function(data) {
                 if(data.status=='1'){
@@ -296,6 +319,7 @@
         function editMessage(){
         	initialFunIds='';
         	initialResIds='';
+        	
    			var row = $('#dg').datagrid('getSelected');
 	   		if(row==null){
 	   			msgShow('系统提示', '请选中要修改的数据', 'info');
@@ -306,9 +330,16 @@
    					   var id=row.privilegeRoleId;
    					   var name=row.roleName;
    					   var status=row.status;
+   					   var deptName=row.deptName;
+   					   var groupName=row.groupName;
+   					   var remark=row.remark;
    					   document.getElementById("id").value=id; 
    					   document.getElementById("roleName").value=name; 
+   					   document.getElementById("deptName").value=deptName; 
+   					   document.getElementById("groupName").value=groupName; 
+   					   document.getElementById("remark").value=remark; 
    					   $("#status").get(0).selectedIndex = status;//index为索引值
+   					   clearChoose();
    					   $.ajax({
    						    url:"${pageContext.request.contextPath}/managerRole/QueryRoleDetails?appId=${appId}&id="+id, 
 	   						success: function(data) {
@@ -316,18 +347,22 @@
 	   							$(data.nodeList).each(function(){
 	   				            	if(this.funcId!=null && this.funcId!=""){
 	   				            		node=$('#deptree1').tree('find',this.funcId);
-	   				            		$('#deptree1').tree('check', node.target);
-	   				            		var node1=$('#deptree1').tree('getParent', node.target);
-	   				            		var node2=$('#deptree1').tree('getParent', node1.target);
-	   				            		var node3=$('#deptree1').tree('getParent', node2.target);
-	   				            		$('#deptree1').tree('expand', node3.target);
+	   				            		if(node!=null){
+		   				            		$('#deptree1').tree('check', node.target);
+		   				            		var node1=$('#deptree1').tree('getParent', node.target);
+		   				            		var node2=$('#deptree1').tree('getParent', node1.target);
+		   				            		var node3=$('#deptree1').tree('getParent', node2.target);
+		   				            		$('#deptree1').tree('expand', node3.target);
+	   				            		}
 	   				            		initialFunIds+=this.funcId.replace('f','')+",";
 	   				            	}else{
 	   				            		node=$('#deptree1').tree('find',this.resourceId);
-	   				            		$('#deptree1').tree('check', node.target);
-	   				            		var node1=$('#deptree1').tree('getParent', node.target);
-	   				            		var node2=$('#deptree1').tree('getParent', node1.target);
-	   				            		$('#deptree1').tree('expand', node2.target);
+	   				            		if(node!=null){
+		   				            		$('#deptree1').tree('check', node.target);
+		   				            		var node1=$('#deptree1').tree('getParent', node.target);
+		   				            		var node2=$('#deptree1').tree('getParent', node1.target);
+		   				            		$('#deptree1').tree('expand', node2.target);
+	   				            		}
 	   				            		initialResIds+=this.resourceId.replace('r','')+",";
 	   				            	}
 	   							});
@@ -335,7 +370,7 @@
    					   });
 	  					$('#w').window({
 			                title: '角色修改',
-			                width: 400,
+			                width: 550,
 			                modal: true,
 			                shadow: true,
 			                closed: true,
