@@ -161,7 +161,7 @@ public class ManagerRoleController  extends BaseControllerUtil {
 							if(moduleRes[i].contains(",,")){
 								String[] mres=moduleRes[i].split(",,");//模块与资源拆分
 								for(int j=0;j<mres.length;j++){
-									if(mres[j]!=null && !mres[j].equals("")){
+									if(mres[j]!=null && !mres[j].equals("") && !mres[j].contains(",")){
 										resourceIds+=mres[j]+",";
 									}
 								}
@@ -223,30 +223,38 @@ public class ManagerRoleController  extends BaseControllerUtil {
 		String roleName=request.getParameter("roleName");
 		roleName=java.net.URLEncoder.encode(roleName,"UTF-8");
 		String status=request.getParameter("status");
-		String treeNodeIds=request.getParameter("temp");
+		String addNodeIds=request.getParameter("addIds");
+		String delNodeIds=request.getParameter("delIds");
 		String resourceIds="";
 		String functionIds="";
-		if(treeNodeIds!=null && !treeNodeIds.equals("")){
-			String[] menus=treeNodeIds.split("=");//菜单组之间分隔
-			for(int a=0;a<menus.length;a++){
-				if(menus[a]!=null && !menus[a].equals("")){
-					String[] moduleRes=menus[a].split(",,,");//模块与模块拆分
-					for(int i=0;i<moduleRes.length;i++){
-						if(moduleRes[i]!=null && !moduleRes[i].equals("")){
-							if(moduleRes[i].contains(",,")){
-								String[] mres=moduleRes[i].split(",,");//模块与资源拆分
-								for(int j=0;j<mres.length;j++){
-									if(mres[j]!=null && !mres[j].equals("")){
-										resourceIds+=mres[j]+",";
-									}
-								}
-							}else if(moduleRes[i].contains(",")){
-								String[] mres=moduleRes[i].split(",");//模块与资源拆分
-								for(int k=0;k<mres.length;k++){
-									if(mres[k]!=null && !mres[k].equals("")){
-										functionIds+=mres[k]+",";
-									}
-								}
+		String s1="";
+		String s2="";
+		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);	
+		map.put("privilegeRoleId", privilegeRoleId);
+		map.put("appId", appId);
+		map.put("roleName", roleName);
+		map.put("status", status);
+		map.put("groupId", "");
+		map.put("groupName", "");
+		map.put("deptId", "");
+		map.put("deptName", "");
+		map.put("roleLevel", "");
+		map.put("roleType", "");
+		map.put("parentRoleId", "");
+		map.put("remark", "");
+		map.put("createUser", "");
+		map.put("createUserId", "");
+		if(addNodeIds!=null && !addNodeIds.equals("")){//添加权限
+			String[] mres=addNodeIds.split(",,");//资源与方法拆分
+			for(int j=0;j<mres.length;j++){
+				if(mres[j]!=null && !mres[j].equals("")){
+					if(!mres[j].contains(",")){
+						resourceIds+=mres[j]+",";
+					}else{
+						String[] rfun=mres[j].split(",");
+						for(int i=0;i<rfun.length;i++){
+							if(rfun[i]!=null && !rfun[i].equals("")){
+								functionIds+=rfun[i]+",";
 							}
 						}
 					}
@@ -258,29 +266,56 @@ public class ManagerRoleController  extends BaseControllerUtil {
 			if(functionIds!=null && !("").equals(functionIds)){
 				functionIds=functionIds.substring(0, functionIds.length()-1);
 			}
+			map.put("rolePrivilege", resourceIds);
+			map.put("privilegeFunId", functionIds);
+			map.put("method", 0);//0-添加权限，1-删除权限
+			s1 = sendPost(roleModiUrl,map);
+		}	
+		resourceIds="";
+		functionIds="";
+		if(delNodeIds!=null && !delNodeIds.equals("")){//删除权限
+			String[] mres=delNodeIds.split(",,");//资源与方法拆分
+			for(int j=0;j<mres.length;j++){
+				if(mres[j]!=null && !mres[j].equals("")){
+					if(!mres[j].contains(",")){
+						resourceIds+=mres[j]+",";
+					}else{
+						String[] rfun=mres[j].split(",");
+						for(int i=0;i<rfun.length;i++){
+							if(rfun[i]!=null && !rfun[i].equals("")){
+								functionIds+=rfun[i]+",";
+							}
+						}
+					}
+				}
+			}
+			if(resourceIds!=null && !("").equals(resourceIds)){
+				resourceIds=resourceIds.substring(0, resourceIds.length()-1);
+			}
+			if(functionIds!=null && !("").equals(functionIds)){
+				functionIds=functionIds.substring(0, functionIds.length()-1);
+			}
+			map.put("rolePrivilege", resourceIds);
+			map.put("privilegeFunId", functionIds);
+			map.put("method", 1);//0-添加权限，1-删除权限
+			s2 = sendPost(roleModiUrl,map);
 		}
-		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
-		map.put("privilegeRoleId", privilegeRoleId);
-		map.put("appId", appId);
-		map.put("method", 0);//0-添加权限，1-删除权限
-		map.put("roleName", roleName);
-		map.put("status", status);
-		map.put("rolePrivilege", resourceIds);
-		map.put("privilegeFunId", functionIds);
-		map.put("groupId", "");
-		map.put("groupName", "");
-		map.put("deptId", "");
-		map.put("deptName", "");
-		map.put("roleLevel", "");
-		map.put("roleType", "");
-		map.put("parentRoleId", "");
-		map.put("remark", "");
-		map.put("createUser", "");
-		map.put("createUserId", "");
-		
-		String s = sendPost(roleModiUrl,map);
-		JSONObject job=JSONObject.fromObject(s);
-    	WebUtils.writeErrorJson(response, job);
+
+		JSONObject job1=null;
+		JSONObject job2=null;
+		Map<String,Object> m =new HashMap<String,Object>();
+		if(s1 == null || ("").equals(s1)){
+			s1="{'status':'1'}";
+		}
+		job1=JSONObject.fromObject(s1);
+		if(s2 == null || ("").equals(s2)){
+			s2="{'status':'1'}";
+		}
+		job2=JSONObject.fromObject(s2);
+		if(("1").equals(job1.get("status")) && ("1").equals(job2.get("status"))){
+			m.put("status", "1");
+		}
+    	WebUtils.writeErrorJson(response, m);
     }
     
     /**

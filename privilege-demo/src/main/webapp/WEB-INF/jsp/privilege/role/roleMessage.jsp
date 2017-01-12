@@ -80,19 +80,35 @@
 	</div>
 </body>
 
-<script>
+	<script>
+
+	var initialResIds='';//用于存放修改界面中选中的resource
+	var initialFunIds='';//用于存放修改界面中选中的function
+	var checkedResIds='';//存放选中的resource
+	var checkedFunIds='';//存放选中的function
+	var addIds='';//存放修改时添加的权限Id
+	var delIds='';//存放修改时删除的权限Id
+
 	$(document).ready(function(){
 		loadData();
 		openPwd();
 		$('#add').click(function() {
 		   	document.getElementById("roleName").value=""; 
-		    $('#w').window('open');
+		   	clearChoose();
+		   	$('#w').window('open');
 		});
 		$('#btnEp').click(function() {
 	   		serverUpdate();
 	    });
 		$('#btnCancel').click(function(){closePwd();});
 	});
+	function clearChoose(){  
+	    $('#deptree1').tree('collapseAll');
+	    var node = $('#deptree1').tree('getChecked', ['checked','checked']);
+    	for(var i = 0;i<node.length;i++){
+       		$('#deptree1').tree('uncheck', node[i].target);
+    	}
+	}  
 	//加载数据
 	function loadData(){
 		$('#dg').datagrid({
@@ -160,6 +176,10 @@
 		
         //添加/修改
         function serverUpdate() { 
+        	//清空之前选中的resource及function
+        	checkedResIds='';
+        	checkedFunIds='';
+        	
         	var privilegeRoleId=$("#id").val();
         	var appId=${appId};
         	var checkIds='';
@@ -175,9 +195,11 @@
      			}else if(ui[i].ismodule=="2"){
      				id=ui[i].id.replace('f','');
      				checkIds=checkIds+id+",";//资源与资源区分
+     				checkedFunIds+=id+",";
      			}else{
      				id=ui[i].id.replace('r','');
      				checkIds=checkIds+id+",,";//模块与资源区分
+     				checkedResIds+=id+",";
      			}
         	}
             var roleName = $('#roleName').val();
@@ -190,7 +212,8 @@
             if(privilegeRoleId==null || privilegeRoleId==""){
                 url='${pageContext.request.contextPath}/managerRole/addRole?appId='+appId+'&roleName='+roleName+'&status='+status+'&temp='+checkIds;
             }else{
-            	url='${pageContext.request.contextPath}/managerRole/updateRole?appId='+appId+'&roleName='+roleName+'&status='+status+'&temp='+checkIds+'&privilegeRoleId='+privilegeRoleId;
+            	getIds();
+            	url='${pageContext.request.contextPath}/managerRole/updateRole?appId='+appId+'&roleName='+roleName+'&status='+status+'&addIds='+addIds+'&delIds='+delIds+'&privilegeRoleId='+privilegeRoleId;
             }
             $.post(url, function(data) {
                 if(data.status=='1'){
@@ -204,14 +227,75 @@
 				     var url='${pageContext.request.contextPath}/managerRole/getRoleMessage';
 				     reload(url,appId);
                 }else if(data.status=='0'){
-                	msgShow('系统提示', '添加失败！', 'info');
+                	if(privilegeRoleId==null || privilegeRoleId==""){
+                		msgShow('系统提示', '添加失败！', 'info');
+                	}else{
+                		msgShow('系统提示', '修改失败！', 'info');
+                	}
 	                close();
 	                $('#w').window('close');
                 }
             });
         }
+        //获取添加删除的id
+        function getIds(){
+        	addIds='';
+        	delIds='';
+        	if(checkedResIds != initialResIds){//resource前后不一致
+        		var checkedRes=checkedResIds.split(",");
+        		var initialRes=initialResIds.split(",");
+        		var checkedFun=checkedFunIds.split(",");
+        		var initialFun=initialFunIds.split(",");
+        		for(var i=0;i<checkedRes.length;i++){
+        			var bool=false;
+        			for(var j=0;j<initialRes.length;j++){
+        				if(checkedRes[i]===initialRes[j]){
+        					bool=true;
+        				}
+        			}
+        			if(!bool){
+        				addIds+=checkedRes[i]+",,";
+        			}
+        		}
+        		for(var i=0;i<initialRes.length;i++){
+        			var bool=false;
+        			for(var j=0;j<checkedRes.length;j++){
+        				if(initialRes[i]===checkedRes[j]){
+        					bool=true;
+        				}
+        			}
+        			if(!bool){
+        				delIds+=initialRes[i]+",,";
+        			}
+        		}
+        		for(var i=0;i<checkedFun.length;i++){
+        			var bool=false;
+        			for(var j=0;j<initialFun.length;j++){
+        				if(checkedFun[i]===initialFun[j]){
+        					bool=true;
+        				}
+        			}
+        			if(!bool){
+        				addIds+=checkedFun[i]+",";
+        			}
+        		}
+        		for(var i=0;i<initialFun.length;i++){
+        			var bool=false;
+        			for(var j=0;j<checkedFun.length;j++){
+        				if(initialFun[i]===checkedFun[j]){
+        					bool=true;
+        				}
+        			}
+        			if(!bool){
+        				delIds+=initialFun[i]+",";
+        			}
+        		}
+        	}
+        }
         //修改
         function editMessage(){
+        	initialFunIds='';
+        	initialResIds='';
    			var row = $('#dg').datagrid('getSelected');
 	   		if(row==null){
 	   			msgShow('系统提示', '请选中要修改的数据', 'info');
@@ -237,12 +321,14 @@
 	   				            		var node2=$('#deptree1').tree('getParent', node1.target);
 	   				            		var node3=$('#deptree1').tree('getParent', node2.target);
 	   				            		$('#deptree1').tree('expand', node3.target);
+	   				            		initialFunIds+=this.funcId.replace('f','')+",";
 	   				            	}else{
 	   				            		node=$('#deptree1').tree('find',this.resourceId);
 	   				            		$('#deptree1').tree('check', node.target);
 	   				            		var node1=$('#deptree1').tree('getParent', node.target);
 	   				            		var node2=$('#deptree1').tree('getParent', node1.target);
 	   				            		$('#deptree1').tree('expand', node2.target);
+	   				            		initialResIds+=this.resourceId.replace('r','')+",";
 	   				            	}
 	   							});
 	   						}
@@ -258,374 +344,12 @@
 			            });
 	  					$('#w').window('open');
    					}
-   			   });
+   			   });   			
    			}
    		}
 
 		function reload(url,appId){
    			$('#dg').datagrid('reload',{url: url, queryParams:{ appId:appId}, method: "post"}); 
    		}
-</script>
-
-<script><%--
-$(function(){  
-	/*$('#dg').datagrid({
-		collapsible:true,
-		rownumbers:true,
-		pagination:true,
-        url: "http://localhost:8080/privilege-service/userRole/getUserPrivilege?appId=23&appUserId=10001",  
-        pagination: true,
-        onLoadSuccess:function(data){
-           if (data.total<1){
-                  $.messager.alert("提示","没有符合查询条件的数据!");
-           }
-           
-         }
-    }); */
-    var signature;
-    var timestamp;
-    var signatureNonce;
-    var appKey;
-    var roleList;
-    $.post('http://localhost:8080/privilege-service/userRole/getUserPrivilege?appId=23&appUserId=10001&appKey='+
-			 appKey+"&signatureNonce="+signatureNonce+"&timestamp="+timestamp+"&signature="+signature ,function(data) {
-   		roleList = data.roleList;
-   		for(var i=0;i<roleList.length;i++){
-   			var tr = "{privilegeRoleId:"+roleList[i].privilegeRoleId+",roleName:"+roleList[i].roleName;
-   			var status=roleList[i].status;
-   			if(status == '0'){
-   				status='有效';
-   			}else{
-   				status='无效';
-   			}
-   			$('#dg').datagrid('appendRow',{
-   				privilegeRoleId:roleList[i].privilegeRoleId,
-   				roleName:roleList[i].roleName,
-   				status:status
-   			});
-   		}
-    });
-    
-    openPwd();
-    $('#add').click(function() {
-   	 document.getElementById("resourceName").value=""; 
-   	 document.getElementById("id").value=""; 
-       $('#w').window('open');
-   });
-   $('#btnEp').click(function() {
-   	serverUpdate();
-   });
-	$('#btnCancel').click(function(){closePwd();});
-});
-
-         //设置登录窗口
-         function openPwd() {
-            $('#w').window({
-                title: '角色添加',
-                width: 400,
-                modal: true,
-                shadow: true,
-                closed: true,
-                height: 500,
-                resizable:false
-            });
-            var id = $('#id').val();
-            $('#deptree1').tree({ 
-           	 lines:true,//显示虚线效果 
-           	 animate: true,
-           	  checkbox:true,
-                 url: '${pageContext.request.contextPath}/managerRole/tree?id='+id,  
-             });
-        }
-        //关闭登录窗口
-        function closePwd() {
-            $('#w').window('close');
-        }
-        //添加
-        function serverLogin() {
-        	
-        	var checkIds='';
-        	var bool=false;
-        	var ui = $('#deptree1').tree('getChecked', ['checked','indeterminate']);
-        	for(var i = 0;i<ui.length;i++){
-       			if(i>0){
-       				//模块节点(ismodule自定义参数=0标记的是模块)
-       				if(ui[i].ismodule=="0"){
-       					checkIds+=",,,";//模块与模块区分
-       					bool=false;
-       				}else if(bool){
-       					checkIds+=",";//资源与资源区分
-       				}else{
-       					checkIds+=",,";//模块与资源区分
-       					bool=true;
-       				}
-        		}
-       		    //去掉带r标示的id（用于区分资源和模块id）
-    			checkIds+=ui[i].id.replace('r','');
-        	}
-        	//alert(checkIds);
-        	
-        	
-        	var id = $('#id').val();
-            var $resourceName = $('#resourceName');
-            var $status= $('#status');
-            if ($resourceName.val() == '') {
-                msgShow('系统提示', '请输入名称！', 'warning');
-                return false;
-            }
-            var url=encodeURI('${pageContext.request.contextPath}/managerRole/addRole?name='+$resourceName.val()+'&status='+$status.val()+'&id='+id+'&temp='+checkIds);
-            $.post(url, function(data) {
-                if(data.returnMsg=='1'){
-	                 msgShow('系统提示', '恭喜，添加成功！', 'info');
-	                 close();
-	                $('#w').window('close');
-	                //刷新
-				      var url='${pageContext.request.contextPath}/managerRole/QueryRoleMessage';
-				      reload(url,name);
-                }else if(data.returnMsg=='2'){
-                	msgShow('系统提示', '修改成功！', 'info');
-	                 close();
-	                $('#w').window('close');
-	                //刷新
-				      var url='${pageContext.request.contextPath}/managerRole/QueryRoleMessage';
-				      reload(url,name);
-                }else{
-                	msgShow('系统提示', '角色已存在！', 'info');
-	                 $newpass.val('');
-	                 $rePass.val('');
-	                 close();
-                }
-            });
-        }
-        
-      //修改
-       /* function serverUpdate() {
-        	var checkIds='';
-        	var bool=false;
-        	var ui = $('#deptree1').tree('getChecked', ['checked','indeterminate']);
-        	for(var i = 0;i<ui.length;i++){
-       			if(i>0){
-       				//模块节点(ismodule自定义参数=0标记的是模块)
-       				if(ui[i].ismodule=="0"){
-       					checkIds+=",,,";//模块与模块区分
-       					bool=false;
-       				}else if(bool){
-       					checkIds+=",";//资源与资源区分
-       				}else{
-       					checkIds+=",,";//模块与资源区分
-       					bool=true;
-       				}
-        		}
-       		    //去掉带r标示的id（用于区分资源和模块id）
-    			checkIds+=ui[i].id.replace('r','');
-        	}
-        	var id = $('#id').val();
-            var $resourceName = $('#resourceName');
-            var $status= $('#status');
-            if ($resourceName.val() == '') {
-                msgShow('系统提示', '请输入名称！', 'warning');
-                return false;
-            }
-            var url= "";
-            if(id==''){
-            	url=encodeURI('${pageContext.request.contextPath}/managerRole/addRole?name='+$resourceName.val()+'&status='+$status.val()+'&id='+id+'&temp='+checkIds);
-            }else{
-            	url=encodeURI('${pageContext.request.contextPath}/managerRole/updateRole?name='+$resourceName.val()+'&status='+$status.val()+'&id='+id+'&temp='+checkIds);
-            }
-             $.post(url, function(data) {
-            	 if(data.returnMsg=='1'){
-	                 msgShow('系统提示', '恭喜，添加成功！', 'info');
-	                 close();
-	                $('#w').window('close');
-	                //刷新
-				      var url='${pageContext.request.contextPath}/managerRole/QueryRoleMessage';
-				      reload(url,name);
-                }else if(data.returnMsg=='2'){
-                	msgShow('系统提示', '修改成功！', 'info');
-	                 close();
-	                $('#w').window('close');
-	                //刷新
-				      var url='${pageContext.request.contextPath}/managerRole/QueryRoleMessage';
-				      reload(url,name);
-                }else{
-                	msgShow('系统提示', '角色已存在！', 'info');
-	                 $newpass.val('');
-	                 $rePass.val('');
-	                 close();
-                }
-            });
-        }
-      
-      
-		//弹出信息窗口 title:标题 msgString:提示信息 msgType:信息类型 [error,info,question,warning]
-		function msgShow(title, msgString, msgType) {
-			$.messager.alert(title, msgString, msgType);
-		}
-       $(function(){  
-       var name=$("#name").val();
-        $('#dg').datagrid({
-				collapsible:true,
-				rownumbers:true,
-				pagination:true,
-		        url: "${pageContext.request.contextPath}/managerRole/QueryRoleMessage?name="+name,  
-		        pagination: true,
-		        onLoadSuccess:function(data){
-                    if (data.total<1){
-                       $.messager.alert("提示","没有符合查询条件的数据!");
-                  }
-                }
-		    }); 
-			 //设置分页控件 
-		    var p = $('#dg').datagrid('getPager'); 
-		    $(p).pagination({ 
-		        pageSize: 15,//每页显示的记录条数，默认为10 
-		        pageList: [5,10,15,20],//可以设置每页记录条数的列表 
-		        beforePageText: '第',//页数文本框前显示的汉字 
-		        afterPageText: '页    共 {pages} 页', 
-		        displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录', 
-		        onBeforeRefresh:function(){
-		            $(this).pagination('loading');
-		            $(this).pagination('loaded');
-		        } 
-		    });
-		     openPwd();
-		     $('#add').click(function() {
-		    	 document.getElementById("resourceName").value=""; 
-		    	 document.getElementById("id").value=""; 
-                $('#w').window('open');
-            });
-            $('#btnEp').click(function() {
-            	serverUpdate();
-            });
-			$('#btnCancel').click(function(){closePwd();});
-		    });
-		  
-        function getSelected(){
-			var row = $('#dg').datagrid('getSelected');
-			if (row){
-				$.messager.alert('Info', row.itemid+":"+row.productid+":"+row.attr1);
-			}
-		}
-        
-        function editMessage(){
-   			var row = $('#dg').datagrid('getSelected');
-	   		if(row==null){
-	   			msgShow('系统提示', '请选中要修改的数据', 'info');
-	   		}
-   			if (row){
-   			$.messager.confirm('系统提示', '是否确定修改本条数据?', function(r){
-   				if (r){
-   					   var id=row.id;
-   					   var name=row.name;
-   					   var status=row.status;
-   						document.getElementById("id").value=id; 
-   						document.getElementById("resourceName").value=name; 
-   						$("#status").get(0).selectedIndex = status-1;//index为索引值
-   					   $.ajax({
-   						    url:"${pageContext.request.contextPath}/managerRole/QueryRoleDetails?id="+id, 
-	   						success: function(data) {
-	   							var node;
-	   				            $(data[0].list).each(function(){
-	   				            	if(this.resources!=null && this.resources!=""){
-	   				            		var resId=this.resources.split(",");
-	   				            		for(var i=0;i<resId.length;i++){
-	   				            			node = zTree.getNodeByParam("searchId",("m"+this.moduleId+"r"+resId[i]));
-	   				            			if(node!=null){
-	   											if(!node.isParent){
-	   												zTree.checkNode(node,true,true);
-	   											}
-	   										}
-	   				            		}
-	   				            	}else{
-	   				            		node = zTree.getNodeByParam("searchId",("m"+this.moduleId));
-	   				            		if(node!=null){
-	   										zTree.checkNode(node,true,true);
-	   									}
-	   				            	}
-	   							});
-	   						}
-   					   });
-	  					//openPwd();
-	  					$('#w').window({
-			                title: '角色修改',
-			                width: 400,
-			                modal: true,
-			                shadow: true,
-			                closed: true,
-			                height: 500,
-			                resizable:false
-			            });
-	  					var id = $('#id').val();
-	  		            $('#deptree1').tree({ 
-	  		           	 lines:true,//显示虚线效果 
-	  		           	 animate: true,
-	  		           	  checkbox:true,
-	  		                 url: '${pageContext.request.contextPath}/managerRole/tree1?id='+id,  
-	  		             });
-	  					$('#w').window('open');
-   				}
-   			   });
-   			}
-   		}
-		
-		function removeit(){
-		 var name=$("#name").val();
-		 var row = $('#dg').datagrid('getSelected');
-			if (row){
-			$.messager.confirm('系统提示', '是否确定删除?', function(r){
-				if (r){
-					   var id=row.id;
-					   var url="${pageContext.request.contextPath}/managerRole/deleteRole?id="+id;
-			            $.post(url, function(data) {
-			                if(data.returnMsg=='1'){
-			                 msgShow('系统提示', '恭喜，删除成功！', 'info');
-			               //刷新
-				              var url='${pageContext.request.contextPath}/managerRole/QueryRoleMessage';
-				              reload(url,name);
-			                }else{
-			                  msgShow('系统提示', '删除失败！', 'info');
-			                }
-			            });
-				}
-			   });
-			}
-		}
-		function reload(url,name){
-		$('#dg').datagrid('reload',{
-            url: url, queryParams:{ name:name}, method: "post"
-          }); 
-		}
-		
-		function onsearch(){
-			 var name=$("#name").val();
-			 var url=encodeURI("${pageContext.request.contextPath}/managerRole/QueryRoleMessage?name="+name);
-	        $('#dg').datagrid({
-					collapsible:true,
-					rownumbers:true,
-					pagination:true,
-			        url: url,  
-			        pagination: true,
-			        onLoadSuccess:function(data){
-	                    if (data.total<1){
-	                       $.messager.alert("提示","没有符合查询条件的数据!");
-	                  }
-	                }
-			    }); 
-				 //设置分页控件 
-			    var p = $('#dg').datagrid('getPager'); 
-			    $(p).pagination({ 
-			        pageSize: 15,//每页显示的记录条数，默认为10 
-			        pageList: [5,10,15,20],//可以设置每页记录条数的列表 
-			        beforePageText: '第',//页数文本框前显示的汉字 
-			        afterPageText: '页    共 {pages} 页', 
-			        displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录', 
-			        onBeforeRefresh:function(){
-			            $(this).pagination('loading');
-			            $(this).pagination('loaded');
-			        } 
-			    }); 
-			}*/
-		
-	  
-	--%></script>
+	</script>
 </html>
