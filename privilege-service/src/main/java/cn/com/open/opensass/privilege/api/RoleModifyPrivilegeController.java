@@ -1,7 +1,9 @@
 package cn.com.open.opensass.privilege.api;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +25,7 @@ import cn.com.open.opensass.privilege.service.PrivilegeRoleResourceService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
+import cn.com.open.opensass.privilege.tools.StringTool;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 
 @Controller
@@ -77,41 +80,29 @@ public class RoleModifyPrivilegeController extends BaseControllerUtil{
 			paraMandaChkAndReturn(10006, response,"认证失败");
 			return;
 		}
-    	if(rolePrivilege!=null){
+		List<PrivilegeRoleResource> roleResourceList=privilegeRoleResourceService.findByPrivilegeRoleId(privilegeRoleId);
+    	if(rolePrivilege!=null && !("").equals(rolePrivilege)){
     		String[] roleResources = rolePrivilege.split(",");
     		PrivilegeRoleResource roleResource1=null;
     		for(String roleResource : roleResources){
     			roleResource1 = privilegeRoleResourceService.findByRoleIdAndResourceId(privilegeRoleId,roleResource);
     			if(("0").equals(method)){//添加权限
-					if(roleResource1 == null){
-						roleResource1 = new PrivilegeRoleResource();
-						roleResource1.setPrivilegeRoleId(privilegeRoleId);
-						roleResource1.setResourceId(roleResource);
-						roleResource1.setCreateUser(createUser);
-						roleResource1.setCreateUserId(createUserId);
-						if(status!=null){
-							roleResource1.setStatus(Integer.parseInt(status));
-						}						
-						roleResource1.setPrivilegeFunId(privilegeFunId);
-						Boolean sf = privilegeRoleResourceService.savePrivilegeRoleResource(roleResource1);
-						if(!sf){
-							paraMandaChkAndReturn(10003, response,"添加权限失败");
-				            return;
-						}
-					}else{
-						roleResource1.setPrivilegeRoleId(privilegeRoleId);
-						roleResource1.setResourceId(roleResource);
-						roleResource1.setCreateUser(createUser);
-						roleResource1.setCreateUserId(createUserId);
-						if(status!=null){
-							roleResource1.setStatus(Integer.parseInt(status));
-						}						
-						roleResource1.setPrivilegeFunId(privilegeFunId);
-						Boolean uf = privilegeRoleResourceService.updatePrivilegeRoleResource(roleResource1);
-						if(!uf){
-							paraMandaChkAndReturn(10004, response,"修改权限失败");
-				            return;
-						}
+					roleResource1 = new PrivilegeRoleResource();
+					roleResource1.setPrivilegeRoleId(privilegeRoleId);
+					roleResource1.setResourceId(roleResource);
+					roleResource1.setCreateUser(createUser);
+					roleResource1.setCreateUserId(createUserId);
+					if(roleResourceList!=null){
+						roleResource1.setPrivilegeFunId(roleResourceList.get(0).getPrivilegeFunId());
+					}
+					if(status!=null){
+						roleResource1.setStatus(Integer.parseInt(status));
+					}						
+					//roleResource1.setPrivilegeFunId(privilegeFunId);
+					Boolean sf = privilegeRoleResourceService.savePrivilegeRoleResource(roleResource1);
+					if(!sf){
+						paraMandaChkAndReturn(10003, response,"添加权限失败");
+			            return;
 					}
     			}else if(("1").equals(method)){//删除权限
     				if(roleResource1 != null){
@@ -124,7 +115,55 @@ public class RoleModifyPrivilegeController extends BaseControllerUtil{
     			}
     		} 
     	}
-    	
+    	if(privilegeFunId!=null && !("").equals(privilegeFunId)){
+    		PrivilegeRoleResource roleResource1=null;
+			//更新所有记录的privilegeFunId字段
+			if(roleResourceList != null){
+				for(PrivilegeRoleResource roleRes:roleResourceList){
+					if(("0").equals(method)){//添加
+						if(roleRes.getPrivilegeFunId() != null && !("").equals(roleRes.getPrivilegeFunId())){
+							roleRes.setPrivilegeFunId(roleRes.getPrivilegeFunId()+","+privilegeFunId);
+						}else{
+							roleRes.setPrivilegeFunId(privilegeFunId);
+						}								
+					}else if(("1").equals(method)){//删除
+						if(roleRes.getPrivilegeFunId() != null && !("").equals(roleRes.getPrivilegeFunId())){
+							String[] tFunIds=roleRes.getPrivilegeFunId().split(",");//表中现有的functionId
+							String[] sFunIds=privilegeFunId.split(",");//需删除的functionId
+							List<String> funIdList=new ArrayList<String>();
+							for(int i=0;i<tFunIds.length;i++){
+								for(int j=0;j<sFunIds.length;j++){
+									if(!(sFunIds[j]).equals(tFunIds[i])){
+										funIdList.add(tFunIds[i]);
+									}
+								}
+							}
+							roleRes.setPrivilegeFunId(StringTool.listToString(funIdList));
+						}
+					}
+					Boolean uf = privilegeRoleResourceService.updatePrivilegeRoleResource(roleRes);
+					if(!uf){
+						paraMandaChkAndReturn(10004, response,"修改权限失败");
+			            return;
+					}
+				}
+			}else{
+				roleResource1 = new PrivilegeRoleResource();
+				roleResource1.setPrivilegeRoleId(privilegeRoleId);
+				roleResource1.setResourceId("");
+				roleResource1.setCreateUser(createUser);
+				roleResource1.setCreateUserId(createUserId);
+				if(status!=null){
+					roleResource1.setStatus(Integer.parseInt(status));
+				}						
+				roleResource1.setPrivilegeFunId(privilegeFunId);
+				Boolean sf = privilegeRoleResourceService.savePrivilegeRoleResource(roleResource1);
+				if(!sf){
+					paraMandaChkAndReturn(10003, response,"添加权限失败");
+		            return;
+				}
+			}
+    	}
 
     	//修改privilegeRole
     	PrivilegeRole privilegeRole = privilegeRoleService.findRoleById(privilegeRoleId);
