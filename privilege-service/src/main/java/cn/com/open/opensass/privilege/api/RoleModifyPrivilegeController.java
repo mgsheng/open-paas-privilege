@@ -98,7 +98,6 @@ public class RoleModifyPrivilegeController extends BaseControllerUtil{
 					if(status!=null){
 						roleResource1.setStatus(Integer.parseInt(status));
 					}						
-					//roleResource1.setPrivilegeFunId(privilegeFunId);
 					Boolean sf = privilegeRoleResourceService.savePrivilegeRoleResource(roleResource1);
 					if(!sf){
 						paraMandaChkAndReturn(10003, response,"添加权限失败");
