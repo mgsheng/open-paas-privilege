@@ -158,8 +158,17 @@ public class ManagerRoleController  extends BaseControllerUtil {
 							if(moduleRes[i].contains(",,")){
 								String[] mres=moduleRes[i].split(",,");//模块与资源拆分
 								for(int j=0;j<mres.length;j++){
-									if(mres[j]!=null && !mres[j].equals("") && !mres[j].contains(",")){
-										resourceIds+=mres[j]+",";
+									if(mres[j]!=null && !mres[j].equals("")){
+										if(!mres[j].contains(",")){
+											resourceIds+=mres[j]+",";
+										}else{
+											String[] rfun=mres[j].split(",");//方法与方法拆分
+											for(int k=0;k<rfun.length;k++){
+												if(rfun[k]!=null && !rfun[k].equals("")){
+													functionIds+=rfun[k]+",";
+												}
+											}
+										}
 									}
 								}
 							}else if(moduleRes[i].contains(",")){

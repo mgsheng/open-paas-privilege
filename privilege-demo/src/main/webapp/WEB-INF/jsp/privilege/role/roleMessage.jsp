@@ -101,6 +101,7 @@
 	var checkedFunIds='';//存放选中的function
 	var addIds='';//存放修改时添加的权限Id
 	var delIds='';//存放修改时删除的权限Id
+	var checkIds='';//存放添加时的选中Id
 
 	$(document).ready(function(){
 		loadData();
@@ -198,7 +199,6 @@
         function serverUpdate() {         	
         	var privilegeRoleId=$("#id").val();
         	var appId=${appId};
-        	var checkIds='';
         	var ui = $('#deptree1').tree('getChecked', ['checked','checked']);
         	getCheckedIds(ui,checkIds);
             var roleName = $('#roleName').val();
@@ -240,10 +240,11 @@
             });
         }
         //获取添加修改时需要的resId及funId
-        function getCheckedIds(ui,checkIds){
+        function getCheckedIds(ui){
         	//清空之前选中的resource及function
         	checkedResIds='';
         	checkedFunIds='';
+        	checkIds='';
         	
         	for(var i = 0;i<ui.length;i++){
     			//模块节点(ismodule自定义参数=0标记的是模块)
@@ -255,7 +256,6 @@
      				checkIds=checkIds+id+",,,";//模块与模块区分
      			}else if(ui[i].ismodule=="2"){
      				id=ui[i].id.replace('f','');
-     				checkIds=checkIds+id+",";//资源与资源区分
      				//判断该方法的资源父类是否选中，如选中则不添加到checkedFunIds中
      				var pnode = $("#deptree1").tree('getParent',ui[i].target);
      				var pnodeId = pnode.id.replace('r','');
@@ -267,9 +267,11 @@
      						}
      					}
  	     				if(!bool){
+ 	        				checkIds=checkIds+id+",";//资源与资源区分
  	     					checkedFunIds+=id+",";
  	     				}
      				}else{
+         				checkIds=checkIds+id+",";//资源与资源区分
      					checkedFunIds+=id+",";
      				}
      			}else{
@@ -287,9 +289,6 @@
         	if(checkedResIds != initialResIds){//resource前后不一致
         		var checkedRes=checkedResIds.split(",");
         		var initialRes=initialResIds.split(",");
-        		var checkedFun=checkedFunIds.split(",");
-        		var initialFun=initialFunIds.split(",");
-        		
         		for(var i=0;i<checkedRes.length;i++){
         			var bool=false;
         			for(var j=0;j<initialRes.length;j++){
@@ -312,6 +311,10 @@
         				delIds+=initialRes[i]+",,";
         			}
         		}
+        	}
+        	if(checkedFunIds != initialFunIds){//function前后不一致
+        		var checkedFun=checkedFunIds.split(",");
+        		var initialFun=initialFunIds.split(",");
         		for(var i=0;i<checkedFun.length;i++){
         			var bool=false;
         			for(var j=0;j<initialFun.length;j++){
