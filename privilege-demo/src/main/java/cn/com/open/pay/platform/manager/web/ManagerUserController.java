@@ -503,7 +503,7 @@ public class ManagerUserController extends BaseControllerUtil {
 				for (PrivilegeResource1 resource1 : resourceList) {
 					if (resource1.getMenuId().equals(menu.getMenuId())) {
 						treeNode = new TreeNode();
-						treeNode.setId(resource1.getResourceId());
+						treeNode.setId("r"+resource1.getResourceId());
 						treeNode.setText(resource1.getResourceName());
 						treeNode.setIsmodule("0");
 						results.add(treeNode);
@@ -518,14 +518,14 @@ public class ManagerUserController extends BaseControllerUtil {
 						if (resource1.getMenuId().equals(menu2.getMenuId())) {
 							TreeNode node = new TreeNode();
 							List<TreeNode> childrenList2 = new ArrayList<TreeNode>();
-							node.setId(resource1.getResourceId());
+							node.setId("r"+resource1.getResourceId());
 							node.setText(resource1.getResourceName());
 							node.setIsmodule("1");
 							childrenList.add(node);
 							for (PrivilegeFunction function : functionList) {
 								if (function.getResourceId().equals(resource1.getResourceId())) {
 									TreeNode Funnode = new TreeNode();
-									Funnode.setId(function.getFunctionId());
+									Funnode.setId("f"+function.getFunctionId());
 									String optId = function.getOptId();
 									Map<String, Object> map = new HashMap<String, Object>();
 									map.put("optId", optId);
