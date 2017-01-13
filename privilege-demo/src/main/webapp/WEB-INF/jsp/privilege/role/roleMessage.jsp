@@ -195,33 +195,12 @@
 		}
 		
         //添加/修改
-        function serverUpdate() { 
-        	//清空之前选中的resource及function
-        	checkedResIds='';
-        	checkedFunIds='';
-        	
+        function serverUpdate() {         	
         	var privilegeRoleId=$("#id").val();
         	var appId=${appId};
         	var checkIds='';
         	var ui = $('#deptree1').tree('getChecked', ['checked','checked']);
-        	for(var i = 0;i<ui.length;i++){
-    			//模块节点(ismodule自定义参数=0标记的是模块)
-     			if(ui[i].ismodule=="0"){
-     				if(checkIds.split(",").length!=0 || checkIds.split(",,").length!=0){
-     					checkIds+="=";
-     				}
-     				id=ui[i].id.replace('m','');
-     				checkIds=checkIds+id+",,,";//模块与模块区分
-     			}else if(ui[i].ismodule=="2"){
-     				id=ui[i].id.replace('f','');
-     				checkIds=checkIds+id+",";//资源与资源区分
-     				checkedFunIds+=id+",";
-     			}else{
-     				id=ui[i].id.replace('r','');
-     				checkIds=checkIds+id+",,";//模块与资源区分
-     				checkedResIds+=id+",";
-     			}
-        	}
+        	getCheckedIds(ui,checkIds);
             var roleName = $('#roleName').val();
             var status= $('#status').val();
             var deptName=$('#deptName').val();
@@ -260,6 +239,48 @@
                 }
             });
         }
+        //获取添加修改时需要的resId及funId
+        function getCheckedIds(ui,checkIds){
+        	//清空之前选中的resource及function
+        	checkedResIds='';
+        	checkedFunIds='';
+        	
+        	for(var i = 0;i<ui.length;i++){
+    			//模块节点(ismodule自定义参数=0标记的是模块)
+     			if(ui[i].ismodule=="0"){
+     				if(checkIds.split(",").length!=0 || checkIds.split(",,").length!=0){
+     					checkIds+="=";
+     				}
+     				id=ui[i].id.replace('m','');
+     				checkIds=checkIds+id+",,,";//模块与模块区分
+     			}else if(ui[i].ismodule=="2"){
+     				id=ui[i].id.replace('f','');
+     				checkIds=checkIds+id+",";//资源与资源区分
+     				//判断该方法的资源父类是否选中，如选中则不添加到checkedFunIds中
+     				var pnode = $("#deptree1").tree('getParent',ui[i].target);
+     				var pnodeId = pnode.id.replace('r','');
+     				if(checkedResIds != ""){
+ 		            	var bool = false;
+     					for(var j=0;j<checkedResIds.split(",").length;j++){
+     						alert(pnodeId+"=="+checkedResIds.split(",")[j]);
+     						if(pnodeId == checkedResIds.split(",")[j]){
+     							bool = true;
+     						}
+     					}
+ 	     				if(!bool){
+ 	     					checkedFunIds+=id+",";
+ 	     				}
+     				}else{
+     					checkedFunIds+=id+",";
+     				}
+     			}else{
+     				id=ui[i].id.replace('r','');
+     				checkIds=checkIds+id+",,";//模块与资源区分
+     				checkedResIds+=id+",";
+     			}
+        	}
+        }
+        
         //获取添加删除的id
         function getIds(){
         	addIds='';
@@ -269,6 +290,7 @@
         		var initialRes=initialResIds.split(",");
         		var checkedFun=checkedFunIds.split(",");
         		var initialFun=initialFunIds.split(",");
+        		
         		for(var i=0;i<checkedRes.length;i++){
         			var bool=false;
         			for(var j=0;j<initialRes.length;j++){
@@ -379,13 +401,10 @@
    		}
 
         function expand(node){
-        	if($('#deptree1').tree('isLeaf', node.target)){
-        		node=$('#deptree1').tree('getParent', node.target);
+        	$('#deptree1').tree('expandTo', node.target);
+        	if($('#deptree1').tree('getChildren', node.target)!=null){
+        		$('#deptree1').tree('expand', node.target);
         	}
-       		while(node!=null){
-       			$('#deptree1').tree('expand', node.target);
-           		node=$('#deptree1').tree('getParent', node.target);
-       		}
         }
         
 		function reload(url,appId){
