@@ -46,13 +46,10 @@
 </body>
 <script>
 	$('#tt').tree({ 
- 	  url: '${pageContext.request.contextPath}/managerUser/tree?id=${id}', 
+ 	  url: '${pageContext.request.contextPath}/managerUser/tree', 
       onLoadSuccess:function(node,data){
-    	  
     	 selected();
       }
-      
-      
    });
 	//勾选用户拥有的功能
 	function selected(){
@@ -69,7 +66,6 @@
 						var nn=$("#tt").tree('getChildren',node.target);
 						if(nn.length<=0){
 							$("#tt").tree('check',node.target);
-							
 						}
 					});
 				}
