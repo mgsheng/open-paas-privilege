@@ -49,6 +49,9 @@
  	  url: '${pageContext.request.contextPath}/managerUser/tree', 
       onLoadSuccess:function(node,data){
     	 selected();
+      },
+      onClick:function(node){
+    	  alert(node.id);
       }
    });
 	//勾选用户拥有的功能
@@ -56,13 +59,15 @@
 		$.post('${pageContext.request.contextPath}/managerUser/function?id='+'${id}',function(data){
 				if(data.functionList!=null){
 					$.each(data.functionList,function(i,n){
-						var node=$("#tt").tree('find',n.functionId);
-						$("#tt").tree('check',node.target);
+						var node=$("#tt").tree('find',"f"+n.functionId);
+						if(node!=null){
+							$("#tt").tree('check',node.target);
+						}
 					});
 				}
 				if(data.resourceList!=null){
 					$.each(data.resourceList,function(i,m){
-						var node=$("#tt").tree('find',m.resourceId);
+						var node=$("#tt").tree('find',"r"+m.resourceId);
 						var nn=$("#tt").tree('getChildren',node.target);
 						if(nn.length<=0){
 							$("#tt").tree('check',node.target);
@@ -86,9 +91,11 @@
 		var select=$('#tt').tree('getChecked', ['checked','indeterminate']);
 		$.each(select, function(i, n) {
 			if(n.ismodule==2){
-				funId.push(n.id);
+				var id=n.id.replace('f','');
+				funId.push(id);
 			}else{
-				resId.push(n.id);
+				var id=n.id.replace('r','');
+				resId.push(id);
 			}
 			console.log(n.text);
 		});
