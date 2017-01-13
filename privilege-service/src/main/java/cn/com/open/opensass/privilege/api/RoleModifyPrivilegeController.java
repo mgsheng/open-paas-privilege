@@ -80,10 +80,11 @@ public class RoleModifyPrivilegeController extends BaseControllerUtil{
 			paraMandaChkAndReturn(10006, response,"认证失败");
 			return;
 		}
-		List<PrivilegeRoleResource> roleResourceList=privilegeRoleResourceService.findByPrivilegeRoleId(privilegeRoleId);
+		List<PrivilegeRoleResource> roleResourceList=null;
     	if(rolePrivilege!=null && !("").equals(rolePrivilege)){
     		String[] roleResources = rolePrivilege.split(",");
     		PrivilegeRoleResource roleResource1=null;
+			roleResourceList=privilegeRoleResourceService.findByPrivilegeRoleId(privilegeRoleId);
     		for(String roleResource : roleResources){
     			roleResource1 = privilegeRoleResourceService.findByRoleIdAndResourceId(privilegeRoleId,roleResource);
     			if(("0").equals(method)){//添加权限
@@ -92,7 +93,7 @@ public class RoleModifyPrivilegeController extends BaseControllerUtil{
 					roleResource1.setResourceId(roleResource);
 					roleResource1.setCreateUser(createUser);
 					roleResource1.setCreateUserId(createUserId);
-					if(roleResourceList!=null){
+					if(roleResourceList!=null && roleResourceList.size()>0){
 						roleResource1.setPrivilegeFunId(roleResourceList.get(0).getPrivilegeFunId());
 					}
 					if(status!=null){
@@ -116,8 +117,9 @@ public class RoleModifyPrivilegeController extends BaseControllerUtil{
     	}
     	if(privilegeFunId!=null && !("").equals(privilegeFunId)){
     		PrivilegeRoleResource roleResource1=null;
+			roleResourceList=privilegeRoleResourceService.findByPrivilegeRoleId(privilegeRoleId);
 			//更新所有记录的privilegeFunId字段
-			if(roleResourceList != null){
+			if(roleResourceList != null && roleResourceList.size()>0){
 				for(PrivilegeRoleResource roleRes:roleResourceList){
 					if(("0").equals(method)){//添加
 						if(roleRes.getPrivilegeFunId() != null && !("").equals(roleRes.getPrivilegeFunId())){
