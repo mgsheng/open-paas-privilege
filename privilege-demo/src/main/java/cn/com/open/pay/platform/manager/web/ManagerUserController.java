@@ -27,8 +27,12 @@ import cn.com.open.pay.platform.manager.department.model.Department;
 import cn.com.open.pay.platform.manager.log.service.PrivilegeLogService;
 import cn.com.open.pay.platform.manager.login.model.User;
 import cn.com.open.pay.platform.manager.login.service.UserService;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeFunction;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource1;
+import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGetSignatureService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeResourceService;
@@ -60,6 +64,12 @@ public class ManagerUserController extends BaseControllerUtil {
 	private String appId;
 	@Value("#{properties['add-privilege-user-uri']}")
 	private String addPrivilegeUserUrl;
+	@Value("#{properties['privilege-appmenu-redis-query-uri']}")
+	private String appMenuRedisUrl;
+	@Value("#{properties['privilege-appres-redis-query-uri']}")
+	private String appResRedisUrl;
+	@Value("#{properties['privilege-operation-name-uri']}")
+	private String getOperationNameUrl;
 
 	/**
 	 * 跳转到用户信息列表的页面
@@ -89,58 +99,11 @@ public class ManagerUserController extends BaseControllerUtil {
 			throws UnsupportedEncodingException {
 		log.info("-------------------------toFunction       start------------------------------------");
 		String id = request.getParameter("id");
-		System.err.println("userid==" + id);
 		String userName = request.getParameter("userName");
 		id = (id == null ? null : new String(id.getBytes("iso-8859-1"), "utf-8"));
 		userName = (userName == null ? null : new String(userName.getBytes("iso-8859-1"), "utf-8"));
 		model.addAttribute("id", id);
 		model.addAttribute("userName", userName);
-		String getAppResUrl = "http://localhost:8080/privilege-service/AppRes/getAppResRedis";
-		Map<String, Object> Signature = privilegeGetSignatureService.getSignature("10029");
-		Signature.put("appId", "10029");
-		String reslut = sendPost(getAppResUrl, Signature);
-		List<Map<String, Object>> resourceList = null;
-		List<Map<String, Object>> functionList = null;
-		if (reslut != null && !("").equals(reslut)) {
-			JSONObject jsonObject = JSONObject.fromObject(reslut);
-			Map JsnMap = (Map) jsonObject;
-			if (!("0").equals(JsnMap.get("status"))) {
-				resourceList = (List<Map<String, Object>>) JsnMap.get("resourceList");
-				functionList = (List<Map<String, Object>>) JsnMap.get("functionList");
-				System.err.println("appRes" + JSONObject.fromObject(JsnMap).toString());
-			} else {
-				System.err.println("该应用没有res");
-			}
-		}
-		List<Map<String, Object>> pareRes = new ArrayList<Map<String, Object>>();
-
-		if (resourceList != null) {
-			for (Map<String, Object> reslist : resourceList) {
-				List<Map<String, Object>> mList = new ArrayList<Map<String, Object>>();
-				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("resourceId", reslist.get("resourceId"));
-				map.put("resourceName", reslist.get("resourceName"));
-				map.put("status", reslist.get("status"));
-				if (functionList != null) {
-					for (Map<String, Object> fun : functionList) {
-						if (fun.get("resourceId").equals(reslist.get("resourceId"))) {
-							Map<String, Object> fMap = new HashMap<String,Object>();
-							fMap.put("functionId", fun.get("functionId"));
-							mList.add(fMap);
-							map.put("menus", mList);
-						}
-					}
-				}
-				pareRes.add(map);
-
-			}
-		}
-
-		Map<String, Object> aMap = new HashMap<String,Object>();
-		aMap.put("menus", pareRes);
-		model.addAttribute("menus", JSONObject.fromObject(aMap));
-		System.err.println(JSONObject.fromObject(aMap).toString());
-
 		return "show/authorizeFunction";
 	}
 
@@ -367,6 +330,31 @@ public class ManagerUserController extends BaseControllerUtil {
 		return;
 	}
 
+	@RequestMapping(value = "tree")
+	public void getModelTree(HttpServletRequest request, HttpServletResponse response) {
+		String id = request.getParameter("id");
+		System.err.println("id===" + id);
+		String appId = "10029";
+		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
+		map.put("appId", appId);
+		String s = sendPost(appMenuRedisUrl, map);
+		JSONObject obj = JSONObject.fromObject(s);// 将json字符串转换为json对象
+		JSONArray objArray = JSONArray.fromObject(obj.get("menuList"));
+		// 将json对象转换为java对象
+		List<PrivilegeMenu> menuList = JSONArray.toList(objArray, PrivilegeMenu.class);
+		String s1 = sendPost(appResRedisUrl, map);
+		JSONObject obj1 = new JSONObject().fromObject(s1);// 将json字符串转换为json对象
+		JSONArray obj1Array = JSONArray.fromObject(obj1.get("resourceList"));
+		JSONArray obj2Array = JSONArray.fromObject(obj1.get("functionList"));
+		// 将json对象转换为java对象
+		List<PrivilegeResource1> resourceList = JSONArray.toList(obj1Array, PrivilegeResource1.class);
+		List<PrivilegeFunction> functionList = JSONArray.toList(obj2Array, PrivilegeFunction.class);
+		JSONArray jsonArr = JSONArray.fromObject(buildTree2(menuList, resourceList, functionList));
+		WebUtils.writeJson(response, jsonArr);
+	}
+
+	
+
 	/**
 	 * 查询指定用户的功能情况
 	 * 
@@ -394,7 +382,7 @@ public class ManagerUserController extends BaseControllerUtil {
 				System.err.println("该用户没有功能");
 			}
 		}
-		Map<String, Object> aMap = new HashMap<String,Object>();
+		Map<String, Object> aMap = new HashMap<String, Object>();
 		aMap.put("resourceList", userResourceList);
 		aMap.put("functionList", userFunctionList);
 		System.err.println(JSONObject.fromObject(aMap).toString());
@@ -500,6 +488,70 @@ public class ManagerUserController extends BaseControllerUtil {
 		System.out.println(jsonArr);
 		WebUtils.writeJson(response, jsonObjArr);
 		return;
+	}
+
+	/**
+	 * 构建树
+	 * 
+	 * @param treeNodes
+	 * @return
+	 */
+	protected List<TreeNode> buildTree2(List<PrivilegeMenu> menuList, List<PrivilegeResource1> resourceList,
+			List<PrivilegeFunction> functionList) {
+		// 顶级菜单资源集合
+		List<TreeNode> results = new ArrayList<TreeNode>();
+		List<PrivilegeResource1> pMenus = new ArrayList<PrivilegeResource1>();
+		TreeNode treeNode = null;
+		for (PrivilegeMenu menu : menuList) {
+			String menuId = menu.getMenuId();
+			String menuname = menu.getMenuName();
+			List<TreeNode> childrenList = null;
+			if (menu.getParentId().equals("0")) {
+				for (PrivilegeResource1 resource1 : resourceList) {
+					if (resource1.getMenuId().equals(menu.getMenuId())) {
+						treeNode = new TreeNode();
+						treeNode.setId(resource1.getResourceId());
+						treeNode.setText(resource1.getResourceName());
+						treeNode.setIsmodule("0");
+						results.add(treeNode);
+						childrenList = new ArrayList<TreeNode>();
+					}
+				}
+			}
+
+			for (PrivilegeMenu menu2 : menuList) {
+				if (menu2.getParentId().equals(menu.getMenuId())) {
+					for (PrivilegeResource1 resource1 : resourceList) {
+						if (resource1.getMenuId().equals(menu2.getMenuId())) {
+							TreeNode node = new TreeNode();
+							List<TreeNode> childrenList2 = new ArrayList<TreeNode>();
+							node.setId(resource1.getResourceId());
+							node.setText(resource1.getResourceName());
+							node.setIsmodule("1");
+							childrenList.add(node);
+							for (PrivilegeFunction function : functionList) {
+								if (function.getResourceId().equals(resource1.getResourceId())) {
+									TreeNode Funnode = new TreeNode();
+									Funnode.setId(function.getFunctionId());
+									String optId = function.getOptId();
+									Map<String, Object> map = new HashMap<String, Object>();
+									map.put("optId", optId);
+									String s = sendPost(getOperationNameUrl, map);
+									JSONObject o = JSONObject.fromObject(s);
+									String nameValue = o.getString("optName");
+									Funnode.setText(nameValue);
+									Funnode.setIsmodule("2");
+									childrenList2.add(Funnode);
+								}
+							}
+							node.setChildren(childrenList2);
+							treeNode.setChildren(childrenList);
+						}
+					}
+				}
+			}
+		}
+		return results;
 	}
 
 	/**
