@@ -58,7 +58,7 @@ public class ManagerUserController extends BaseControllerUtil {
 	private String getUserPrivilegeUrl;
 	@Value("#{properties['modify-privilege-user-uri']}")
 	private String moditUserPrivilegeUrl;
-	@Value("#{properties['privilege-approleredis-query-uri']}")
+	@Value("#{properties['privilege-approle-redis-query-uri']}")
 	private String getAppRoleRedis;
 	@Value("#{properties['appId']}")
 	private String appId;
