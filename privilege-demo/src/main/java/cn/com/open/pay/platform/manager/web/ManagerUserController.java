@@ -120,9 +120,6 @@ public class ManagerUserController extends BaseControllerUtil {
 		String id = request.getParameter("id");
 		String function = request.getParameter("function");
 		String resource = request.getParameter("resource");
-		System.err.println(function);
-		System.err.println(resource);
-		// String role = request.getParameter("role");
 		String userName = request.getParameter("userName");
 		Boolean boo = false;
 		JSONObject jsonobj = new JSONObject();
@@ -274,7 +271,6 @@ public class ManagerUserController extends BaseControllerUtil {
 			signature.put("appId", appId);
 			signature.put("appUserId", id);
 			signature.put("method", "1");
-			System.err.println("oldId===" + oldRoleIds.subSequence(0, oldRoleIds.length() - 1).toString());
 			signature.put("privilegeRoleId", oldRoleIds.subSequence(0, oldRoleIds.length() - 1).toString());
 			reslut = sendPost(moditUserPrivilegeUrl, signature);
 			if (reslut != null && !("").equals(reslut)) {
@@ -332,9 +328,6 @@ public class ManagerUserController extends BaseControllerUtil {
 
 	@RequestMapping(value = "tree")
 	public void getModelTree(HttpServletRequest request, HttpServletResponse response) {
-		String id = request.getParameter("id");
-		System.err.println("id===" + id);
-		String appId = "10029";
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
 		map.put("appId", appId);
 		String s = sendPost(appMenuRedisUrl, map);
