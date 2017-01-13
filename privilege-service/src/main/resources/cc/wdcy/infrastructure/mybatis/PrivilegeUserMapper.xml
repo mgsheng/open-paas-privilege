@@ -41,7 +41,7 @@
     <update id="updatePrivilegeUser" parameterType="PrivilegeUser" flushCache="true">
         update privilege_user
         <trim prefix="set" suffixOverrides=",">
-        <if test="privilegeRoleId != null and privilegeRoleId !=''" >
+        <if test="privilegeRoleId != null" >
         privilege_roleid = #{privilegeRoleId},
         </if>
          <if test="resourceId != null and resourceId !=''" >
