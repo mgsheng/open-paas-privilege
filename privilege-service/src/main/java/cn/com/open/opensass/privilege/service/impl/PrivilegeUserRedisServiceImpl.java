@@ -172,10 +172,11 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 	@Override
 	public PrivilegeAjaxMessage delUserRoleRedis(String appId, String appUserId) {
 		PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
-		Boolean UserRoleKeyExist = redisDao.deleteRedisKey(prefix, appId, appUserId);
+		Boolean boolean1=redisClientTemplate.del(prefix+appId+SIGN+appUserId);
+		//Boolean UserRoleKeyExist = redisDao.deleteRedisKey(prefix, appId, appUserId);
 		ajaxMessage.setCode("1");
-		ajaxMessage.setMessage(UserRoleKeyExist ? "Success" : "Failed");
-		log.info("delMenuRedis接口删除：" + UserRoleKeyExist);
+		ajaxMessage.setMessage(boolean1 ? "Success" : "Failed");
+		log.info("delMenuRedis接口删除：" + boolean1);
 		return ajaxMessage;
 	}
 
