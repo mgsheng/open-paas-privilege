@@ -48,7 +48,7 @@
          <if test="createUserId != null and createUserId !=''" >
         create_userid = #{createUserId},
         </if>
-         <if test="privilegeFunId != null and privilegeFunId!=''" >
+         <if test="privilegeFunId != null" >
         privilege_funid = #{privilegeFunId},
         </if>
         <if test="status != null" >
