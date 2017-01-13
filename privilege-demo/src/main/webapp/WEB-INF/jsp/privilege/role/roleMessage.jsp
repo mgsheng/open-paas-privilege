@@ -262,7 +262,6 @@
      				if(checkedResIds != ""){
  		            	var bool = false;
      					for(var j=0;j<checkedResIds.split(",").length;j++){
-     						alert(pnodeId+"=="+checkedResIds.split(",")[j]);
      						if(pnodeId == checkedResIds.split(",")[j]){
      							bool = true;
      						}
