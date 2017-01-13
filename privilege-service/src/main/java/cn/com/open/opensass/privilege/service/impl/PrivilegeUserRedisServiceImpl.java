@@ -26,7 +26,6 @@ import cn.com.open.opensass.privilege.service.PrivilegeUserRedisService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 import cn.com.open.opensass.privilege.vo.PrivilegeResourceVo;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Repository("privilegeUserRedisService")
@@ -126,7 +125,6 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 					// 通过查roleResource表 user表中functionId 获取的resource 是否包含
 					// user表中resource
 					if (!resourceList.contains(map2)) {
-						System.err.println(resourceId);
 						resourceIds.add(resourceId);
 					}
 					resourceList.add(map2);
@@ -163,7 +161,6 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 		}
 		Set<Map<String, Object>> functionSet = new HashSet<Map<String, Object>>();
 		functionSet.addAll(privilegeFunctions);
-		System.err.println("set" + JSONArray.fromObject(functionSet).toString());
 		roleMap.put("functionList", functionSet);
 		// 放入缓存
 		redisClientTemplate.setString(userCacheRoleKey, JSONObject.fromObject(roleMap).toString());
