@@ -137,6 +137,10 @@ public class PrivilegeFunctionServiceImpl implements PrivilegeFunctionService {
 		
 		return privilegefunctions;
 	}
+	@Override
+	public List<String> findAppFunction(String appId) {
+		return privilegeFunctionRepository.findAppFunction(appId);
+	}
 	
 	
 }
