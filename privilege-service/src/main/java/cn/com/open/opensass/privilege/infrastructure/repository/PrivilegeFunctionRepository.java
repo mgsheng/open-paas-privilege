@@ -23,4 +23,5 @@ public interface PrivilegeFunctionRepository {
 	List<PrivilegeFunction> getFunctionListByUserId(@Param("appUserId")String appUserId,@Param("appId")String appId);
 	List<PrivilegeFunction> getFunctionListByAppId(@Param("appId")String appId);
 	List<PrivilegeFunction> getFunctionListByFunctionIds(@Param("functionIds")String[] functionIds);
+	List<String> findAppFunction(String appId);
 }
