@@ -217,6 +217,7 @@ privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/rep
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/PrivilegeRoleRepository.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/UserRepository.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/UserSerialRecordRepository.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/interceptor/VerifyUserPrivilegeInterceptor.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/log/model/PrivilegeLog.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/log/service/PrivilegeLogService.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/log/service/imp/PrivilegeLogServiceImp.java -text
