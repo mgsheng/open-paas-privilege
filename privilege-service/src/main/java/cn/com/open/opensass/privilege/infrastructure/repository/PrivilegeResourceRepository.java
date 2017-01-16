@@ -27,4 +27,5 @@ public interface PrivilegeResourceRepository extends Repository {
 	List<PrivilegeResource> getResourceListByAppId(@Param("appId")String appId);
 	List<PrivilegeResource> getResourceListByFunIds(@Param("functionIds")String[] functionIds);
 	List<PrivilegeResource> getResourceListByMenuId(@Param("menuId")String menuId);
+	List<String> findAppResources(String appId);
 }
