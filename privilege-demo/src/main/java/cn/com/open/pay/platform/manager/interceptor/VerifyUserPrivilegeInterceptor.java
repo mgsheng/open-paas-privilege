@@ -1,13 +1,11 @@
 package cn.com.open.pay.platform.manager.interceptor;
 
 import java.io.PrintWriter;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -58,7 +56,6 @@ public class VerifyUserPrivilegeInterceptor extends BaseControllerUtil implement
 		if (doFilter) {
 			// 从session中获取登录者实体
 			String appUserId = (String) request.getSession().getAttribute("user");
-			System.err.println("appUserId==" + appUserId);
 			if (null == appUserId) {
 				// 如果session中不存在登录者实体，则弹出框提示重新登录
 				// 设置request和response的字符集，防止乱码
@@ -68,7 +65,6 @@ public class VerifyUserPrivilegeInterceptor extends BaseControllerUtil implement
 				StringBuilder builder = new StringBuilder();
 				builder.append("<script type=\"text/javascript\">");
 				builder.append("alert('您不具备该操作权限！');");
-
 				builder.append("</script>");
 				out.print(builder.toString());
 				return false;
@@ -76,13 +72,11 @@ public class VerifyUserPrivilegeInterceptor extends BaseControllerUtil implement
 				// 如果session中存在登录者实体，则继续
 				url = url.replaceAll(request.getContextPath(), "");
 				Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
-				System.err.println(appId);
 				map.put("appId", appId);
 				map.put("appUserId", appUserId);
 				map.put("optUrl", url);
 				String vurl = "http://localhost:8080/privilege-service/userRole/verifyUserPrivilege";
 				String reult = sendPost(vurl, map);
-				System.err.println("reult==" + reult);
 				JSONObject object = JSONObject.fromObject(reult);
 				Map map2 = (Map) object;
 				if (map2.get("status").equals("1")) {
