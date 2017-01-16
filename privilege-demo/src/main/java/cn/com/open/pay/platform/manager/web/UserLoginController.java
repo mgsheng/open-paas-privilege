@@ -133,7 +133,8 @@ public class UserLoginController extends BaseControllerUtil {
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
 		map.put("appId", appId);
 		map.put("appUserId", appUserId);
-		
+		HttpSession session=request.getSession();
+		session.setAttribute("user", appUserId);
 		String result =sendPost(getUserPrivilegeUrl, map);
 		Map<String, Object> menus=new HashMap<String, Object>();
 		if (result!=null&&!("").equals(result)) {
