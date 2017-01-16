@@ -28,8 +28,6 @@ import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
 import cn.com.open.opensass.privilege.tools.WebUtils;
-import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 /**
@@ -88,7 +86,6 @@ public class VerifyUserPrivilegeController extends BaseControllerUtil {
 		states = redisDao.existUrlRedis(prifix, jsonKeyName, optUrl, appId, appUserId);
 		if (!states) {
 			List<PrivilegeRole> roles = privilegeRoleService.getRoleListByUserIdAndAppId(appUserId, appId);
-			System.err.println(JSONArray.fromObject(roles).toString());
 			for (PrivilegeRole role : roles) {
 				if (role.getRoleType() != null) {
 					if (role.getRoleType() == 2) {
