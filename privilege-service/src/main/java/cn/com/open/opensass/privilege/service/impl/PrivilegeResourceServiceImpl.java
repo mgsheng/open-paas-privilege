@@ -301,4 +301,9 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 	
 	}
 
+	@Override
+	public List<String> findAppResources(String appId) {
+		return privilegeResourceRepository.findAppResources(appId);
+	}
+
 }
