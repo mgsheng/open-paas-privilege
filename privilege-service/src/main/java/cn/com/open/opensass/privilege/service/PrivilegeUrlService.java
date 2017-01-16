@@ -55,6 +55,6 @@ public interface PrivilegeUrlService {
      * @return
      */
     PrivilegeUrl getPrivilegeUrl(String appId, String appUserId, PrivilegeUser privilegeUser);
-
+    PrivilegeUrl getAllPrivilegeUrl(String appId);
 
 }
