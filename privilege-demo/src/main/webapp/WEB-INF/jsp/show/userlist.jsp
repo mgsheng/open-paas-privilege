@@ -539,7 +539,7 @@
 			}
 			$.ajax({
 				type:"post",
-				url:"/pay-platform-manager/managerUser/addUser",
+				url:"${pageContext.request.contextPath}/managerUser/addUser",
 				data:{"user_name":username,"real_name":realname,"nickname":nickname,"sha_password":password,"addDeptName":addDeptName,"deptID":deptID},
 				dataType:"json",
 				success:function (data){
