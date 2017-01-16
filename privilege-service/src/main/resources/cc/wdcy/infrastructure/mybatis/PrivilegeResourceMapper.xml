@@ -54,6 +54,9 @@
         </foreach>
 		AND pf.resource_id=pr.resource_id 
 	</select>
+	<select id="findAppResources"  resultType="java.lang.String" flushCache="true">
+  		 SELECT base_url FROM privilege_resource WHERE app_id =#{appId} AND NOT(base_url IS NULL OR base_url='')
+ 	</select>
 	<select id="findByResource_Id" resultMap="privilegeResourceMap" flushCache="true">
          select * from privilege_resource
          where  resource_id = #{resourceId}
