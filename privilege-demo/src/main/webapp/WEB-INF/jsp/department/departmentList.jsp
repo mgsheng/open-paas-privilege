@@ -406,7 +406,7 @@
 			}
 			$.ajax({
 				type:"post",
-				url:"/pay-platform-manager/department/addDept",
+				url:"${pageContext.request.contextPath}/department/addDept",
 				data:{"deptname":dept_Name},
 				dataType:"json",
 				success:function (data){
