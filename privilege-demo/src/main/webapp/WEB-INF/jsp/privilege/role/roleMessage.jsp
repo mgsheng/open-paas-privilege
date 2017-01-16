@@ -177,14 +177,17 @@
 					   var id=row.privilegeRoleId;
 					   var url="${pageContext.request.contextPath}/managerRole/deleteRole?id="+id+"&appId="+appId;
 			            $.post(url, function(data) {
-			                if(data.status=='1'){
-			                  msgShow('系统提示', '恭喜，删除成功！', 'info');
-			                  //刷新
-				              var url='${pageContext.request.contextPath}/managerRole/getRoleMessage';
-				              reload(url,appId);
-			                }else{
-			                  msgShow('系统提示', '删除失败！', 'info');
-			                }
+			            	if(data.status!=null){
+			            		if(data.status=='1'){
+					                  msgShow('系统提示', '恭喜，删除成功！', 'info');
+					                  //刷新
+						              var url='${pageContext.request.contextPath}/managerRole/getRoleMessage';
+						              reload(url,appId);
+					                }else{
+					                  msgShow('系统提示', '删除失败！', 'info');
+					                }
+			            	}
+			                
 			            });
 				}
 			   });
