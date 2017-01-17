@@ -23,6 +23,7 @@ public class PrivilegeMenu extends AbstractDomain {
 	private int resourceType;
 	private int status;
 	private String menuId;
+	private String isLeaf;
 	
 	
 	public String getMenuId() {
@@ -103,6 +104,12 @@ public class PrivilegeMenu extends AbstractDomain {
 	}
 	public void setStatus(int status) {
 		this.status = status;
+	}
+	public String getIsLeaf() {
+		return isLeaf;
+	}
+	public void setIsLeaf(String isLeaf) {
+		this.isLeaf = isLeaf;
 	}
 
 }
