@@ -68,10 +68,13 @@
 				if(data.resourceList!=null){
 					$.each(data.resourceList,function(i,m){
 						var node=$("#tt").tree('find',"r"+m.resourceId);
-						var nn=$("#tt").tree('getChildren',node.target);
-						if(nn.length<=0){
-							$("#tt").tree('check',node.target);
+						if(node!=null){
+							var nn=$("#tt").tree('getChildren',node.target);
+							if(nn.length<=0){
+								$("#tt").tree('check',node.target);
+							}
 						}
+						
 					});
 				}
 		 
