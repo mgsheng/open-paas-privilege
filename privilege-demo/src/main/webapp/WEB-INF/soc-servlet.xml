@@ -26,6 +26,10 @@
 						<value>QueryRoleDetails</value>
 						<value>getAllOperation</value>
 						<value>userList</value>
+						<value>/managerUser/role</value>
+						<value>/managerUser/authorizeRole</value>
+						<value>/managerUser/function</value>
+						<value>/managerUser/authorizeFun</value>
 					</list>
 				</property>
 			</bean>
