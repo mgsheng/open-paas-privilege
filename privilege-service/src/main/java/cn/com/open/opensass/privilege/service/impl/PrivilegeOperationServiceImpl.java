@@ -1,5 +1,7 @@
 package cn.com.open.opensass.privilege.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeOperationRepository;
@@ -25,5 +27,9 @@ public class PrivilegeOperationServiceImpl implements PrivilegeOperationService 
         	return opt;
         }
     }
+	@Override
+	public List<PrivilegeOperation> findAllOper() {
+		return privilegeOperationRepository.findAllOper();
+	}
     
 }
