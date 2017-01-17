@@ -100,7 +100,7 @@ public class MenuAddPrivilegeController extends BaseControllerUtil{
     	Boolean sf =privilegeMenuService.savePrivilegeMenu(pm);
     	if(sf){
     		//添加缓存
-    		PrivilegeAjaxMessage message=privilegeMenuService.getAppMenuRedis(appId);
+    		PrivilegeAjaxMessage message=privilegeMenuService.updateAppMenuRedis(appId);
     		if (message.getCode().equals("1")) {
     			map.put("status","1");
         		map.put("menuId", pm.id());
