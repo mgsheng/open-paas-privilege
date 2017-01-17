@@ -1,6 +1,7 @@
 package cn.com.open.opensass.privilege.api;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +32,14 @@ public class PrivilegeOperationController extends BaseControllerUtil{
 		if(opt!=null){
 			map.put("optName", opt.getName());
 		}
+		writeSuccessJson(response, map);
+		return;
+	}
+	@RequestMapping("getAllOperation")
+	public void getAllOperation(HttpServletRequest request,HttpServletResponse response){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<PrivilegeOperation> opt=privilegeOperationService.findAllOper();
+		map.put("operationList", opt);
 		writeSuccessJson(response, map);
 		return;
 	}
