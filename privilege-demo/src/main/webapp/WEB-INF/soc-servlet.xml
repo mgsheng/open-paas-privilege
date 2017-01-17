@@ -25,6 +25,7 @@
 						<value>tree</value>
 						<value>QueryRoleDetails</value>
 						<value>getAllOperation</value>
+						<value>userList</value>
 					</list>
 				</property>
 			</bean>
