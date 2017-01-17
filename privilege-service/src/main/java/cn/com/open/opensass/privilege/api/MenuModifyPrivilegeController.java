@@ -1,6 +1,5 @@
 package cn.com.open.opensass.privilege.api;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -45,19 +44,8 @@ public class MenuModifyPrivilegeController extends BaseControllerUtil{
      */
     @RequestMapping("modifyMenu")
     public void modifyMenu(HttpServletRequest request,HttpServletResponse response) {
-    	String menuName = "";
-    	String menuRule="";
-    	try {
-    	if(!nullEmptyBlankJudge(request.getParameter("menuName"))){
-    		menuName = new String(request.getParameter("menuName").getBytes("iso-8859-1"),"utf-8");	
-    	}
-    	if(!nullEmptyBlankJudge(request.getParameter("menuRule"))){
-    		menuRule = new String(request.getParameter("menuRule").getBytes("iso-8859-1"),"utf-8");	
-    	}
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    	String menuName = request.getParameter("menuName");
+    	String menuRule=request.getParameter("menuRule");    	
     	String menuId=request.getParameter("menuId");
     	String menuCode=request.getParameter("menuCode");
     	String appId=request.getParameter("appId");
