@@ -86,7 +86,7 @@
                         </div>
                     </div>
                       <div class="form-group">
-                        <label class="col-sm-2 control-label">menuLevel</label>
+                        <label class="col-sm-2 control-label">parentId</label>
 
                         <div class="col-sm-10">
                             <input type="text" name="parentId" id="parentId"
