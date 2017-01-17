@@ -15,4 +15,5 @@ import java.util.Map;
 public interface PrivilegeOperationRepository extends Repository {
     
 	PrivilegeOperation findById(Integer id);
+	List<PrivilegeOperation> findAllOper();
 }
