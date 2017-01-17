@@ -119,6 +119,9 @@ AND a.uid=b.user_id AND b.privilege_roleid=c.privilege_roleid AND c.resource_id=
         (#{id},#{menuCode},#{menuName},#{appId},#{createTime},#{parentId},#{displayOrder},#{status},#{menuLevel},#{menuRule})
     </insert>
 	 <delete id="deleteByMenuId">
-        delete from privilege_menu where id=#{menuId}
+        delete from privilege_menu where id in
+        <foreach item="item" index="index" collection="menuIds" open="(" separator="," close=")">  
+          #{item}  
+        </foreach>
     </delete>
 </mapper>
