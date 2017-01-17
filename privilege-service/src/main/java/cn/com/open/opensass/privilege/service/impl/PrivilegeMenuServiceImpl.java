@@ -21,6 +21,7 @@ import cn.com.open.opensass.privilege.model.PrivilegeMenu;
 import cn.com.open.opensass.privilege.model.PrivilegeRole;
 import cn.com.open.opensass.privilege.model.PrivilegeUser;
 import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
+import cn.com.open.opensass.privilege.service.PrivilegeRoleResourceService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 
@@ -39,11 +40,13 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 	private PrivilegeMenuRepository privilegeMenuRepository;
 	@Autowired
 	private RedisDao redisDao;
-	@Autowired
+	@Autowired  
 	private PrivilegeRoleService privilegeRoleService;
 	@Autowired
 	private PrivilegeUserService privilegeUserService;
-
+	@Autowired
+	private PrivilegeRoleResourceService privilegeRoleResourceService;
+	
 	@Override
 	public Boolean savePrivilegeMenu(PrivilegeMenu privilegeMenu) {
 		try {
@@ -129,14 +132,29 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 
 		{
 			List<PrivilegeMenu> privilegeMenuList = getMenuListByUserId(appUserId, appId);
+			List<String> FunIds = privilegeRoleResourceService.findUserResourcesFunId(user.getAppId(),
+					user.getAppUserId());
+			
 			//根据user表中functionId resourceId 查询菜单
 			String functionIds = user.getPrivilegeFunId();
 			String resourceIds = user.getResourceId();
 			if (functionIds != null && !("").equals(functionIds)) {
-				String[] funIds = functionIds.split(",");
-				List<PrivilegeMenu> menus = getMenuListByFunctionId(funIds);
-				privilegeMenuList.addAll(menus);
+				FunIds.add(functionIds);
 			}
+			
+			if (FunIds != null&&FunIds.size()>0) {
+				for (String funIds : FunIds) {
+					String[] functIds = funIds.split(",");
+					List<PrivilegeMenu> menus = getMenuListByFunctionId(functIds);
+					privilegeMenuList.addAll(menus);
+				}
+			}
+			/*
+			 * if (functionIds != null && !("").equals(functionIds)) { String[]
+			 * funIds = functionIds.split(","); List<PrivilegeMenu> menus =
+			 * getMenuListByFunctionId(funIds); privilegeMenuList.addAll(menus);
+			 * }
+			 */
 			if (resourceIds != null && !("").equals(resourceIds)) {
 				String[] resIds = resourceIds.split(",");
 				for (String id : resIds) {
