@@ -99,7 +99,7 @@ public class ResourceAddPrivilegeController extends BaseControllerUtil{
     	Boolean sf= privilegeResourceService.savePrivilegeResource(pr);
     	if(sf){
     		//添加缓存
-    		PrivilegeAjaxMessage message=privilegeResourceService.getAppResRedis(appId);
+    		PrivilegeAjaxMessage message=privilegeResourceService.updateAppResRedis(appId);
     		if (message.getCode().equals("1")) {
     			map.put("status","1");
         		map.put("resourceId", pr.id());
