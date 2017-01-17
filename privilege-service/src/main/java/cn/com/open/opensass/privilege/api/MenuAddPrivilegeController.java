@@ -46,19 +46,8 @@ public class MenuAddPrivilegeController extends BaseControllerUtil{
      */
     @RequestMapping("addMenu")
     public void addMenu(HttpServletRequest request,HttpServletResponse response) {
-    	String menuName = "";
-    	String menuRule="";
-    	try {
-    	if(!nullEmptyBlankJudge(request.getParameter("menuName"))){
-    		menuName = new String(request.getParameter("menuName").getBytes("iso-8859-1"),"utf-8");	
-    	}
-    	if(!nullEmptyBlankJudge(request.getParameter("menuRule"))){
-    		menuRule = new String(request.getParameter("menuRule").getBytes("iso-8859-1"),"utf-8");	
-    	}
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    	String menuName=request.getParameter("menuName");
+    	String menuRule=request.getParameter("menuRule");
     	String appId=request.getParameter("appId");
     	String menuLevel=request.getParameter("menuLevel");
     	String menuCode=request.getParameter("menuCode");
