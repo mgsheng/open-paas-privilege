@@ -205,7 +205,7 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 			}
 			// 查询相应function
 			List<Map<String, Object>> privilegeFunctions = new ArrayList<Map<String, Object>>();
-			if (FunIds != null) {
+			if (FunIds != null&&FunIds.size()>0) {
 				for (String funIds : FunIds) {
 					String[] functionIds = funIds.split(",");
 					List<Map<String, Object>> functions = privilegeFunctionService
