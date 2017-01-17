@@ -62,26 +62,31 @@ public class MenuDelPrivilegeController extends BaseControllerUtil{
 			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
 			return;
 		}
-    	PrivilegeMenu pm=privilegeMenuService.findByMenuId(menuId, appId);
-    	if(pm!=null){
-    		Boolean df= privilegeMenuService.deleteByMenuId(menuId);
-    		if(df){
-    			//更新缓存
-    			PrivilegeAjaxMessage message=privilegeMenuService.updateAppMenuRedis(appId);
-    			if (message.getCode().equals("1")) {
-    				map.put("status","1");
-    			} else {
-    				map.put("status", message.getCode());
-    				map.put("error_code", message.getMessage());/* 数据不存在 */
-    			}
-    		}else{
-    			map.put("status","0");
-        		map.put("error_code","10002");	
+    	//PrivilegeMenu pm=privilegeMenuService.findByMenuId(menuId, appId);
+    	//if(pm!=null){
+    		String menuIds[]=menuId.split(",");
+    		if(menuIds!=null&&menuIds.length>0){
+    			Boolean df= privilegeMenuService.deleteByMenuId(menuIds);
+    			if(df){
+        			//更新缓存
+        			PrivilegeAjaxMessage message=privilegeMenuService.updateAppMenuRedis(appId);
+        			if (message.getCode().equals("1")) {
+        				map.put("status","1");
+        			} else {
+        				map.put("status", message.getCode());
+        				map.put("error_code", message.getMessage());/* 数据不存在 */
+        			}
+        		}else{
+        			map.put("status","0");
+            		map.put("error_code","10002");	
+        		}
     		}
-    	}else{
+    		
+    		
+    	/*}else{
     		map.put("status","0");
     		map.put("error_code","10001");
-    	}
+    	}*/
     	if(map.get("status")=="0"){
     		writeErrorJson(response,map);
     	}else{
