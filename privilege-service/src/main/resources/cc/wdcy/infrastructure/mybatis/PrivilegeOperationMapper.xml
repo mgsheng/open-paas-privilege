@@ -19,4 +19,7 @@
         SELECT * FROM  privilege_operation
         where  id = #{id}
     </select>
+    <select id="findAllOper" resultMap="privilegeOperationMap" flushCache="true">
+        SELECT * FROM privilege_operation WHERE STATUS='1'
+    </select>
 </mapper>
