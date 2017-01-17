@@ -9,7 +9,7 @@
 
 
     <!--<import resource="security.xml"/>-->
-	<!-- <mvc:interceptors>
+	 <mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/**" />
 			<bean class="cn.com.open.pay.platform.manager.interceptor.VerifyUserPrivilegeInterceptor" >
@@ -24,12 +24,13 @@
 						<value>getRoleMessage</value>
 						<value>tree</value>
 						<value>QueryRoleDetails</value>
+						<value>getAllOperation</value>
 					</list>
 				</property>
 			</bean>
 			
 		</mvc:interceptor>
-	</mvc:interceptors>  -->
+	</mvc:interceptors>  
     <!--annotation configuration -->
     <context:annotation-config/>
     <context:component-scan base-package="cn.com.open.pay.platform.manager.web"/>
