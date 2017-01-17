@@ -81,10 +81,10 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 	}
 
 	@Override
-	public Boolean deleteByMenuId(String menuId) {
+	public Boolean deleteByMenuId(String[] menuIds) {
 		// TODO Auto-generated method stub
 		try {
-			privilegeMenuRepository.deleteByMenuId(menuId);
+			privilegeMenuRepository.deleteByMenuId(menuIds);
 			return true;
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -110,17 +110,19 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 		//判断用户角色是否是系统管理员  
 		List<PrivilegeRole> roles = privilegeRoleService.getRoleListByUserIdAndAppId(appUserId, appId);
 		for (PrivilegeRole role : roles) {
-			
-			if (role.getRoleType() == 2) {//若角色为系统管理员  则把app拥有的所有菜单放入缓存
-				PrivilegeAjaxMessage message = getAppMenuRedis(appId);
-				if ("1".equals(message.getCode())) {
-					String redisJson = message.getMessage();
-					System.err.println("rediskey=" + prefix + appId + SIGN + appUserId);
-					redisClientTemplate.setString(prefix + appId + SIGN + appUserId, redisJson);
-				}
-				return message;
+			if(role.getRoleType()!=null){
+				if (role.getRoleType() == 2) {//若角色为系统管理员  则把app拥有的所有菜单放入缓存
+					PrivilegeAjaxMessage message = getAppMenuRedis(appId);
+					if ("1".equals(message.getCode())) {
+						String redisJson = message.getMessage();
+						System.err.println("rediskey=" + prefix + appId + SIGN + appUserId);
+						redisClientTemplate.setString(prefix + appId + SIGN + appUserId, redisJson);
+					}
+					return message;
 
+				}
 			}
+			
 		}
 		String menuJedis = redisDao.getUrlRedis(prefix, appId, appUserId);
 		if (null == menuJedis || menuJedis.length() <= 0)
@@ -215,9 +217,9 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 	@Override
 	public Set<PrivilegeMenuVo> getAllMenuByUserId(List<PrivilegeMenu> privilegeMenuList,
 			Set<PrivilegeMenuVo> privilegeMenuVoSet) {
-
+			System.err.println(privilegeMenuList.isEmpty());
 		for (PrivilegeMenu privilegeMenu : privilegeMenuList) {
-			if (null != privilegeMenu.getParentId() && privilegeMenu.getParentId().length() > 0) {
+			if (null != privilegeMenu.getParentId() && privilegeMenu.getParentId().length() > 0&&!("").equals(privilegeMenu.getParentId())) {
 				PrivilegeMenuVo privilegeMenuVo = new PrivilegeMenuVo();
 				privilegeMenuVo.setMenuId(privilegeMenu.id());
 				privilegeMenuVo.setParentId(privilegeMenu.getParentId());
@@ -327,9 +329,12 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 		return privilegeMenuRepository.getMenuListByFunctionId(functionIds);
 	}
 
+
+
 	@Override
 	public List<PrivilegeMenu> findByParentId(String parentId, String appId) {
 		return privilegeMenuRepository.getMenuListByParentId(parentId,appId);
 	}
+
 
 }
