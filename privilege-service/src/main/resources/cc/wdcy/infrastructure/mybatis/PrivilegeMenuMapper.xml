@@ -64,6 +64,9 @@
         
          limit #{startRow},#{pageSize} 
 	</select>
+	<select id="getMenuListByParentId" resultMap="privilegeMenuMap" flushCache="true">
+		select * from privilege_menu where parent_id=#{parentId} and app_id=#{appId}
+	</select>
     <select id="getMenuById" resultMap="privilegeMenuMap" flushCache="true">
         select * from privilege_menu
         where  id = #{menuId}

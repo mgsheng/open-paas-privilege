@@ -266,6 +266,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 		/* 缓存中是否存在 存在返回 */
 		log.info("获取缓存");
 		String jsonString = redisClientTemplate.getString(AppMenuRedisKey);
+		jsonString=null;
 		if (null != jsonString && jsonString.length() > 0) {
 			ajaxMessage.setCode("1");
 			ajaxMessage.setMessage(jsonString);
@@ -324,6 +325,11 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 	@Override
 	public List<PrivilegeMenu> getMenuListByFunctionId(String[] functionIds) {
 		return privilegeMenuRepository.getMenuListByFunctionId(functionIds);
+	}
+
+	@Override
+	public List<PrivilegeMenu> findByParentId(String parentId, String appId) {
+		return privilegeMenuRepository.getMenuListByParentId(parentId,appId);
 	}
 
 }

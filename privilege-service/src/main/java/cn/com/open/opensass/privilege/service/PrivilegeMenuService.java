@@ -103,4 +103,5 @@ public interface PrivilegeMenuService {
 	 */
 	PrivilegeAjaxMessage updateAppMenuRedis(String appId);
 	List<PrivilegeMenu> getMenuListByFunctionId(String[] functionIds);
+	List<PrivilegeMenu> findByParentId(String parentId, String appId);
 }
