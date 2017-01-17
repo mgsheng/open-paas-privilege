@@ -1,5 +1,6 @@
 package cn.com.open.opensass.privilege.api;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +24,7 @@ import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
 import cn.com.open.opensass.privilege.tools.WebUtils;
+import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
 
 /**
  *  菜单查询接口
@@ -66,13 +68,29 @@ public class MenuGetPrivilegeController extends BaseControllerUtil{
 			return;
 		}
     	List<PrivilegeMenu>lists=privilegeMenuService.findMenuPage(menuId, appId,Integer.parseInt(start),Integer.parseInt(limit));
+    	List<PrivilegeMenu> mlist=new ArrayList<PrivilegeMenu>();
     	if(lists!=null&&lists.size()>0){
-    		for(int i=0;i<lists.size();i++){
-    			
+    		for(PrivilegeMenu menu:lists){
+    			PrivilegeMenu m = new PrivilegeMenu();
+    			m.setMenuId(menu.id());
+    			m.setParentId(menu.getParentId());
+    			m.setMenuName(m.getMenuName());
+    			m.setMenuRule(m.getMenuRule());
+    			m.setMenuLevel(menu.getMenuLevel());
+    			m.setResourceType(menu.getResourceType());
+    			m.setMenuCode(menu.getMenuCode());
+    			m.setDisplayOrder(menu.getDisplayOrder());
+    			m.setStatus(menu.getStatus());
+    			if(!("0").equals(menu.getParentId())){
+        			m.setIsLeaf("1");//1-叶子        		
+    			}else{
+    				m.setIsLeaf("0");//0-根   
+    			}
+    			mlist.add(m);
     		}
     		map.put("status", "1");
     		map.put("count", lists.size());
-    		map.put("menuList",lists);
+    		map.put("menuList",mlist);
     	}else{
     		map.put("status", "0");
     		map.put("error_code", "10001");
