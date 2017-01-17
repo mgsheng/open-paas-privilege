@@ -135,7 +135,10 @@
         (#{id},#{resourceName},#{appId},#{createTime},#{createUser},#{createUserId},#{resourceRule},#{resourceLevel},#{menuId},#{baseUrl})
     </insert>
     <delete id="deleteByResourceId">
-        delete from privilege_resource where resource_id=#{resourceId}
+        delete from privilege_resource where resource_id in
+        <foreach item="item" index="index" collection="resourceIds" open="(" separator="," close=")">  
+          #{item}  
+        </foreach>
     </delete>
     <select id="findResourceList" resultMap="privilegeResourceMap" flushCache="true">
         select app_id,resource_id,resource_level,resource_name,resource_rule,display_order,menu_id,base_url,status from privilege_resource where resource_id in
