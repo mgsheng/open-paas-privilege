@@ -74,6 +74,6 @@
 	<select id="findUserResourcesFunId"  resultType="java.lang.String" flushCache="true">
 		SELECT c.privilege_funid FROM privilege_user a,privilege_user_role b,privilege_role_resource c
 		WHERE  a.app_id=#{appId} AND a.app_userid=#{appUserId}
-		AND a.uid=b.user_id AND b.privilege_roleid=c.privilege_roleid 
+		AND a.uid=b.user_id AND b.privilege_roleid=c.privilege_roleid AND c.privilege_funid IS NOT null
 	</select>
 </mapper>
