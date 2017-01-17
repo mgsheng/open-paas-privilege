@@ -75,8 +75,7 @@ public class VerifyUserPrivilegeInterceptor extends BaseControllerUtil implement
 				map.put("appId", appId);
 				map.put("appUserId", appUserId);
 				map.put("optUrl", url);
-				String vurl = "http://localhost:8080/privilege-service/userRole/verifyUserPrivilege";
-				String reult = sendPost(vurl, map);
+				String reult = sendPost(VerifyUserPrivilegeUri, map);
 				JSONObject object = JSONObject.fromObject(reult);
 				Map map2 = (Map) object;
 				if (map2.get("status").equals("1")) {
@@ -86,11 +85,10 @@ public class VerifyUserPrivilegeInterceptor extends BaseControllerUtil implement
 					response.setCharacterEncoding("UTF-8");
 					PrintWriter out = response.getWriter();
 					StringBuilder builder = new StringBuilder();
-					if(request.getHeader("x-requested-with")!=null){
-						
+					if (request.getHeader("x-requested-with") != null) {
 						response.setContentType("application/x-javascript;charset=utf-8");
 						builder.append("alert('您不具备该操作权限！');");
-					}else{
+					} else {
 						builder.append("<script type=\"text/javascript\">");
 						builder.append("alert('您不具备该操作权限！');");
 						builder.append("</script>");
