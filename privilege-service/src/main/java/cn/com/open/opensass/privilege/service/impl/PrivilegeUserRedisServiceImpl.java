@@ -131,8 +131,8 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 				}
 			}
 			// 获取所有的resource
-			List<Map<String, Object>> list = privilegeResourceService.getAllResource(resourceList);
-			resourceList.addAll(list);
+			//List<Map<String, Object>> list = privilegeResourceService.getAllResource(resourceList);
+			//resourceList.addAll(list);
 		}
 		resourceSet.addAll(resourceList);
 		roleMap.put("resourceList", resourceSet);
