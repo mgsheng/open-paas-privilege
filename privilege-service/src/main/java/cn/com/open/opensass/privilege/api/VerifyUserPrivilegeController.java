@@ -108,6 +108,7 @@ public class VerifyUserPrivilegeController extends BaseControllerUtil {
 					states = true;
 				}
 			}
+			privilegeUrlService.getRedisUrl(appId, appUserId);
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 
