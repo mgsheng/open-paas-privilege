@@ -360,9 +360,9 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	 */
 	@RequestMapping(value = "addMenu")
 	public void add(HttpServletRequest request, HttpServletResponse response) {
-		String menuName=null;
+		String menuName=request.getParameter("name");
 		try {
-			menuName = new String(request.getParameter("name").getBytes("iso-8859-1"),"utf-8");
+			menuName = java.net.URLEncoder.encode(menuName,"UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
