@@ -162,19 +162,14 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 				treeNode.setText(menuname);
 				treeNode.setIsmodule("0");
 				treeNode.setState("closed");
-				for (PrivilegeResource1 resource1 : resourceList) {
-					if (resource1.getMenuId().equals(menu.getMenuId())) {
-						Map<String, Object> map = new HashMap<String, Object>();
-						map.put("resourceId", resource1.getResourceId());
-						map.put("menuCode", menu.getMenuCode());
-						map.put("menuLevel", menu.getMenuLevel());
-						map.put("menuRule", menu.getMenuRule());
-						map.put("dislayOrder", menu.getDisplayOrder());
-						map.put("parentId", menu.getParentId());
-						map.put("status", menu.getDisplayOrder());
-						treeNode.setAttributes(map);
-					}
-				}
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("menuCode", menu.getMenuCode());
+				map.put("menuLevel", menu.getMenuLevel());
+				map.put("menuRule", menu.getMenuRule());
+				map.put("dislayOrder", menu.getDisplayOrder());
+				map.put("parentId", menu.getParentId());
+				map.put("status", menu.getDisplayOrder());
+				treeNode.setAttributes(map);
 				cList.add(treeNode);
 				// results.add(treeNode);
 				childrenList = new ArrayList<TreeNode>();
@@ -401,27 +396,31 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		} else {
 			boo = false;
 		}
-		if (boo) {
-			// 添加资源
-			map2.put("resourceLevel", "0");
-			map2.put("resourceName", menuName);
-			map2.put("menuId", menuId);
-			map2.put("baseUrl", url);
-			// String reourceId = null;
-			reslut = sendPost(addResourceUrl, map2);
-			if (reslut != null) {
-				JSONObject jsonObject = JSONObject.fromObject(reslut);
-				Map JsnMap = (Map) jsonObject;
-				if (JsnMap.get("status").equals("1")) {
-					boo = true;
+		if (!parentId.equals("0")) {
+			if (boo) {
+				// 添加资源
+				map2.put("resourceLevel", "0");
+				map2.put("resourceName", menuName);
+				map2.put("menuId", menuId);
+				map2.put("baseUrl", url);
+				// String reourceId = null;
+				reslut = sendPost(addResourceUrl, map2);
+				if (reslut != null) {
+					JSONObject jsonObject = JSONObject.fromObject(reslut);
+					Map JsnMap = (Map) jsonObject;
+					if (JsnMap.get("status").equals("1")) {
+						boo = true;
+					} else {
+						boo = false;
+					}
 				} else {
 					boo = false;
 				}
-			} else {
-				boo = false;
 			}
 		}
+		
 		map2.clear();
+		
 		if (boo) {
 			map2.put("returnMsg", "1");
 		} else {
@@ -471,26 +470,29 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		} else {
 			boo = false;
 		}
-		if (boo) {
-			// 修改
-			map2.put("resourceName", menuName);
-			map2.put("menuId", menuId);
-			map2.put("baseUrl", url);
-			map2.put("resourceId", resourceId);
-			// String reourceId = null;
-			reslut = sendPost(modifyResourceUrl, map2);
-			if (reslut != null) {
-				JSONObject jsonObject = JSONObject.fromObject(reslut);
-				Map JsnMap = (Map) jsonObject;
-				if (JsnMap.get("status").equals("1")) {
-					boo = true;
+		if (resourceId!=null&&!("").equals(resourceId)) {
+			if (boo) {
+				// 修改
+				map2.put("resourceName", menuName);
+				map2.put("menuId", menuId);
+				map2.put("baseUrl", url);
+				map2.put("resourceId", resourceId);
+				// String reourceId = null;
+				reslut = sendPost(modifyResourceUrl, map2);
+				if (reslut != null) {
+					JSONObject jsonObject = JSONObject.fromObject(reslut);
+					Map JsnMap = (Map) jsonObject;
+					if (JsnMap.get("status").equals("1")) {
+						boo = true;
+					} else {
+						boo = false;
+					}
 				} else {
 					boo = false;
 				}
-			} else {
-				boo = false;
 			}
 		}
+		
 		map2.clear();
 		if (boo) {
 			map2.put("returnMsg", "2");
@@ -552,6 +554,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	 */
 	@RequestMapping(value = "deleteMenu")
 	public void delete(HttpServletRequest request, HttpServletResponse response) {
+		String resourceId=request.getParameter("resourceId");
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
 		map.put("appId", appId);
 		map.put("menuId", request.getParameter("menuId"));
@@ -568,21 +571,24 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		} else {
 			boo = false;
 		}
-		if (boo) {
-			map.put("resourceId", request.getParameter("resourceId"));
-			reslut = sendPost(delResourceUrl, map);
-			if (reslut != null) {
-				JSONObject jsonObject = JSONObject.fromObject(reslut);
-				Map JsnMap = (Map) jsonObject;
-				if (JsnMap.get("status").equals("1")) {
-					boo = true;
+		if(resourceId!=null){
+			if (boo) {
+				map.put("resourceId", request.getParameter("resourceId"));
+				reslut = sendPost(delResourceUrl, map);
+				if (reslut != null) {
+					JSONObject jsonObject = JSONObject.fromObject(reslut);
+					Map JsnMap = (Map) jsonObject;
+					if (JsnMap.get("status").equals("1")) {
+						boo = true;
+					} else {
+						boo = false;
+					}
 				} else {
 					boo = false;
 				}
-			} else {
-				boo = false;
 			}
 		}
+		
 		map.clear();
 		if (boo) {
 			map.put("returnMsg", "1");
