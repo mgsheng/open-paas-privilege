@@ -500,16 +500,12 @@ public class ManagerUserController extends BaseControllerUtil {
 			String menuname = menu.getMenuName();
 			List<TreeNode> childrenList = null;
 			if (menu.getParentId().equals("0")) {
-				for (PrivilegeResource1 resource1 : resourceList) {
-					if (resource1.getMenuId().equals(menu.getMenuId())) {
-						treeNode = new TreeNode();
-						treeNode.setId("r"+resource1.getResourceId());
-						treeNode.setText(resource1.getResourceName());
-						treeNode.setIsmodule("0");
-						results.add(treeNode);
-						childrenList = new ArrayList<TreeNode>();
-					}
-				}
+				treeNode = new TreeNode();
+				treeNode.setId("m"+menuId);
+				treeNode.setText(menuname);
+				treeNode.setIsmodule("0");
+				results.add(treeNode);
+				childrenList = new ArrayList<TreeNode>();
 			}
 
 			for (PrivilegeMenu menu2 : menuList) {
