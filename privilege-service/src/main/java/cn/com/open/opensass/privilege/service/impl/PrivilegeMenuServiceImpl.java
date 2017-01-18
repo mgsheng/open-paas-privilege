@@ -251,7 +251,9 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 				} else {
 					privilegeMenuVoSet.add(privilegeMenuVo);
 					PrivilegeMenu privilegeMenuListParents = getMenuById(privilegeMenu.getParentId());
-					getAllMenuByUserId(Arrays.asList(privilegeMenuListParents), privilegeMenuVoSet);
+					if(privilegeMenuListParents!=null){
+						getAllMenuByUserId(Arrays.asList(privilegeMenuListParents), privilegeMenuVoSet);
+					}
 				}
 			}
 
