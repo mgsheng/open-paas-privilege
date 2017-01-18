@@ -104,6 +104,7 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 		}
 		log.info("从数据库获取数据");
 		Map<String, Object> redisMap = new HashMap<String, Object>();
+		redisMap.put("groupName", group.getGroupName());
 		// 根据组Id和appId 查询资源
 		List<PrivilegeResourceVo> resourceList = privilegeResourceService.findByGroupIdAndAppId(groupId, appId);
 		redisMap.put("resourceList", resourceList);
