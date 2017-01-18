@@ -78,4 +78,13 @@ public class PrivilegeRoleResourceServiceImpl implements PrivilegeRoleResourceSe
 		}
 	}
 
+	@Override
+	public List<String> findfindUserResourcesFunIdByResIsNull(String appId,String appUserId) {
+		try{
+			return privilegeRoleResourceRepository.findUserResourcesFunIdByResIsNull(appId,appUserId);
+		}catch(Exception e){
+			return null;
+		}
+	}
+
 }
