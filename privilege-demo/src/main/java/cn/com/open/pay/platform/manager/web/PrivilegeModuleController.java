@@ -1,14 +1,12 @@
 package cn.com.open.pay.platform.manager.web;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -78,8 +76,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	private String delResourceUrl;
 	@Autowired
 	private PrivilegeGetSignatureService privilegeGetSignatureService;
-	@Autowired
-	private PrivilegeLogService privilegeLogService;
+	
 
 	/**
 	 * 跳转模块管理页面
@@ -124,7 +121,6 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		List<PrivilegeResource1> resourceList = JSONArray.toList(obj1Array, PrivilegeResource1.class);
 		List<PrivilegeFunction> functionList = JSONArray.toList(obj2Array, PrivilegeFunction.class);
 		JSONArray jsonArr = JSONArray.fromObject(buildTree(menuList, resourceList, functionList));
-		System.err.println(jsonArr.toString());
 		if (request.getParameter("id") != null) {
 			jsonArr = new JSONArray();
 		}
@@ -186,7 +182,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 							resourceMap.put("menuCode", menu2.getMenuCode());
 							resourceMap.put("menuLevel", menu2.getMenuLevel());
 							resourceMap.put("menuRule", menu2.getMenuRule());
-							resourceMap.put("parentId", menu.getParentId());
+							resourceMap.put("parentId", menu2.getParentId());
 							resourceMap.put("dislayOrder", menu2.getDisplayOrder());
 							resourceMap.put("status", menu2.getDisplayOrder());
 							node.setAttributes(resourceMap);
@@ -364,7 +360,14 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	 */
 	@RequestMapping(value = "addMenu")
 	public void add(HttpServletRequest request, HttpServletResponse response) {
-		String menuName = request.getParameter("name");
+		String menuName=null;
+		try {
+			menuName = new String(request.getParameter("name").getBytes("iso-8859-1"),"utf-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+	//	String menuName = request.getParameter("name");
 		String menuCode = request.getParameter("code");
 		String parentId = request.getParameter("parentId");
 		String status = request.getParameter("status");
@@ -377,7 +380,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		map2.put("menuCode", menuCode);
 		map2.put("parentId", parentId);
 		map2.put("status", status);
-		map2.put("displayOrder", displayOrder);
+		map2.put("dislayOrder", displayOrder);
 		map2.put("menuLevel", menuLevel);
 		Boolean boo = false;
 		String menuId = null;
@@ -438,6 +441,12 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	@RequestMapping(value = "edit")
 	public void edit(HttpServletRequest request, HttpServletResponse response) {
 		String menuName = request.getParameter("name");
+		/*try {
+			menuName = new String(request.getParameter("name").getBytes("iso-8859-1"),"utf-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
 		String menuCode = request.getParameter("code");
 		String menuId = request.getParameter("menuId");
 		String resourceId = request.getParameter("resourceId");
@@ -453,7 +462,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		map2.put("menuCode", menuCode);
 		map2.put("parentId", parentId);
 		map2.put("status", status);
-		map2.put("displayOrder", displayOrder);
+		map2.put("dislayOrder", displayOrder);
 		map2.put("menuLevel", menuLevel);
 		Boolean boo = false;
 		String reslut = sendPost(modifyMenuUrl, map2);
