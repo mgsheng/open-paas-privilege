@@ -91,12 +91,12 @@
 	function submitAuthorizeFun(){
 		var resId=[];
 		var funId=[];
-		var select=$('#tt').tree('getChecked', ['checked','indeterminate']);
+		var select=$('#tt').tree('getChecked', 'checked');
 		$.each(select, function(i, n) {
 			if(n.ismodule==2){
 				var id=n.id.replace('f','');
 				funId.push(id);
-			}else{
+			}else if(n.ismodule==1){
 				var id=n.id.replace('r','');
 				resId.push(id);
 			}
