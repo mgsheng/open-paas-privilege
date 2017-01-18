@@ -36,6 +36,7 @@ import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
+import cn.com.open.opensass.privilege.tools.StringTool;
 import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
 import cn.com.open.opensass.privilege.vo.PrivilegeResourceVo;
 import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
@@ -138,29 +139,35 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 			List resourceList = new ArrayList<PrivilegeResource>();
 			for (PrivilegeRole role : roleList) {
 				if (role.getRoleType() != null) {
-					System.out.println(role.getRoleType() == 2);
 					if (role.getRoleType() == 2) {// 若角色为系统管理员 则把app拥有的所有资源放入缓存
 						resourceList = privilegeResourceService.getResourceListByAppId(user.getAppId());
 						boo = true;
+						break;
 					}
 				}
-
 			}
 			// user表多余的resourceId
 			List<String> resourceIds = new ArrayList<String>();
 			// resourceList
 			Set resourceSet = new HashSet();
-			if (!boo) {
+			if (!boo) {				
 				resourceList = privilegeResourceService.getResourceListByUserId(user.getAppUserId(), user.getAppId());
+				//获取roleResource中resource_id为空且funtion_id不为空，与function_id对应的resource
+				List<String> FuncIds=privilegeRoleResourceService.findfindUserResourcesFunIdByResIsNull(user.getAppId(),user.getAppUserId());
+				if (FuncIds != null&&FuncIds.size()>0) {
+					String [] funcIds = StringTool.listToString(FuncIds).split(",");
+					List<Map<String, Object>> resources = privilegeResourceService.getResourceListByFunIds(funcIds);
+					resourceList.addAll(resources);
+				}
 				// 通过user表functionId 查 resource
 				if (privilegeFunctionIds != null && !("").equals(privilegeFunctionIds)&&!("null").equals(privilegeFunctionIds)) {
 					String[] FunctionIds = privilegeFunctionIds.split(",");
 					if (FunctionIds != null && FunctionIds.length > 0) {
-						List<Map<String, Object>> resources = privilegeResourceService
-								.getResourceListByFunIds(FunctionIds);
+						List<Map<String, Object>> resources = privilegeResourceService.getResourceListByFunIds(FunctionIds);
 						resourceList.addAll(resources);
 					}
 				}
+				//通过user表中resourceId查resource
 				if (privilegeResourceIds != null && !("").equals(privilegeResourceIds)&&!("null").equals(privilegeResourceIds)) {
 					String[] resourceIds1 = privilegeResourceIds.split(",");// 将当前user
 					List<String> resourceIdList = new ArrayList<String>();// privilegeResourceIds字段数组转list
@@ -181,7 +188,6 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 							map2.put("status", resource.getStatus());
 						}
 						// 通过查roleResource表 user表中functionId 获取的resource 是否包含
-						// user表中resource
 						if (!resourceList.contains(map2)) {
 							System.err.println(resourceId);
 							resourceIds.add(resourceId);
@@ -192,13 +198,12 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 				// 获取所有的resource
 				List<Map<String, Object>> list = privilegeResourceService.getAllResource(resourceList);
 				resourceList.addAll(list);
-			}
+			}			
 			resourceSet.addAll(resourceList);
 			roleMap.put("resourceList", resourceSet);
 			// functionList
 			// roleResource表中functionIds
-			List<String> FunIds = privilegeRoleResourceService.findUserResourcesFunId(user.getAppId(),
-					user.getAppUserId());
+			List<String> FunIds = privilegeRoleResourceService.findUserResourcesFunId(user.getAppId(),user.getAppUserId());
 			// 加入 user表中functionIds
 			if (privilegeFunctionIds != null && !("").equals(privilegeFunctionIds)) {
 				FunIds.add(privilegeFunctionIds);
@@ -208,8 +213,7 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 			if (FunIds != null&&FunIds.size()>0) {
 				for (String funIds : FunIds) {
 					String[] functionIds = funIds.split(",");
-					List<Map<String, Object>> functions = privilegeFunctionService
-							.getFunctionListByFunctionIds(functionIds);
+					List<Map<String, Object>> functions = privilegeFunctionService.getFunctionListByFunctionIds(functionIds);
 					privilegeFunctions.addAll(functions);
 				}
 			}
@@ -223,9 +227,6 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 			Set<Map<String, Object>> functionSet = new HashSet<Map<String, Object>>();
 			functionSet.addAll(privilegeFunctions);
 			System.err.println("set" + JSONArray.fromObject(functionSet).toString());
-			// List<Map<String, Object>> functionList =
-			// privilegeFunctionService.getFunctionListByUserId(user.getAppUserId(),
-			// user.getAppId());
 			roleMap.put("functionList", functionSet);
 			try {
 				redisClient.setObject(prefixRole + user.getAppId() + SIGN + user.getuId(), roleMap);
@@ -242,6 +243,13 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 				privilegeMenuList = privilegeMenuService.getMenuListByAppId(user.getAppId());
 			} else {// 无管理员角色获取相应权限菜单
 				privilegeMenuList = privilegeMenuService.getMenuListByUserId(user.getAppUserId(), user.getAppId());
+				// 根据roleResource表中functionId无resourceId 查询菜单
+				List<String> FuncIds=privilegeRoleResourceService.findfindUserResourcesFunIdByResIsNull(user.getAppId(),user.getAppUserId());
+				if (FuncIds != null&&FuncIds.size()>0) {
+					String [] funcIds = StringTool.listToString(FuncIds).split(",");
+					List<PrivilegeMenu> menus = privilegeMenuService.getMenuListByFunctionId(funcIds);
+					privilegeMenuList.addAll(menus);
+				}
 				// 根据user表中functionId resourceId 查询菜单
 				if (privilegeFunctionIds != null && !("").equals(privilegeFunctionIds)) {
 					String[] funIds = privilegeFunctionIds.split(",");
