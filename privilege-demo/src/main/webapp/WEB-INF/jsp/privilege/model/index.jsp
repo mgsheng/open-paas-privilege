@@ -39,8 +39,9 @@
 						<td>
 						<div  id="parentName"></div>
 						<input id="menuId" name="menuId" type="hidden" value=""/>
-						<input id="resourceId" name="resourceId" type="hidden" value=""/>
+						<%--<input id="resourceId" name="resourceId" type="hidden" value=""/>--%>
 						<input type="hidden" id="parentId" name="parentId" value=""/>
+						<input type="hidden" id="menuLevel" name="menuLevel" value=""/>
 						</td>
 						
 					</tr>
@@ -49,33 +50,33 @@
 						<td><input id="moduleName" name="name" type="text" class="txt01" />
 						</td>
 					</tr>
-					<tr>
+					<tr id="url">
 						<td>URL：</td>
 						<td><input id="url" type="text" name="url"class="txt01" />
 						</td>
 					</tr>
-					<!-- <tr>
+					<tr>
 						<td>code：</td>
 						<td><input id="code" type="text" name="code" class="txt01" />
 						</td>
-					</tr> -->
+					</tr>
 					<tr>
 						<td>排序：</td>
 						<td><input id="display_order" name="displayOrder"type="text" class="txt01" />
 						</td>
 					</tr>
-					<tr>
+					<%--<tr>
 						<td>菜单层级：</td>
 						<td>
 							<input id="menuLevel" name="menuLevel" type="text" class="txt01" />
 						</td>
 					</tr>
-					<tr>
+					--%><tr>
 						<td>状态：</td>
 						<td>
 			                 <select class="easyui-combobox" data-options="editable:false" id="status" name="status" style="width:100%">
-								<option value="1">启用</option>
-								<option value="0">禁用</option>
+								<option value="1">有效</option>
+								<option value="0">无效</option>
 							</select>
 						</td>
 					</tr>
@@ -84,10 +85,8 @@
 			</div>
 			<div region="south" border="false"
 				style="text-align:center; height: 30px; line-height: 30px;">
-				<a id="btnEp" class="easyui-linkbutton" icon="icon-ok"
-					href="javascript:void(0)"> 确定</a> <a id="btnCancel"
-					class="easyui-linkbutton" icon="icon-cancel"
-					href="javascript:void(0)">取消</a>
+				<a id="btnEp" class="easyui-linkbutton" icon="icon-ok" href="javascript:void(0)"> 确定</a> 
+				<a id="btnCancel" class="easyui-linkbutton" icon="icon-cancel" href="javascript:void(0)">取消</a>
 			</div>
 		</div>
 	</div>
@@ -105,7 +104,7 @@
 					
 						<td width="50px">父节点：</td>
 						<td>
-						<div  id="parentName"></div>
+						<div  id="parentName1"></div>
 							<input id="resourceId2" name="resourceId" type="hidden" value=""/>
 							<input id="functionId" name="functionId" type="hidden" value=""/>
 						</td>
@@ -113,7 +112,7 @@
 					</tr>
 					<tr>
 						<td>名称：</td>
-						<td><select class="easyui-combobox" data-options="editable:false"  id="operName" name=""operName"" 
+						<td><select class="easyui-combobox" data-options="editable:false"  id="operName" name="operName" 
 							style="width:100%;height:35px;padding:5px;">
 						</select>
 						</td>
@@ -233,7 +232,7 @@
               
 			var url="";
 		    if(menuId==""){
-		    	url=  '${pageContext.request.contextPath}/module/addMenu?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&url='+moduleUrl+'&menuLevel='+menuLevel;
+		    	url=  '${pageContext.request.contextPath}/module/addMenu?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&menuLevel='+menuLevel+'&url='+moduleUrl;
 		    }else{
 		   		url= '${pageContext.request.contextPath}/module/edit?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&url='+moduleUrl+'&menuLevel='+menuLevel+'&menuId='+menuId+'&resourceId='+resourceId;
 		    }
@@ -244,7 +243,6 @@
                  	reset();
                  	reload();
                 	$('#wmodule').window('close');
-                 
                 }else if(data.returnMsg=='2'){
                  	msgShow('系统提示', '恭喜，修改成功！', 'info');
                  	close();
@@ -267,31 +265,32 @@
 	     $('#add').click(function() {
 	     	var node = $('#deptree').tree('getSelected');
 			if (node){
-				if(node.ismodule=="1"){
-					var s = node.text;
-			 		$("#parentName").html(s);
+				if(node.ismodule=="1"){//node为resource
+					$("#url").show();
+			 		$('#parentName1').html(node.text);
 					$('#resourceId2').val(node.id);
-					$('#function').window('open');
 					$('#operName').combobox({
 						url:'${pageContext.request.contextPath}/module/getAllOperation',
 						valueField:'id',
 						textField:'name'
 					});
-				}else if(node.ismodule=="2"){
-					 msgShow('系统提示', '请选择父菜单', 'info');
-					}else {
-						var s = node.text;
-				 		$("#parentName").html(s);
-					 	$("#parentId").val(node.id);
-				   		$('#wmodule').window('open');
-					}
-		 		
-	     	}/* else{
-	       		$("#parentName").html('根节点');
-		    	$("#parentId").val('0');
+					$('#function').window('open');
+				}else if(node.ismodule=="2"){//nodeo为function
+					msgShow('系统提示', '请选择父级菜单或父级资源！', 'info');
+				}else if(node.ismodule=="0"){//添加的二级菜单
+					$("#url").show();
+			 		$('#parentName').html(node.text);
+				 	$('#parentId').val(node.id);
+				 	$('#menuLevel').val(node.attributes.menuLevel);
+			   		$('#wmodule').window('open');
+				}
+	     	}else{//添加一级菜单
+				$("#url").hide();
+	     		$('#parentName').html('根节点');
+			 	$('#parentId').val('0');
+			 	$('#menuLevel').val('0');
 		   		$('#wmodule').window('open');
-	     	} */
-         
+	     	}
        });
 	    $(function(){  
 		     openPwd();
@@ -399,8 +398,6 @@
 		     	}
               
          });
-            
-            
             
              $('#btnEp').click(function() {
                  serverLogin();
