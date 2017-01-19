@@ -199,7 +199,6 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 		String AppResRedisKey = AppResRedisPrefix + appId;
 		String jsonString = redisClientTemplate.getString(AppResRedisKey);
 		//取缓存
-		jsonString = null;
 		if (null != jsonString && jsonString.length() > 0) {
 			ajaxMessage.setCode("1");
 			ajaxMessage.setMessage(jsonString);
