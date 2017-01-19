@@ -195,9 +195,6 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 						resourceList.add(map2);
 					}
 				}
-				// 获取所有的resource
-				List<Map<String, Object>> list = privilegeResourceService.getAllResource(resourceList);
-				resourceList.addAll(list);
 			}			
 			resourceSet.addAll(resourceList);
 			roleMap.put("resourceList", resourceSet);
