@@ -97,27 +97,6 @@ public class ManagerRoleController  extends BaseControllerUtil {
 		WebUtils.writeErrorJson(response, map);
 	}
 	
-	/**
-	 * 根据条件实现查询角色操作
-	 * @param request
-	 * @param response
-	 * @param model
-	 * @return  查询完毕后返回查询结果
-	 */
-	/*@RequestMapping("QueryRoleMessage")
-	public String QueryRoleMessage(HttpServletRequest request,HttpServletResponse response,Model model){
-		log.info("-------------------------Search         start------------------------------------");
-		String appId=request.getParameter("appId");
-		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
-		map.put("appId", appId);
-		String s = sendPost(appRoleRedisUrl,map);
-		JSONObject job=JSONObject.fromObject(s);
-		model.addAttribute("appId",appId);
-		model.addAttribute("roleList", job.get("roleList"));
-		return "privilege/role/roleMessage";
-	}*/
-	
-	
 	 /**
      * 添加角色
      * @param request
