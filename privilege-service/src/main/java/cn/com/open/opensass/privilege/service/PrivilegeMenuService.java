@@ -82,6 +82,7 @@ public interface PrivilegeMenuService {
 	 * @return
 	 */
 	List<PrivilegeMenu> getMenuListByAppId(String appId);
+	List<PrivilegeMenuVo> getMenuVoListByAppId(String appId);
 	/**
 	 * 获取redis menu 数据
 	 * @param appId 应用id
