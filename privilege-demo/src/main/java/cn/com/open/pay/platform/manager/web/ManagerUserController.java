@@ -30,6 +30,7 @@ import cn.com.open.pay.platform.manager.login.service.UserService;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeFunction;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeOperation;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource1;
 import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
@@ -70,6 +71,8 @@ public class ManagerUserController extends BaseControllerUtil {
 	private String appResRedisUrl;
 	@Value("#{properties['privilege-operation-name-uri']}")
 	private String getOperationNameUrl;
+	@Value("#{properties['privilege-get-operation-uri']}")
+	private String getAllOperationUrl;
 
 	/**
 	 * 跳转到用户信息列表的页面
@@ -339,10 +342,14 @@ public class ManagerUserController extends BaseControllerUtil {
 		JSONObject obj1 = new JSONObject().fromObject(s1);// 将json字符串转换为json对象
 		JSONArray obj1Array = JSONArray.fromObject(obj1.get("resourceList"));
 		JSONArray obj2Array = JSONArray.fromObject(obj1.get("functionList"));
+		String operation=sendPost(getAllOperationUrl, map);
+		obj=JSONObject.fromObject(operation);
+		objArray=JSONArray.fromObject(obj.get("operationList"));
 		// 将json对象转换为java对象
+		List<PrivilegeOperation> operationList=JSONArray.toList(objArray, PrivilegeOperation.class);
 		List<PrivilegeResource1> resourceList = JSONArray.toList(obj1Array, PrivilegeResource1.class);
 		List<PrivilegeFunction> functionList = JSONArray.toList(obj2Array, PrivilegeFunction.class);
-		JSONArray jsonArr = JSONArray.fromObject(buildTree2(menuList, resourceList, functionList));
+		JSONArray jsonArr = JSONArray.fromObject(buildTree2(menuList, resourceList, functionList,operationList));
 		WebUtils.writeJson(response, jsonArr);
 	}
 
@@ -490,7 +497,7 @@ public class ManagerUserController extends BaseControllerUtil {
 	 * @return
 	 */
 	protected List<TreeNode> buildTree2(List<PrivilegeMenu> menuList, List<PrivilegeResource1> resourceList,
-			List<PrivilegeFunction> functionList) {
+			List<PrivilegeFunction> functionList,List<PrivilegeOperation> operationList) {
 		// 顶级菜单资源集合
 		List<TreeNode> results = new ArrayList<TreeNode>();
 		List<PrivilegeResource1> pMenus = new ArrayList<PrivilegeResource1>();
@@ -523,12 +530,11 @@ public class ManagerUserController extends BaseControllerUtil {
 									TreeNode Funnode = new TreeNode();
 									Funnode.setId("f"+function.getFunctionId());
 									String optId = function.getOptId();
-									Map<String, Object> map = new HashMap<String, Object>();
-									map.put("optId", optId);
-									String s = sendPost(getOperationNameUrl, map);
-									JSONObject o = JSONObject.fromObject(s);
-									String nameValue = o.getString("optName");
-									Funnode.setText(nameValue);
+									for(PrivilegeOperation operation:operationList){
+										if(optId.equals(operation.getId())){
+											Funnode.setText(operation.getName());
+										}
+									}
 									Funnode.setIsmodule("2");
 									childrenList2.add(Funnode);
 								}
