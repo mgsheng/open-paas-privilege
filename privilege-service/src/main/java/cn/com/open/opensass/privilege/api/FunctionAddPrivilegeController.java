@@ -90,7 +90,7 @@ public class FunctionAddPrivilegeController extends BaseControllerUtil{
     		PrivilegeAjaxMessage message=privilegeResourceService.getAppResRedis(appId);
     		if (message.getCode().equals("1")) {
     			map.put("status","1");
-        		map.put("menuId", pf.id());
+        		map.put("functionId", pf.id());
     		} else {
     			map.put("status", message.getCode());
     			map.put("error_code", message.getMessage());/* 数据不存在 */
