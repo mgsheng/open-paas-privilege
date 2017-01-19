@@ -7,6 +7,8 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,7 +22,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import cn.com.open.pay.platform.manager.log.service.PrivilegeLogService;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeFunction;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
@@ -88,20 +89,6 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	 */
 	@RequestMapping(value = "index")
 	public String stats(HttpServletRequest request, HttpServletResponse response, Model model) {
-		List<PrivilegeResource> resourceList = privilegeResourceService.findAllResource();
-		List<Map<String, Object>> listMap = new LinkedList<Map<String, Object>>();
-		if (resourceList != null && resourceList.size() > 0) {
-			Map<String, Object> map = null;
-			for (PrivilegeResource pr : resourceList) {
-				map = new HashMap<String, Object>();
-				map.put("id", pr.getId() + "");
-				map.put("name", pr.getName());
-				listMap.add(map);
-			}
-		}
-		JSONArray json = new JSONArray();
-		json.addAll(listMap);
-		model.addAttribute("resourceList", json);
 		return "privilege/model/index";
 	}
 
@@ -133,65 +120,69 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	 * @param treeNodes
 	 * @return
 	 */
-	protected List<TreeNode> buildTree(List<PrivilegeMenu> menuList, List<PrivilegeResource1> resourceList,
-			List<PrivilegeFunction> functionList) {
+	protected List<TreeNode> buildTree(List<PrivilegeMenu> menuList, List<PrivilegeResource1> resourceList, List<PrivilegeFunction> functionList) {
 		// 顶级菜单资源集合
 		List<TreeNode> results = new ArrayList<TreeNode>();
-		List<PrivilegeResource1> pMenus = new ArrayList<PrivilegeResource1>();
-		TreeNode fNode = new TreeNode();
-		fNode.setId("0");
-		fNode.setState("closed");
-		fNode.setText("菜单");
-		fNode.setIsmodule("00");
-		List<TreeNode> cList = new ArrayList<TreeNode>();
-		fNode.setChildren(cList);
-		TreeNode treeNode = null;
-		for (PrivilegeMenu menu : menuList) {
-			String menuId = menu.getMenuId();
-			String menuname = menu.getMenuName();
-			List<TreeNode> childrenList = null;
-			if (menu.getParentId().equals("0")) {
-				treeNode = new TreeNode();
-				treeNode.setId(menuId);
-				treeNode.setText(menuname);
-				treeNode.setIsmodule("0");
-				treeNode.setState("closed");
-				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("menuCode", menu.getMenuCode());
-				map.put("menuLevel", menu.getMenuLevel());
-				map.put("menuRule", menu.getMenuRule());
-				map.put("dislayOrder", menu.getDisplayOrder());
-				map.put("parentId", menu.getParentId());
-				map.put("status", menu.getDisplayOrder());
-				treeNode.setAttributes(map);
-				cList.add(treeNode);
-				// results.add(treeNode);
-				childrenList = new ArrayList<TreeNode>();
-				treeNode.setChildren(childrenList);
+		
+		Map<String, TreeNode> aidMap = new LinkedHashMap<String, TreeNode>();
+		List<TreeNode> nodes=null;
+		if(menuList!=null){
+			nodes=new ArrayList<TreeNode>();
+			for (PrivilegeMenu menu : menuList) {
+				TreeNode node=null;
+				if(menu!=null && menu.getParentId().equals("0")) {
+					node=new TreeNode();
+					node.setId(String.valueOf(menu.getMenuId()));//菜单ID
+					node.setChecked(false);
+					node.setText(menu.getMenuName());//菜单名称
+					node.setTarget("");
+					node.setPid(String.valueOf(menu.getParentId()));//父级部门ID
+					node.setResource(menu.getMenuLevel()+"");
+					node.setIsmodule("0");
+					Map<String,Object> map = new HashMap<String,Object>();
+					map.put("menuCode", menu.getMenuCode());
+					map.put("menuLevel", menu.getMenuLevel());
+					map.put("menuRule", menu.getMenuRule());
+					map.put("dislayOrder", menu.getDisplayOrder());
+					map.put("parentId", menu.getParentId());
+					map.put("status", menu.getDisplayOrder());
+					node.setAttributes(map);
+				}
+				if(node!=null){
+					nodes.add(node);
+					aidMap.put(node.getId(), node);
+				}
 			}
-
-			for (PrivilegeMenu menu2 : menuList) {
-				if (menu2.getParentId().equals(menu.getMenuId())) {
-					for (PrivilegeResource1 resource1 : resourceList) {
-						if (resource1.getMenuId().equals(menu2.getMenuId())) {
-							TreeNode node = new TreeNode();
+		}
+		nodes=null;
+		Set<Entry<String, TreeNode>> entrySet = aidMap.entrySet();
+		for (Entry<String, TreeNode> entry : entrySet) {
+			String pid = entry.getValue().getId();
+			TreeNode node = aidMap.get(pid);
+			List<TreeNode> childrenList = new ArrayList<TreeNode>();
+			for (PrivilegeMenu menu : menuList) {
+				if (menu.getParentId().equals(pid)) {
+					for (PrivilegeResource1 resource : resourceList) {
+						TreeNode node1=null;
+						if (resource.getMenuId().equals(menu.getMenuId())) {
+							node1 = new TreeNode();
 							List<TreeNode> childrenList2 = new ArrayList<TreeNode>();
 							Map<String, Object> resourceMap = new HashMap<String, Object>();
-							resourceMap.put("baseUrl", resource1.getBaseUrl());
-							resourceMap.put("menuId", menu2.getMenuId());
-							resourceMap.put("menuCode", menu2.getMenuCode());
-							resourceMap.put("menuLevel", menu2.getMenuLevel());
-							resourceMap.put("menuRule", menu2.getMenuRule());
-							resourceMap.put("parentId", menu2.getParentId());
-							resourceMap.put("dislayOrder", menu2.getDisplayOrder());
-							resourceMap.put("status", menu2.getDisplayOrder());
-							node.setAttributes(resourceMap);
-							node.setId(resource1.getResourceId());
-							node.setText(resource1.getResourceName());
-							node.setIsmodule("1");
-							childrenList.add(node);
+							resourceMap.put("baseUrl", resource.getBaseUrl());
+							resourceMap.put("menuId", menu.getMenuId());
+							resourceMap.put("menuCode", menu.getMenuCode());
+							resourceMap.put("menuLevel", menu.getMenuLevel());
+							resourceMap.put("menuRule", menu.getMenuRule());
+							resourceMap.put("parentId", menu.getParentId());
+							resourceMap.put("dislayOrder", menu.getDisplayOrder());
+							resourceMap.put("status", menu.getDisplayOrder());
+							node1.setAttributes(resourceMap);
+							node1.setId(resource.getResourceId());
+							node1.setText(resource.getResourceName());
+							node1.setState("closed");
+							node1.setIsmodule("1");
 							for (PrivilegeFunction function : functionList) {
-								if (function.getResourceId().equals(resource1.getResourceId())) {
+								if (function.getResourceId().equals(resource.getResourceId())) {
 									TreeNode Funnode = new TreeNode();
 									Funnode.setId(function.getFunctionId());
 									String optId = function.getOptId();
@@ -199,24 +190,28 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 									map.put("optId", optId);
 									String s = sendPost(getOperationNameUrl, map);
 									map.put("optUrl", function.getOptUrl());
-									// map.put("operationId",
-									// function.getOptId());
 									Funnode.setAttributes(map);
 									JSONObject o = JSONObject.fromObject(s);
 									String nameValue = o.getString("optName");
 									Funnode.setText(nameValue);
 									Funnode.setIsmodule("2");
-									childrenList2.add(Funnode);
+									if(Funnode!=null){
+										childrenList2.add(Funnode);
+									}
 								}
 							}
-							node.setChildren(childrenList2);
-
+							node1.setChildren(childrenList2);
+						}
+						if(node1!=null){
+							childrenList.add(node1);
 						}
 					}
 				}
 			}
+			node.setChildren(childrenList);
+			results.add(node);
 		}
-		results.add(fNode);
+		aidMap = null;
 		return results;
 	}
 
