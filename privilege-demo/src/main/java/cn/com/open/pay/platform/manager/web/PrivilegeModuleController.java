@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeFunction;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeOperation;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource1;
 import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
@@ -104,10 +105,14 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		JSONObject obj1 = new JSONObject().fromObject(s1);// 将json字符串转换为json对象
 		JSONArray obj1Array = JSONArray.fromObject(obj1.get("resourceList"));
 		JSONArray obj2Array = JSONArray.fromObject(obj1.get("functionList"));
+		String operation=sendPost(getAllOperationUrl, map);
+		obj=JSONObject.fromObject(operation);
+		objArray=JSONArray.fromObject(obj.get("operationList"));
 		// 将json对象转换为java对象
+		List<PrivilegeOperation> operationList=JSONArray.toList(objArray, PrivilegeOperation.class);
 		List<PrivilegeResource1> resourceList = JSONArray.toList(obj1Array, PrivilegeResource1.class);
 		List<PrivilegeFunction> functionList = JSONArray.toList(obj2Array, PrivilegeFunction.class);
-		JSONArray jsonArr = JSONArray.fromObject(buildTree(menuList, resourceList, functionList));
+		JSONArray jsonArr = JSONArray.fromObject(buildTree(menuList, resourceList, functionList,operationList));
 		if (request.getParameter("id") != null) {
 			jsonArr = new JSONArray();
 		}
@@ -120,7 +125,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	 * @param treeNodes
 	 * @return
 	 */
-	protected List<TreeNode> buildTree(List<PrivilegeMenu> menuList, List<PrivilegeResource1> resourceList, List<PrivilegeFunction> functionList) {
+	protected List<TreeNode> buildTree(List<PrivilegeMenu> menuList, List<PrivilegeResource1> resourceList, List<PrivilegeFunction> functionList,List<PrivilegeOperation> operationList) {
 		// 顶级菜单资源集合
 		List<TreeNode> results = new ArrayList<TreeNode>();
 		
@@ -188,12 +193,13 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 									String optId = function.getOptId();
 									Map<String, Object> map = new HashMap<String, Object>();
 									map.put("optId", optId);
-									String s = sendPost(getOperationNameUrl, map);
 									map.put("optUrl", function.getOptUrl());
+									for(PrivilegeOperation operation:operationList){
+										if (optId.equals(operation.getId())) {
+											Funnode.setText(operation.getName());
+										}
+									}
 									Funnode.setAttributes(map);
-									JSONObject o = JSONObject.fromObject(s);
-									String nameValue = o.getString("optName");
-									Funnode.setText(nameValue);
 									Funnode.setIsmodule("2");
 									if(Funnode!=null){
 										childrenList2.add(Funnode);
