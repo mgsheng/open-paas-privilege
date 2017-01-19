@@ -272,10 +272,22 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 
 		return privilegeMenuRepository.getMenuById(menuId);
 	}
-
+	
 	@Override
-	public List<PrivilegeMenu> getMenuListByAppId(String appId) {
-		return privilegeMenuRepository.getMenuListByAppId(appId);
+	public List<PrivilegeMenuVo> getMenuVoListByAppId(String appId) {
+		List<PrivilegeMenu> privilegeMenus=privilegeMenuRepository.getMenuListByAppId(appId);
+		List<PrivilegeMenuVo> privilegeMenuVos=new ArrayList<PrivilegeMenuVo>();
+		for(PrivilegeMenu privilegeMenu:privilegeMenus){
+			PrivilegeMenuVo privilegeMenuVo=new PrivilegeMenuVo();
+			privilegeMenuVo.setMenuId(privilegeMenu.id());
+			privilegeMenuVo.setParentId(privilegeMenu.getParentId());
+			privilegeMenuVo.setMenuName(privilegeMenu.getMenuName());
+			privilegeMenuVo.setMenuRule(privilegeMenu.getMenuRule());
+			privilegeMenuVo.setMenuLevel(privilegeMenu.getMenuLevel());
+			privilegeMenuVo.setDisplayOrder(privilegeMenu.getDisplayOrder());
+			privilegeMenuVos.add(privilegeMenuVo);
+		}
+		return privilegeMenuVos;
 	}
 
 	@Override
@@ -288,7 +300,6 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 		/* 缓存中是否存在 存在返回 */
 		log.info("获取缓存");
 		String jsonString = redisClientTemplate.getString(AppMenuRedisKey);
-		jsonString=null;
 		if (null != jsonString && jsonString.length() > 0) {
 			ajaxMessage.setCode("1");
 			ajaxMessage.setMessage(jsonString);
@@ -297,22 +308,16 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 		}
 
 		log.info("从数据库获取数据");
-		List<PrivilegeMenu> menuList = getMenuListByAppId(appId);
+		List<PrivilegeMenuVo> menuList = getMenuVoListByAppId(appId);
 		if (menuList.size() <= 0) {
 			ajaxMessage.setCode("0");
 			ajaxMessage.setMessage("MENU-IS-NULL");
 			return ajaxMessage;
 		}
-		Set<PrivilegeMenuVo> privilegeMenuListReturn = new HashSet<PrivilegeMenuVo>();
-
-		Set<PrivilegeMenuVo> privilegeMenuListData = getAllMenuByUserId(menuList,
-				privilegeMenuListReturn); /* 缓存中是否存在 */
-		if (privilegeMenuListData.size() <= 0) {
-			ajaxMessage.setCode("0");
-			ajaxMessage.setMessage("MENU-IS-NULL");
-			return ajaxMessage;
-		}
-		MenuMap.put("menuList", privilegeMenuListData);
+		
+		Set<PrivilegeMenuVo> menus=new HashSet<PrivilegeMenuVo>();
+		menus.addAll(menuList);
+		MenuMap.put("menuList", menus);
 		redisClientTemplate.setString(AppMenuRedisKey, JSONObject.fromObject(MenuMap).toString());
 		ajaxMessage.setCode("1");
 		ajaxMessage.setMessage(JSONObject.fromObject(MenuMap).toString());
@@ -354,6 +359,11 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 	@Override
 	public List<PrivilegeMenu> findByParentId(String parentId, String appId) {
 		return privilegeMenuRepository.getMenuListByParentId(parentId,appId);
+	}
+
+	@Override
+	public List<PrivilegeMenu> getMenuListByAppId(String appId) {
+		return privilegeMenuRepository.getMenuListByAppId(appId);
 	}
 
 
