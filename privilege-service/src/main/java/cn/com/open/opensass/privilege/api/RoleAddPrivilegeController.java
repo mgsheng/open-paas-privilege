@@ -1,5 +1,6 @@
 package cn.com.open.opensass.privilege.api;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -62,6 +63,7 @@ public class RoleAddPrivilegeController extends BaseControllerUtil{
     	String createUserId=request.getParameter("createUserId");
     	String status=request.getParameter("status");
     	
+    	
     	if(!paraMandatoryCheck(Arrays.asList(appId,roleName))){
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
               return;
@@ -76,6 +78,29 @@ public class RoleAddPrivilegeController extends BaseControllerUtil{
 			paraMandaChkAndReturn(10004, response,"认证失败");
 			return;
 		}
+		
+
+    	try {
+        	if(!nullEmptyBlankJudge(roleName)){
+        		roleName = new String(roleName.getBytes("iso-8859-1"),"utf-8");	
+        	}
+        	if(!nullEmptyBlankJudge(deptName)){
+        		deptName = new String(deptName.getBytes("iso-8859-1"),"utf-8");	
+        	}
+        	if(!nullEmptyBlankJudge(groupName)){
+        		groupName = new String(groupName.getBytes("iso-8859-1"),"utf-8");	
+        	}
+        	if(!nullEmptyBlankJudge(createUser)){
+        		createUser = new String(createUser.getBytes("iso-8859-1"),"utf-8");	
+        	}
+        	if(!nullEmptyBlankJudge(remark)){
+        		remark = new String(remark.getBytes("iso-8859-1"),"utf-8");	
+        	}
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
     	PrivilegeRole privilegeRole=new PrivilegeRole();
     	privilegeRole.setAppId(appId);
     	privilegeRole.setRoleName(roleName);
