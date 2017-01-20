@@ -111,26 +111,13 @@ public class ManagerRoleController  extends BaseControllerUtil {
     	log.info("-------------------------add         start------------------------------------");
 		String appId=request.getParameter("appId");
 		String roleName=request.getParameter("roleName");
-		//roleName=java.net.URLEncoder.encode(roleName,"UTF-8");
-		try {
-			roleName = java.net.URLDecoder.decode(roleName,"UTF-8");
-			roleName=java.net.URLEncoder.encode(roleName,"UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
+		roleName=java.net.URLEncoder.encode(roleName,"UTF-8");
 		String deptName=request.getParameter("deptName");
-		if(deptName!=null){
-			deptName=java.net.URLEncoder.encode(deptName,"UTF-8");
-		}
+		deptName=java.net.URLEncoder.encode(deptName,"UTF-8");
 		String groupName=request.getParameter("groupName");
-		if(groupName!=null){
-			groupName=java.net.URLEncoder.encode(groupName,"UTF-8");
-		}
+		groupName=java.net.URLEncoder.encode(groupName,"UTF-8");
 		String remark=request.getParameter("remark");
-		if(remark!=null){
-			remark=java.net.URLEncoder.encode(remark,"UTF-8");
-		}
+		remark=java.net.URLEncoder.encode(remark,"UTF-8");
 		String status=request.getParameter("status");
 		String treeNodeIds=request.getParameter("temp");
 		String resourceIds="";
