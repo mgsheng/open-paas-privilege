@@ -234,7 +234,7 @@
               
 			var url="";
 		    if(menuId==""){
-		    	url='${pageContext.request.contextPath}/module/addMenu?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&menuLevel='+menuLevel+'&url='+moduleUrl;
+		    	url=encodeURI('${pageContext.request.contextPath}/module/addMenu?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&menuLevel='+menuLevel+'&url='+moduleUrl);
 		    }else{
 		   		url= '${pageContext.request.contextPath}/module/edit?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&url='+moduleUrl+'&menuLevel='+menuLevel+'&menuId='+menuId+'&resourceId='+resourceId;
 		    }
@@ -398,7 +398,7 @@
        		    	 
        		    	 	resourceId=node.id;
        		    		menuId=node.attributes.menuId;
-       		    	 	url=encodeURI('${pageContext.request.contextPath}/module/deleteMenu?menuId='+menuId+'&resourceId='+resourceId);
+       		    	 	url=encodeURI(encodeURI('${pageContext.request.contextPath}/module/deleteMenu?menuId='+menuId+'&resourceId='+resourceId));
        				}else {
        					functionId=node.id;
        					url=encodeURI('${pageContext.request.contextPath}/module/delFunction?functionId='+functionId);
