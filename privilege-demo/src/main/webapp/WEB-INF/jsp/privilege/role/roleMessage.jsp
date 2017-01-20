@@ -213,7 +213,7 @@
             	getIds();
             	url='${pageContext.request.contextPath}/managerRole/updateRole?appId='+appId+'&roleName='+roleName+'&status='+status+'&addIds='+addIds+'&delIds='+delIds+'&privilegeRoleId='+privilegeRoleId+'&deptName='+deptName+'&groupName='+groupName+'&remark='+remark;
             }
-            url=encodeURI(encodeURI(url));
+            //url=encodeURI(encodeURI(url));
             $.post(url, function(data) {
                 if(data.status=='1'){
                 	 if(privilegeRoleId==null || privilegeRoleId==""){
