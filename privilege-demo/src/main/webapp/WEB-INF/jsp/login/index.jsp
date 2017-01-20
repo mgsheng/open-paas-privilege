@@ -10,6 +10,9 @@
 	href="${pageContext.request.contextPath}/css/themes/default/easyui.css" />
 <link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/css/themes/icon.css" />
+<style type="text/css">
+	.close ul{display: none} 
+</style>
 <script type="text/javascript"
 	src="${pageContext.request.contextPath}/js/jquery-1.4.4.min.js"></script>
 <script type="text/javascript"
@@ -19,11 +22,74 @@
 	src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
 
 <script type="text/javascript">
+function menuClick(obj){
+	var menu=$(obj).next();
+	//var boo=$(obj).parent(".close").find('ul').first().css('display');
+	var boo=menu.css('display');
+	if(boo=='none'){
+		menu.css('display','block');
+	}else{
+		menu.css('display','none');
+	} 
+}
+function GetMenuList(data, menulist) {
+    if (data.menus == null)
+        return menulist;
+    else {
+        menulist += '<ul>';
+        $.each(data.menus, function(i, sm) {
+            if (sm.url != null) {
+                menulist += '<li><div style="margin-bottom:-16px"><a ref="'+sm.menuId+'" href="#" rel="' + sm.url + '" ><span class="icon '+sm.icon+'" >&nbsp;</span><span class="nav">' + sm.menuName+ '</span></a></div></li> ';
+            }
+            else {
+            	 menulist += '<li class="close" style="margin-bottom: 15px" >'
+            	 +'<div style="margin-left:-8px;margin-right:-15px" class=" panel-header accordion-header" onclick="menuClick(this)"><span class="panel-icon icon icon-more"></span><span class=" panel-title panel-with-icon">'+ sm.menuName +'</span></div>';
+            }
+            menulist = GetMenuList(sm, menulist);
+        })
+        menulist += '</ul>';
+    }
+    return menulist;
+}
+function addNav(data) {
+
+    $.each(data, function(i, sm) {
+        var menulist1 = "";
+        //sm 常用菜单  邮件 列表
+        menulist1 = GetMenuList(sm, menulist1);
+        menulist1 = "<ul id='tt1' >" + menulist1.substring(4); 
+        $('#nav').accordion('add', {
+            title: sm.menuName,
+            content: menulist1,
+            iconCls: 'icon icon-more'
+        });
+
+    });
+    $('.easyui-accordion li a').click(function(){
+		var tabTitle = $(this).children('.nav').text();
+		var url = '${pageContext.request.contextPath}'+$(this).attr("rel")+"?appId=${appId}";
+		var menuid = $(this).attr("ref");
+		//var icon = getIcon(menuid,icon);
+
+		addTab(tabTitle,url,"");
+		$('.easyui-accordion li div').removeClass("selected");
+		$(this).parent().addClass("selected");
+	}).hover(function(){
+		$(this).parent().addClass("hover");
+	},function(){
+		$(this).parent().removeClass("hover");
+	});
+    var pp = $('#nav').accordion('panels');
+    var t = pp[0].panel('options').title;
+    $('#nav').accordion('select', t);
+
+}
 function InitLeftMenu(_menus) {
 	console.log(_menus);
 	$("#nav").accordion({animate:false});
 	if(_menus.menus!=null&&_menus.menus.length>0){
-	$.each(_menus.menus, function(i, n) {
+		   
+/* 	$.each(_menus.menus, function(i, n) {
 		var menulist ='';
 		menulist +='<ul>';
 		if(n.menus!=null&&n.menus.length>0){
@@ -39,7 +105,7 @@ function InitLeftMenu(_menus) {
             iconCls: 'icon ' + n.icon
         });
 
-    });
+    }); */
 
 	$('.easyui-accordion li a').click(function(){
 		var tabTitle = $(this).children('.nav').text();
@@ -57,9 +123,9 @@ function InitLeftMenu(_menus) {
 	});
 
 	//选中第一个
-	var panels = $('#nav').accordion('panels');
+	/* var panels = $('#nav').accordion('panels');
 	var t = panels[0].panel('options').title;
-    $('#nav').accordion('select', t);
+    $('#nav').accordion('select', t); */
 	}else{
 		alert("没有相应菜单");
 	}
@@ -132,7 +198,8 @@ function InitLeftMenu(_menus) {
         		if(data.status=="0"){
             		alert(data.errMsg);
             	}else {
-            		InitLeftMenu(data);
+            		//InitLeftMenu(data);
+            		addNav(data.menus);
             	}
         	}
         	
