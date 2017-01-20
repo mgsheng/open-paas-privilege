@@ -231,7 +231,10 @@
                 msgShow('系统提示', '请输入排序！', 'warning');
                 return false;
             }
-              
+            if(!$('#moduleUrl').is(':hidden') &&  moduleUrl == ''){
+            	msgShow('系统提示', '请输入Url！', 'warning');
+                return false;
+            }
 			var url="";
 		    if(menuId==""){
 		    	url=encodeURI('${pageContext.request.contextPath}/module/addMenu?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&menuLevel='+menuLevel+'&url='+moduleUrl);
