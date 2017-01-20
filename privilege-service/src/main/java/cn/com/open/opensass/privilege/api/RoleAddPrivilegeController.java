@@ -63,7 +63,6 @@ public class RoleAddPrivilegeController extends BaseControllerUtil{
     	String createUserId=request.getParameter("createUserId");
     	String status=request.getParameter("status");
     	
-    	
     	if(!paraMandatoryCheck(Arrays.asList(appId,roleName))){
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
               return;
@@ -79,10 +78,10 @@ public class RoleAddPrivilegeController extends BaseControllerUtil{
 			return;
 		}
 		
-
-    	try {
+    	/*try {
         	if(!nullEmptyBlankJudge(roleName)){
-        		roleName = new String(roleName.getBytes("iso-8859-1"),"utf-8");	
+        		//roleName = new String(roleName.getBytes("iso-8859-1"),"utf-8");	
+        		roleName = java.net.URLDecoder.decode(roleName,"UTF-8");
         	}
         	if(!nullEmptyBlankJudge(deptName)){
         		deptName = new String(deptName.getBytes("iso-8859-1"),"utf-8");	
@@ -99,7 +98,7 @@ public class RoleAddPrivilegeController extends BaseControllerUtil{
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		
     	PrivilegeRole privilegeRole=new PrivilegeRole();
     	privilegeRole.setAppId(appId);
