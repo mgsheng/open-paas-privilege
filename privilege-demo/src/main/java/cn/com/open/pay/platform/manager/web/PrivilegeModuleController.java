@@ -1,7 +1,7 @@
 package cn.com.open.pay.platform.manager.web;
 
 import java.io.UnsupportedEncodingException;
-
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -480,13 +480,14 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	 */
 	@RequestMapping(value = "addMenu")
 	public void add(HttpServletRequest request, HttpServletResponse response) {
-		String menuName=request.getParameter("name");
-		try {
+		//String menuName=request.getParameter("name");
+		String menuName = URLDecoder.decode(request.getParameter("name"));
+		/*try {
 			menuName = java.net.URLEncoder.encode(menuName,"UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
+		}	*/
 		String menuCode = request.getParameter("code");
 		String parentId = request.getParameter("parentId");
 		String status = request.getParameter("status");
