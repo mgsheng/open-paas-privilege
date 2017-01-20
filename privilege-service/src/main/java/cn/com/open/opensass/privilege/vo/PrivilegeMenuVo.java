@@ -13,6 +13,7 @@ public class PrivilegeMenuVo implements Serializable {
     private String menuRule;
     private int menuLevel;
     private int displayOrder;
+    private String menuCode;
 
     public String getMenuId() {
         return menuId;
@@ -79,4 +80,12 @@ public class PrivilegeMenuVo implements Serializable {
     public int hashCode() {
         return menuId.hashCode();
     }
+
+	public String getMenuCode() {
+		return menuCode;
+	}
+
+	public void setMenuCode(String menuCode) {
+		this.menuCode = menuCode;
+	}
 }

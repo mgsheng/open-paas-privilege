@@ -284,6 +284,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 			privilegeMenuVo.setMenuName(privilegeMenu.getMenuName());
 			privilegeMenuVo.setMenuRule(privilegeMenu.getMenuRule());
 			privilegeMenuVo.setMenuLevel(privilegeMenu.getMenuLevel());
+			privilegeMenuVo.setMenuCode(privilegeMenu.getMenuCode());
 			privilegeMenuVo.setDisplayOrder(privilegeMenu.getDisplayOrder());
 			privilegeMenuVos.add(privilegeMenuVo);
 		}
