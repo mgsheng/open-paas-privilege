@@ -27,17 +27,10 @@
 			</tr>
 		</thead>
 	</table>
-	<div id="tb" style="padding:2px 5px;">
-	   <%--<span style="margin-left: 75%;">
-		名称: 
-		<input class="easyui-textbox" name="name" id="name" style="width:110px;">
-		&nbsp;&nbsp;&nbsp;&nbsp;
-		<a href="#" class="easyui-linkbutton" iconCls="icon-search " plain="true"  onclick="onsearch();" id="search"></a>
-		--%>
+	<div id="tb" style="padding:2px 5px; text-align: right;">
 		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="add"></a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" id="edit" onclick="editMessage();"></a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" id="delete" onclick="removeit();"></a>
-		</span>
 	</div>
 	<div id="w" class="easyui-window" title="角色添加" collapsible="false"
 		minimizable="false" maximizable="false" icon="icon-save"

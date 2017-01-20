@@ -25,6 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeFunction;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeOperation;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource1;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRoleDetails;
@@ -57,12 +58,12 @@ public class ManagerRoleController  extends BaseControllerUtil {
 	private String roleDelUrl;
 	@Value("#{properties['privilege-role-add-uri']}")
 	private String roleAddUrl;
-	@Value("#{properties['privilege-operation-name-uri']}")
-	private String getOperationNameUrl;
 	@Value("#{properties['get-role-privilege-uri']}")
 	private String getRolePrivilegeUrl;
 	@Value("#{properties['privilege-role-modi-uri']}")
 	private String roleModiUrl;
+	@Value("#{properties['privilege-get-operation-uri']}")
+	private String getAllOperationUrl;
 	
 	
 	/**
@@ -406,11 +407,16 @@ public class ManagerRoleController  extends BaseControllerUtil {
 		JSONObject obj1 = new JSONObject().fromObject(s1);//将json字符串转换为json对象
 		JSONArray obj1Array=JSONArray.fromObject(obj1.get("resourceList"));
 		JSONArray obj2Array=JSONArray.fromObject(obj1.get("functionList"));
+		String operation=sendPost(getAllOperationUrl, map);
+		obj=JSONObject.fromObject(operation);
+		objArray=JSONArray.fromObject(obj.get("operationList"));
 		//将json对象转换为java对象
+		List<PrivilegeOperation> operationList=JSONArray.toList(objArray, PrivilegeOperation.class);		
 		List<PrivilegeResource1> resourceList = JSONArray.toList(obj1Array,PrivilegeResource1.class);
 		List<PrivilegeFunction> functionList = JSONArray.toList(obj2Array,PrivilegeFunction.class);
+		
 		List<TreeNode> nodes = convertTreeNodeList(menuList);
-		JSONArray jsonArr = JSONArray.fromObject(buildTree2(nodes,resourceList,functionList));
+		JSONArray jsonArr = JSONArray.fromObject(buildTree2(nodes,resourceList,functionList,operationList));
 		WebUtils.writeJson(response,jsonArr);
     }
     private List<TreeNode> convertTreeNodeList(List<PrivilegeMenu> modules) {
@@ -452,7 +458,7 @@ public class ManagerRoleController  extends BaseControllerUtil {
 	* @param treeNodes
 	* @return
 	*/
-	protected List<TreeNode> buildTree2(List<TreeNode> treeNodes,List<PrivilegeResource1> resourceList,List<PrivilegeFunction> functionList) {
+	protected List<TreeNode> buildTree2(List<TreeNode> treeNodes,List<PrivilegeResource1> resourceList,List<PrivilegeFunction> functionList,List<PrivilegeOperation> operationList) {
 		List<TreeNode> results = new ArrayList<TreeNode>();
 		Map<String, TreeNode> aidMap = new LinkedHashMap<String, TreeNode>();
 		for (TreeNode node : treeNodes) {
@@ -474,34 +480,28 @@ public class ManagerRoleController  extends BaseControllerUtil {
 				}
 				
 				String menuId = entry.getValue().getId();
-				List<TreeNode> treeNodeList = new ArrayList<TreeNode>();
 				for(PrivilegeResource1 res:resourceList){
-					TreeNode treeNode=new TreeNode();
 					if((menuId).equals("m"+res.getMenuId())){
-						treeNode.setId("r"+res.getResourceId());
-						treeNode.setText(res.getResourceName());
-						treeNode.setIsmodule("1");
+						entry.getValue().setId("r"+res.getResourceId());
+						entry.getValue().setText(res.getResourceName());
+						entry.getValue().setIsmodule("1");
 						List<TreeNode> treeNodeList1 = new ArrayList<TreeNode>();
 						for(PrivilegeFunction func:functionList){
-							String optId=func.getOptId();								
-							Map<String, Object> map = new HashMap<String,Object>();
-							map.put("optId", optId);
-							String s = sendPost(getOperationNameUrl,map);
-							JSONObject o = JSONObject.fromObject(s);
-							String nameValue = o.getString("optName");
 							TreeNode treeNode1=new TreeNode();
 							if((res.getResourceId()).equals(func.getResourceId())){
 								treeNode1.setId("f"+func.getFunctionId());
-								treeNode1.setText(nameValue);
 								treeNode1.setIsmodule("2");
+								for(PrivilegeOperation operation:operationList){
+									if (func.getOptId().equals(operation.getId())) {
+										treeNode1.setText(operation.getName());
+									}
+								}
 								treeNodeList1.add(treeNode1);
 							}
 						}
-						treeNode.setChildren(treeNodeList1);
-						treeNodeList.add(treeNode);
+						entry.getValue().setChildren(treeNodeList1);
 					}
 				}
-				entry.getValue().setChildren(treeNodeList);
 				children.add(entry.getValue());
 			}
 		}
