@@ -34,7 +34,9 @@ import cn.com.open.pay.platform.manager.dev.PayManagerDev;
 import cn.com.open.pay.platform.manager.login.model.User;
 import cn.com.open.pay.platform.manager.login.service.UserService;
 import cn.com.open.pay.platform.manager.privilege.model.Manager;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource1;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRoleDetails;
 import cn.com.open.pay.platform.manager.privilege.service.ManagerService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGetSignatureService;
@@ -85,34 +87,10 @@ public class UserLoginController extends BaseControllerUtil {
 	@RequestMapping("loginVerify")
 	public void verify(HttpServletRequest request, HttpServletResponse response, String username, String password) {
 		log.info("-----------------------login start----------------");
-		// boolean flag = false;
 		Boolean flag = true;
 		String errorCode = "ok";
 		User user = null;
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
-		// user = checkUsername(username, userService);
-		/*
-		 * if (user != null) { if (user.checkPasswod(password)) { flag = true;
-		 * errorCode = "ok"; // Manager
-		 * manager=managerService.getManagerById(user.getId()); // int role=0;
-		 * // List<PrivilegeRoleDetails> list=null; // List<PrivilegeModule>
-		 * modules=null; // if(manager!=null){ // role=manager.getRole(); //
-		 * list=privilegeRoleDetailsService.findRoleDetailsByRoleId(role); //
-		 * List<Integer>ids=new ArrayList<Integer>(list.size()); // for(int
-		 * i=0;i<list.size();i++){ // ids.add(list.get(i).getModuleId()); // }
-		 * // if(ids!=null&&list.size()>0){ // modules=
-		 * privilegeModuleService.findModuleByIds(ids); // for(int
-		 * j=0;j<modules.size();j++){ // // } // } // } //HttpSession session =
-		 * request.getSession(); //
-		 * session.setAttribute("serverHost",payManagerDev.getServer_host()); //
-		 * session.setAttribute("manager",manager); //
-		 * session.setAttribute("modules",modules);
-		 * //session.setAttribute("user", user);
-		 * 
-		 * } else { errorCode = "error"; }
-		 * 
-		 * } else { errorCode = "error"; }
-		 */
 		map.put("flag", flag);
 		map.put("errorCode", errorCode);
 		WebUtils.writeJsonToMap(response, map);
@@ -133,36 +111,36 @@ public class UserLoginController extends BaseControllerUtil {
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
 		map.put("appId", appId);
 		map.put("appUserId", appUserId);
-		HttpSession session=request.getSession();
+		HttpSession session = request.getSession();
 		session.setAttribute("user", appUserId);
-		String result =sendPost(getUserPrivilegeUrl, map);
-		Map<String, Object> menus=new HashMap<String, Object>();
-		if (result!=null&&!("").equals(result)) {
-			JSONObject  jasonObject = JSONObject.fromObject(result);
-			Map JsonMap = (Map)jasonObject;
+		String result = sendPost(getUserPrivilegeUrl, map);
+		Map<String, Object> menus = new HashMap<String, Object>();
+		if (result != null && !("").equals(result)) {
+			JSONObject jasonObject = JSONObject.fromObject(result);
+			Map JsonMap = (Map) jasonObject;
 			if ("0".equals(JsonMap.get("status"))) {
 				menus.put("status", "0");
 				menus.put("errMsg", JsonMap.get("errMsg"));
 				model.addAttribute("menus", JSONObject.fromObject(menus));
-			}else {
-				List<Map<String, Object>> list=getMenu(result);
-				//Map<String, Object> menus=new HashMap<String, Object>();
-				menus.put("menus", list);
-				model.addAttribute("appId",appId);
+			} else {
+				JSONArray menu=jasonObject.getJSONArray("menuList");
+				JSONArray resource=jasonObject.getJSONArray("resourceList");
+				List<PrivilegeResource1> resourceList = JSONArray.toList(resource, PrivilegeResource1.class);
+				List<PrivilegeMenu> menuList = JSONArray.toList(menu, PrivilegeMenu.class);
+				JSONArray jsonArray2=treeMenuList(menuList,resourceList,"0");
+				menus.put("menus", jsonArray2);
+				model.addAttribute("appId", appId);
 				model.addAttribute("menus", JSONObject.fromObject(menus));
 			}
-		}else {
+		} else {
 			menus.put("status", "0");
 			menus.put("errMsg", "没有相应菜单");
-			model.addAttribute("appId",appId);
+			model.addAttribute("appId", appId);
 			model.addAttribute("menus", JSONObject.fromObject(menus));
 		}
-		
-		
-		
+
 		return "login/index";
 
-		
 	}
 
 	/**
@@ -184,51 +162,24 @@ public class UserLoginController extends BaseControllerUtil {
 		user.setUpdatePwdTime(new Date());
 		userService.updateUser(user);
 	}
-
-	
-	public List<Map<String, Object>> getMenu(String result) {
-		JSONObject  jasonObject = JSONObject.fromObject(result);
-		Map JsonMap = (Map)jasonObject;
-		List<Map<String, Object>> resourceList=(List<Map<String, Object>>) JsonMap.get("resourceList");
-		List<Map<String, Object>> menulists=(List<Map<String, Object>>) JsonMap.get("menuList");
-		System.err.println(menulists.size());
-		if(menulists.size()<=0){
-			return null;
-		}
-		// 顶级菜单集合
-		List<Map<String, Object>> pMenus = new ArrayList<Map<String, Object>>();
-		Map<String, Object> map1=null;
-		for(Map<String, Object> map2:menulists){
-			String menuId=(String) map2.get("menuId");
-			String menuname=(String) map2.get("menuName");
-			List<Map<String, Object>> mList=null;
-			if (map2.get("parentId").equals("0")) {
-				map1=new HashMap<String,Object>();
-				mList=new ArrayList<Map<String, Object>>();
-				map1.put("menuid", (String) map2.get("menuId"));
-				map1.put("menuname", (String) map2.get("menuName"));
-				map1.put("icon","");
-				pMenus.add(map1);
-			}
-			for(Map<String, Object> map3:menulists){
-				if(map3.get("parentId").equals(map2.get("menuId"))){
-					for(Map<String, Object> map6:resourceList){
-						if (map6.get("menuId").equals(map3.get("menuId"))) {
-							Map<String, Object> map4=new HashMap<String, Object>();
-							map4.put("menuid", map3.get("menuId"));
-							map4.put("menuname", map3.get("menuName"));
-							map4.put("icon", map3.get("icon"));
-							map4.put("url",map6.get("baseUrl"));
-							mList.add(map4);
-							map1.put("menus", mList);
-						}
+	//构建菜单tree Json
+	public JSONArray treeMenuList(List<PrivilegeMenu> menuList,List<PrivilegeResource1> resourceList, String parentId) {
+		JSONArray childMenu = new JSONArray();
+		for (PrivilegeMenu menu : menuList) {
+			JSONObject jsonMenu = JSONObject.fromObject(menu);
+			String menuId = menu.getMenuId();
+			String pid = menu.getParentId();
+			if (parentId.equals(pid)) {
+				for (PrivilegeResource1 resource : resourceList) {
+					if (resource.getMenuId().equals(menuId)) {
+							jsonMenu.put("url", resource.getBaseUrl());
 					}
-					
 				}
+				JSONArray childrenNode = treeMenuList(menuList, resourceList, menuId);
+				jsonMenu.put("menus", childrenNode);
+				childMenu.add(jsonMenu);
 			}
 		}
-		//Map<String, Object> map5=new HashMap<>();
-		//map5.put("menus", pMenus);
-		return pMenus;
+		return childMenu;
 	}
 }
