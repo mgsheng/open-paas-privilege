@@ -128,7 +128,7 @@
 		$('#dg').datagrid({
 			collapsible:true,
 			rownumbers:true,
-	        url: "${pageContext.request.contextPath}/managerRole/getRoleMessage?appId=${appId}",  
+	        url: '${pageContext.request.contextPath}/managerRole/getRoleMessage?appId=${appId}',  
 	        onLoadSuccess:function(data){
 	           if (data.total<1){
 	                  $.messager.alert("提示","没有符合查询条件的数据!");
@@ -213,6 +213,7 @@
             	getIds();
             	url='${pageContext.request.contextPath}/managerRole/updateRole?appId='+appId+'&roleName='+roleName+'&status='+status+'&addIds='+addIds+'&delIds='+delIds+'&privilegeRoleId='+privilegeRoleId+'&deptName='+deptName+'&groupName='+groupName+'&remark='+remark;
             }
+            url=encodeURI(encodeURI(url));
             $.post(url, function(data) {
                 if(data.status=='1'){
                 	 if(privilegeRoleId==null || privilegeRoleId==""){
