@@ -13,7 +13,9 @@
 <body>
 	<div class="easyui-panel" title="模块管理" style="width:100%;max-width:100%;padding:20px 30px;height:540px;">
 	<div style="padding:2px 5px; text-align: right;">
-		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="add"></a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="addRoot">AddRoot</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="addMenu">AddMenu</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="add">AddResFun</a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" id="edit"></a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" id="delete" ></a>
 	</div>
@@ -52,7 +54,7 @@
 					</tr>
 					<tr id="url">
 						<td>URL：</td>
-						<td><input id="url" type="text" name="url"class="txt01" />
+						<td><input id="moduleUrl" type="text" name="moduleUrl"class="txt01" />
 						</td>
 					</tr>
 					<tr>
@@ -214,7 +216,7 @@
         function serverLogin() {
             var name = $('#moduleName').val();
             var code = $('#code').val();
-            var moduleUrl= $('#url').val();
+            var moduleUrl= $('#moduleUrl').val();
             var displayOrder= $('#display_order').val();
             var status= $('#status').val();
             var parentId=$('#parentId').val();
@@ -232,7 +234,7 @@
               
 			var url="";
 		    if(menuId==""){
-		    	url=  '${pageContext.request.contextPath}/module/addMenu?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&menuLevel='+menuLevel+'&url='+moduleUrl;
+		    	url='${pageContext.request.contextPath}/module/addMenu?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&menuLevel='+menuLevel+'&url='+moduleUrl;
 		    }else{
 		   		url= '${pageContext.request.contextPath}/module/edit?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&url='+moduleUrl+'&menuLevel='+menuLevel+'&menuId='+menuId+'&resourceId='+resourceId;
 		    }
@@ -261,7 +263,33 @@
 		function msgShow(title, msgString, msgType) {
 			$.messager.alert(title, msgString, msgType);
 		}
-		//添加
+        
+        //添加根菜单
+        $('#addRoot').click(function(){
+        	$("#url").hide();
+     		$('#parentName').html('根节点');
+		 	$('#parentId').val('0');
+		 	$('#menuLevel').val('0');
+	   		$('#wmodule').window('open');
+        });
+        //添加不带Url菜单
+        $('#addMenu').click(function(){
+        	var node = $('#deptree').tree('getSelected');
+			if (node){
+				if(node.attributes.baseUrl!="" && node.attributes.baseUrl!="undefined"){
+					msgShow('系统提示', '资源菜单下不能添加菜单目录！', 'info');
+				}else{
+					$("#url").hide();
+			 		$('#parentName').html(node.text);
+				 	$('#parentId').val(node.id);
+				 	$('#menuLevel').val(node.attributes.menuLevel);
+			   		$('#wmodule').window('open');
+				}
+			}else{
+				 msgShow('系统提示', '请选择父菜单！', 'info');
+			}
+        });
+        //添加资源或功能
 	     $('#add').click(function() {
 	     	var node = $('#deptree').tree('getSelected');
 			if (node){
@@ -275,21 +303,17 @@
 						textField:'name'
 					});
 					$('#function').window('open');
-				}else if(node.ismodule=="2"){//nodeo为function
-					msgShow('系统提示', '请选择父级菜单或父级资源！', 'info');
-				}else if(node.ismodule=="0"){//添加的二级菜单
+				}else if(node.ismodule=="2"){//node为function
+					msgShow('系统提示', '请选择父菜单', 'info');
+				}else if(node.ismodule=="0"){//node为根菜单或不带Url菜单
 					$("#url").show();
 			 		$('#parentName').html(node.text);
 				 	$('#parentId').val(node.id);
 				 	$('#menuLevel').val(node.attributes.menuLevel);
 			   		$('#wmodule').window('open');
 				}
-	     	}else{//添加一级菜单
-				$("#url").hide();
-	     		$('#parentName').html('根节点');
-			 	$('#parentId').val('0');
-			 	$('#menuLevel').val('0');
-		   		$('#wmodule').window('open');
+	     	}else{
+	     		msgShow('系统提示', '请选择父菜单！', 'info');
 	     	}
        });
 	    $(function(){  
