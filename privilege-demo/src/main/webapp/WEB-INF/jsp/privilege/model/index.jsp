@@ -142,10 +142,18 @@
 	function getRoot(){
 		var node=$('#deptree').tree('getRoots');
 		$.each(node,function(i,n){
-			$(n.target).children(".tree-icon").addClass("icon icon-mini-add");
+			if($(n.target).children(".tree-icon").hasClass('tree-file')){
+				$(n.target).children(".tree-icon").removeClass('tree-file').addClass("tree-folder");
+			}
+			$(n.target).children(".tree-icon").addClass("tree-folder");
 			var children=$('#deptree').tree('getChildren',n.target);
 			$.each(children,function(i,m){
 				if(m.ismodule=="0"){
+					if($(m.target).children(".tree-icon").hasClass('tree-file')){
+						$(m.target).children(".tree-icon").removeClass('tree-file').addClass("tree-folder");
+					}
+					//$(m.target).children(".tree-icon").addClass("tree-folder");
+				}else if (m.ismodule=="1") {
 					$(m.target).children(".tree-icon").addClass("icon icon-mini-add");
 				}
 			});
@@ -322,7 +330,10 @@
 						}
                  		
                  		var nn = $('#deptree').tree('find', data.menuId);
-             			$(nn.target).children(".tree-icon").addClass("icon icon-mini-add");
+                 		if($(nn.target).children(".tree-icon").hasClass('tree-file')){
+            				$(nn.target).children(".tree-icon").removeClass('tree-file').addClass("tree-folder");
+            			}
+             			//$(nn.target).children(".tree-icon").addClass("icon icon-mini-add");
                  	}else{
                  		$('#deptree').tree('append',{parent: menu.target,
                      		data:[{
@@ -341,7 +352,8 @@
                      			}
                      		}]});
                  		var nn = $('#deptree').tree('find', data.resourceId);
-             			$(nn.target).children(".tree-icon").removeClass("tree-file").addClass("tree-folder");
+                 		$(nn.target).children(".tree-icon").addClass("icon icon-mini-add");
+             			//$(nn.target).children(".tree-icon").removeClass("tree-file").addClass("tree-folder");
                  	}
                  	reset();
                  	
