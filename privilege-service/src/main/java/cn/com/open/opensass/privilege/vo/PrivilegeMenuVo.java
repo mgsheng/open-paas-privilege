@@ -14,12 +14,21 @@ public class PrivilegeMenuVo implements Serializable {
     private int menuLevel;
     private int displayOrder;
     private String menuCode;
+    private int status;
 
     public String getMenuId() {
         return menuId;
     }
 
-    public void setMenuId(String menuId) {
+    public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public void setMenuId(String menuId) {
         this.menuId = menuId;
     }
 
