@@ -59,7 +59,7 @@
 		$.post('${pageContext.request.contextPath}/managerUser/function?id='+'${id}',function(data){
 				if(data.functionList!=null){
 					$.each(data.functionList,function(i,n){
-						var node=$("#tt").tree('find',"f"+n.functionId);
+						var node=$("#tt").tree('find',n.functionId);
 						if(node!=null){
 							$("#tt").tree('check',node.target);
 						}
@@ -67,12 +67,15 @@
 				}
 				if(data.resourceList!=null){
 					$.each(data.resourceList,function(i,m){
-						var node=$("#tt").tree('find',"r"+m.resourceId);
+						var node=$("#tt").tree('find',m.resourceId);
 						if(node!=null){
-							var nn=$("#tt").tree('getChildren',node.target);
-							if(nn.length<=0){
-								$("#tt").tree('check',node.target);
+							if(node.ismodule=="1"){
+								var nn=$("#tt").tree('getChildren',node.target);
+								if(nn.length<=0){
+									$("#tt").tree('check',node.target);
+								}
 							}
+							
 						}
 						
 					});
@@ -94,10 +97,8 @@
 		var select=$('#tt').tree('getChecked', 'checked');
 		$.each(select, function(i, n) {
 			if(n.ismodule==2){
-				var id=n.id.replace('f','');
 				funId.push(id);
 			}else if(n.ismodule==1){
-				var id=n.id.replace('r','');
 				resId.push(id);
 			}
 			console.log(n.text);
