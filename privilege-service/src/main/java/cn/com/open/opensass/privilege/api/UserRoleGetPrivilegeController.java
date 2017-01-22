@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +38,7 @@ import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
 import cn.com.open.opensass.privilege.tools.StringTool;
+import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
 import cn.com.open.opensass.privilege.vo.PrivilegeResourceVo;
 import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
@@ -65,6 +67,7 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 	private AppService appService;
 	@Autowired
 	private RedisClientTemplate redisClient;
+	
 
 	/**
 	 * 用户角色权限获取接口
@@ -105,12 +108,7 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 			map.put("groupId", user.getGroupId());
 			map.put("privilegeFunId", user.getPrivilegeFunId());
 		}
-		try {
-			redisClient.del(prefixMenu + user.getAppId() + SIGN + user.getuId());
-			redisClient.del(prefixRole + user.getAppId() + SIGN + user.getuId());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		
 		Map<String, Object> roleMap = null;
 		Map<String, Object> menuMap = null;
 		try {
@@ -195,9 +193,16 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 						resourceList.add(map2);
 					}
 				}
+				resourceSet.addAll(resourceList);
+				roleMap.put("resourceList", resourceSet);
+			}else{
+				PrivilegeAjaxMessage message=privilegeResourceService.getAppResRedis(user.getAppId());
+				JSONObject obj1 = new JSONObject().fromObject(message.getMessage());// 将json字符串转换为json对象
+				JSONArray objArray = JSONArray.fromObject(obj1.get("resourceList"));
+				roleMap.put("resourceList", objArray);
 			}			
-			resourceSet.addAll(resourceList);
-			roleMap.put("resourceList", resourceSet);
+			//resourceSet.addAll(resourceList);
+			//roleMap.put("resourceList", resourceSet);
 			// functionList
 			// roleResource表中functionIds
 			List<String> FunIds = privilegeRoleResourceService.findUserResourcesFunId(user.getAppId(),user.getAppUserId());
@@ -237,7 +242,13 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 			menuMap = new HashMap<String, Object>();
 			List<PrivilegeMenu> privilegeMenuList = new ArrayList<PrivilegeMenu>();
 			if (boo) {// 有管理员角色获取所有应用下菜单
-				privilegeMenuList = privilegeMenuService.getMenuListByAppId(user.getAppId());
+				//privilegeMenuList = privilegeMenuService.getMenuListByAppId(user.getAppId());
+				PrivilegeAjaxMessage message=privilegeMenuService.getAppMenuRedis(user.getAppId());
+				JSONObject obj1 = new JSONObject().fromObject(message.getMessage());// 将json字符串转换为json对象
+				JSONArray objArray = JSONArray.fromObject(obj1.get("menuList"));
+				menuMap.put("menuList", objArray);
+
+				
 			} else {// 无管理员角色获取相应权限菜单
 				privilegeMenuList = privilegeMenuService.getMenuListByUserId(user.getAppUserId(), user.getAppId());
 				// 根据roleResource表中functionId无resourceId 查询菜单
@@ -260,11 +271,12 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 						privilegeMenuList.addAll(menus);
 					}
 				}
+				Set<PrivilegeMenuVo> privilegeMenuListReturn = new HashSet<PrivilegeMenuVo>();
+				Set<PrivilegeMenuVo> privilegeMenuListData = privilegeMenuService.getAllMenuByUserId(privilegeMenuList,
+						privilegeMenuListReturn); /* 缓存中是否存在 */
+				menuMap.put("menuList", privilegeMenuListData);
 			}
-			Set<PrivilegeMenuVo> privilegeMenuListReturn = new HashSet<PrivilegeMenuVo>();
-			Set<PrivilegeMenuVo> privilegeMenuListData = privilegeMenuService.getAllMenuByUserId(privilegeMenuList,
-					privilegeMenuListReturn); /* 缓存中是否存在 */
-			menuMap.put("menuList", privilegeMenuListData);
+			
 			try {
 				redisClient.setObject(prefixMenu + user.getAppId() + SIGN + user.getuId(), menuMap);
 
