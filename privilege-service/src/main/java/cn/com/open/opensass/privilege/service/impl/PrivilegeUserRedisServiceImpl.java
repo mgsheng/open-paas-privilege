@@ -25,7 +25,9 @@ import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserRedisService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
+import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
 import cn.com.open.opensass.privilege.vo.PrivilegeResourceVo;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Repository("privilegeUserRedisService")
@@ -47,7 +49,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 	private PrivilegeRoleResourceService privilegeRoleResourceService;
 	@Autowired
 	private RedisDao redisDao;
-
+	
 	@Override
 	public PrivilegeAjaxMessage getRedisUserRole(String appId, String appUserId) {
 
@@ -130,12 +132,15 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 					resourceList.add(map2);
 				}
 			}
-			// 获取所有的resource
-			//List<Map<String, Object>> list = privilegeResourceService.getAllResource(resourceList);
-			//resourceList.addAll(list);
+			resourceSet.addAll(resourceList);
+			roleMap.put("resourceList", resourceSet);
+		}else {
+			PrivilegeAjaxMessage message=privilegeResourceService.getAppResRedis(appId);
+			JSONObject obj1 = new JSONObject().fromObject(message.getMessage());// 将json字符串转换为json对象
+			JSONArray objArray = JSONArray.fromObject(obj1.get("resourceList"));
+			roleMap.put("resourceList", objArray);
 		}
-		resourceSet.addAll(resourceList);
-		roleMap.put("resourceList", resourceSet);
+		
 		// functionList
 		// roleResource表中functionIds
 		List<String> FunIds = privilegeRoleResourceService.findUserResourcesFunId(appId, appUserId);
