@@ -149,7 +149,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 				map.put("menuRule", privilegeMenu.getMenuRule());
 				map.put("dislayOrder", privilegeMenu.getDisplayOrder());
 				map.put("parentId", privilegeMenu.getParentId());
-				map.put("status", privilegeMenu.getDisplayOrder());
+				map.put("status", privilegeMenu.getStatus());
 				node.setAttributes(map);
 			}
 			return node;
