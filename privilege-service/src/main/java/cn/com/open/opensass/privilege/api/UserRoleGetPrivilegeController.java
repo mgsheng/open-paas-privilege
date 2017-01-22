@@ -123,7 +123,19 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 		Boolean boo = false;// 存放是否有管理员角色标志 true-有，false-没有
 		String privilegeResourceIds = user.getResourceId();
 		String privilegeFunctionIds = user.getPrivilegeFunId();
-
+		
+		List<PrivilegeRole> roleList = privilegeRoleService.getRoleListByUserIdAndAppId(user.getAppUserId(),
+				user.getAppId());
+		List resourceList = new ArrayList<PrivilegeResource>();
+		for (PrivilegeRole role : roleList) {
+			if (role.getRoleType() != null) {
+				if (role.getRoleType() == 2) {// 若角色为系统管理员 则把app拥有的所有资源放入缓存
+					//resourceList = privilegeResourceService.getResourceListByAppId(user.getAppId());
+					boo = true;
+					break;
+				}
+			}
+		}
 		// redis中没有roleMap，从数据库中查询并存入redis
 		if (roleMap == null) {
 			roleMap = new HashMap<String, Object>();
@@ -132,18 +144,8 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 					user.getAppId());
 			roleMap.put("roleList", roles);
 			// resourceList
-			List<PrivilegeRole> roleList = privilegeRoleService.getRoleListByUserIdAndAppId(user.getAppUserId(),
-					user.getAppId());
-			List resourceList = new ArrayList<PrivilegeResource>();
-			for (PrivilegeRole role : roleList) {
-				if (role.getRoleType() != null) {
-					if (role.getRoleType() == 2) {// 若角色为系统管理员 则把app拥有的所有资源放入缓存
-						resourceList = privilegeResourceService.getResourceListByAppId(user.getAppId());
-						boo = true;
-						break;
-					}
-				}
-			}
+			
+			
 			// user表多余的resourceId
 			List<String> resourceIds = new ArrayList<String>();
 			// resourceList
