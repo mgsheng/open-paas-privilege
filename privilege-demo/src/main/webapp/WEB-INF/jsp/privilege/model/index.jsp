@@ -138,7 +138,25 @@
 	</div>
 </body>
 <script>
-
+	
+	function getRoot(){
+		var node=$('#deptree').tree('getRoots');
+		$.each(node,function(i,n){
+			$(n.target).children(".tree-icon").addClass("icon icon-mini-add");
+			var children=$('#deptree').tree('getChildren',n.target);
+			$.each(children,function(i,m){
+				if(m.ismodule=="0"){
+					$(m.target).children(".tree-icon").addClass("icon icon-mini-add");
+				}
+			});
+		});
+	}
+	$('#deptree').tree({
+		onLoadSuccess:function(node, data){
+			getRoot();
+		}
+		
+	}); 
 	   //设置=窗口
         function openPwd() {
             $('#wmodule').window({
@@ -178,6 +196,7 @@
         	var functionId = $('#functionId').val();
         	var optUrl = $('#opturl').val();
         	var optId = $('#operName').combobox('getValue');
+        	var optName=$('#operName').combobox('getText');
         	if(functionId!=""){
         		$.post('${pageContext.request.contextPath}/module/editFunction',
                     	{'functionId':functionId,'optUrl':optUrl,'operationId':optId},
@@ -185,7 +204,17 @@
                     		if(data.returnMsg=='1'){
                              	msgShow('系统提示', '恭喜，修改成功！', 'info');
                              	close();
-                             	reload();
+                             	 //var funNode=$('#deptree').tree('getSelected');
+                             	var node = $('#deptree').tree('getSelected');
+                              	$('#deptree').tree('update',{
+                              		target: node.target,
+                              			'text':optName,
+                              			'attributes':{
+                              				'optId':optId,
+                              				'optUrl':optUrl
+                              			}
+                              		});
+                             	//reload();
                             	$('#function').window('close');
                     		}else {
                     			msgShow('系统提示', '修改失败！', 'info');
@@ -200,7 +229,18 @@
                     		if(data.returnMsg=='1'){
                              	msgShow('系统提示', '恭喜，添加成功！', 'info');
                              	close();
-                             	reload();
+                             	 var resNode=$('#deptree').tree('getSelected');
+                             	$('#deptree').tree('append',{parent: resNode.target,
+                             		data:[{
+                             			'id':data.functionId,
+                             			'text':optName,
+                             			'ismodule':'2',
+                             			'attributes':{
+                             				'optId':optId,
+                             				'optUrl':optUrl
+                             			}
+                             		}]});
+                             	//reload();
                             	$('#function').window('close');
                     		}else{
                     			msgShow('系统提示', '添加失败！', 'info');
@@ -237,22 +277,107 @@
             }
 			var url="";
 		    if(menuId==""){
-		    	url=encodeURI('${pageContext.request.contextPath}/module/addMenu?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&menuLevel='+menuLevel+'&url='+moduleUrl);
+		    	url=encodeURI('${pageContext.request.contextPath}/module/addMenu?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&menuLevel='+displayOrder+'&url='+moduleUrl);
 		    }else{
-		   		url= '${pageContext.request.contextPath}/module/edit?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&url='+moduleUrl+'&menuLevel='+menuLevel+'&menuId='+menuId+'&resourceId='+resourceId;
+		   		url= '${pageContext.request.contextPath}/module/edit?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&url='+moduleUrl+'&menuLevel='+displayOrder+'&menuId='+menuId+'&resourceId='+resourceId;
 		    }
              $.post(url, function(data) {
                 if(data.returnMsg=='1'){
                  	msgShow('系统提示', '恭喜，添加成功！', 'info');
-                 	close();
+                 	$('#wmodule').window('close');
+                 		var menu=$('#deptree').tree('getSelected');
+                 	if(data.resourceId==null){
+                 		if(parentId=="0"){
+                 			var root = $("#deptree").tree('getRoot');
+                 			$('#deptree').tree('append',{parent:null,
+                         		data:[{
+                         			'id':data.menuId,
+                         			'pid':parentId,
+                         			'text':name,
+                         			'ismodule':'0',
+                         			'attributes':{
+                         				'code':code,
+                         				'status':status,
+                         				'dislayOrder':displayOrder,
+                         				'menuLevel':displayOrder,
+    									'parentId':parentId               				
+                         			}
+                         		}]});
+                 		}else {
+                 			$('#deptree').tree('append',{parent: menu.target,
+                         		data:[{
+                         			'id':data.menuId,
+                         			'pid':parentId,
+                         			'text':name,
+                         			'ismodule':'0',
+                         			'attributes':{
+                         				'code':code,
+                         				'status':status,
+                         				'dislayOrder':displayOrder,
+                         				'menuLevel':displayOrder,
+    									'parentId':parentId               				
+                         			}
+                         		}]});
+                 			
+						}
+                 		
+                 		var nn = $('#deptree').tree('find', data.menuId);
+             			$(nn.target).children(".tree-icon").addClass("icon icon-mini-add");
+                 	}else{
+                 		$('#deptree').tree('append',{parent: menu.target,
+                     		data:[{
+                     			'id':data.resourceId,
+                     			'pid':parentId,
+                     			'text':name,
+                     			'ismodule':'1',
+                     			'attributes':{
+                     				'baseUrl':moduleUrl,
+                     				'menuId':data.menuId,
+                     				'parentId':parentId,
+                     				'menuCode':code,
+                     				'status':status,
+                     				'displayOrder':displayOrder,
+                     				'menuLevel':displayOrder
+                     			}
+                     		}]});
+                 		var nn = $('#deptree').tree('find', data.resourceId);
+             			$(nn.target).children(".tree-icon").removeClass("tree-file").addClass("tree-folder");
+                 	}
                  	reset();
-                 	reload();
+                 	
+                 	//reload();
                 	$('#wmodule').window('close');
                 }else if(data.returnMsg=='2'){
                  	msgShow('系统提示', '恭喜，修改成功！', 'info');
                  	close();
                 	reset();
-                 	reload();
+                	var node = $('#deptree').tree('getSelected');
+                	if(resourceId!==null&&resourceId!=""&&typeof(resourceId)!="undefined"){
+                		$('#deptree').tree('update',{
+                  			target: node.target,
+                  			'text':name,
+                  			'attributes':{
+                  				'menuCode':code,
+                  				'status':status,
+                  				'dislayOrder':displayOrder,
+                 				'menuLevel':displayOrder
+                  			}
+                  		}); 
+                	}else {
+                		$('#deptree').tree('update',{
+                  			target: node.target,
+                  			'text':name,
+                  			'attributes':{
+                  				'baseUrl':moduleUrl,
+                  				'menuCode':code,
+                  				'status':status,
+                  				'dislayOrder':displayOrder,
+                 				'menuLevel':displayOrder
+                  			}
+                  		}); 
+					}
+                	
+                 	//reload();
                  	$('#wmodule').window('close');
                 }else{
                  	msgShow('系统提示', '系统错误！', 'info');
@@ -279,7 +404,7 @@
         $('#addMenu').click(function(){
         	var node = $('#deptree').tree('getSelected');
 			if (node){
-				if(node.attributes.baseUrl!="" && node.attributes.baseUrl!="undefined"){
+				if(node.attributes.baseUrl!="" && typeof(node.attributes.baseUrl)!="undefined"){
 					msgShow('系统提示', '资源菜单下不能添加菜单目录！', 'info');
 				}else{
 					$("#url").hide();
@@ -369,14 +494,12 @@
        		    		 			if(n.ismodule=="1"){
        		    		 				menuIds.push(n.attributes.menuId);
        			    		 			resourceIds.push(n.id);
-       		    		 			}
-       		    		 		 	var children = $('#deptree').tree('getChildren',n.target);
-       		    		 		 	if(children!=null){
-       		    		 				$.each(children,function(i,m){
-       			    		 				functionIds.push(m.id);
-       			    		 		 	});
-       		    		 		 	}
-       		    		 		 
+       		    		 			}else if (n.ismodule=="0") {
+       		    		 				menuIds.push(n.id);
+									}else {
+										functionIds.push(n.id);
+									}
+       		    		 		 	
        			    	 		});
        		    		 		menuIds.join(",");
        		    		 		resourceIds.join(",");
@@ -412,7 +535,9 @@
     			                if(data.returnMsg=='1'){
     			                 	msgShow('系统提示', '恭喜，删除成功！', 'info');
     			                 	close();
-    			                 	reload();
+    			                 	var Nodes = $('#deptree').tree('getSelected');
+    			                 	$('#deptree').tree('pop',Nodes.target);
+    			                 	//reload();
     			                }else{
     			                 	msgShow('系统提示', '删除失败！', 'info');
     			                 	close();
@@ -478,7 +603,6 @@
 		    	var functionId=node.id;
 		    	var optUrl=node.attributes.optUrl;
 				var optId=node.attributes.optId;
-				
 				$('#functionId').val(functionId);
 				$('#opturl').val(optUrl);
 				$('#operName').combobox('select',optId);
@@ -489,26 +613,30 @@
 				if(data.id==null || data.id==0){
 					return;
 				}
+				 data=$('#deptree').tree('getSelected');
 				//赋值
 				var menuId;
 				var resourceId;
 				if(data.ismodule=="0"){
 					menuId=data.id;
+					$('#moduleUrl').val("");
+					$('#url').hide();
 					//resourceId=data.attributes.resourceId;
 				}else if (data.ismodule=="1") {
 					menuId=data.attributes.menuId;
 					resourceId=data.id;
 					jQuery('#resourceId').val(resourceId);
+					$('#url').show();
+					var url = data.attributes.baseUrl;
+					$('#moduleUrl').val(url);
 				}
 				var parentId = data.attributes.parentId;
 				var name = data.text;
-				var url = data.attributes.baseUrl;
 				var code = data.attributes.menuCode;
 				var displayOrder = data.attributes.dislayOrder;
 				var status = data.attributes.status;
 				var menuLevel = data.attributes.menuLevel;
 				jQuery('#menuId').val(menuId);
-				//jQuery('#parentId').val(parentId);
 				if(parentId==0){
 					jQuery('#parentName').html('根节点');
 				}
@@ -518,7 +646,7 @@
 				}
 				jQuery('#parentId').val(parentId);
 				jQuery('#moduleName').val(name);
-				jQuery('#url').val(url);
+				//jQuery('#url').val(url);
 				jQuery('#code').val(code);
 				jQuery('#display_order').val(displayOrder);
 				jQuery('#menuLevel').val(menuLevel);
