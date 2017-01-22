@@ -30,7 +30,6 @@ import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource1;
 import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGetSignatureService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
-import cn.com.open.pay.platform.manager.privilege.service.PrivilegeResourceService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
 
@@ -365,6 +364,9 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	@RequestMapping(value = "delFunction")
 	public void delFunction(HttpServletRequest request, HttpServletResponse response) {
 		String functionId = request.getParameter("functionId");
+		if (functionId!="undefined") {
+			return;
+		}
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
 		map.put("appId", appId);
 		map.put("functionId", functionId);
@@ -450,10 +452,12 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		map.put("operationId", operationId);
 		Boolean boo = false;
 		String reslut = sendPost(addFunctionUrl, map);
+		String functionId=null;
 		if (reslut != null) {
 			JSONObject jsonObject = JSONObject.fromObject(reslut);
 			Map JsnMap = (Map) jsonObject;
 			if (JsnMap.get("status").equals("1")) {
+				functionId=(String) JsnMap.get("functionId");
 				boo = true;
 			} else {
 				boo = false;
@@ -464,6 +468,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		map.clear();
 		if (boo) {
 			map.put("returnMsg", "1");
+			map.put("functionId", functionId);
 		} else {
 			map.put("returnMsg", "0");
 		}
@@ -517,6 +522,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		} else {
 			boo = false;
 		}
+		String reourceId = null;
 		if (!url.equals("")) {//添加带url的menu
 			if (boo) {
 				// 添加资源
@@ -524,12 +530,12 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 				map2.put("resourceName", menuName);
 				map2.put("menuId", menuId);
 				map2.put("baseUrl", url);
-				// String reourceId = null;
 				reslut = sendPost(addResourceUrl, map2);
 				if (reslut != null) {
 					JSONObject jsonObject = JSONObject.fromObject(reslut);
 					Map JsnMap = (Map) jsonObject;
 					if (JsnMap.get("status").equals("1")) {
+						reourceId=(String) JsnMap.get("resourceId");
 						boo = true;
 					} else {
 						boo = false;
@@ -543,6 +549,8 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		map2.clear();
 		
 		if (boo) {
+			map2.put("menuId",menuId);
+			map2.put("resourceId", reourceId);
 			map2.put("returnMsg", "1");
 		} else {
 			map2.put("returnMsg", "0");
@@ -561,12 +569,12 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	@RequestMapping(value = "edit")
 	public void edit(HttpServletRequest request, HttpServletResponse response) {
 		String menuName = request.getParameter("name");
-		/*try {
+		try {
 			menuName = new String(request.getParameter("name").getBytes("iso-8859-1"),"utf-8");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}*/
+		}
 		String menuCode = request.getParameter("code");
 		String menuId = request.getParameter("menuId");
 		String resourceId = request.getParameter("resourceId");
@@ -597,7 +605,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		} else {
 			boo = false;
 		}
-		if (resourceId!=null&&!("").equals(resourceId)) {
+		if (resourceId!=null&&!("").equals(resourceId)&&!("undefined").equals(resourceId)) {
 			if (boo) {
 				// 修改
 				map2.put("resourceName", menuName);
@@ -698,7 +706,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		} else {
 			boo = false;
 		}
-		if(resourceId!=null){
+		if(resourceId!=null&&!("undefined").equals(resourceId)){
 			if (boo) {
 				map.put("resourceId", request.getParameter("resourceId"));
 				reslut = sendPost(delResourceUrl, map);
