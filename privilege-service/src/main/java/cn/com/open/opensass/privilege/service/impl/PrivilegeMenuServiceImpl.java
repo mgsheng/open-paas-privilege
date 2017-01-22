@@ -286,6 +286,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 			privilegeMenuVo.setMenuLevel(privilegeMenu.getMenuLevel());
 			privilegeMenuVo.setMenuCode(privilegeMenu.getMenuCode());
 			privilegeMenuVo.setDisplayOrder(privilegeMenu.getDisplayOrder());
+			privilegeMenuVo.setStatus(privilegeMenu.getStatus());
 			privilegeMenuVos.add(privilegeMenuVo);
 		}
 		return privilegeMenuVos;
@@ -310,6 +311,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 
 		log.info("从数据库获取数据");
 		List<PrivilegeMenuVo> menuList = getMenuVoListByAppId(appId);
+		//List<PrivilegeMenu> menuList=getMenuListByAppId(appId);
 		if (menuList.size() <= 0) {
 			ajaxMessage.setCode("0");
 			ajaxMessage.setMessage("MENU-IS-NULL");
