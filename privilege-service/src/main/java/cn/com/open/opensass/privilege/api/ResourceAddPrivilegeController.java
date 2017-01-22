@@ -50,7 +50,7 @@ public class ResourceAddPrivilegeController extends BaseControllerUtil{
     	String createUser="";
     	try {
     	if(!nullEmptyBlankJudge(request.getParameter("resourceName"))){
-    		resourceName = request.getParameter("resourceName");
+    		resourceName = new String(request.getParameter("resourceName").getBytes("iso-8859-1"),"utf-8");	
     	}
     	if(!nullEmptyBlankJudge(request.getParameter("resourceRule"))){
     		resourceRule = new String(request.getParameter("resourceRule").getBytes("iso-8859-1"),"utf-8");	
