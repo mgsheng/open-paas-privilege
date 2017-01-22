@@ -616,6 +616,11 @@
 		    	if(node.id==null || node.id==0){
 					return;
 				}
+		    	var pnode = $("#deptree").tree("getParent",node.target);
+		    	if(pnode!=null){
+			    	var parentName1=pnode.text;
+					$('#parentName1').html(parentName1);
+		    	}
 		    	var functionId=node.id;
 		    	var optUrl=node.attributes.optUrl;
 				var optId=node.attributes.optId;
