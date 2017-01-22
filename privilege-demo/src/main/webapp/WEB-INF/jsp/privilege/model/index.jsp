@@ -41,7 +41,7 @@
 						<td>
 						<div  id="parentName"></div>
 						<input id="menuId" name="menuId" type="hidden" value=""/>
-						<%--<input id="resourceId" name="resourceId" type="hidden" value=""/>--%>
+						<input id="resourceId" name="resourceId" type="hidden" value=""/>
 						<input type="hidden" id="parentId" name="parentId" value=""/>
 						<input type="hidden" id="menuLevel" name="menuLevel" value=""/>
 						</td>
@@ -406,6 +406,7 @@
         
         //添加根菜单
         $('#addRoot').click(function(){
+        	reset();
         	$("#url").hide();
      		$('#parentName').html('根节点');
 		 	$('#parentId').val('0');
@@ -414,6 +415,7 @@
         });
         //添加不带Url菜单
         $('#addMenu').click(function(){
+        	reset();
         	var node = $('#deptree').tree('getSelected');
 			if (node){
 				if(node.attributes.baseUrl!="" && typeof(node.attributes.baseUrl)!="undefined"){
@@ -431,6 +433,7 @@
         });
         //添加资源或功能
 	     $('#add').click(function() {
+	    	reset();
 	     	var node = $('#deptree').tree('getSelected');
 			if (node){
 				if(node.ismodule=="1"){//node为resource
@@ -601,11 +604,12 @@
 				jQuery('#parentName').val('');
 				jQuery('#parentId').val('');
 				jQuery('#moduleName').val('');
-				jQuery('#url').val('');
+				jQuery('#moduleUrl').val('');
 				jQuery('#code').val('');
 				jQuery('#display_order').val('');
 				$('#menuLevel').val('');
 				$('#opturl').val('');
+				$('#status').attr('value',0);
 				
 			}
 		    function updataFunction(node){
@@ -621,11 +625,11 @@
 				
 		    }
 		     function updateModel(data){
-				//reset();
+				reset();
 				if(data.id==null || data.id==0){
 					return;
 				}
-				 data=$('#deptree').tree('getSelected');
+				data=$('#deptree').tree('getSelected');
 				//赋值
 				var menuId;
 				var resourceId;
@@ -633,11 +637,10 @@
 					menuId=data.id;
 					$('#moduleUrl').val("");
 					$('#url').hide();
-					//resourceId=data.attributes.resourceId;
 				}else if (data.ismodule=="1") {
 					menuId=data.attributes.menuId;
 					resourceId=data.id;
-					jQuery('#resourceId').val(resourceId);
+					$('#resourceId').val(resourceId);
 					$('#url').show();
 					var url = data.attributes.baseUrl;
 					$('#moduleUrl').val(url);
@@ -648,17 +651,16 @@
 				var displayOrder = data.attributes.dislayOrder;
 				var status = data.attributes.status;
 				var menuLevel = data.attributes.menuLevel;
-				jQuery('#menuId').val(menuId);
+				$('#menuId').val(menuId);
 				if(parentId==0){
-					jQuery('#parentName').html('根节点');
+					$('#parentName').html('根节点');
 				}
 				else{
 					var node=$('#deptree').tree('find',parentId);
-					jQuery('#parentName').html(node.text);
+					$('#parentName').html(node.text);
 				}
 				jQuery('#parentId').val(parentId);
 				jQuery('#moduleName').val(name);
-				//jQuery('#url').val(url);
 				jQuery('#code').val(code);
 				jQuery('#display_order').val(displayOrder);
 				jQuery('#menuLevel').val(menuLevel);
@@ -666,19 +668,19 @@
 				jQuery('#status').attr('value',status);
 				
 			}
-			function reload(){
+			/*function reload(){
 			    $('#deptree').tree({
                 	url:'${pageContext.request.contextPath}/module/tree'
-             });
-			}
-			function expandAll(){
+             	});
+			}*/
+			/*function expandAll(){
 				var node = $('#deptree').tree('getSelected');
 				if (node){
 					$('#deptree').tree('expandAll', node.target);
 				} else {
 					$('#deptree').tree('expandAll');
 				}
-		}
+			}*/
 	
 </script>
 </html>
