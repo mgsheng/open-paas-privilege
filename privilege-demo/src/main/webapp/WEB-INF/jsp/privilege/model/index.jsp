@@ -162,7 +162,19 @@
 	$('#deptree').tree({
 		onLoadSuccess:function(node, data){
 			getRoot();
+		},
+		onClick:function(node){
+			console.log("text=="+node.text);
+			console.log("parentId=="+node.attributes.parentId);
+			if(node.ismodule=="0"){
+				console.log("menuId=="+node.id+"status=="+node.attributes.status);
+				
+			}else if (node.ismodule=="1") {
+				console.log("menuID="+node.attributes.menuId);
+				console.log("resourceId=="+node.id+"status=="+node.attributes.status+"url="+node.attributes.baseUrl);
+			}
 		}
+	
 		
 	}); 
 	   //设置=窗口
@@ -609,7 +621,7 @@
 				jQuery('#display_order').val('');
 				$('#menuLevel').val('');
 				$('#opturl').val('');
-				$('#status').attr('value',0);
+				$('#status').combobox('setValue', '1');
 				
 			}
 		    function updataFunction(node){
@@ -658,6 +670,7 @@
 				var menuLevel = data.attributes.menuLevel;
 				$('#menuId').val(menuId);
 				if(parentId==0){
+					alert("parentId=="+parentId);
 					$('#parentName').html('根节点');
 				}
 				else{
@@ -669,15 +682,14 @@
 				jQuery('#code').val(code);
 				jQuery('#display_order').val(displayOrder);
 				jQuery('#menuLevel').val(menuLevel);
-				
-				jQuery('#status').attr('value',status);
+				$('#status').combobox('setValue', status);
 				
 			}
-			/*function reload(){
+			function reload(){
 			    $('#deptree').tree({
                 	url:'${pageContext.request.contextPath}/module/tree'
              	});
-			}*/
+			}
 			/*function expandAll(){
 				var node = $('#deptree').tree('getSelected');
 				if (node){
