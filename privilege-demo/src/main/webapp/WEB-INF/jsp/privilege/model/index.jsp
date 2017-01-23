@@ -130,7 +130,7 @@
 			<div region="south" border="false"
 				style="text-align:center; height: 30px; line-height: 30px;">
 				<a id="addFunct" class="easyui-linkbutton" icon="icon-ok"
-					href="javascript:void(0)"> 确定</a> <a id="btnCancel"
+					href="javascript:void(0)"> 确定</a> <a id="btnCancel1"
 					class="easyui-linkbutton" icon="icon-cancel"
 					href="javascript:void(0)">取消</a>
 			</div>
@@ -331,10 +331,10 @@
                          			'text':name,
                          			'ismodule':'0',
                          			'attributes':{
-                         				'code':code,
+                         				'menuCode':code,
                          				'status':status,
                          				'dislayOrder':displayOrder,
-                         				'menuLevel':displayOrder,
+                         				'menuLevel':menuLevel,
     									'parentId':parentId               				
                          			}
                          		}]});
@@ -346,10 +346,10 @@
                          			'text':name,
                          			'ismodule':'0',
                          			'attributes':{
-                         				'code':code,
+                         				'menuCode':code,
                          				'status':status,
                          				'dislayOrder':displayOrder,
-                         				'menuLevel':displayOrder,
+                         				'menuLevel':menuLevel,
     									'parentId':parentId               				
                          			}
                          		}]});
@@ -374,8 +374,8 @@
                      				'parentId':parentId,
                      				'menuCode':code,
                      				'status':status,
-                     				'displayOrder':displayOrder,
-                     				'menuLevel':displayOrder
+                     				'dislayOrder':displayOrder,
+                     				'menuLevel':menuLevel
                      			}
                      		}]});
                  		var nn = $('#deptree').tree('find', data.resourceId);
@@ -383,19 +383,19 @@
              			//$(nn.target).children(".tree-icon").removeClass("tree-file").addClass("tree-folder");
                  	}
                  	reset();
-                 	
-                 	//reload();
                 	$('#wmodule').window('close');
                 }else if(data.returnMsg=='2'){
                  	msgShow('系统提示', '恭喜，修改成功！', 'info');
                  	close();
                 	reset();
                 	var node = $('#deptree').tree('getSelected');
-                	if(resourceId!==null&&resourceId!=""&&typeof(resourceId)!="undefined"){
+                	if(resourceId!==null&&resourceId!=""&&typeof(resourceId)!="undefined"){//资源菜单
                 		$('#deptree').tree('update',{
                   			target: node.target,
                   			'text':name,
                   			'attributes':{
+                  				'menuId':node.id,
+                  				'baseUrl':moduleUrl,
                   				'menuCode':code,
                   				'status':status,
                   				'menuId':menuId,
@@ -403,11 +403,12 @@
                   				'parentId':parentId,
                  				'menuCode':code,
                   				'dislayOrder':displayOrder,
-                 				'menuLevel':displayOrder
+                 				'menuLevel':menuLevel,
+								'parentId':parentId    
                   			}
                   		}); 
                 	}else {
-                		$('#deptree').tree('update',{
+                		$('#deptree').tree('update',{//目录菜单
                   			target: node.target,
                   			'text':name,
                   			'attributes':{
@@ -420,7 +421,6 @@
                   		}); 
 					}
                 	
-                 	//reload();
                  	$('#wmodule').window('close');
                 }else{
                  	msgShow('系统提示', '系统错误！', 'info');
@@ -497,6 +497,7 @@
             //编辑
             $('#edit').click(function() {
 		     var node = $('#deptree').tree('getSelected');
+		     console.log(node);
 		     if (node){
 					if(node.ismodule=="2"){
 						$('#function').window('open');
@@ -534,7 +535,6 @@
        				  	boo=false;
        			  	 }else if(node.ismodule=="0"){
        			  	 		menuId=node.id;
-       		    	 		//resourceId=node.attributes.resourceId;
        		    	 		var childrenNodes = $('#deptree').tree('getChildren',node.target);
        		    	 		if(childrenNodes!=null){
        		    		 		$.each(childrenNodes,function(i,n){
@@ -586,7 +586,6 @@
     			                 	var Nodes = $('#deptree').tree('getSelected');
     			                 	$('#deptree').tree('pop',Nodes.target);
     			                 	getRoot();
-    			                 	//reload();
     			                }else{
     			                 	msgShow('系统提示', '删除失败！', 'info');
     			                 	close();
@@ -605,36 +604,23 @@
              });
 
 			$('#btnCancel').click(function(){closePwd();});
+			$('#btnCancel1').click(function(){closeFunction();});
 			
 			
 });
 	    	//删除子菜单
 	    	function delMenu(resourceIds,menuIds){
 	    		$.post('${pageContext.request.contextPath}/module/deleteMenu?resourceId='+resourceIds+'&menuId='+menuIds,
-	    				function(data){
-	    			/* if(data.returnMsg=='1'){
-	    				alert("cehngf");
-		                // msgShow('系统提示', '恭喜，删除成功！', 'info');
-					}else{
-						alert("shibai");
-					} */
-	    		});
+	    				function(data){});
 	    	}
 	    	//删除子功能
 	    	function delFunctions(functionIds){
 	    		$.post('${pageContext.request.contextPath}/module/delFunction?functionId='+functionIds,
 	    				
-	    				function(data){
-	    					/* if(data.returnMsg=='1'){
-	    		                 msgShow('系统提示', '恭喜，删除成功！', 'info');
-	    					}else{
-	    						msgShow('系统提示', '恭！', 'info');
-	    					} */
-	    				});
+	    				function(data){});
 	    	}
 		    //清空
 			function reset(){
-				//jQuery('#id').val('0');
 				jQuery('#parentName').val('');
 				jQuery('#parentId').val('');
 				jQuery('#moduleName').val('');
@@ -646,8 +632,6 @@
 				$('#opturl').val('');
 				$('#menuId').val('');
 				$('#status').combobox('setValue', '1');
-
-				
 			}
 		    function updataFunction(node){
 		    	if(node.id==null || node.id==0){
