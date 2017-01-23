@@ -505,7 +505,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		map2.put("parentId", parentId);
 		map2.put("status", status);
 		map2.put("dislayOrder", displayOrder);
-		map2.put("menuLevel", menuLevel);
+		map2.put("menuLevel", Integer.parseInt(menuLevel)+1);
 		Boolean boo = false;
 		String menuId = null;
 		String reslut = sendPost(addMenuUrl, map2);
@@ -597,7 +597,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		map2.put("parentId", parentId);
 		map2.put("status", status);
 		map2.put("dislayOrder", displayOrder);
-		map2.put("menuLevel", menuLevel);
+		map2.put("menuLevel", Integer.parseInt(menuLevel)+1);
 		Boolean boo = false;
 		String reslut = sendPost(modifyMenuUrl, map2);
 		if (reslut != null) {
