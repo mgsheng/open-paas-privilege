@@ -171,6 +171,7 @@
 				
 			}else if (node.ismodule=="1") {
 				console.log("menuID="+node.attributes.menuId);
+				console.log("menuLevel="+node.attributes.menuLevel);
 				console.log("resourceId=="+node.id+"status=="+node.attributes.status+"url="+node.attributes.baseUrl);
 			}
 		}
@@ -280,7 +281,6 @@
             var displayOrder= $('#display_order').val();
             
             var status= $('#status').combobox('getValue');
-            alert(status);
             var parentId=$('#parentId').val();
             var menuLevel=$('#menuLevel').val();
             var menuId=$('#menuId').val();
@@ -298,7 +298,7 @@
                 return false;
             }
 			var url="";
-			alert(menuId);
+			
 		    if(menuId==""){
 		    	url=encodeURI(encodeURI('${pageContext.request.contextPath}/module/addMenu?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&menuLevel='+displayOrder+'&url='+moduleUrl));
 		    }else{
@@ -386,6 +386,8 @@
                   			'attributes':{
                   				'menuCode':code,
                   				'status':status,
+                  				'menuId':menuId,
+                  				'baseUrl':moduleUrl,
                   				'parentId':parentId,
                  				'menuCode':code,
                   				'dislayOrder':displayOrder,
@@ -397,7 +399,7 @@
                   			target: node.target,
                   			'text':name,
                   			'attributes':{
-                  				'baseUrl':moduleUrl,
+                  				'parentId':parentId,
                   				'menuCode':code,
                   				'status':status,
                   				'dislayOrder':displayOrder,
@@ -471,6 +473,7 @@
 				 	$('#parentId').val(node.id);
 				 	$('#menuLevel').val(node.attributes.menuLevel);
 			   		$('#wmodule').window('open');
+			   		$('#menuId').val('');
 				}
 	     	}else{
 	     		msgShow('系统提示', '请选择父菜单！', 'info');
@@ -536,6 +539,7 @@
        		    		 		menuIds.join(",");
        		    		 		resourceIds.join(",");
        		    		 		functionIds.join(",");
+       		    		 		console.log(functionIds);
        		    		 		if(functionIds.length>0){
     		    			 		delFunctions(functionIds);
     		    		 		}
@@ -569,6 +573,7 @@
     			                 	close();
     			                 	var Nodes = $('#deptree').tree('getSelected');
     			                 	$('#deptree').tree('pop',Nodes.target);
+    			                 	getRoot();
     			                 	//reload();
     			                }else{
     			                 	msgShow('系统提示', '删除失败！', 'info');
@@ -625,8 +630,9 @@
 				jQuery('#code').val('');
 				jQuery('#display_order').val('');
 				$('#menuLevel').val('');
+				$('#resourceId').val('');
 				$('#opturl').val('');
-
+				$('#menuId').val('');
 				$('#status').combobox('setValue', '1');
 
 				
@@ -677,7 +683,6 @@
 				var menuLevel = data.attributes.menuLevel;
 				$('#menuId').val(menuId);
 				if(parentId==0){
-					alert("parentId=="+parentId);
 					$('#parentName').html('根节点');
 				}
 				else{
