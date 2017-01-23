@@ -364,7 +364,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	@RequestMapping(value = "delFunction")
 	public void delFunction(HttpServletRequest request, HttpServletResponse response) {
 		String functionId = request.getParameter("functionId");
-		if (functionId!="undefined") {
+		if (("undefined").equals(functionId)) {
 			return;
 		}
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
@@ -485,14 +485,13 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	 */
 	@RequestMapping(value = "addMenu")
 	public void add(HttpServletRequest request, HttpServletResponse response) {
-		//String menuName=request.getParameter("name");
 		String menuName = URLDecoder.decode(request.getParameter("name"));
-		/*try {
+		try {
 			menuName = java.net.URLEncoder.encode(menuName,"UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	*/
+		}
 		String menuCode = request.getParameter("code");
 		String parentId = request.getParameter("parentId");
 		String status = request.getParameter("status");
@@ -568,13 +567,20 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	 */
 	@RequestMapping(value = "edit")
 	public void edit(HttpServletRequest request, HttpServletResponse response) {
-		String menuName = request.getParameter("name");
+		String menuName = URLDecoder.decode(request.getParameter("name"));
+		try {
+			menuName = java.net.URLEncoder.encode(menuName,"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		/*String menuName = request.getParameter("name");
 		try {
 			menuName = new String(request.getParameter("name").getBytes("iso-8859-1"),"utf-8");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		String menuCode = request.getParameter("code");
 		String menuId = request.getParameter("menuId");
 		String resourceId = request.getParameter("resourceId");
