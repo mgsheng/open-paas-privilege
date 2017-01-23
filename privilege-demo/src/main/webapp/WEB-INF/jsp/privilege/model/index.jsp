@@ -67,13 +67,7 @@
 						<td><input id="display_order" name="displayOrder"type="text" class="txt01" />
 						</td>
 					</tr>
-					<%--<tr>
-						<td>菜单层级：</td>
-						<td>
-							<input id="menuLevel" name="menuLevel" type="text" class="txt01" />
-						</td>
-					</tr>
-					--%><tr>
+					<tr>
 						<td>状态：</td>
 						<td>
 			                 <select class="easyui-combobox" data-options="editable:false" id="status" name="status" style="width:100%">
