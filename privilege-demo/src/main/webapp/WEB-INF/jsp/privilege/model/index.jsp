@@ -300,11 +300,23 @@
 			var url="";
 			
 		    if(menuId==""){
-		    	url=encodeURI(encodeURI('${pageContext.request.contextPath}/module/addMenu?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&menuLevel='+displayOrder+'&url='+moduleUrl));
+				url='${pageContext.request.contextPath}/module/addMenu';
+		    	//url=encodeURI(encodeURI('${pageContext.request.contextPath}/module/addMenu?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&menuLevel='+displayOrder+'&url='+moduleUrl));
 		    }else{
-		   		url= encodeURI(encodeURI('${pageContext.request.contextPath}/module/edit?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&url='+moduleUrl+'&menuLevel='+displayOrder+'&menuId='+menuId+'&resourceId='+resourceId));
+				url='${pageContext.request.contextPath}/module/edit';
+		   		//url= encodeURI(encodeURI('${pageContext.request.contextPath}/module/edit?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&url='+moduleUrl+'&menuLevel='+displayOrder+'&menuId='+menuId+'&resourceId='+resourceId));
 		    }
-             $.post(url, function(data) {
+             $.post(url, {
+                 	'name':name,
+                 	'code':code,
+                 	'parentId':parentId,
+                 	'status':status,
+                 	'displayOrder':displayOrder,
+                 	'menuLevel':displayOrder,
+                 	'url':moduleUrl,
+                 	'menuId':menuId,
+                 	'resourceId':resourceId
+                 },function(data) {
                 if(data.returnMsg=='1'){
                  	msgShow('系统提示', '恭喜，添加成功！', 'info');
                  	$('#wmodule').window('close');
