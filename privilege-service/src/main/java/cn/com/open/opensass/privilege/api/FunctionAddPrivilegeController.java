@@ -87,7 +87,7 @@ public class FunctionAddPrivilegeController extends BaseControllerUtil{
         pf.setOperationId(operationId);
     	Boolean sf =privilegeFunctionService.savePrivilegeFunction(pf);
     	if(sf){
-    		PrivilegeAjaxMessage message=privilegeResourceService.getAppResRedis(appId);
+    		PrivilegeAjaxMessage message=privilegeResourceService.updateAppResRedis(appId);
     		if (message.getCode().equals("1")) {
     			map.put("status","1");
         		map.put("functionId", pf.id());
