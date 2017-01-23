@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,6 +45,11 @@ public class BaseControllerUtil {
         }
         return true;
     }
+	 public static String getUUID(){ 
+	        String s = UUID.randomUUID().toString(); 
+	        //去掉“-”符号 
+	        return s.substring(0,8)+s.substring(9,13)+s.substring(14,18)+s.substring(19,23)+s.substring(24); 
+	    } 
 	/**
 	 * 检验字符串是否为空
 	 * @param str

@@ -3,15 +3,8 @@ package cn.com.open.pay.platform.manager.web;
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,22 +16,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import cn.com.open.pay.platform.manager.department.model.DictTradeChannel;
 import cn.com.open.pay.platform.manager.log.model.PrivilegeLog;
 import cn.com.open.pay.platform.manager.log.service.PrivilegeLogService;
 import cn.com.open.pay.platform.manager.login.model.User;
-import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
-import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
-import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRole;
-import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRoleDetails;
-import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
-import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
-import cn.com.open.pay.platform.manager.privilege.service.PrivilegeResourceService;
-import cn.com.open.pay.platform.manager.privilege.service.PrivilegeRoleDetailsService;
-import cn.com.open.pay.platform.manager.privilege.service.PrivilegeRoleService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
 @Controller

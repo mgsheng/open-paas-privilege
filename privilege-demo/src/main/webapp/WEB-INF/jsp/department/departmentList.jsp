@@ -1,468 +1,429 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<!DOCTYPE HTML>
+<!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<title>部门信息列表</title>
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/themes/default/easyui.css">
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/themes/icon.css">
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/dataList.css">
-		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/js/highcharts/highcharts.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/js/highcharts/modules/exporting.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
-	</head>
-	<body >
-		<div id="tt" class="easyui-tabs" data-options="tools:'AuthorizeRole'," fit="true" >
-				<div title="部门信息">
-				<div style="border:0px solid;border-radius:8px;margin-bottom:0px;width: 100%;max-width:100%;">
-					<div class="top" style="width: 100%">
-						<div class="easyui-panel" title="查询条件" style="width:100%;max-width:100%;padding:20px 25px;">
-							<form id="fm" method="post" action="/department/findDepts" >
-								<table cellpadding="5px">
-									<tr>
-										<td>
-												<input class="easyui-textbox" name="deptname" id="deptname" label="部&nbsp;门&nbsp;名：" 
+<head>
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/dataList.css">
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
+	<script type="text/javascript"
+	src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+	<div class="easyui-panel" title="模块管理" style="width:100%;max-width:100%;padding:20px 30px;height:540px;">
+	<div style="padding:2px 5px; text-align: right;">
+	    <input class="easyui-textbox" name="groupId" id="groupId" label="组织机构ID" 
 													prompt="选填" style="width:200px"></input> 
-										</td>
-										<td>	
-											<a href="javascript:void(0)" class="easyui-linkbutton" onclick="findDepts();" style="width: 120px;margin-left:30px;">
-												<span style="font-weight:bold;margin-right:15px;margin-left:15px;">查&nbsp;&nbsp;&nbsp;&nbsp;询</span>
-												<span class="icon-search">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-											</a>
-										</td>
-										<td>	
-											<a href="#" class="easyui-linkbutton"  style="width: 120px;margin-left:30px;" onclick="openWinAdd();">
-												<span style="font-weight:bold;margin-right:15px;margin-left:15px;"">添加部门</span>
-												<span class="icon-add">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-											</a>
-										</td>
-										<td>	
-											<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearFormFind();" style="width:120px;margin-left:30px;">
-												<span style="font-weight:bold;margin-right:15px;margin-left:15px;">清&nbsp;&nbsp;
-													&nbsp;&nbsp;除</span>
-												<span class="icon-clear">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-											</a>
-										</td>	
-										<td>	
-											<a href="#" class="easyui-linkbutton" onclick="removeDeptByID();" style="width:120px;margin-left:30px;">
-												<span style="font-weight:bold;margin-right:15px;margin-left:15px;">删&nbsp;&nbsp;
-													&nbsp;&nbsp;除</span>
-												<span class="icon-cut">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-											</a>
-										</td>	
-										<td>	
-											<a href="javascript:void(0)" class="easyui-linkbutton" onclick="openWinUpdate();" style="width:120px;margin-left:30px;">
-												<span style="font-weight:bold;margin-right:15px;margin-left:15px;">修&nbsp;&nbsp;
-													&nbsp;&nbsp;改</span>
-												<span class="icon-edit">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-											</a>
-										</td>
-										<td>	
-											<a href="javascript:void(0)" class="easyui-linkbutton" onclick="openWinDeptUserList();" style="width:120px;margin-left:30px;">
-												<span style="font-weight:bold;margin-right:5px;margin-left:5px;">部门员工信息</span>
-												<span class="icon-man">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-											</a>
-										</td>	
-									</tr>
-								</table>
-							</form>
-						</div>
-					</div>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" id="search"></a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="add"></a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" id="edit"></a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" id="delete" ></a>
+	</div>
+	<div class="easyui-panel" style="padding:5px;height: 95%;overflow-x:scroll;">
+		  <ul id="deptree"  style="height: 100%"class="easyui-tree" 
+			 data-options="method:'get',url:'${pageContext.request.contextPath}/department/tree?appId=${appId}'"> 
+	 </ul>
+	</div>
+	</div>
+	<!--添加模块-->
+	<div id="wmodule" class="easyui-window" title="资源添加" collapsible="false"
+		minimizable="false" maximizable="false" icon="icon-save"
+		style="width: 300px; height: 150px; padding: 5px;
+        background: #fafafa;overflow-y:scroll; ">
+		<div class="easyui-layout" fit="true">
+			<div region="center" border="false"
+				style="padding: 10px; background: #fff; border: 1px solid #ccc;">
+				<form id="resourceFrom" style="padding-top: 10px;" action="">
+				<table >
+					<tr>
+						<td>机构名称：</td>
+						
+						<td>
+						<input id="menuId" name="menuId" type="hidden" value=""/>
+						<input id=groupName name="groupName" type="text" class="txt01" />
+						</td>
+					</tr>
+					<tr>
+						<td>状态：</td>
+						<td>
+			                 <select class="easyui-combobox" data-options="editable:false" id="status" name="status" style="width:100%">
+								<option value="1">启用</option>
+								<option value="0">禁用</option>
+							</select>
+						</td>
+					</tr>
+					
+				</table>
+				<div id="updateDiv" style="display: none;">
+				<span>操作:</span><span>  <select class="easyui-combobox" data-options="editable:false" id="method" name="method" style="width:100px">
+								<option value="1">删除</option>
+								<option value="0">添加</option>
+							</select></span>
 				</div>
-				<div class="botton" style="margin-top:0px;width:100%;height:300px">
-					<table  id="dg"  class="easyui-datagrid" title="查询结果"  style="width:100%;max-width:100%;padding:20px 30px;"
-						data-options="singleSelect:true,method:'get'">
-						<thead>
-							<tr>
-								<th data-options="field:'id',align:'center'" hidden="true" style="width:15%;max-width:100%;">ID</th>
-								<th data-options="field:'deptName',align:'center'" style="width:15%;max-width:100%;">部&nbsp;&nbsp;门&nbsp;&nbsp;名</th>
-								<th data-options="field:'create_Time',align:'center'" style="width:18%;max-width:100%;">添加时间</th>
-							</tr>
-						</thead>
-					</table>
-				</div>
+				<div class="easyui-panel" style="padding:5px;margin-top:5px;overflow-y:scroll;">
+				  <ul id="deptree1"  style="height: 100%;width: 200px" class="easyui-tree" 
+					 data-options="method:'get'"> 
+			 	  </ul>
 			</div>
-		</div>	
-		<!--修改部门窗口--> 
-		<div id="upda" class="easyui-window" title="部门信息" collapsible="false" minimizable="false" maximizable="false" 
-			icon="icon-save" style="width: 300px; height: 150px; background: #fafafa;">
-			<div class="easyui-layout" fit="true">
-				<div region="center" border="false" style="background: #fff; border: 1px solid #ccc;">
-					<table cellpadding="10px" id="tb"  style="border: 0px;margin:15px 10px;font-weight: bold;"" >
-						<tr>
-							<td>部&nbsp;门&nbsp;名：</td>
-							<td><input id="dept_name" type="text" class="txt01" name="dept_name" />
-							</td>
-						</tr>
-						<tr>
-							<td><input id="dept_name_check" type="text" class="txt01" name="dept_name_check" hidden="true" />
-							</td>
-						</tr>
-						<tr>
-							<td>注册时间：</td>
-							<td><input id="create_time" type="text" class="txt01" name="create_time" readonly/>
-							</td>
-						</tr>
-					</table>
-				</div>
-				<div region="south" border="false" style="text-align:center; height: 50px; line-height: 50px;">
-					<a id="btnEp" class="easyui-linkbutton" icon="icon-ok" href="javascript:void(0)" onclick="updateDept()" style="margin:8px"> 确定</a>
-					<a id="btnCancel" class="easyui-linkbutton" icon="icon-cancel" href="javascript:void(0)" onclick="closeWinUpdate()" style="margin:8px">取消</a>
-					<a id="btnClear" class="easyui-linkbutton" icon="icon-clear" href="javascript:void(0)" onclick="clearFormUpdate()" style="margin:8px">清空</a>
-				</div>
+				</form>
+			</div>
+			<div region="south" border="false"
+				style="text-align:center; height: 30px; line-height: 30px;">
+				<a id="btnEp" class="easyui-linkbutton" icon="icon-ok"
+					href="javascript:void(0)"> 确定</a> <a id="btnCancel"
+					class="easyui-linkbutton" icon="icon-cancel"
+					href="javascript:void(0)">取消</a>
 			</div>
 		</div>
-		<!-- 添加部门窗口 -->
-		<div id="addDept" class="easyui-window" title="添加部门" collapsible="false" minimizable="false" maximizable="false" 
-			icon="icon-save" style="background: #fafafa;">
-			<div class="easyui-layout" fit="true">
-				<div region="center" border="false" style="background: #fff; border: 1px solid #ccc;">
-					<table cellpadding="10px" id="addForm"  style="border: 0px;margin:50px 20px;font-weight: bold;" data-options="novalidate:true">
-						<tr>
-							<td>部&nbsp;门&nbsp;名：</td>
-							<td>
-								<input id="dept_Name"  type="text" class="text" name="dept_Name" >
-							</td>
-						</tr>
-					</table>	
-				</div>
-				<div region="south" border="false" style="text-align:center; height: 50px; line-height: 50px;">
-					<a href="javascript:void(0)" class="easyui-linkbutton" icon="icon-ok" onclick="submitForm()" style="margin:8px">提交</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" icon="icon-clear"  onclick="clearFormAdd()" style="margin:8px">清空</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" icon="icon-cancel" onclick="closeWinAdd()" style="margin:8px">取消</a>
-				</div>
-			</div>
-		</div>
-	</body>
-	<script>
-		//添加tab页面
-		function addPanel(deptName,deptId){
-			if ($('#tt').tabs('exists', deptName)){
-			 	$('#tt').tabs('select', deptName);
-			} else {
-				 var url = '${pageContext.request.contextPath}/department/toDeptUsers?id='+deptId+'&deptName='+deptName;
-			 	 var content = '<iframe scrolling="auto" frameborder="0" src="'+url+'" style="width:100%;height:100%;"></iframe>';
-				 $('#tt').tabs('add',{
-					 title:'部门:'+deptName,
-					 content:content,
-					 closable:true,
-					 cache:true
-				 });
-			}
-		}	
-		//移除tab页面
-		function removePanel(){
-			var tab = $('#tt').tabs('getSelected');
-			if (tab){
-				var index = $('#tt').tabs('getTabIndex', tab);
-				$('#tt').tabs('close', index);
-			}
-		}
-	
-	
-		//设置部门用户信息窗口
-		 function winDeptUserList() {
-            $('#deptUserList').window({
-                title: '部门用户信息',
+	</div>
+</body>
+<script>
+
+	var initialResIds='';//用于存放修改界面中选中的resource
+	var initialFunIds='';//用于存放修改界面中选中的function
+	var checkedResIds='';//存放选中的resource
+	var checkedFunIds='';//存放选中的function
+	var addIds='';//存放修改时添加的权限Id
+	var delIds='';//存放修改时删除的权限Id
+	var checkIds='';//存放添加时的选中Id
+	var appId=${appId};
+ //设置=窗口
+        function openPwd() {
+            $('#wmodule').window({
+                title: '模块',
                 width: 600,
                 modal: true,
                 shadow: true,
                 closed: true,
+                top:150,
+                left:400,
                 height: 400,
                 resizable:false
             });
         }
-		
-		//打开部门用户信息窗口
-		winDeptUserList();
-		function openWinDUL(deptName,deptId){
-			$('#deptUserList').window('open');
-			addPanel(deptName,deptId);
-		}
-		
-		 //设置修改部门窗口
-        function winUpdate() {
-            $('#upda').window({
-                title: '部门信息',
-                width: 300,
-                modal: true,
-                shadow: true,
-                closed: true,
-                height: 260,
-                resizable:false
-            });
+        //关闭窗口
+        function closePwd() {
+            $('#wmodule').window('close');
         }
-        
-         //设置添加部门窗口
-        function winAdd() {
-            $('#addDept').window({
-                title: '添加部门',
-                width: 320,
-                modal: true,
-                shadow: true,
-                closed: true,
-                height: 260,
-                resizable:false
+      $(function(){  
+		  openPwd();
+		 //加载树
+		 $('#deptree1').tree({ 
+      	 lines:true,//显示虚线效果 
+      	 animate: true,
+      	  checkbox:true,
+            url: '${pageContext.request.contextPath}/managerRole/tree?appId=${appId}',  
+        });
+         //添加
+		 $('#add').click(function() {
+		    $("#updateDiv").hide();
+		   	clearChoose();
+		   	$('#wmodule').window('open');
+         });
+         //编辑
+         $('#edit').click(function() {
+            $("#updateDiv").show();
+            initialFunIds='';
+        	initialResIds='';
+        	
+   			var groupId=$("#groupId").val();
+   					   $("#status").get(0).selectedIndex = status;//index为索引值
+   					   clearChoose();
+   					   $.ajax({
+   						    url:"${pageContext.request.contextPath}/department/privilegeGroupQuery?appId=${appId}&groupId="+groupId, 
+	   						success: function(data) {
+	   							var node;
+	   							$(data.nodeList).each(function(){
+	   				            	if(this.funcId!=null && this.funcId!=""){
+	   				            		node=$('#deptree1').tree('find',this.funcId);
+	   				            		if(node!=null){
+		   				            		$('#deptree1').tree('check', node.target);
+		   				            		expand(node);//展开相应菜单
+	   				            		}
+	   				            		initialFunIds+=this.funcId.replace('f','')+",";
+	   				            	}else{
+	   				            		node=$('#deptree1').tree('find',this.resourceId);
+	   				            		console.log(node);
+	   				            		if(node!=null){
+		   				            		$('#deptree1').tree('check', node.target);
+		   				            		expand(node);//展开相应菜单
+	   				            		}
+	   				            		initialResIds+=this.resourceId.replace('r','')+",";
+	   				            	}
+	   							});
+	   						}
+   					   });
+	  					$('#wmodule').window({
+			                title: '组织机构修改',
+			                width: 550,
+			                modal: true,
+			                shadow: true,
+			                closed: true,
+			                height: 500,
+			                resizable:false
+			            });
+	  					$('#wmodule').window('open');
+            
+            
             });
+            //删除
+             $('#delete').click(function() {
+				var groupId=$("#groupId").val();
+				 if (groupId!=null || groupId!=""){
+					$.messager.confirm('系统提示', '是否确定删除?', function(r){
+					   var url="${pageContext.request.contextPath}/department/removeDeptByID?id="+groupId+"&appId="+appId;
+			            $.post(url, function(data) {
+			            	if(data.status!=null){
+			            		if(data.status=='1'){
+					                  msgShow('系统提示', '恭喜，删除成功！', 'info');
+					                  //刷新
+						              reload();
+					                }else{
+					                  msgShow('系统提示', '删除失败！', 'info');
+					                }
+			            	}
+			                
+			            });
+			    });
+			  }
+            });
+            //确定提交
+            $('#btnEp').click(function() {
+                serverLogin();
+            });
+
+		    });
+		    
+	  
+        //添加資源
+        function serverLogin() {
+            var groupName = $('#groupName').val();
+            var status= $('#status').val();
+            var appId=${appId};
+            var groupId=$('#groupId').val();
+            var method=$('#method').val();
+            if (groupName == '') {
+                msgShow('系统提示', '请输入名称！', 'warning');
+                return false;
+            }
+          	var ui = $('#deptree1').tree('getChecked', ['checked','checked']);
+        	getCheckedIds(ui,checkIds);
+			var url="";
+			if(groupId==null || groupId==""){
+		    url=  '${pageContext.request.contextPath}/department/addDept?groupName='+groupName+'&status='+status+'&temp='+checkIds+'&appId='+appId;
+		    }else{
+		    url=  '${pageContext.request.contextPath}/department/updateDept?groupName='+groupName+'&status='+status+'&temp='+checkIds+'&appId='+appId+'&method='+method;
+		    }
+		    url=encodeURI(encodeURI(url));
+           //解析data===parentId=&resources=1&resources=3&resources=5&resources=7&name=aa&url=aa%2Faa%2Faa&code=aa&displayOrder=2&status=1
+             $.post(url, function(data) {
+                if(data.status=='1'){
+                 if(groupId==null || groupId==""){
+	                 	msgShow('系统提示', '恭喜，添加成功！', 'info');
+                	 }else{
+                		msgShow('系统提示', '恭喜，修改成功！', 'info');
+                	 }
+                 close();
+                 reload();
+                $('#wmodule').window('close');
+                }else{
+                  if(groupId==null || groupId==""){
+	                 	msgShow('系统提示', '恭喜，添加成功！', 'info');
+                	 }else{
+                		msgShow('系统提示', '恭喜，修改成功！', 'info');
+                	 }
+                 close();
+                }
+            }); 
         }
-        
-          // 清除查询表单
-		function clearFormFind(){
-			$('#fm').form('clear');
-		}
-		
-		// 清空修改部门窗口
-		function clearFormUpdate(){
-			$('#tb').form('clear');
-		};
-		
-		
-		//打开部门用户信息窗口
-		function openWinDeptUserList(){
-			var row = $('#dg').datagrid('getSelected');
-			if (row){
-				var deptId = row.id;
-				var deptName = row.deptName;
-				openWinDUL(deptName,deptId);
-			}else{
-				msgShow('系统提示', '请选择部门！', 'error');
-			}
-		};
-		
-		winUpdate();
-		//打开修改部门窗口
-		function openWinUpdate(){
-			var row = $('#dg').datagrid('getSelected');
-			if (row){
-				var deptName = row.deptName;
-				var dept_name_check = row.deptName;
-				var create_Time = row.create_Time;
-				$('#dept_name').val(deptName);
-				$('#dept_name_check').val(dept_name_check);
-				$('#create_time').val(create_Time);
-				$('#upda').window('open');
-			}else{
-				msgShow('系统提示', '请选择要修改的部门！', 'error');
-			}
-		};
-		
-		winAdd();
-		//打开添加部门窗口
-		function openWinAdd(){
-			//打开添加部门窗口之前先清空
-			clearFormAdd();
-			$('#addDept').window('open');
-		};
-		
-		//关闭修改部门窗口
-		function closeWinDeptUserList(){
-			$('#deptUserList').window('close');
-		};
-		
-		//关闭修改部门窗口
-		function closeWinUpdate(){
-			$('#upda').window('close');
-		};
-		
-		//关闭添加部门窗口
-		function closeWinAdd(){
-			$('#addDept').window('close');
-		};
-		
 		//弹出信息窗口 title:标题 msgString:提示信息 msgType:信息类型 [error,info,question,warning]
 		function msgShow(title, msgString, msgType) {
 			$.messager.alert(title, msgString, msgType);
 		}
-	
-		//根据部门ID删除部门
-		function removeDeptByID(){
-			var row = $('#dg').datagrid('getSelected');
-			if (row){
-				$.messager.confirm('系统提示', '是否确定删除?', function(r){
-					if (r){
-						   var id=row.id;
-						   var url='${pageContext.request.contextPath}/department/removeDeptByID?id='+id;
-				            $.post(url, function(data) {
-				                if(data.result==true){
-				                 	msgShow('系统提示', '恭喜，删除成功！', 'info');
-				                }else{
-				                  	msgShow('系统提示', '删除失败！', 'error');
-				                }
-				            });
-				              //刷新
-				              var url='${pageContext.request.contextPath}/department/findDepts';
-				              reload(url,name);
-					}
-			   });
-			}else{
-            	msgShow('系统提示', '请选择要删除的部门！', 'error');
-            }
-		}
 		
-		//列表重新加载
-		function reload(url,name){
-			$('#dg').datagrid('reload',{
-	            url: url, queryParams:{ name:name}, method: "post"
-	          }); 
-		}
-		
-		// 查询部门方法
-		function findDepts(){
-			//部门名
-			var dept_name = $('#deptname').val().trim();
-			$('#dg').datagrid({
-				collapsible:true,
-				rownumbers:true,
-				pagination:true,
-		        url: "${pageContext.request.contextPath}/department/findDepts?dept_name="+dept_name,  
-		        pagination: true,//显示分页工具栏
-		        onLoadSuccess:function(data){
-                    if (data.total<1){
-                       $.messager.alert("系统提示","没有符合查询条件的数据!","info");
-                  }
-                }
-		    }); 
-		    
-			 //设置分页控件 
-		    var p = $('#dg').datagrid('getPager'); 
-		    $(p).pagination({ 
-		        pageSize: 15,//每页显示的记录条数，默认为10 
-		        pageList: [5,10,15,20],//可以设置每页记录条数的列表 
-		        beforePageText: '第',//页数文本框前显示的汉字 
-		        afterPageText: '页    共 {pages} 页', 
-		        displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录', 
-		        onBeforeRefresh:function(){
-		            $(this).pagination('loading');
-		            $(this).pagination('loaded');
-		        } 
-		    }); 
-		}
-        
-        // 提交修改后的部门信息
-         function updateDept() {
-			var row = $('#dg').datagrid('getSelected');
-			if(row){	
-				var id=row.id;
-	            var dept_name = $('#dept_name').val().trim();
-	            var dept_name_check = $('#dept_name_check').val().trim();
-	            if (dept_name == '') {
-	                msgShow('系统提示', '请输入部门名！', 'warning');
-	                return false;
-	            }else if(dept_name_check==dept_name){
-	            	msgShow('系统提示', '修改成功！', 'info');
-	            	closeWinUpdate();
-		            var url='${pageContext.request.contextPath}/department/findDepts';
-			        reload(url,name);
-	                return;
-	            }
-	            dept_name = $('#dept_name').val().trim();
-	            var url=encodeURI('${pageContext.request.contextPath}/department/updateDept?dept_name='+dept_name+'&id='+id);
-	            $.post(url, function(data) {
-	                if(data.result==true){
-		                 msgShow('系统提示', '修改成功！', 'info');
-		                 closeWinUpdate();
-		                 var url='${pageContext.request.contextPath}/department/findDepts';
-			             reload(url,name);
-	                }else if(data.result==false){
-	                	 msgShow('系统提示', '该部门名已被注册！', 'error');
-		                 closeWinUpdate();
-		                 var url='${pageContext.request.contextPath}/department/findDepts';
-			             reload(url,name);
-	                }else{
-		                 msgShow('系统提示', '修改失败！', 'error');
-		                 closeWinUpdate();
-	                }
-	            });
-            }else{
-            	msgShow('系统提示', '请选择要修改的部门！', 'error');
-            }
+	   //获取添加修改时需要的resId及funId
+        function getCheckedIds(ui){
+        	//清空之前选中的resource及function
+        	checkedResIds='';
+        	checkedFunIds='';
+        	checkIds='';
+        	
+        	for(var i = 0;i<ui.length;i++){
+    			//模块节点(ismodule自定义参数=0标记的是模块)
+     			if(ui[i].ismodule=="0"){
+     				if(checkIds.split(",").length!=0 || checkIds.split(",,").length!=0){
+     					checkIds+="=";
+     				}
+     				id=ui[i].id.replace('m','');
+     				checkIds=checkIds+id+",,,";//模块与模块区分
+     			}else if(ui[i].ismodule=="2"){
+     				id=ui[i].id.replace('f','');
+     				//判断该方法的资源父类是否选中，如选中则不添加到checkedFunIds中
+     				var pnode = $("#deptree1").tree('getParent',ui[i].target);
+     				var pnodeId = pnode.id.replace('r','');
+     				if(checkedResIds != ""){
+ 		            	var bool = false;
+     					for(var j=0;j<checkedResIds.split(",").length;j++){
+     						if(pnodeId == checkedResIds.split(",")[j]){
+     							bool = true;
+     						}
+     					}
+ 	     				if(!bool){
+ 	        				checkIds=checkIds+id+",";//资源与资源区分
+ 	     					checkedFunIds+=id+",";
+ 	     				}
+     				}else{
+         				checkIds=checkIds+id+",";//资源与资源区分
+     					checkedFunIds+=id+",";
+     				}
+     			}else{
+     				id=ui[i].id.replace('r','');
+     				checkIds=checkIds+id+",,";//模块与资源区分
+     				checkedResIds+=id+",";
+     			}
+        	}
         }
         
-        // 清空添加部门表单
-		function clearFormAdd(){
-			$('#addForm').form('clear');
-		}
-		
-		//前端校验
-		function checked(){
-			var regex_dept_Name=/^[\u4E00-\u9FA5A-Za-z0-9_]{2,20}$/;
-			var dept_Name = $.trim($('#dept_Name').val()) ;
-			if(dept_Name == "" || dept_Name == null || dept_Name == undefined || regex_dept_Name.test(dept_Name) != true){
-					$.messager.alert("系统提示","部门名不能为空或格式不正确，请重新填写！\n用户名由2-20位汉字、字母、数字、下划线组成","error");	
-					return false;
-			}
-			return true;
-		}
-		
-		// 提交（部门信息）
-		function submitForm(){
-			var dept_Name = $.trim($('#dept_Name').val()) ;
-			// 提交信息前完成前端校验
-			var check_result = checked();
-			if(!check_result){
-				return;
-			}
-			$.ajax({
-				type:"post",
-				url:"${pageContext.request.contextPath}/department/addDept",
-				data:{"deptname":dept_Name},
-				dataType:"json",
-				success:function (data){
-					if(data.result == true){
-						$.messager.alert("系统提示","恭喜，添加部门成功!","info");
-						var URL = '${pageContext.request.contextPath}/department /findDepts?dept_name=';
-						var name = $('#deptname').val().trim();
-						closeWinAdd();
-						reload(URL,name);
-					}else if(data.result == false){
-						$.messager.alert("系统提示","该部门名已被注册，请重新填写部门名!","error");	
-						clearFormAdd();
-					}else{
-						$.messager.alert("系统提示","添加部门失败，请重新添加!","error");
-						clearFormAdd();
-					}
-				},
-				error:function(){
-					$.messager.alert("系统提示","部门添加异常，请刷新页面!","error");
+        //获取添加删除的id
+        function getIds(){
+        	addIds='';
+        	delIds='';
+        	if(checkedResIds != initialResIds){//resource前后不一致
+        		var checkedRes=checkedResIds.split(",");
+        		var initialRes=initialResIds.split(",");
+        		for(var i=0;i<checkedRes.length;i++){
+        			var bool=false;
+        			for(var j=0;j<initialRes.length;j++){
+        				if(checkedRes[i]===initialRes[j]){
+        					bool=true;
+        				}
+        			}
+        			if(!bool){
+        				addIds+=checkedRes[i]+",,";
+        			}
+        		}
+        		for(var i=0;i<initialRes.length;i++){
+        			var bool=false;
+        			for(var j=0;j<checkedRes.length;j++){
+        				if(initialRes[i]===checkedRes[j]){
+        					bool=true;
+        				}
+        			}
+        			if(!bool){
+        				delIds+=initialRes[i]+",,";
+        			}
+        		}
+        	}
+        	if(checkedFunIds != initialFunIds){//function前后不一致
+        		var checkedFun=checkedFunIds.split(",");
+        		var initialFun=initialFunIds.split(",");
+        		for(var i=0;i<checkedFun.length;i++){
+        			var bool=false;
+        			for(var j=0;j<initialFun.length;j++){
+        				if(checkedFun[i]===initialFun[j]){
+        					bool=true;
+        				}
+        			}
+        			if(!bool){
+        				addIds+=checkedFun[i]+",";
+        			}
+        		}
+        		for(var i=0;i<initialFun.length;i++){
+        			var bool=false;
+        			for(var j=0;j<checkedFun.length;j++){
+        				if(initialFun[i]===checkedFun[j]){
+        					bool=true;
+        				}
+        			}
+        			if(!bool){
+        				delIds+=initialFun[i]+",";
+        			}
+        		}
+        	}
+        }
+	
+		     function updateModel(data){
+				//reset();
+				if(data.id==null || data.id==0){
+					return;
 				}
-			});
+				//赋值
+				var id = data.id;
+				var parentId = data.parentId;
+				var name = data.name;
+				var url = data.url;
+				var code = data.code;
+				var displayOrder = data.displayOrder;
+				var status = data.status;
+				var resources = data.resources;
+				jQuery('#id').val(id);
+				jQuery('#parentId').val(parentId);
+				if(parentId==0){
+					jQuery('#parentName').html('根节点');
+				}
+				else{
+					jQuery('#parentName').html(data.parentName);
+				}
+				jQuery('#parentId').val(parentId);
+				jQuery('#moduleName').val(name);
+				jQuery('#url').val(url);
+				jQuery('#code').val(code);
+				jQuery('#display_order').val(displayOrder);
+				jQuery('#status').attr('value',status);
+				jQuery('#resources').val(resources);
+				if(resources!=null && resources!=""){
+					var resource=resources.split(",");
+					for(var i=0;i<resource.length;i++){
+						$("#resource_"+resource[i]).parent().addClass("checked");
+						$("#resource_"+resource[i]).attr("checked",true);
+					}
+				}
+			}
+			function reload(){
+			    var groupId=jQuery('#groupId').val();
+			    $('#deptree').tree({
+                  url:'${pageContext.request.contextPath}/department/tree?groupId='+groupId+'&appId=${appId}'
+             });
+			}
+			   //查询
+             $('#search').click(function() {
+		     var groupId=jQuery('#groupId').val();
+			 if (groupId!=''){
+			  $('#deptree').tree({
+                url:'${pageContext.request.contextPath}/department/tree?groupId='+groupId+'&appId=${appId}'
+             });
+		     }else{
+		       msgShow('系统提示', '请输入组织机构id！', 'info');
+		     }
+              
+            });
+            
+			function expandAll(){
+			var node = $('#deptree').tree('getSelected');
+			if (node){
+				$('#deptree').tree('expandAll', node.target);
+			} else {
+				$('#deptree').tree('expandAll');
+			}
 		}
-		
-		 // 查询部门用户方法
-		function findDeptUsers(deptID){
-			$('#deptTable').datagrid({
-				collapsible:true,
-				rownumbers:true,
-				pagination:true,
-		        url: "${pageContext.request.contextPath}/managerUser/findDeptUsers?deptID="+deptID,  
-		        pagination: true,//显示分页工具栏
-		        onLoadSuccess:function(data){
-                    if (data.total<1){
-                       $.messager.alert("系统提示","没有符合查询条件的数据!","info");
-                  };
-                }
-		    }); 
-		    alert(deptID);
-			 //设置分页控件 
-		    var p = $('#deptTable').datagrid('getPager'); 
-		    $(p).pagination({ 
-		        pageSize: 15,//每页显示的记录条数，默认为10 
-		        pageList: [5,10,15,20],//可以设置每页记录条数的列表 
-		        beforePageText: '第',//页数文本框前显示的汉字 
-		        afterPageText: '页    共 {pages} 页', 
-		        displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录', 
-		        onBeforeRefresh:function(){
-		            $(this).pagination('loading');
-		            $(this).pagination('loaded');
-		        } 
-		    }); 
-		}
-		
-		//页面预加载
-		$(function(){
-			findDepts();
-		});
-	</script>
+		//清空填入值和树选中节点并收起
+		function clearChoose(){
+		  $("#groupName").val('');
+		  $("#status").get(0).selectedIndex = 0;//index为索引值
+		    $('#deptree1').tree('collapseAll');
+		    var node = $('#deptree1').tree('getChecked', ['checked','checked']);
+	    	for(var i = 0;i<node.length;i++){
+	       		$('#deptree1').tree('uncheck', node[i].target);
+	    	}
+		}  
+		 function expand(node){
+        	$('#deptree1').tree('expandTo', node.target);
+        	if($('#deptree1').tree('getChildren', node.target)!=null){
+        		$('#deptree1').tree('expand', node.target);
+        	}
+        }
+        
+	
+</script>
 </html>

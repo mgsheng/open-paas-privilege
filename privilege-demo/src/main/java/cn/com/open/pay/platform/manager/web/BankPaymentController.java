@@ -31,6 +31,7 @@ import cn.com.open.pay.platform.manager.department.service.DictTradePaymentServi
 import cn.com.open.pay.platform.manager.department.service.MerchantInfoService;
 import cn.com.open.pay.platform.manager.order.model.MerchantOrderInfo;
 import cn.com.open.pay.platform.manager.order.service.MerchantOrderInfoService;
+import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGetSignatureService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.OrderDeriveExport;
 import cn.com.open.pay.platform.manager.tools.ReportDateTools;
@@ -50,7 +51,7 @@ public class BankPaymentController extends BaseControllerUtil{
 	private MerchantOrderInfoService merchantOrderInfoService;
 	@Autowired
 	private MerchantInfoService merchantInfoService;
-	
+
 	/**
 	 * 跳转到银行缴费管理页面
 	 * @return

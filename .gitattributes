@@ -383,6 +383,7 @@ privilege-demo/src/main/webapp/WEB-INF/jsp/paychannel/channelRate.jsp -text
 privilege-demo/src/main/webapp/WEB-INF/jsp/paychannel/channelRevenue.jsp -text
 privilege-demo/src/main/webapp/WEB-INF/jsp/payment/bankPayment.jsp -text
 privilege-demo/src/main/webapp/WEB-INF/jsp/payment/otherPayment.jsp -text
+privilege-demo/src/main/webapp/WEB-INF/jsp/privilege/group/index.jsp -text
 privilege-demo/src/main/webapp/WEB-INF/jsp/privilege/model/index.jsp -text
 privilege-demo/src/main/webapp/WEB-INF/jsp/privilege/privilegePublic/index.jsp -text
 privilege-demo/src/main/webapp/WEB-INF/jsp/privilege/resource/index.jsp -text
