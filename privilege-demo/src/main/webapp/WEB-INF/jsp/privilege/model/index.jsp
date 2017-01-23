@@ -301,10 +301,8 @@
 			
 		    if(menuId==""){
 				url='${pageContext.request.contextPath}/module/addMenu';
-		    	//url=encodeURI(encodeURI('${pageContext.request.contextPath}/module/addMenu?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&menuLevel='+displayOrder+'&url='+moduleUrl));
 		    }else{
 				url='${pageContext.request.contextPath}/module/edit';
-		   		//url= encodeURI(encodeURI('${pageContext.request.contextPath}/module/edit?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&url='+moduleUrl+'&menuLevel='+displayOrder+'&menuId='+menuId+'&resourceId='+resourceId));
 		    }
              $.post(url, {
                  	'name':name,
@@ -312,7 +310,7 @@
                  	'parentId':parentId,
                  	'status':status,
                  	'displayOrder':displayOrder,
-                 	'menuLevel':displayOrder,
+                 	'menuLevel':menuLevel,
                  	'url':moduleUrl,
                  	'menuId':menuId,
                  	'resourceId':resourceId
@@ -361,7 +359,7 @@
             				$(nn.target).children(".tree-icon").removeClass('tree-file').addClass("tree-folder");
             			}
              			//$(nn.target).children(".tree-icon").addClass("icon icon-mini-add");
-                 	}else{
+                 	}else{//添加资源菜单
                  		$('#deptree').tree('append',{parent: menu.target,
                      		data:[{
                      			'id':data.resourceId,
@@ -376,6 +374,7 @@
                      				'status':status,
                      				'dislayOrder':displayOrder,
                      				'menuLevel':menuLevel
+
                      			}
                      		}]});
                  		var nn = $('#deptree').tree('find', data.resourceId);
@@ -551,11 +550,10 @@
        		    		 		menuIds.join(",");
        		    		 		resourceIds.join(",");
        		    		 		functionIds.join(",");
-       		    		 		console.log(functionIds);
        		    		 		if(functionIds.length>0){
     		    			 		delFunctions(functionIds);
     		    		 		}
-    		    		 		if(resourceIds.length>0){
+    		    		 		if(menuIds.length>0){
     		    			 		delMenu(resourceIds, menuIds);
     		    		 		}
        		    	 		}
