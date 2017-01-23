@@ -208,13 +208,25 @@
             }
             var url;
             if(privilegeRoleId==null || privilegeRoleId==""){
-                url='${pageContext.request.contextPath}/managerRole/addRole?appId='+appId+'&roleName='+roleName+'&status='+status+'&temp='+checkIds+'&deptName='+deptName+'&groupName='+groupName+'&remark='+remark;
+                url='${pageContext.request.contextPath}/managerRole/addRole';
+            	//url='${pageContext.request.contextPath}/managerRole/addRole?appId='+appId+'&roleName='+roleName+'&status='+status+'&temp='+checkIds+'&deptName='+deptName+'&groupName='+groupName+'&remark='+remark;
             }else{
             	getIds();
-            	url='${pageContext.request.contextPath}/managerRole/updateRole?appId='+appId+'&roleName='+roleName+'&status='+status+'&addIds='+addIds+'&delIds='+delIds+'&privilegeRoleId='+privilegeRoleId+'&deptName='+deptName+'&groupName='+groupName+'&remark='+remark;
+            	url='${pageContext.request.contextPath}/managerRole/updateRole';
+            	//url='${pageContext.request.contextPath}/managerRole/updateRole?appId='+appId+'&roleName='+roleName+'&status='+status+'&addIds='+addIds+'&delIds='+delIds+'&privilegeRoleId='+privilegeRoleId+'&deptName='+deptName+'&groupName='+groupName+'&remark='+remark;
             }
-            //url=encodeURI(encodeURI(url));
-            $.post(url, function(data) {
+            $.post(url,{
+            	appId:appId,
+            	roleName:roleName,
+            	status:status,
+            	temp:checkIds,
+            	deptName:deptName,
+            	groupName:groupName,
+            	remark:remark,
+            	addIds:addIds,
+            	delIds:delIds,
+            	privilegeRoleId:privilegeRoleId
+            }, function(data) {
                 if(data.status=='1'){
                 	 if(privilegeRoleId==null || privilegeRoleId==""){
 	                 	msgShow('系统提示', '恭喜，添加成功！', 'info');
