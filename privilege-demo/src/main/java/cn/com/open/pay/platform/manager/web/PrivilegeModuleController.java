@@ -485,7 +485,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	 */
 	@RequestMapping(value = "addMenu")
 	public void add(HttpServletRequest request, HttpServletResponse response) {
-		String menuName = URLDecoder.decode(request.getParameter("name"));
+		String menuName = request.getParameter("name");
 		try {
 			menuName = java.net.URLEncoder.encode(menuName,"UTF-8");
 		} catch (UnsupportedEncodingException e) {
@@ -567,7 +567,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	 */
 	@RequestMapping(value = "edit")
 	public void edit(HttpServletRequest request, HttpServletResponse response) {
-		String menuName = URLDecoder.decode(request.getParameter("name"));
+		String menuName = request.getParameter("name");
 		try {
 			menuName = java.net.URLEncoder.encode(menuName,"UTF-8");
 		} catch (UnsupportedEncodingException e) {
