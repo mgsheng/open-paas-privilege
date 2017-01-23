@@ -278,7 +278,9 @@
             var code = $('#code').val();
             var moduleUrl= $('#moduleUrl').val();
             var displayOrder= $('#display_order').val();
-            var status= $('#status').val();
+            
+            var status= $('#status').combobox('getValue');
+            alert(status);
             var parentId=$('#parentId').val();
             var menuLevel=$('#menuLevel').val();
             var menuId=$('#menuId').val();
@@ -296,10 +298,11 @@
                 return false;
             }
 			var url="";
+			alert(menuId);
 		    if(menuId==""){
-		    	url=encodeURI('${pageContext.request.contextPath}/module/addMenu?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&menuLevel='+displayOrder+'&url='+moduleUrl);
+		    	url=encodeURI(encodeURI('${pageContext.request.contextPath}/module/addMenu?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&menuLevel='+displayOrder+'&url='+moduleUrl));
 		    }else{
-		   		url= '${pageContext.request.contextPath}/module/edit?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&url='+moduleUrl+'&menuLevel='+displayOrder+'&menuId='+menuId+'&resourceId='+resourceId;
+		   		url= encodeURI(encodeURI('${pageContext.request.contextPath}/module/edit?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&url='+moduleUrl+'&menuLevel='+displayOrder+'&menuId='+menuId+'&resourceId='+resourceId));
 		    }
              $.post(url, function(data) {
                 if(data.returnMsg=='1'){
@@ -383,6 +386,8 @@
                   			'attributes':{
                   				'menuCode':code,
                   				'status':status,
+                  				'parentId':parentId,
+                 				'menuCode':code,
                   				'dislayOrder':displayOrder,
                  				'menuLevel':displayOrder
                   			}
@@ -621,7 +626,9 @@
 				jQuery('#display_order').val('');
 				$('#menuLevel').val('');
 				$('#opturl').val('');
+
 				$('#status').combobox('setValue', '1');
+
 				
 			}
 		    function updataFunction(node){
@@ -682,8 +689,20 @@
 				jQuery('#code').val(code);
 				jQuery('#display_order').val(displayOrder);
 				jQuery('#menuLevel').val(menuLevel);
+<<<<<<< .mine
+				$('#status').combobox('setValue',status);
+||||||| .r28802
+=======
 				$('#status').combobox('setValue', status);
+>>>>>>> .r28810
 				
+<<<<<<< .mine
+				
+||||||| .r28802
+				jQuery('#status').attr('value',status);
+				
+=======
+>>>>>>> .r28810
 			}
 			function reload(){
 			    $('#deptree').tree({
