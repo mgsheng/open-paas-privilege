@@ -162,7 +162,7 @@
 			console.log("parentId=="+node.attributes.parentId);
 			if(node.ismodule=="0"){
 				console.log("menuId=="+node.id+"status=="+node.attributes.status);
-				
+				console.log("menuLevel="+node.attributes.menuLevel);
 			}else if (node.ismodule=="1") {
 				console.log("menuID="+node.attributes.menuId);
 				console.log("menuLevel="+node.attributes.menuLevel);
@@ -326,7 +326,7 @@
                          				'menuCode':code,
                          				'status':status,
                          				'dislayOrder':displayOrder,
-                         				'menuLevel':menuLevel,
+                         				'menuLevel':parseInt(menuLevel)+1,
     									'parentId':parentId               				
                          			}
                          		}]});
@@ -341,7 +341,7 @@
                          				'menuCode':code,
                          				'status':status,
                          				'dislayOrder':displayOrder,
-                         				'menuLevel':menuLevel,
+                         				'menuLevel':parseInt(menuLevel)+1,
     									'parentId':parentId               				
                          			}
                          		}]});
@@ -367,7 +367,7 @@
                      				'menuCode':code,
                      				'status':status,
                      				'dislayOrder':displayOrder,
-                     				'menuLevel':menuLevel
+                     				'menuLevel':parseInt(menuLevel)+1
 
                      			}
                      		}]});
@@ -490,7 +490,6 @@
             //编辑
             $('#edit').click(function() {
 		     var node = $('#deptree').tree('getSelected');
-		     console.log(node);
 		     if (node){
 					if(node.ismodule=="2"){
 						$('#function').window('open');
