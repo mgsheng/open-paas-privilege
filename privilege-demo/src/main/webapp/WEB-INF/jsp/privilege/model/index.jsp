@@ -689,20 +689,9 @@
 				jQuery('#code').val(code);
 				jQuery('#display_order').val(displayOrder);
 				jQuery('#menuLevel').val(menuLevel);
-<<<<<<< .mine
-				$('#status').combobox('setValue',status);
-||||||| .r28802
-=======
+
 				$('#status').combobox('setValue', status);
->>>>>>> .r28810
-				
-<<<<<<< .mine
-				
-||||||| .r28802
-				jQuery('#status').attr('value',status);
-				
-=======
->>>>>>> .r28810
+
 			}
 			function reload(){
 			    $('#deptree').tree({
