@@ -48,20 +48,17 @@ public class ResourceModifyPrivilegeController extends BaseControllerUtil{
     	String resourceName = "";
     	String resourceRule="";
     	String createUser="";
-    	try {
+    	
     	if(!nullEmptyBlankJudge(request.getParameter("resourceName"))){
-    		resourceName = new String(request.getParameter("resourceName").getBytes("iso-8859-1"),"utf-8");	
+    		resourceName = request.getParameter("resourceName");	
     	}
     	if(!nullEmptyBlankJudge(request.getParameter("resourceRule"))){
-    		resourceRule = new String(request.getParameter("resourceRule").getBytes("iso-8859-1"),"utf-8");	
+    		resourceRule = request.getParameter("resourceRule");	
     	}
     	if(!nullEmptyBlankJudge(request.getParameter("createUser"))){
-    		createUser = new String(request.getParameter("createUser").getBytes("iso-8859-1"),"utf-8");	
+    		createUser = request.getParameter("createUser");	
     	}
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
     	String appId=request.getParameter("appId");
     	String resourceLevel=request.getParameter("resourceLevel");
     	String menuId=request.getParameter("menuId");
