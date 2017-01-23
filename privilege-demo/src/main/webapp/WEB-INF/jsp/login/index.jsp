@@ -39,7 +39,7 @@ function GetMenuList(data, menulist) {
         menulist += '<ul>';
         $.each(data.menus, function(i, sm) {
             if (sm.url != null) {
-                menulist += '<li><div style="margin-bottom:-5px"><a ref="'+sm.menuId+'" href="#" rel="' + sm.url + '" ><span class="icon '+sm.icon+'" >&nbsp;</span><span class="nav">' + sm.menuName+ '</span></a></div></li> ';
+                menulist += '<li><div style="margin-bottom:-5px"><a ref="'+sm.menuId+'" href="#" rel="' + sm.url + '" ><span class="icon icon-mini-add" >&nbsp;</span><span class="nav">' + sm.menuName+ '</span></a></div></li> ';
             }
             else {
             	 menulist += '<li class="close" style="margin-bottom: 15px" >'
