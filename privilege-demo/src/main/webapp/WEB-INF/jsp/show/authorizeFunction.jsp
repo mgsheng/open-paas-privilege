@@ -51,7 +51,7 @@
     	 selected();
       },
       onClick:function(node){
-    	  alert(node.id);
+    	  alert("id="+node.id+"ismodule=="+node.ismodule);
       }
    });
 	//勾选用户拥有的功能
@@ -61,7 +61,10 @@
 					$.each(data.functionList,function(i,n){
 						var node=$("#tt").tree('find',n.functionId);
 						if(node!=null){
-							$("#tt").tree('check',node.target);
+							if(node.ismodule=="2"){
+								$("#tt").tree('check',node.target);
+							}
+							
 						}
 					});
 				}
@@ -78,6 +81,21 @@
 							
 						}
 						
+					});
+				}
+				if(data.menuList!=null){
+					$.each(data.menuList,function(i,n){
+						var node=$("#tt").tree('find',n.menuId);
+						if(node!=null){
+							if(node.ismodule=="0"){
+									var nn=$("#tt").tree('getChildren',node.target);
+									if(nn.length<=0){
+										$("#tt").tree('check',node.target);
+									}
+									
+								}
+							
+						}
 					});
 				}
 		 
@@ -97,9 +115,9 @@
 		var select=$('#tt').tree('getChecked', 'checked');
 		$.each(select, function(i, n) {
 			if(n.ismodule==2){
-				funId.push(id);
+				funId.push(n.id);
 			}else if(n.ismodule==1){
-				resId.push(id);
+				resId.push(n.id);
 			}
 			console.log(n.text);
 		});
