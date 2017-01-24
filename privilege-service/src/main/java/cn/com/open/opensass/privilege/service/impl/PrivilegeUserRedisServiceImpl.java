@@ -87,10 +87,9 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 				if (role.getRoleType() == 2) {// 若角色为系统管理员 则把app拥有的所有资源放入缓存
 					resourceList = privilegeResourceService.getResourceListByAppId(appId);
 					boo = true;
+					break;
 				}
 			}
-			
-
 		}
 		// user表多余的resourceId
 		List<String> resourceIds = new ArrayList<String>();
@@ -140,33 +139,41 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 			JSONArray objArray = JSONArray.fromObject(obj1.get("resourceList"));
 			roleMap.put("resourceList", objArray);
 		}
+		/*functionList  判断是否为管理员，若为管理员，查询应用资源缓存中functionList*/
+		if(boo){
+			PrivilegeAjaxMessage message=privilegeResourceService.getAppResRedis(appId);
+			JSONObject obj1 = new JSONObject().fromObject(message.getMessage());// 将json字符串转换为json对象
+			JSONArray objArray = JSONArray.fromObject(obj1.get("functionList"));
+			roleMap.put("functionList", objArray);
+		}else {
+			// functionList
+			// roleResource表中functionIds
+			List<String> FunIds = privilegeRoleResourceService.findUserResourcesFunId(appId, appUserId);
+			// 加入 user表中functionIds
+			if (privilegeFunctionIds != null && !("").equals(privilegeFunctionIds)) {
+				FunIds.add(privilegeFunctionIds);
+			}
+			// 查询相应function
+			List<Map<String, Object>> privilegeFunctions = new ArrayList<Map<String, Object>>();
+			if (FunIds != null&&FunIds.size()>0) {
+				for (String funIds : FunIds) {
+					String[] functionIds = funIds.split(",");
+					List<Map<String, Object>> functions = privilegeFunctionService.getFunctionListByFunctionIds(functionIds);
+					privilegeFunctions.addAll(functions);
+				}
+			}
+			// 查询单独的resource 包含的function
+			if (resourceIds.size() > 0) {
+				for (String resourceId : resourceIds) {
+					List<Map<String, Object>> list = privilegeFunctionService.getFunctionMap(resourceId);
+					privilegeFunctions.addAll(list);
+				}
+			}
+			Set<Map<String, Object>> functionSet = new HashSet<Map<String, Object>>();
+			functionSet.addAll(privilegeFunctions);
+			roleMap.put("functionList", functionSet);
+		}
 		
-		// functionList
-		// roleResource表中functionIds
-		List<String> FunIds = privilegeRoleResourceService.findUserResourcesFunId(appId, appUserId);
-		// 加入 user表中functionIds
-		if (privilegeFunctionIds != null && !("").equals(privilegeFunctionIds)) {
-			FunIds.add(privilegeFunctionIds);
-		}
-		// 查询相应function
-		List<Map<String, Object>> privilegeFunctions = new ArrayList<Map<String, Object>>();
-		if (FunIds != null&&FunIds.size()>0) {
-			for (String funIds : FunIds) {
-				String[] functionIds = funIds.split(",");
-				List<Map<String, Object>> functions = privilegeFunctionService.getFunctionListByFunctionIds(functionIds);
-				privilegeFunctions.addAll(functions);
-			}
-		}
-		// 查询单独的resource 包含的function
-		if (resourceIds.size() > 0) {
-			for (String resourceId : resourceIds) {
-				List<Map<String, Object>> list = privilegeFunctionService.getFunctionMap(resourceId);
-				privilegeFunctions.addAll(list);
-			}
-		}
-		Set<Map<String, Object>> functionSet = new HashSet<Map<String, Object>>();
-		functionSet.addAll(privilegeFunctions);
-		roleMap.put("functionList", functionSet);
 		// 放入缓存
 		redisClientTemplate.setString(userCacheRoleKey, JSONObject.fromObject(roleMap).toString());
 		ajaxMessage.setCode("1");
