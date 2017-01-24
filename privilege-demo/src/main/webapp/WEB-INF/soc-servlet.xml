@@ -31,12 +31,13 @@
 						<value>/managerUser/function</value>
 						<value>/managerUser/authorizeFun</value>
 						<value>/resource/findModuel</value>
+						<value>/managerUser/findUserList</value>
 					</list>
 				</property>
 			</bean>
 			
 		</mvc:interceptor>
-	</mvc:interceptors>  
+	</mvc:interceptors>  s
     <!--annotation configuration -->
     <context:annotation-config/>
     <context:component-scan base-package="cn.com.open.pay.platform.manager.web"/>
