@@ -1,6 +1,7 @@
 package cn.com.open.opensass.privilege.infrastructure.repository;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -22,5 +23,7 @@ public interface PrivilegeUserRepository extends Repository {
 	void delUserByAppIdAndAppUserId(@Param("appId") String appId, @Param("appUserId") String appUserId);
 
 	void updatePrivilegeUser(PrivilegeUser user);
-	ArrayList<String> findUserResources(@Param("appId") String appId, @Param("appUserId") String appUserId); 
+	ArrayList<String> findUserResources(@Param("appId") String appId, @Param("appUserId") String appUserId);
+	List<PrivilegeUser> findUserListByPage(@Param("appId")String appId,@Param("start") int start,@Param("limit") int limit);
+	int getUserCountByAppId(String appId);
 }
