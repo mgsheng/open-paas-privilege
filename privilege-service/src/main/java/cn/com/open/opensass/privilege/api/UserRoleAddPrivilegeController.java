@@ -20,7 +20,6 @@ import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import cn.com.open.opensass.privilege.service.AppService;
 import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
-import cn.com.open.opensass.privilege.service.PrivilegeUrlService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserRedisService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserRoleService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserService;
