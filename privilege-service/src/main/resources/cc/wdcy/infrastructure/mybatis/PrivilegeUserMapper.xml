@@ -26,9 +26,16 @@
 	  privilege_funid
 	</sql>
 	
+	<select id="findUserListByPage" resultMap="privilegeUserMap" flushCache="true">
+         select * from privilege_user
+         where  app_id = #{appId} limit #{start},#{limit}
+	</select>
 	<select id="findByUid" resultMap="privilegeUserMap" flushCache="true">
          select * from privilege_user
          where  uid = #{uId}
+	</select>
+	<select id="getUserCountByAppId"  resultType="java.lang.Integer">
+		SELECT count(1) from privilege_user where app_id=#{appId}
 	</select>
  	<select id="findByAppIdAndAppUserId" resultMap="privilegeUserMap" flushCache="true">
  		select * from privilege_user where app_id=#{appId} and app_userid=#{appUserId}
@@ -44,10 +51,10 @@
         <if test="privilegeRoleId != null" >
         privilege_roleid = #{privilegeRoleId},
         </if>
-         <if test="resourceId != null and resourceId !=''" >
+         <if test=" resourceId !=''" >
         resource_id = #{resourceId},
         </if>
-         <if test="privilegeFunId != null and privilegeFunId !=''" >
+         <if test=" privilegeFunId !=''" >
         privilege_funid = #{privilegeFunId},
         </if>
          <if test="deptId != null and deptId !=''" >
