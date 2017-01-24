@@ -55,14 +55,8 @@
 					</tr>
 					
 				</table>
-				<div id="updateDiv" style="display: none;">
-				<span>操作:</span><span>  <select class="easyui-combobox" data-options="editable:false" id="method" name="method" style="width:100px">
-								<option value="1">删除</option>
-								<option value="0">添加</option>
-							</select></span>
-				</div>
 				<div class="easyui-panel" style="padding:5px;margin-top:5px;overflow-y:scroll;">
-				  <ul id="deptree1"  style="height: 100%;width: 200px" class="easyui-tree" 
+				  <ul id="deptree1"  style="height: 245px;width: 200px" class="easyui-tree" 
 					 data-options="method:'get'"> 
 			 	  </ul>
 			</div>
@@ -113,17 +107,17 @@
       	 lines:true,//显示虚线效果 
       	 animate: true,
       	  checkbox:true,
-            url: '${pageContext.request.contextPath}/managerRole/tree?appId=${appId}',  
+            url: '${pageContext.request.contextPath}/department/buildTree2?appId=${appId}',  
         });
          //添加
 		 $('#add').click(function() {
-		    $("#updateDiv").hide();
+		   // $("#updateDiv").hide();
 		   	clearChoose();
 		   	$('#wmodule').window('open');
          });
          //编辑
          $('#edit').click(function() {
-            $("#updateDiv").show();
+           // $("#updateDiv").show();
             initialFunIds='';
         	initialResIds='';
         	
@@ -160,7 +154,7 @@
 			                modal: true,
 			                shadow: true,
 			                closed: true,
-			                height: 500,
+			                height: 430,
 			                resizable:false
 			            });
 	  					$('#wmodule').window('open');
@@ -192,18 +186,19 @@
             $('#btnEp').click(function() {
                 serverLogin();
             });
-
+            //取消提交
+            $('#btnCancel').click(function(){closePwd();});
 		    });
 		    
 	  
         //添加資源
         function serverLogin() {
             var groupName = $('#groupName').val();
-            var status= $('#status').val();
+            var status= $("#status").combobox('getValue');
             var appId=${appId};
             var groupId=$('#groupId').val();
-            var method=$('#method').val();
-            if (groupName == '') {
+            //var method=$("#method").combobox('getValue');
+            if (groupId==''&& groupName == '') {
                 msgShow('系统提示', '请输入名称！', 'warning');
                 return false;
             }
@@ -211,13 +206,26 @@
         	getCheckedIds(ui,checkIds);
 			var url="";
 			if(groupId==null || groupId==""){
-		    url=  '${pageContext.request.contextPath}/department/addDept?groupName='+groupName+'&status='+status+'&temp='+checkIds+'&appId='+appId;
+			 url=  '${pageContext.request.contextPath}/department/addDept';
+		   // url=  '${pageContext.request.contextPath}/department/addDept?groupName='+groupName+'&status='+status+'&temp='+checkIds+'&appId='+appId;
 		    }else{
-		    url=  '${pageContext.request.contextPath}/department/updateDept?groupName='+groupName+'&status='+status+'&temp='+checkIds+'&appId='+appId+'&method='+method;
+		    getIds();
+		    url=  '${pageContext.request.contextPath}/department/updateDept';
+		    //url=  '${pageContext.request.contextPath}/department/updateDept?groupName='+groupName+'&status='+status+'&temp='+checkIds+'&appId='+appId+'&method='+method+'&groupId='+groupId+'&addIds='+addIds+'&delIds='+delIds;
 		    }
 		    url=encodeURI(encodeURI(url));
            //解析data===parentId=&resources=1&resources=3&resources=5&resources=7&name=aa&url=aa%2Faa%2Faa&code=aa&displayOrder=2&status=1
-             $.post(url, function(data) {
+             $.post(url, 
+             {
+            	appId:appId,
+            	groupName:groupName,
+            	status:status,
+            	temp:checkIds,
+            	addIds:addIds,
+            	delIds:delIds,
+            	groupId:groupId
+            },
+             function(data) {
                 if(data.status=='1'){
                  if(groupId==null || groupId==""){
 	                 	msgShow('系统提示', '恭喜，添加成功！', 'info');
@@ -343,43 +351,6 @@
         	}
         }
 	
-		     function updateModel(data){
-				//reset();
-				if(data.id==null || data.id==0){
-					return;
-				}
-				//赋值
-				var id = data.id;
-				var parentId = data.parentId;
-				var name = data.name;
-				var url = data.url;
-				var code = data.code;
-				var displayOrder = data.displayOrder;
-				var status = data.status;
-				var resources = data.resources;
-				jQuery('#id').val(id);
-				jQuery('#parentId').val(parentId);
-				if(parentId==0){
-					jQuery('#parentName').html('根节点');
-				}
-				else{
-					jQuery('#parentName').html(data.parentName);
-				}
-				jQuery('#parentId').val(parentId);
-				jQuery('#moduleName').val(name);
-				jQuery('#url').val(url);
-				jQuery('#code').val(code);
-				jQuery('#display_order').val(displayOrder);
-				jQuery('#status').attr('value',status);
-				jQuery('#resources').val(resources);
-				if(resources!=null && resources!=""){
-					var resource=resources.split(",");
-					for(var i=0;i<resource.length;i++){
-						$("#resource_"+resource[i]).parent().addClass("checked");
-						$("#resource_"+resource[i]).attr("checked",true);
-					}
-				}
-			}
 			function reload(){
 			    var groupId=jQuery('#groupId').val();
 			    $('#deptree').tree({
