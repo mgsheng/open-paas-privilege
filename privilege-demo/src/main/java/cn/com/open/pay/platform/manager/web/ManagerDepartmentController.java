@@ -5,9 +5,12 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,6 +31,7 @@ import cn.com.open.pay.platform.manager.department.service.ManagerDepartmentServ
 import cn.com.open.pay.platform.manager.login.model.User;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeFunction;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeOperation;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource1;
 import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGetSignatureService;
@@ -71,6 +75,8 @@ public class ManagerDepartmentController extends BaseControllerUtil {
 
 	@Value("#{properties['privilege-groupredis-query-uri']}") 
 	private String getGroupredis;
+	@Value("#{properties['privilege-get-operation-uri']}")
+	private String getAllOperationUrl;
 	
 	/**
 	 * 跳转到所选部门的员工信息页面
@@ -153,11 +159,97 @@ public class ManagerDepartmentController extends BaseControllerUtil {
 		String groupName = request.getParameter("groupName");
 		String appId = request.getParameter("appId");
 		String status=request.getParameter("status");
-		String treeNodeIds=request.getParameter("temp");
-		String method=request.getParameter("method");
+//		String treeNodeIds=request.getParameter("temp");
+//		String method=request.getParameter("method");
 		String resourceIds="";
 		String functionIds="";
-		if(treeNodeIds!=null && !treeNodeIds.equals("")){
+		String s1="";
+		String s2="";
+		String addNodeIds=request.getParameter("addIds");
+		String delNodeIds=request.getParameter("delIds");
+		String groupId = request.getParameter("groupId");
+		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
+		map.put("appId", appId);
+		map.put("groupId",groupId);
+		map.put("groupName", groupName);
+		map.put("createUser", "");
+		map.put("createUserid", "");
+		map.put("status",status );
+		if((addNodeIds!=null && !addNodeIds.equals("")) || (delNodeIds!=null && !delNodeIds.equals(""))){
+			if(addNodeIds!=null && !addNodeIds.equals("")){//添加权限
+				String[] mres=addNodeIds.split(",,");//资源与方法拆分
+				for(int j=0;j<mres.length;j++){
+					if(mres[j]!=null && !mres[j].equals("")){
+						if(!mres[j].contains(",")){
+							resourceIds+=mres[j]+",";
+						}else{
+							String[] rfun=mres[j].split(",");
+							for(int i=0;i<rfun.length;i++){
+								if(rfun[i]!=null && !rfun[i].equals("")){
+									functionIds+=rfun[i]+",";
+								}
+							}
+						}
+					}
+				}
+				if(resourceIds!=null && !("").equals(resourceIds)){
+					resourceIds=resourceIds.substring(0, resourceIds.length()-1);
+				}
+				if(functionIds!=null && !("").equals(functionIds)){
+					functionIds=functionIds.substring(0, functionIds.length()-1);
+				}
+				map.put("groupPrivilege", resourceIds);
+				map.put("method", 0);//0-添加权限，1-删除权限
+				s1 = sendPost(privilegeGroupModifyUrl,map);
+			}	
+			resourceIds="";
+			functionIds="";
+			if(delNodeIds!=null && !delNodeIds.equals("")){//删除权限
+				String[] mres=delNodeIds.split(",,");//资源与方法拆分
+				for(int j=0;j<mres.length;j++){
+					if(mres[j]!=null && !mres[j].equals("")){
+						if(!mres[j].contains(",")){
+							resourceIds+=mres[j]+",";
+						}else{
+							String[] rfun=mres[j].split(",");
+							for(int i=0;i<rfun.length;i++){
+								if(rfun[i]!=null && !rfun[i].equals("")){
+									functionIds+=rfun[i]+",";
+								}
+							}
+						}
+					}
+				}
+				if(resourceIds!=null && !("").equals(resourceIds)){
+					resourceIds=resourceIds.substring(0, resourceIds.length()-1);
+				}
+				if(functionIds!=null && !("").equals(functionIds)){
+					functionIds=functionIds.substring(0, functionIds.length()-1);
+				}
+				map.put("groupPrivilege", resourceIds);
+				map.put("method", 1);//0-添加权限，1-删除权限
+				s2 = sendPost(privilegeGroupModifyUrl,map);
+			}
+			}else{
+				map.put("method", 0);//如果没有添加或删除权限，默认给一个值
+				s1 = sendPost(privilegeGroupModifyUrl,map);
+			}
+			
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+/*		if(treeNodeIds!=null && !treeNodeIds.equals("")){
 			String[] menus=treeNodeIds.split("=");//菜单组之间分隔
 			for(int a=0;a<menus.length;a++){
 				if(menus[a]!=null && !menus[a].equals("")){
@@ -199,19 +291,23 @@ public class ManagerDepartmentController extends BaseControllerUtil {
 				functionIds=functionIds.substring(0, functionIds.length()-1);
 			}
 		}
-		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
-		map.put("appId", appId);
-		map.put("groupId",getUUID());
-		map.put("groupName", groupName);
-		map.put("groupPrivilege", resourceIds);
-		map.put("method", method);
-		map.put("createUser", "");
-		map.put("createUserid", "");
-		map.put("status",status );
+*/
 		
-		String s = sendPost(privilegeGroupModifyUrl,map);
-		JSONObject job=JSONObject.fromObject(s);
-    	WebUtils.writeErrorJson(response, job);
+		JSONObject job1=null;
+		JSONObject job2=null;
+		Map<String,Object> m =new HashMap<String,Object>();
+		if(s1 == null || ("").equals(s1)){
+			s1="{'status':'1'}";
+		}
+		job1=JSONObject.fromObject(s1);
+		if(s2 == null || ("").equals(s2)){
+			s2="{'status':'1'}";
+		}
+		job2=JSONObject.fromObject(s2);
+		if(("1").equals(job1.get("status")) && ("1").equals(job2.get("status"))){
+			m.put("status", "1");
+		}
+    	WebUtils.writeErrorJson(response, m);
 	}
 	
 	
@@ -535,7 +631,7 @@ public class ManagerDepartmentController extends BaseControllerUtil {
 							node.setText(resource1.getResourceName());
 							node.setIsmodule("1");
 							childrenList.add(node);
-							for (PrivilegeFunction function : functionList) {
+							/*for (PrivilegeFunction function : functionList) {
 								if (function.getResourceId().equals(resource1.getResourceId())) {
 									TreeNode Funnode = new TreeNode();
 									Funnode.setId(function.getFunctionId());
@@ -553,8 +649,8 @@ public class ManagerDepartmentController extends BaseControllerUtil {
 									Funnode.setIsmodule("2");
 									childrenList2.add(Funnode);
 								}
-							}
-							node.setChildren(childrenList2);
+							}*/
+							//node.setChildren(childrenList2);
 
 						}
 					}
@@ -564,4 +660,121 @@ public class ManagerDepartmentController extends BaseControllerUtil {
 		results.add(fNode);
 		return results;
 	}
+	@RequestMapping(value = "buildTree2")
+	public void getResourceTrees2(HttpServletRequest request,HttpServletResponse response) {
+		String appId=request.getParameter("appId");
+		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
+		map.put("appId", appId);
+		String s = sendPost(appMenuRedisUrl,map);
+		JSONObject obj = JSONObject.fromObject(s);//将json字符串转换为json对象
+		JSONArray objArray=JSONArray.fromObject(obj.get("menuList"));
+		//将json对象转换为java对象
+		List<PrivilegeMenu> menuList = JSONArray.toList(objArray,PrivilegeMenu.class);
+		String s1 = sendPost(appResRedisUrl,map);
+		JSONObject obj1 = new JSONObject().fromObject(s1);//将json字符串转换为json对象
+		JSONArray obj1Array=JSONArray.fromObject(obj1.get("resourceList"));
+		JSONArray obj2Array=JSONArray.fromObject(obj1.get("functionList"));
+		String operation=sendPost(getAllOperationUrl, map);
+		obj=JSONObject.fromObject(operation);
+		objArray=JSONArray.fromObject(obj.get("operationList"));
+		//将json对象转换为java对象
+		List<PrivilegeOperation> operationList=JSONArray.toList(objArray, PrivilegeOperation.class);		
+		List<PrivilegeResource1> resourceList = JSONArray.toList(obj1Array,PrivilegeResource1.class);
+		List<PrivilegeFunction> functionList = JSONArray.toList(obj2Array,PrivilegeFunction.class);
+		
+		List<TreeNode> nodes = convertTreeNodeList(menuList);
+		JSONArray jsonArr = JSONArray.fromObject(buildTree2(nodes,resourceList,functionList,operationList));
+		WebUtils.writeJson(response,jsonArr);
+    }
+	  private List<TreeNode> convertTreeNodeList(List<PrivilegeMenu> modules) {
+			List<TreeNode> nodes = null;
+			if(modules != null){
+				nodes = new ArrayList<TreeNode>();
+				for(PrivilegeMenu menu:modules){
+					TreeNode node = convertTreeNode(menu);
+					if(node != null){
+						nodes.add(node);
+					}
+				}
+			}
+			return nodes;
+		}
+		/**
+		* @param departments
+		* @return
+		*/
+		private TreeNode convertTreeNode(PrivilegeMenu privilegeMenu){
+			TreeNode node = null;
+			if(privilegeMenu != null){
+				node = new TreeNode();
+				node.setId("m"+String.valueOf(privilegeMenu.getMenuId()));//菜单ID
+				node.setIsmodule("0");
+				node.setChecked(false);
+				node.setText(privilegeMenu.getMenuName());//菜单名称
+				node.setTarget("");
+				node.setResource("");
+				node.setPid("m"+String.valueOf(privilegeMenu.getParentId()));//父级菜单ID
+				Map<String,Object> map = new HashMap<String,Object>();
+				node.setAttributes(map);
+			}
+			return node;
+		}
+		/**
+		* 添加时构建树
+		* @param treeNodes
+		* @return
+		*/
+		protected List<TreeNode> buildTree2(List<TreeNode> treeNodes,List<PrivilegeResource1> resourceList,List<PrivilegeFunction> functionList,List<PrivilegeOperation> operationList) {
+			List<TreeNode> results = new ArrayList<TreeNode>();
+			Map<String, TreeNode> aidMap = new LinkedHashMap<String, TreeNode>();
+			for (TreeNode node : treeNodes) {
+				aidMap.put(node.getId(), node);
+			}
+			treeNodes = null;
+			Set<Entry<String, TreeNode>> entrySet = aidMap.entrySet();
+			for (Entry<String, TreeNode> entry : entrySet) {
+				String pid = entry.getValue().getPid();
+				TreeNode node = aidMap.get(pid);
+				if (node == null) {
+					results.add(entry.getValue());
+				} else {
+					List<TreeNode> children = node.getChildren();
+					if (children == null) {
+						children = new ArrayList<TreeNode>();
+						node.setChildren(children);
+						node.setState("closed");
+					}
+					
+					String menuId = entry.getValue().getId();
+					for(PrivilegeResource1 res:resourceList){
+						if((menuId).equals("m"+res.getMenuId())){
+							entry.getValue().setId("r"+res.getResourceId());
+							entry.getValue().setText(res.getResourceName());
+							entry.getValue().setIsmodule("1");
+						//	List<TreeNode> treeNodeList1 = new ArrayList<TreeNode>();
+						/*	for(PrivilegeFunction func:functionList){
+								TreeNode treeNode1=new TreeNode();
+								if((res.getResourceId()).equals(func.getResourceId())){
+									treeNode1.setId("f"+func.getFunctionId());
+									treeNode1.setIsmodule("2");
+									for(PrivilegeOperation operation:operationList){
+										if (func.getOptId().equals(operation.getId())) {
+											treeNode1.setText(operation.getName());
+										}
+									}
+									treeNodeList1.add(treeNode1);
+								}
+							}
+							entry.getValue().setChildren(treeNodeList1);*/
+						}
+					}
+					children.add(entry.getValue());
+				}
+			}
+			aidMap = null;
+
+			return results;
+		}
+		
+		
 }
