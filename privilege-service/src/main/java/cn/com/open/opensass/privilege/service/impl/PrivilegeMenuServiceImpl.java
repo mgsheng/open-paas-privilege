@@ -180,7 +180,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 			PrivilegeUrl privilegeUrl = new PrivilegeUrl();
 			Map<Object, Object> map = new HashMap<Object, Object>();
 			map.put("menuList", privilegeMenuListData);
-			String json = new JSONArray().fromObject(map).toString();
+			String json = new JSONObject().fromObject(map).toString();
 
 			privilegeUrl.setPrivilegeUrl(json);
 			/* 写入redis */
