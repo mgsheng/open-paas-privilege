@@ -198,8 +198,12 @@ function InitLeftMenu(_menus) {
         		if(data.status=="0"){
             		alert(data.errMsg);
             	}else {
-            		//InitLeftMenu(data);
-            		addNav(data.menus);
+                	if(data.menus.length<=0){
+						alert("没有相应菜单");
+                    }else {
+                    	addNav(data.menus);
+					}
+            		
             	}
         	}
         	
