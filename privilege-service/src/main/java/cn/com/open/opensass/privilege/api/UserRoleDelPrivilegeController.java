@@ -76,7 +76,7 @@ public class UserRoleDelPrivilegeController extends BaseControllerUtil{
                 return;
     		}
     		//删除缓存
-			PrivilegeAjaxMessage message=privilegeUserRedisService.delUserRoleRedis(privilegeUserVo.getAppId(), privilegeUserVo.getAppUserId());
+			PrivilegeAjaxMessage message=privilegeUserRedisService.updateUserRoleRedis(privilegeUserVo.getAppId(), privilegeUserVo.getAppUserId());
 			if (message.getCode().equals("1")) {
 				map.put("status","1");
 			} else {
