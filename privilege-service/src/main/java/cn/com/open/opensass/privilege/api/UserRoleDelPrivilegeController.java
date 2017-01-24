@@ -18,6 +18,7 @@ import cn.com.open.opensass.privilege.model.PrivilegeUser;
 import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import cn.com.open.opensass.privilege.service.AppService;
+import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserRedisService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserRoleService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserService;
@@ -40,6 +41,8 @@ public class UserRoleDelPrivilegeController extends BaseControllerUtil{
 	private AppService appService;
 	@Autowired
 	private RedisClientTemplate redisClient;
+	@Autowired
+	private PrivilegeMenuService privilegeMenuService;
 	/**
 	 * 用户角色删除接口
 	 */
@@ -77,6 +80,8 @@ public class UserRoleDelPrivilegeController extends BaseControllerUtil{
     		}
     		//删除缓存
 			PrivilegeAjaxMessage message=privilegeUserRedisService.updateUserRoleRedis(privilegeUserVo.getAppId(), privilegeUserVo.getAppUserId());
+			privilegeMenuService.updateMenuRedis(privilegeUserVo.getAppId(),
+					privilegeUserVo.getAppUserId());
 			if (message.getCode().equals("1")) {
 				map.put("status","1");
 			} else {
