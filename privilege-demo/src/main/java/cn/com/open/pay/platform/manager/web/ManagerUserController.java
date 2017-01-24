@@ -75,7 +75,10 @@ public class ManagerUserController extends BaseControllerUtil {
 	private String getOperationNameUrl;
 	@Value("#{properties['privilege-get-operation-uri']}")
 	private String getAllOperationUrl;
-	
+	@Value("#{properties['privilege-usermenu-redis-query-uri']}")
+	private String userMenuRedisUrl;
+	@Value("#{properties['query-privilege-user-uri']}")
+	private String queryUserUrl;
 	/**
 	 * 跳转到用户信息列表的页面
 	 * 
@@ -333,7 +336,7 @@ public class ManagerUserController extends BaseControllerUtil {
 
 	@RequestMapping(value = "tree")
 	public void getModelTree(HttpServletRequest request, HttpServletResponse response) {
-		
+
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
 		map.put("appId", appId);
 		String s = sendPost(appMenuRedisUrl, map);
@@ -345,26 +348,29 @@ public class ManagerUserController extends BaseControllerUtil {
 		JSONObject obj1 = new JSONObject().fromObject(s1);// 将json字符串转换为json对象
 		JSONArray obj1Array = JSONArray.fromObject(obj1.get("resourceList"));
 		JSONArray obj2Array = JSONArray.fromObject(obj1.get("functionList"));
-		String operation=sendPost(getAllOperationUrl, map);
-		obj=JSONObject.fromObject(operation);
-		objArray=JSONArray.fromObject(obj.get("operationList"));
+		String operation = sendPost(getAllOperationUrl, map);
+		obj = JSONObject.fromObject(operation);
+		objArray = JSONArray.fromObject(obj.get("operationList"));
 		// 将json对象转换为java对象
-		List<PrivilegeOperation> operationList=JSONArray.toList(objArray, PrivilegeOperation.class);
+		List<PrivilegeOperation> operationList = JSONArray.toList(objArray, PrivilegeOperation.class);
 		List<PrivilegeResource1> resourceList = JSONArray.toList(obj1Array, PrivilegeResource1.class);
 		List<PrivilegeFunction> functionList = JSONArray.toList(obj2Array, PrivilegeFunction.class);
 		List<TreeNode> nodes = convertTreeNodeList(menuList);
-		JSONArray jsonArr = JSONArray.fromObject(buildTree(nodes, resourceList, functionList,operationList));
+		JSONArray jsonArr = JSONArray.fromObject(buildTree(nodes, resourceList, functionList, operationList));
 		if (request.getParameter("id") != null) {
 			jsonArr = new JSONArray();
 		}
 		WebUtils.writeJson(response, jsonArr);
 	}
+
 	/**
-	* 添加时构建树
-	* @param treeNodes
-	* @return
-	*/
-	protected List<TreeNode> buildTree(List<TreeNode> treeNodes,List<PrivilegeResource1> resourceList,List<PrivilegeFunction> functionList,List<PrivilegeOperation> operationList) {
+	 * 添加时构建树
+	 * 
+	 * @param treeNodes
+	 * @return
+	 */
+	protected List<TreeNode> buildTree(List<TreeNode> treeNodes, List<PrivilegeResource1> resourceList,
+			List<PrivilegeFunction> functionList, List<PrivilegeOperation> operationList) {
 		List<TreeNode> results = new ArrayList<TreeNode>();
 		Map<String, TreeNode> aidMap = new LinkedHashMap<String, TreeNode>();
 		for (TreeNode node : treeNodes) {
@@ -386,21 +392,21 @@ public class ManagerUserController extends BaseControllerUtil {
 				}
 				String menuId = entry.getValue().getId();
 				List<TreeNode> treeNodeList = new ArrayList<TreeNode>();
-				for(PrivilegeResource1 res:resourceList){
-					//TreeNode treeNode=new TreeNode();
-					if((menuId).equals(res.getMenuId())){
+				for (PrivilegeResource1 res : resourceList) {
+					// TreeNode treeNode=new TreeNode();
+					if ((menuId).equals(res.getMenuId())) {
 						entry.getValue().setState("closed");
 						entry.getValue().setId(res.getResourceId());
 						entry.getValue().setText(res.getResourceName());
 						entry.getValue().setIsmodule("1");
 						List<TreeNode> treeNodeList1 = new ArrayList<TreeNode>();
-						for(PrivilegeFunction func:functionList){
-							TreeNode treeNode1=new TreeNode();
-							if((res.getResourceId()).equals(func.getResourceId())){
+						for (PrivilegeFunction func : functionList) {
+							TreeNode treeNode1 = new TreeNode();
+							if ((res.getResourceId()).equals(func.getResourceId())) {
 								treeNode1.setId(func.getFunctionId());
 								treeNode1.setIsmodule("2");
-								
-								for(PrivilegeOperation operation:operationList){
+
+								for (PrivilegeOperation operation : operationList) {
 									if (func.getOptId().equals(operation.getId())) {
 										treeNode1.setText(operation.getName());
 									}
@@ -409,16 +415,15 @@ public class ManagerUserController extends BaseControllerUtil {
 							}
 						}
 						entry.getValue().setChildren(treeNodeList1);
-						//treeNodeList.add(entry.getValue());
+						// treeNodeList.add(entry.getValue());
 					}
 				}
-				/*List<TreeNode> nodeList = entry.getValue().getChildren();
-				if(nodeList == null){
-					nodeList=treeNodeList;
-				}else{
-					nodeList.addAll(treeNodeList);
-				}
-				entry.getValue().setChildren(nodeList);*/
+				/*
+				 * List<TreeNode> nodeList = entry.getValue().getChildren();
+				 * if(nodeList == null){ nodeList=treeNodeList; }else{
+				 * nodeList.addAll(treeNodeList); }
+				 * entry.getValue().setChildren(nodeList);
+				 */
 				children.add(entry.getValue());
 			}
 		}
@@ -426,41 +431,44 @@ public class ManagerUserController extends BaseControllerUtil {
 
 		return results;
 	}
-	 private List<TreeNode> convertTreeNodeList(List<PrivilegeMenu> modules) {
-			List<TreeNode> nodes = null;
-			if(modules != null){
-				nodes = new ArrayList<TreeNode>();
-				for(PrivilegeMenu menu:modules){
-					TreeNode node = convertTreeNode(menu);
-					if(node != null){
-						nodes.add(node);
-					}
+
+	private List<TreeNode> convertTreeNodeList(List<PrivilegeMenu> modules) {
+		List<TreeNode> nodes = null;
+		if (modules != null) {
+			nodes = new ArrayList<TreeNode>();
+			for (PrivilegeMenu menu : modules) {
+				TreeNode node = convertTreeNode(menu);
+				if (node != null) {
+					nodes.add(node);
 				}
 			}
-			return nodes;
 		}
-	 private TreeNode convertTreeNode(PrivilegeMenu privilegeMenu){
-			TreeNode node = null;
-			if(privilegeMenu != null){
-				node = new TreeNode();
-				node.setId(String.valueOf(privilegeMenu.getMenuId()));//菜单ID
-				node.setIsmodule("0");
-				node.setChecked(false);
-				node.setText(privilegeMenu.getMenuName());//菜单名称
-				node.setTarget("");
-				node.setResource("");
-				node.setPid(String.valueOf(privilegeMenu.getParentId()));//父级菜单ID
-				Map<String,Object> map = new HashMap<String,Object>();
-				map.put("menuCode", privilegeMenu.getMenuCode());
-				map.put("menuLevel", privilegeMenu.getMenuLevel());
-				map.put("menuRule", privilegeMenu.getMenuRule());
-				map.put("dislayOrder", privilegeMenu.getDisplayOrder());
-				map.put("parentId", privilegeMenu.getParentId());
-				map.put("status", privilegeMenu.getDisplayOrder());
-				node.setAttributes(map);
-			}
-			return node;
+		return nodes;
+	}
+
+	private TreeNode convertTreeNode(PrivilegeMenu privilegeMenu) {
+		TreeNode node = null;
+		if (privilegeMenu != null) {
+			node = new TreeNode();
+			node.setId(String.valueOf(privilegeMenu.getMenuId()));// 菜单ID
+			node.setIsmodule("0");
+			node.setChecked(false);
+			node.setText(privilegeMenu.getMenuName());// 菜单名称
+			node.setTarget("");
+			node.setResource("");
+			node.setPid(String.valueOf(privilegeMenu.getParentId()));// 父级菜单ID
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("menuCode", privilegeMenu.getMenuCode());
+			map.put("menuLevel", privilegeMenu.getMenuLevel());
+			map.put("menuRule", privilegeMenu.getMenuRule());
+			map.put("dislayOrder", privilegeMenu.getDisplayOrder());
+			map.put("parentId", privilegeMenu.getParentId());
+			map.put("status", privilegeMenu.getDisplayOrder());
+			node.setAttributes(map);
 		}
+		return node;
+	}
+
 	/**
 	 * 查询指定用户的功能情况
 	 * 
@@ -476,6 +484,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		Signature.put("appId", appId);
 		Signature.put("appUserId", id);
 		String reslut = sendPost(getUserPrivilegeUrl, Signature);
+		
 		List<Map<String, Object>> userResourceList = null;
 		List<Map<String, Object>> userFunctionList = null;
 		if (reslut != null && !("").equals(reslut)) {
@@ -488,9 +497,22 @@ public class ManagerUserController extends BaseControllerUtil {
 				System.err.println("该用户没有功能");
 			}
 		}
+		String url="http://localhost:8080/privilege-service/menu/getMenu";
+		reslut=sendPost(userMenuRedisUrl, Signature);
+		List<Map<String, Object>> userMenuList=null;
+		if (reslut != null && !("").equals(reslut)) {
+			JSONObject jsonObject = JSONObject.fromObject(reslut);
+			Map JsnMap = (Map) jsonObject;
+			if (!("0").equals(JsnMap.get("status"))) {
+				userMenuList = (List<Map<String, Object>>) JsnMap.get("menuList");
+			} else {
+				System.err.println("该用户没有菜单");
+			}
+		}
 		Map<String, Object> aMap = new HashMap<String, Object>();
 		aMap.put("resourceList", userResourceList);
 		aMap.put("functionList", userFunctionList);
+		aMap.put("menuList", userMenuList);
 		System.err.println(JSONObject.fromObject(aMap).toString());
 		WebUtils.writeJson(response, JSONObject.fromObject(aMap));
 		return;
@@ -603,7 +625,7 @@ public class ManagerUserController extends BaseControllerUtil {
 	 * @return
 	 */
 	protected List<TreeNode> buildTree2(List<PrivilegeMenu> menuList, List<PrivilegeResource1> resourceList,
-			List<PrivilegeFunction> functionList,List<PrivilegeOperation> operationList) {
+			List<PrivilegeFunction> functionList, List<PrivilegeOperation> operationList) {
 		// 顶级菜单资源集合
 		List<TreeNode> results = new ArrayList<TreeNode>();
 		List<PrivilegeResource1> pMenus = new ArrayList<PrivilegeResource1>();
@@ -614,7 +636,7 @@ public class ManagerUserController extends BaseControllerUtil {
 			List<TreeNode> childrenList = null;
 			if (menu.getParentId().equals("0")) {
 				treeNode = new TreeNode();
-				treeNode.setId("m"+menuId);
+				treeNode.setId("m" + menuId);
 				treeNode.setText(menuname);
 				treeNode.setIsmodule("0");
 				results.add(treeNode);
@@ -627,17 +649,17 @@ public class ManagerUserController extends BaseControllerUtil {
 						if (resource1.getMenuId().equals(menu2.getMenuId())) {
 							TreeNode node = new TreeNode();
 							List<TreeNode> childrenList2 = new ArrayList<TreeNode>();
-							node.setId("r"+resource1.getResourceId());
+							node.setId("r" + resource1.getResourceId());
 							node.setText(resource1.getResourceName());
 							node.setIsmodule("1");
 							childrenList.add(node);
 							for (PrivilegeFunction function : functionList) {
 								if (function.getResourceId().equals(resource1.getResourceId())) {
 									TreeNode Funnode = new TreeNode();
-									Funnode.setId("f"+function.getFunctionId());
+									Funnode.setId("f" + function.getFunctionId());
 									String optId = function.getOptId();
-									for(PrivilegeOperation operation:operationList){
-										if(optId.equals(operation.getId())){
+									for (PrivilegeOperation operation : operationList) {
+										if (optId.equals(operation.getId())) {
 											Funnode.setText(operation.getName());
 										}
 									}
@@ -749,6 +771,36 @@ public class ManagerUserController extends BaseControllerUtil {
 	public String userList() {
 		log.info("-------------------------userlist       start------------------------------------");
 		return "show/userlist";
+	}
+
+	@RequestMapping("findUserList")
+	public void findUserList(HttpServletRequest request, HttpServletResponse response) {
+		// 当前第几页
+		String page = request.getParameter("page");
+		System.out.println(page);
+		// 每页显示的记录数
+		String rows = request.getParameter("rows");
+		System.out.println(rows);
+		// 当前页
+		int currentPage = Integer.parseInt((page == null || page == "0") ? "1" : page);
+		// 每页显示条数
+		int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10" : rows);
+		// 每页的开始记录 第一页为1 第二页为number +1
+		int startRow = (currentPage - 1) * pageSize;
+		String url="http://localhost:8080/privilege-service/user/getUser";
+		Map<String, Object> map=new HashMap<String,Object>();
+		map.put("appId", appId);
+		map.put("start", startRow);
+		map.put("limit", pageSize);
+		String result=sendPost(queryUserUrl, map);
+		JSONObject object=JSONObject.fromObject(result);
+		int count = (int) object.get("total");
+		
+
+		
+
+		WebUtils.writeJson(response, object);
+		return;
 	}
 
 	/**
