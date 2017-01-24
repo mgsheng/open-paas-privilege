@@ -96,15 +96,25 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 		// resourceList
 		Set resourceSet = new HashSet();
 		if (!boo) {
+			//roleResource 中functionId
+			List<String> FunIds = privilegeRoleResourceService.findUserResourcesFunId(appId, appUserId);
+			// 加入 user表中functionIds
+			if (privilegeFunctionIds != null && !("").equals(privilegeFunctionIds)) {
+				FunIds.add(privilegeFunctionIds);
+			}
 			resourceList = privilegeResourceService.getResourceListByUserId(appUserId, appId);
-			// 通过user表functionId 查 resource
-			if (privilegeFunctionIds != null && !("").equals(privilegeFunctionIds)&&!("null").equals(privilegeFunctionIds)) {
-				String[] FunctionIds = privilegeFunctionIds.split(",");
-				if (FunctionIds != null && FunctionIds.length > 0) {
-					List<Map<String, Object>> resources = privilegeResourceService.getResourceListByFunIds(FunctionIds);
-					resourceList.addAll(resources);
+			if (FunIds!=null&&!("").equals(FunIds)&&!("null").equals(FunIds)) {
+				for(String string:FunIds){
+					if(string != null && !("").equals(string)&&!("null").equals(string)){
+						String[] FunctionIds = string.split(",");
+						if (FunctionIds != null && FunctionIds.length > 0) {
+							List<Map<String, Object>> resources = privilegeResourceService.getResourceListByFunIds(FunctionIds);
+							resourceList.addAll(resources);
+						}
+					}
 				}
 			}
+	
 			if (privilegeResourceIds != null && !("").equals(privilegeResourceIds)&&!("null").equals(privilegeResourceIds)) {
 				String[] resourceIds1 = privilegeResourceIds.split(",");// 将当前user
 																		// privilegeResourceIds字段数组转list
