@@ -1,6 +1,7 @@
 package cn.com.open.opensass.privilege.service.impl;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -74,6 +75,16 @@ public class PrivilegeUserServiceImpl implements PrivilegeUserService {
 	@Override
 	public ArrayList<String> findUserResources(String appId, String appUserId) {
 		return privilegeUserRepository.findUserResources(appId, appUserId);
+	}
+
+	@Override
+	public List<PrivilegeUser> findUserListByPage(String appId, int start, int limit) {
+		return privilegeUserRepository.findUserListByPage(appId, start, limit);
+	}
+
+	@Override
+	public int getUserCountByAppId(String appId) {
+		return privilegeUserRepository.getUserCountByAppId(appId);
 	}
 
 }
