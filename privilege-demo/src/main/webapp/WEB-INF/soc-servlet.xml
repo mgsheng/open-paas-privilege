@@ -37,7 +37,7 @@
 			</bean>
 			
 		</mvc:interceptor>
-	</mvc:interceptors>  s
+	</mvc:interceptors>  
     <!--annotation configuration -->
     <context:annotation-config/>
     <context:component-scan base-package="cn.com.open.pay.platform.manager.web"/>
