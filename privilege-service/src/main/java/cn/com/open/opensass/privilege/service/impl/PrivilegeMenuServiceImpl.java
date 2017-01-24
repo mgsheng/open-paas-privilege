@@ -8,7 +8,6 @@ import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.slf4j.Logger;
@@ -53,7 +52,6 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 			privilegeMenuRepository.savePrivilegeMenu(privilegeMenu);
 			return true;
 		} catch (Exception e) {
-			// TODO: handle exception
 			return false;
 		}
 
@@ -61,36 +59,30 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 
 	@Override
 	public PrivilegeMenu findByMenuId(String menuId, String appId) {
-		// TODO Auto-generated method stub
 		return privilegeMenuRepository.findByMenuId(menuId, appId);
 	}
 
 	@Override
 	public List<PrivilegeMenu> findMenuPage(String menuId, String appId, int startRow, int pageSize) {
-		// TODO Auto-generated method stub
 		return privilegeMenuRepository.findMenuPage(menuId, appId, startRow, pageSize);
 	}
 
 	@Override
 	public Boolean updatePrivilegeMenu(PrivilegeMenu privilegeMenu) {
-		// TODO Auto-generated method stub
 		try {
 			privilegeMenuRepository.updatePrivilegeMenu(privilegeMenu);
 			return true;
 		} catch (Exception e) {
-			// TODO: handle exception
 			return false;
 		}
 	}
 
 	@Override
 	public Boolean deleteByMenuId(String[] menuIds) {
-		// TODO Auto-generated method stub
 		try {
 			privilegeMenuRepository.deleteByMenuId(menuIds);
 			return true;
 		} catch (Exception e) {
-			// TODO: handle exception
 			return false;
 		}
 	}
@@ -132,6 +124,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 
 		{
 			List<PrivilegeMenu> privilegeMenuList = getMenuListByUserId(appUserId, appId);
+			//通过查找RoleResource中functionId 查找相应的菜单
 			List<String> FunIds = privilegeRoleResourceService.findUserResourcesFunId(user.getAppId(),
 					user.getAppUserId());
 			
@@ -149,12 +142,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 					privilegeMenuList.addAll(menus);
 				}
 			}
-			/*
-			 * if (functionIds != null && !("").equals(functionIds)) { String[]
-			 * funIds = functionIds.split(","); List<PrivilegeMenu> menus =
-			 * getMenuListByFunctionId(funIds); privilegeMenuList.addAll(menus);
-			 * }
-			 */
+			
 			if (resourceIds != null && !("").equals(resourceIds)) {
 				String[] resIds = resourceIds.split(",");
 				for (String id : resIds) {
