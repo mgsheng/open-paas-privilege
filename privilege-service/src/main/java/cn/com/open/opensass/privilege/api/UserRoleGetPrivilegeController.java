@@ -47,8 +47,6 @@ import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
 @Controller
 @RequestMapping("/userRole/")
 public class UserRoleGetPrivilegeController extends BaseControllerUtil {
-	private static final String prefixRole = RedisConstant.USERROLE_CACHE;
-	private static final String prefixMenu = RedisConstant.USERMENU_CACHE;
 	public static final String SIGN = RedisConstant.SIGN;
 
 	private static final Logger log = LoggerFactory.getLogger(UserRoleGetPrivilegeController.class);
@@ -84,7 +82,7 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 			paraMandaChkAndReturn(10000, response, "必传参数中有空值");
 			return;
 		}
-		/*App app = (App) redisClient.getObject(RedisConstant.APP_INFO + privilegeUserVo.getAppId());
+		App app = (App) redisClient.getObject(RedisConstant.APP_INFO + privilegeUserVo.getAppId());
 		if (app == null) {
 			app = appService.findById(Integer.parseInt(privilegeUserVo.getAppId()));
 			redisClient.setObject(RedisConstant.APP_INFO + privilegeUserVo.getAppId(), app);
@@ -94,7 +92,7 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 		if (!f) {
 			paraMandaChkAndReturn(10001, response, "认证失败");
 			return;
-		}*/
+		}
 
 		// 获取当前用户信息
 		PrivilegeUser user = privilegeUserService.findByAppIdAndUserId(privilegeUserVo.getAppId(),
