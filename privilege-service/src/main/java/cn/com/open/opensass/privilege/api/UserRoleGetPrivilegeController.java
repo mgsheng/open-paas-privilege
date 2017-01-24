@@ -127,12 +127,15 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 					functionIds.add(string);
 				}
 			}
-			StringBuffer stringBuffer=new StringBuffer();
-			for (String string : functionIds) {
-				stringBuffer.append(string);
-				stringBuffer.append(",");
+			if (functionIds.size()>0) {
+				StringBuffer stringBuffer=new StringBuffer();
+				for (String string : functionIds) {
+					stringBuffer.append(string);
+					stringBuffer.append(",");
+				}
+				map.put("privilegeFunId", stringBuffer.substring(0,stringBuffer.length()-1));
 			}
-			map.put("privilegeFunId", stringBuffer.substring(0,stringBuffer.length()-1));
+			
 		}
 		
 	
