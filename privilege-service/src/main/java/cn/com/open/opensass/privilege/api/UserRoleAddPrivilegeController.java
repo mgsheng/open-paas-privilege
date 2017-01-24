@@ -102,7 +102,7 @@ public class UserRoleAddPrivilegeController extends BaseControllerUtil {
 					}
 				}
 				// 添加缓存
-				PrivilegeAjaxMessage message = privilegeUserRedisService.getRedisUserRole(privilegeUserVo.getAppId(),
+				PrivilegeAjaxMessage message = privilegeUserRedisService.updateUserRoleRedis(privilegeUserVo.getAppId(),
 						privilegeUserVo.getAppUserId());
 				if (message.getCode().equals("1")) {
 					map.put("status", "1");
