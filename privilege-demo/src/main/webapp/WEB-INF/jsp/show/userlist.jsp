@@ -209,7 +209,7 @@
 				 var url = '${pageContext.request.contextPath}/managerUser/toRole?id='+userId+'&userName='+userName;
 			 	 var content = '<iframe scrolling="auto" frameborder="0" src="'+url+'" style="width:100%;height:100%;"></iframe>';
 				 $('#tt').tabs('add',{
-					 title:userName,
+					 title:userName+'-授权角色',
 					 content:content,
 					 closable:true,
 					 cache:true
@@ -224,7 +224,7 @@
 				 var url = '${pageContext.request.contextPath}/managerUser/toFunction?id='+userId+'&userName='+userName;
 			 	 var content = '<iframe scrolling="auto" frameborder="0" src="'+url+'" style="width:100%;height:100%;"></iframe>';
 				 $('#tt').tabs('add',{
-					 title:userName,
+					 title:userName+'-授权功能',
 					 content:content,
 					 closable:true,
 					 cache:true
