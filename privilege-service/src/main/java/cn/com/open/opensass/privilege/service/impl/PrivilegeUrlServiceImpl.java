@@ -5,6 +5,7 @@ import cn.com.open.opensass.privilege.dao.PrivilegeUrl;
 import cn.com.open.opensass.privilege.dao.cache.RedisDao;
 import cn.com.open.opensass.privilege.model.PrivilegeFunction;
 import cn.com.open.opensass.privilege.model.PrivilegeResource;
+import cn.com.open.opensass.privilege.model.PrivilegeRole;
 import cn.com.open.opensass.privilege.model.PrivilegeUser;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import cn.com.open.opensass.privilege.service.*;
@@ -36,6 +37,8 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 	private PrivilegeResourceService privilegeResourceService;
 	@Autowired
 	private PrivilegeFunctionService privilegeFunctionService;
+	@Autowired
+	private PrivilegeRoleService privilegeRoleService;
 
 	@Override
 	public PrivilegeAjaxMessage getRedisUrl(String appId, String appUserId) {
@@ -52,10 +55,26 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 		String urlJedis = redisDao.getUrlRedis(prifix, appId, appUserId);
 		log.info("getDataPrivilege接口读取redis数据：" + urlJedis);
 		if (null == urlJedis || urlJedis.length() <= 0) {
-			PrivilegeUrl privilegeUrl = getPrivilegeUrl(appId, appUserId, privilegeUser);
+			Boolean isManger=false;
+			List<PrivilegeRole> roles = privilegeRoleService.getRoleListByUserIdAndAppId(appUserId, appId);
+			for (PrivilegeRole role : roles) {
+				if (role.getRoleType() != null) {
+					if (role.getRoleType() == 2) {
+						isManger=true;
+						break;
+					}
+				}
+			}
+			PrivilegeUrl url=null;
+			if (isManger) {
+				 url=getAllPrivilegeUrl(appId);
+			}else {
+				url = getPrivilegeUrl(appId, appUserId, privilegeUser);
+			}
+			
 			/* 写入redis */
 			log.info("getDataPrivilege接口获取数据并写入redis数据开始");
-			redisDao.putUrlRedis(prifix, privilegeUrl, appId, appUserId);
+			redisDao.putUrlRedis(prifix, url, appId, appUserId);
 
 			/* 读取redis */
 			urlJedis = redisDao.getUrlRedis(prifix, appId, appUserId);
@@ -125,7 +144,7 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 
 	@Override
 	public PrivilegeUrl getPrivilegeUrl(String appId, String appUserId, PrivilegeUser privilegeUser) {
-
+		
 		/* 排重处理 */
 		Set<String> setUrl = (Set<String>) new HashSet();
 		/* 资源 */
@@ -144,7 +163,11 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 				String[] functionIds = functionId.split(",");
 				for (String fid : functionIds) {
 					if (null != fid && fid.length() > 0) {
-
+						//通过 roleResource表 functionId 查找资源
+						PrivilegeResource resource=privilegeResourceService.getResourceListByFunId(fid);
+						if(null!=resource&&null!=resource.getBaseUrl()){
+							setUrl.add(resource.getBaseUrl());
+						}
 						PrivilegeFunction privilegeFunction = privilegeFunctionService.findByFunctionId(fid);
 						if (null != privilegeFunction && null != privilegeFunction.getOptUrl()
 								&& privilegeFunction.getOptUrl().length() > 0) {
