@@ -26,6 +26,10 @@
          where  group_id = #{groupId}
          and app_id=#{appId}
 	</select>
+	<select id="findByAppId" resultMap="privilegeGroupMap" flushCache="true">
+         select * from privilege_group
+         where app_id=#{appId}
+	</select>
 	<select id="findGroupPage" resultMap="privilegeGroupMap" flushCache="true">
          select * from privilege_group
          where  group_id = #{groupId}
