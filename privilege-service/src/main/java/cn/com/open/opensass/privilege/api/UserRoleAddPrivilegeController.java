@@ -20,6 +20,7 @@ import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import cn.com.open.opensass.privilege.service.AppService;
 import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
+import cn.com.open.opensass.privilege.service.PrivilegeUrlService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserRedisService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserRoleService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserService;
@@ -44,6 +45,8 @@ public class UserRoleAddPrivilegeController extends BaseControllerUtil {
 	private RedisClientTemplate redisClient;
 	@Autowired
 	private PrivilegeMenuService privilegeMenuService;
+	@Autowired
+	private PrivilegeUrlService privilegeUrlService;
 	/**
 	 * 用户角色初始创建接口
 	 */
@@ -107,6 +110,8 @@ public class UserRoleAddPrivilegeController extends BaseControllerUtil {
 				PrivilegeAjaxMessage message = privilegeUserRedisService.updateUserRoleRedis(privilegeUserVo.getAppId(),
 						privilegeUserVo.getAppUserId());
 				privilegeMenuService.updateMenuRedis(privilegeUserVo.getAppId(),
+						privilegeUserVo.getAppUserId());
+				privilegeUrlService.updateRedisUrl(privilegeUserVo.getAppId(),
 						privilegeUserVo.getAppUserId());
 				if (message.getCode().equals("1")) {
 					map.put("status", "1");
