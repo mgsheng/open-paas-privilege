@@ -183,7 +183,7 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 			for (String resourceId : resourceIds) {
 				if (null != resourceId && resourceId.length() > 0) {
 					PrivilegeResource privilegeResource = privilegeResourceService
-							.findByResourceId(privilegeUser.getResourceId(), appId);
+							.findByResourceId(resourceId, appId);
 					if (null != privilegeResource && null != privilegeResource.getBaseUrl()
 							&& privilegeResource.getBaseUrl().length() > 0) {
 						setUrl.add(privilegeResource.getBaseUrl());
