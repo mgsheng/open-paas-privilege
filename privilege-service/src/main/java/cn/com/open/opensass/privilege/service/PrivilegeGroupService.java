@@ -3,6 +3,8 @@ package cn.com.open.opensass.privilege.service;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import cn.com.open.opensass.privilege.model.PrivilegeGroup;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 
@@ -16,5 +18,5 @@ public interface PrivilegeGroupService {
 	PrivilegeAjaxMessage findGroupPrivilege(String groupId,String appId);
 	PrivilegeAjaxMessage delGroupPrivilegeCache(String groupId,String appId);
 	PrivilegeAjaxMessage updateGroupPrivilegeCache(String groupId,String appId);
-	
+	List<PrivilegeGroup> findByAppId(String appId);
 }
