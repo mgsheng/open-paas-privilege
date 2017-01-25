@@ -173,6 +173,11 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 			String[] functionIds = privilegeUser.getPrivilegeFunId().split(",");
 			for (String functionId : functionIds) {
 				if (null != functionId && functionId.length() > 0) {
+					PrivilegeResource resource=privilegeResourceService.getResourceListByFunId(functionId);
+					if(null!=resource&&null!=resource.getBaseUrl()){
+						setUrl.add(resource.getBaseUrl());
+					}
+					
 					PrivilegeFunction privilegeFunction = privilegeFunctionService.findByFunctionId(functionId);
 					if (null != privilegeFunction && null != privilegeFunction.getOptUrl()
 							&& privilegeFunction.getOptUrl().length() > 0) {
