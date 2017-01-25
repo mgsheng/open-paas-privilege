@@ -32,6 +32,11 @@
 						<value>/managerUser/authorizeFun</value>
 						<value>/resource/findModuel</value>
 						<value>/managerUser/findUserList</value>
+						<value>/payment/findPayment</value>
+						<value>/paychannel/findMerchantNames</value>
+						<value>/payment/getPayment</value>
+						<value>/privilegeLog/findPrivilegeLog</value>
+						<value>/manage/getMerchantOrderRefund</value>
 					</list>
 				</property>
 			</bean>
