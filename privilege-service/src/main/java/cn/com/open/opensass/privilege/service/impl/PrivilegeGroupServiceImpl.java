@@ -151,4 +151,9 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 		return findGroupPrivilege(groupId, appId);
 	}
 
+	@Override
+	public List<PrivilegeGroup> findByAppId(String appId) {
+		return privilegeGroupRepository.findByAppId(appId);
+	}
+
 }
