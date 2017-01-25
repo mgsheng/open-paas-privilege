@@ -45,9 +45,29 @@
 	</div>
 </body>
 <script>
+function getRoot(){
+	var node=$('#tt').tree('getRoots');
+	$.each(node,function(i,n){
+		if($(n.target).children(".tree-icon").hasClass('tree-file')){
+			$(n.target).children(".tree-icon").removeClass('tree-file').addClass("tree-folder");
+		}
+		$(n.target).children(".tree-icon").addClass("tree-folder");
+		var children=$('#tt').tree('getChildren',n.target);
+		$.each(children,function(i,m){
+			if(m.ismodule=="0"){
+				if($(m.target).children(".tree-icon").hasClass('tree-file')){
+					$(m.target).children(".tree-icon").removeClass('tree-file').addClass("tree-folder");
+				}
+			}else if (m.ismodule=="1") {
+				$(m.target).children(".tree-icon").addClass("icon icon-mini-add");
+			}
+		});
+	});
+}
 	$('#tt').tree({ 
  	  url: '${pageContext.request.contextPath}/managerUser/tree', 
       onLoadSuccess:function(node,data){
+    	  getRoot();
     	 selected();
       },
       onClick:function(node){
