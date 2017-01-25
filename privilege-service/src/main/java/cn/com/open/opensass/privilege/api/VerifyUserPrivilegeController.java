@@ -80,8 +80,13 @@ public class VerifyUserPrivilegeController extends BaseControllerUtil {
 		Boolean isManger = false;
 		PrivilegeUser privilegeUser = privilegeUserService.findByAppIdAndUserId(appId, appUserId);
 		log.info("getDataPrivilege用户数据，appid=" + appId + ",用户Id=" + appUserId);
+		Map<String, Object> map = new HashMap<String, Object>();
 		if (null == privilegeUser) {
 			states = false;
+			map.put("status", "0");
+			map.put("error_code", "10001");
+			writeErrorJson(response, map);
+			return;
 		}
 		states = redisDao.existUrlRedis(prifix, jsonKeyName, optUrl, appId, appUserId);
 		if (!states) {
@@ -110,7 +115,7 @@ public class VerifyUserPrivilegeController extends BaseControllerUtil {
 			}
 			privilegeUrlService.getRedisUrl(appId, appUserId);
 		}
-		Map<String, Object> map = new HashMap<String, Object>();
+		
 
 		if (states) {
 			map.put("status", "1");
