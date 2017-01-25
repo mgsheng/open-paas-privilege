@@ -34,4 +34,5 @@ public interface PrivilegeResourceService {
 	List<Map<String, Object>> getAllResource(List<Map<String, Object>> resources);
 	List<Map<String, Object>> getResourceListByMenuId(String menuId);
 	List<String> findAppResources(String appId);
+	PrivilegeResource getResourceListByFunId(String functionId);
 }
