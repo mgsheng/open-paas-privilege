@@ -83,8 +83,8 @@
 									<!-- <th data-options="field:'password',align:'center'" hidden="true" style="width:15%;max-width:100%;">密码</th> -->
 									<th data-options="field:'appUserName',align:'center'" style="width:15%;max-width:100%;">用&nbsp;&nbsp;户&nbsp;&nbsp;名</th>
 									<!-- <th data-options="field:'realName',align:'center'" style="width:15%;max-width:100%;">真实姓名</th> -->
-									<!-- <th data-options="field:'nickName',align:'center'" style="width:15%;max-width:100%;">昵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称</th>
-									<th data-options="field:'deptName',align:'center'" style="width:15%;max-width:100%;">所属部门</th> -->
+									<!-- <th data-options="field:'nickName',align:'center'" style="width:15%;max-width:100%;">昵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称</th> -->
+									<th data-options="field:'groupName',align:'center'" style="width:15%;max-width:100%;">所属部门</th> 
 									<th data-options="field:'deptId',align:'center'" hidden="true" style="width:15%;max-width:100%;">所属部门ID</th>
 									<!-- <th data-options="field:'createTime',align:'center'" style="width:18%;max-width:100%;">注册时间</th> -->
 									<!-- <th data-options="field:'lastLoginTime',align:'center'" style="width:18%;max-width:100%;">上次登陆时间</th> -->
