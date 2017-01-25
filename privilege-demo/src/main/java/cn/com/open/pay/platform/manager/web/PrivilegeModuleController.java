@@ -92,15 +92,15 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		map.put("appId", appId);
 		String reslut = sendPost(appMenuRedisUrl, map);
 		JSONObject obj = JSONObject.fromObject(reslut);// 将json字符串转换为json对象
-		JSONArray objArray = JSONArray.fromObject(obj.get("menuList"));
+		JSONArray objArray = (JSONArray) obj.get("menuList");
 		List<PrivilegeMenu> menuList = JSONArray.toList(objArray, PrivilegeMenu.class);
 		String s1 = sendPost(appResRedisUrl, map);
 		JSONObject obj1 = new JSONObject().fromObject(s1);// 将json字符串转换为json对象
-		JSONArray obj1Array = JSONArray.fromObject(obj1.get("resourceList"));
-		JSONArray obj2Array = JSONArray.fromObject(obj1.get("functionList"));
+		JSONArray obj1Array = (JSONArray) obj1.get("resourceList");
+		JSONArray obj2Array = (JSONArray) obj1.get("functionList");
 		String operation = sendPost(getAllOperationUrl, map);
 		obj = JSONObject.fromObject(operation);
-		objArray = JSONArray.fromObject(obj.get("operationList"));
+		objArray = (JSONArray) obj.get("operationList");
 		// 将json对象转换为java对象
 		List<PrivilegeOperation> operationList = JSONArray.toList(objArray, PrivilegeOperation.class);
 		List<PrivilegeResource1> resourceList = JSONArray.toList(obj1Array, PrivilegeResource1.class);
