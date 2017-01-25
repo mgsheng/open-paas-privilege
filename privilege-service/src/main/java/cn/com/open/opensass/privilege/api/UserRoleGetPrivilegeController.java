@@ -108,7 +108,7 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 			map.put("deptId", user.getDeptId());
 			map.put("groupId", user.getGroupId());
 			map.put("privilegeFunId", user.getPrivilegeFunId());
-			//
+			//用户拥有的功能
 			List<String> FuncIds=privilegeRoleResourceService.findfindUserResourcesFunIdByResIsNull(user.getAppId(),user.getAppUserId());
 			Set<String> functionIds=new HashSet<String>();
 			if(FuncIds.size()>0){
@@ -222,8 +222,8 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 				roleMap.put("resourceList", resourceSet);
 			}else{
 				PrivilegeAjaxMessage message=privilegeResourceService.getAppResRedis(user.getAppId());
-				JSONObject obj1 = new JSONObject().fromObject(message.getMessage());// 将json字符串转换为json对象
-				JSONArray objArray = JSONArray.fromObject(obj1.get("resourceList"));
+				JSONObject obj1 = JSONObject.fromObject(message.getMessage());// 将json字符串转换为json对象
+				JSONArray objArray = (JSONArray) obj1.get("resourceList");
 				roleMap.put("resourceList", objArray);
 			}			
 			
@@ -256,12 +256,12 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 			roleMap.put("functionList", functionSet);
 			map.putAll(roleMap);
 		}else{
-			JSONObject obj1 = new JSONObject().fromObject(roleMessage.getMessage());// 将json字符串转换为json对象
-			JSONArray objArray = JSONArray.fromObject(obj1.get("roleList"));
+			JSONObject obj1 = JSONObject.fromObject(roleMessage.getMessage());// 将json字符串转换为json对象
+			JSONArray objArray = (JSONArray) obj1.get("roleList");
 			roleMap.put("roleList", objArray);
-			objArray=JSONArray.fromObject(obj1.get("resourceList"));
+			objArray=(JSONArray) obj1.get("resourceList");
 			roleMap.put("resourceList", objArray);
-			objArray=JSONArray.fromObject(obj1.get("functionList"));
+			objArray=(JSONArray) obj1.get("functionList");
 			roleMap.put("functionList", objArray);
 			map.putAll(roleMap);
 		}
@@ -307,8 +307,8 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 			}
 			map.putAll(menuMap);
 		}else{
-			JSONObject obj1 = new JSONObject().fromObject(menuMessage.getMessage());// 将json字符串转换为json对象
-			JSONArray objArray = JSONArray.fromObject(obj1.get("menuList"));
+			JSONObject obj1 = JSONObject.fromObject(menuMessage.getMessage());// 将json字符串转换为json对象
+			JSONArray objArray = (JSONArray) obj1.get("menuList");
 			menuMap.put("menuList", objArray);
 			map.putAll(menuMap);
 		}
