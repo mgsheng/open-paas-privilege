@@ -341,16 +341,16 @@ public class ManagerUserController extends BaseControllerUtil {
 		map.put("appId", appId);
 		String s = sendPost(appMenuRedisUrl, map);
 		JSONObject obj = JSONObject.fromObject(s);// 将json字符串转换为json对象
-		JSONArray objArray = JSONArray.fromObject(obj.get("menuList"));
+		JSONArray objArray = (JSONArray) obj.get("menuList");
 		// 将json对象转换为java对象
 		List<PrivilegeMenu> menuList = JSONArray.toList(objArray, PrivilegeMenu.class);
 		String s1 = sendPost(appResRedisUrl, map);
 		JSONObject obj1 = new JSONObject().fromObject(s1);// 将json字符串转换为json对象
-		JSONArray obj1Array = JSONArray.fromObject(obj1.get("resourceList"));
-		JSONArray obj2Array = JSONArray.fromObject(obj1.get("functionList"));
+		JSONArray obj1Array = (JSONArray) obj1.get("resourceList");
+		JSONArray obj2Array = (JSONArray) obj1.get("functionList");
 		String operation = sendPost(getAllOperationUrl, map);
 		obj = JSONObject.fromObject(operation);
-		objArray = JSONArray.fromObject(obj.get("operationList"));
+		objArray = (JSONArray) obj.get("operationList");
 		// 将json对象转换为java对象
 		List<PrivilegeOperation> operationList = JSONArray.toList(objArray, PrivilegeOperation.class);
 		List<PrivilegeResource1> resourceList = JSONArray.toList(obj1Array, PrivilegeResource1.class);
@@ -497,7 +497,6 @@ public class ManagerUserController extends BaseControllerUtil {
 				System.err.println("该用户没有功能");
 			}
 		}
-		String url="http://localhost:8080/privilege-service/menu/getMenu";
 		reslut=sendPost(userMenuRedisUrl, Signature);
 		List<Map<String, Object>> userMenuList=null;
 		if (reslut != null && !("").equals(reslut)) {
@@ -787,7 +786,6 @@ public class ManagerUserController extends BaseControllerUtil {
 		int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10" : rows);
 		// 每页的开始记录 第一页为1 第二页为number +1
 		int startRow = (currentPage - 1) * pageSize;
-		String url="http://localhost:8080/privilege-service/user/getUser";
 		Map<String, Object> map=new HashMap<String,Object>();
 		map.put("appId", appId);
 		map.put("start", startRow);
