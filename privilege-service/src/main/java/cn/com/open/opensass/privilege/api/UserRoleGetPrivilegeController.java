@@ -108,33 +108,7 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 			map.put("deptId", user.getDeptId());
 			map.put("groupId", user.getGroupId());
 			map.put("privilegeFunId", user.getPrivilegeFunId());
-			//用户拥有的功能
-			List<String> FuncIds=privilegeRoleResourceService.findfindUserResourcesFunIdByResIsNull(user.getAppId(),user.getAppUserId());
-			Set<String> functionIds=new HashSet<String>();
-			if(FuncIds.size()>0){
-				for (String string : FuncIds) {
-					if(string!=null&&!string.equals("")&&!string.equals("null")){
-						String[] FuncnId = string.split(",");
-						for(String functionId:FuncnId){
-							functionIds.add(functionId);
-						}
-					}
-				}
-			}
-			if(user.getPrivilegeFunId()!=null&&user.getPrivilegeFunId().length()>0){
-				String[] FuncnId = user.getPrivilegeFunId().split(",");
-				for (String string : FuncnId) {
-					functionIds.add(string);
-				}
-			}
-			if (functionIds.size()>0) {
-				StringBuffer stringBuffer=new StringBuffer();
-				for (String string : functionIds) {
-					stringBuffer.append(string);
-					stringBuffer.append(",");
-				}
-				map.put("privilegeFunId", stringBuffer.substring(0,stringBuffer.length()-1));
-			}
+			map.put("resourceId", user.getResourceId());
 			
 		}
 		
