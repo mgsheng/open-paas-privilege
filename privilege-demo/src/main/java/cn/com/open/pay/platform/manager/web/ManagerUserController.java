@@ -79,6 +79,7 @@ public class ManagerUserController extends BaseControllerUtil {
 	private String userMenuRedisUrl;
 	@Value("#{properties['query-privilege-user-uri']}")
 	private String queryUserUrl;
+
 	/**
 	 * 跳转到用户信息列表的页面
 	 * 
@@ -138,13 +139,12 @@ public class ManagerUserController extends BaseControllerUtil {
 		List<Map<String, Object>> userRoleList = null;
 		if (reslut != null && !("").equals(reslut)) {
 			JSONObject jsonObject = JSONObject.fromObject(reslut);
-			Map JsnMap = (Map) jsonObject;
-			if (!("0").equals(JsnMap.get("status"))) {
+			if (!("0").equals(jsonObject.get("status"))) {
 				boo = true;
 			} else {
 				boo = false;
 				// 如果用户不存在 添加用户
-				if (("10002").equals(String.valueOf(JsnMap.get("error_code")))) {
+				if (("10002").equals(String.valueOf(jsonObject.get("error_code")))) {
 					Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
 					map.put("appId", appId);
 					map.put("appUserId", id);
@@ -154,8 +154,7 @@ public class ManagerUserController extends BaseControllerUtil {
 					reslut = sendPost(addPrivilegeUserUrl, map);
 					if (reslut != null && !("").equals(reslut)) {
 						jsonObject = JSONObject.fromObject(reslut);
-						JsnMap = (Map) jsonObject;
-						if (!("0").equals(JsnMap.get("status"))) {
+						if (!("0").equals(jsonObject.get("status"))) {
 							boo = true;
 							jsonobj.put("result", boo);
 							WebUtils.writeJson(response, jsonobj);
@@ -186,8 +185,7 @@ public class ManagerUserController extends BaseControllerUtil {
 			reslut = sendPost(moditUserPrivilegeUrl, signature);
 			if (reslut != null && !("").equals(reslut)) {
 				JSONObject jsonObject = JSONObject.fromObject(reslut);
-				Map JsnMap = (Map) jsonObject;
-				if (!("0").equals(JsnMap.get("status"))) {
+				if (!("0").equals(jsonObject.get("status"))) {
 					System.err.println("修改成功");
 					boo = true;
 				} else {
@@ -215,76 +213,50 @@ public class ManagerUserController extends BaseControllerUtil {
 	public void authorizeRole(HttpServletRequest request, HttpServletResponse response)
 			throws UnsupportedEncodingException {
 		log.info("-------------------------authorizeRole        start------------------------------------");
-		String id = request.getParameter("id");
+		String appUserId = request.getParameter("id");
 		String role = request.getParameter("role");
-		String userName = request.getParameter("userName");
+		String roleId = request.getParameter("roleId");
+		String deptId = null;
+		String groupId = null;
+		String privilegeFunId = null;
+		String resourceId = null;
 		Boolean boo = false;
 		JSONObject jsonobj = new JSONObject();
-		// 查找当前用户角色
 		Map<String, Object> Signature = privilegeGetSignatureService.getSignature(appId);
 		Signature.put("appId", appId);
-		Signature.put("appUserId", id);
+		Signature.put("appUserId", appUserId);
+		// 查询当前用户权限
 		String reslut = sendPost(getUserPrivilegeUrl, Signature);
-		List<Map<String, Object>> userRoleList = null;
 		if (reslut != null && !("").equals(reslut)) {
 			JSONObject jsonObject = JSONObject.fromObject(reslut);
-			Map JsnMap = (Map) jsonObject;
-			if (!("0").equals(JsnMap.get("status"))) {
+			if (!("0").equals(jsonObject.get("status"))) {
+				deptId = (String) (jsonObject.get("deptId").equals("null") ? "" : jsonObject.get("deptId"));
+				groupId = (String) (jsonObject.get("groupId").equals("null") ? "" : jsonObject.get("groupId"));
+				privilegeFunId = (String) (jsonObject.get("privilegeFunId").equals("null") ? "": jsonObject.get("privilegeFunId"));
+				resourceId = (String) (jsonObject.get("resourceId").equals("null") ? "" : jsonObject.get("resourceId"));
 				boo = true;
-				userRoleList = (List<Map<String, Object>>) JsnMap.get("roleList");
 			} else {
 				boo = false;
-				// 如果用户不存在 添加用户
-				if (("10002").equals(String.valueOf(JsnMap.get("error_code")))) {
-					Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
-					map.put("appId", appId);
-					map.put("appUserId", id);
-					map.put("privilegeRoleId", role);
-					map.put("appUserName", userName);
-					reslut = sendPost(addPrivilegeUserUrl, map);
-					if (reslut != null && !("").equals(reslut)) {
-						jsonObject = JSONObject.fromObject(reslut);
-						JsnMap = (Map) jsonObject;
-						if (!("0").equals(JsnMap.get("status"))) {
-							boo = true;
-							jsonobj.put("result", boo);
-							WebUtils.writeJson(response, jsonobj);
-							return;
-						} else {
-							boo = false;
-							jsonobj.put("result", boo);
-							WebUtils.writeJson(response, jsonobj);
-							return;
-						}
-					} else {
-						boo = false;
-					}
-				}
 				System.err.println("该用户没有角色");
 			}
 		} else {
 			boo = false;
 		}
-		// 用户当前角色ids
-		StringBuffer oldRoleIds = new StringBuffer();
-		if (userRoleList != null && userRoleList.size() > 0) {
-			for (Map<String, Object> map : userRoleList) {
-				oldRoleIds.append(map.get("privilegeRoleId"));
-				oldRoleIds.append(",");
-			}
-		}
-		if (oldRoleIds.length() > 0 && boo) {
-			// 删除用户原有角色
+		// 删除取消勾选的角色
+		if (roleId != null && boo) {
 			Map<String, Object> signature = privilegeGetSignatureService.getSignature(appId);
 			signature.put("appId", appId);
-			signature.put("appUserId", id);
+			signature.put("appUserId", appUserId);
 			signature.put("method", "1");
-			signature.put("privilegeRoleId", oldRoleIds.subSequence(0, oldRoleIds.length() - 1).toString());
+			signature.put("privilegeRoleId", roleId);
+			signature.put("deptId", deptId);
+			signature.put("groupId", groupId);
+			signature.put("privilegeFunId", privilegeFunId);
+			signature.put("resourceId", resourceId);
 			reslut = sendPost(moditUserPrivilegeUrl, signature);
 			if (reslut != null && !("").equals(reslut)) {
 				JSONObject jsonObject = JSONObject.fromObject(reslut);
-				Map JsnMap = (Map) jsonObject;
-				if (!("0").equals(JsnMap.get("status"))) {
+				if (!("0").equals(jsonObject.get("status"))) {
 					System.err.println("删除成功");
 					boo = true;
 				} else {
@@ -295,26 +267,21 @@ public class ManagerUserController extends BaseControllerUtil {
 				boo = false;
 			}
 		}
-
-		id = (id == null ? null : new String(id.getBytes("iso-8859-1"), "utf-8"));
-		if (role == null || role == "") {
-			role = null;
-		} else {
-			role = new String(role.getBytes("iso-8859-1"), "utf-8");
-		}
-
 		if (role != null && boo) {
-			// 添加现在的角色
+			// 添加勾选的角色
 			Map<String, Object> signature = privilegeGetSignatureService.getSignature(appId);
 			signature.put("appId", appId);
-			signature.put("appUserId", id);
+			signature.put("appUserId", appUserId);
 			signature.put("method", "0");
 			signature.put("privilegeRoleId", role);
+			signature.put("deptId", deptId);
+			signature.put("groupId", groupId);
+			signature.put("privilegeFunId", privilegeFunId);
+			signature.put("resourceId", resourceId);
 			reslut = sendPost(moditUserPrivilegeUrl, signature);
 			if (reslut != null && !("").equals(reslut)) {
 				JSONObject jsonObject = JSONObject.fromObject(reslut);
-				Map JsnMap = (Map) jsonObject;
-				if (!("0").equals(JsnMap.get("status"))) {
+				if (!("0").equals(jsonObject.get("status"))) {
 					System.err.println("添加成功");
 					boo = true;
 				} else {
@@ -325,7 +292,7 @@ public class ManagerUserController extends BaseControllerUtil {
 				boo = false;
 			}
 		}
-		System.out.println("****************id:" + id + "****************role:" + role);
+		System.out.println("****************id:" + appUserId + "****************role:" + role);
 
 		// result = true表示该用户授权角色成功
 
@@ -484,7 +451,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		Signature.put("appId", appId);
 		Signature.put("appUserId", id);
 		String reslut = sendPost(getUserPrivilegeUrl, Signature);
-		
+
 		List<Map<String, Object>> userResourceList = null;
 		List<Map<String, Object>> userFunctionList = null;
 		if (reslut != null && !("").equals(reslut)) {
@@ -497,8 +464,8 @@ public class ManagerUserController extends BaseControllerUtil {
 				System.err.println("该用户没有功能");
 			}
 		}
-		reslut=sendPost(userMenuRedisUrl, Signature);
-		List<Map<String, Object>> userMenuList=null;
+		reslut = sendPost(userMenuRedisUrl, Signature);
+		List<Map<String, Object>> userMenuList = null;
 		if (reslut != null && !("").equals(reslut)) {
 			JSONObject jsonObject = JSONObject.fromObject(reslut);
 			Map JsnMap = (Map) jsonObject;
@@ -786,12 +753,12 @@ public class ManagerUserController extends BaseControllerUtil {
 		int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10" : rows);
 		// 每页的开始记录 第一页为1 第二页为number +1
 		int startRow = (currentPage - 1) * pageSize;
-		Map<String, Object> map=new HashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("appId", appId);
 		map.put("start", startRow);
 		map.put("limit", pageSize);
-		String result=sendPost(queryUserUrl, map);
-		JSONObject object=JSONObject.fromObject(result);
+		String result = sendPost(queryUserUrl, map);
+		JSONObject object = JSONObject.fromObject(result);
 		WebUtils.writeJson(response, object);
 		return;
 	}
