@@ -21,9 +21,12 @@ import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import cn.com.open.opensass.privilege.service.AppService;
 import cn.com.open.opensass.privilege.service.PrivilegeGroupResourceService;
+import cn.com.open.opensass.privilege.service.PrivilegeGroupService;
+import cn.com.open.opensass.privilege.service.PrivilegeResourceService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
 import cn.com.open.opensass.privilege.tools.WebUtils;
+import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 
 /**
  *  权限资源修改接口
@@ -38,6 +41,8 @@ public class GroupModifyPrivilegeController extends BaseControllerUtil{
 	private AppService appService;
 	@Autowired
 	private RedisClientTemplate redisClient;
+	@Autowired
+	private PrivilegeGroupService privilegeGroupService;
     /**
      * 权限资源修改接口
      * @return Json
@@ -136,7 +141,15 @@ public class GroupModifyPrivilegeController extends BaseControllerUtil{
         	    	 }
     			}
     	}
-    	map.put("status", "1");
+    	//更新缓存
+		PrivilegeAjaxMessage message=privilegeGroupService.updateGroupPrivilegeCache(groupId, appId);
+		if (message.getCode().equals("1")) {
+			map.put("status","1");
+		} else {
+			map.put("status", message.getCode());
+			map.put("error_code", message.getMessage());/* 数据不存在 */
+			writeErrorJson(response, map);
+		}
     	writeSuccessJson(response,map);
     	//OauthControllerLog.log(startTime, guid, source_id, app, map,userserviceDev);
         return;

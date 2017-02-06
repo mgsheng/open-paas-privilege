@@ -1,6 +1,5 @@
 package cn.com.open.opensass.privilege.api;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -50,19 +49,8 @@ public class GroupAddPrivilegeController extends BaseControllerUtil{
     @RequestMapping("addPrivilege")
     public void addPrivilege(HttpServletRequest request,HttpServletResponse response) {
     	String groupId=request.getParameter("groupId");
-    	String groupName = "";
-    	String createUser="";
-    	try {
-    	if(!nullEmptyBlankJudge(request.getParameter("groupName"))){
-    		groupName = new String(request.getParameter("groupName").getBytes("iso-8859-1"),"utf-8");	
-    	}
-    	if(!nullEmptyBlankJudge(request.getParameter("createUser"))){
-    		createUser = new String(request.getParameter("createUser").getBytes("iso-8859-1"),"utf-8");	
-    	}
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    	String groupName = request.getParameter("groupName");
+    	String createUser=request.getParameter("createUser");
     	String appId=request.getParameter("appId");
     	String groupPrivilege=request.getParameter("groupPrivilege");
     	String createUserid=request.getParameter("createUserid");
@@ -84,37 +72,38 @@ public class GroupAddPrivilegeController extends BaseControllerUtil{
 			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
 			return;
 		}
-    	//添加 privilege_group_resource
-    	String [] groupPrivileges=groupPrivilege.split(",");
-    	String resourceId="";
-    	for(int i=0;i<groupPrivileges.length;i++){
-    		resourceId=groupPrivileges[i];
-    		if(nullEmptyBlankJudge(resourceId)){
-    			map.put("status","0");
-        		map.put("error_code","10002");
-    		}else{
-    			PrivilegeGroupResource pgr=privilegeGroupResourceService.getPrivilegeGroupResource(groupId, resourceId);
-    			if(pgr!=null){
-    	    		map.put("status","0");
-    	    		map.put("error_code","10002");
-    	    	}else{
-    	    		pgr=new PrivilegeGroupResource();
-    	    		pgr.setGroupId(groupId);
-    	    		pgr.setResourceId(resourceId);
-    	    		pgr.setCreateUser(createUser);
-    	    		pgr.setCreateUserId(createUserid);
-    	    		pgr.setCreateTime(new Date());
-    	    		if(!nullEmptyBlankJudge(status)){
-    	    			pgr.setStatus(Integer.parseInt(status));	
-    	    		}else{
-    	    			pgr.setStatus(1);	
-    	    		}
-    	    		privilegeGroupResourceService.saveprivilegeGroupResource(pgr);
-    	    		
-    	    	}
-    		}
-    	}
-    	
+		if(!nullEmptyBlankJudge(groupPrivilege)){
+			//添加 privilege_group_resource
+	    	String [] groupPrivileges=groupPrivilege.split(",");
+	    	String resourceId="";
+	    	for(int i=0;i<groupPrivileges.length;i++){
+	    		resourceId=groupPrivileges[i];
+	    		if(nullEmptyBlankJudge(resourceId)){
+	    			map.put("status","0");
+	        		map.put("error_code","10002");
+	    		}else{
+	    			PrivilegeGroupResource pgr=privilegeGroupResourceService.getPrivilegeGroupResource(groupId, resourceId);
+	    			if(pgr!=null){
+	    	    		map.put("status","0");
+	    	    		map.put("error_code","10002");
+	    	    	}else{
+	    	    		pgr=new PrivilegeGroupResource();
+	    	    		pgr.setGroupId(groupId);
+	    	    		pgr.setResourceId(resourceId);
+	    	    		pgr.setCreateUser(createUser);
+	    	    		pgr.setCreateUserId(createUserid);
+	    	    		pgr.setCreateTime(new Date());
+	    	    		if(!nullEmptyBlankJudge(status)){
+	    	    			pgr.setStatus(Integer.parseInt(status));	
+	    	    		}else{
+	    	    			pgr.setStatus(1);	
+	    	    		}
+	    	    		privilegeGroupResourceService.saveprivilegeGroupResource(pgr);
+	    	    		
+	    	    	}
+	    		}
+	    	}
+		}
     	PrivilegeGroup pg=privilegeGroupService.findBygroupId(groupId,appId);
     	if(pg!=null){
     		map.put("status","0");

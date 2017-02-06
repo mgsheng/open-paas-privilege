@@ -20,9 +20,11 @@ import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import cn.com.open.opensass.privilege.service.AppService;
 import cn.com.open.opensass.privilege.service.PrivilegeGroupResourceService;
+import cn.com.open.opensass.privilege.service.PrivilegeGroupService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
 import cn.com.open.opensass.privilege.tools.WebUtils;
+import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 
 /**
  * 组织机构权限删除接口（删除当前组织机构所有权限）
@@ -37,6 +39,8 @@ public class GroupDelPrivilegeController extends BaseControllerUtil{
 	private AppService appService;
 	@Autowired
 	private RedisClientTemplate redisClient;
+	@Autowired
+	private PrivilegeGroupService privilegeGroupService;
     /**
      * 组织机构权限删除接口（删除当前组织机构所有权限）
      * @return Json
@@ -67,7 +71,15 @@ public class GroupDelPrivilegeController extends BaseControllerUtil{
     	List<PrivilegeGroupResource> lists=privilegeGroupResourceService.getPgrs(groupId);
     	if(lists!=null&&lists.size()>0){
     		privilegeGroupResourceService.deleteByGroupId(groupId);
-    		map.put("status","1");
+    		//更新缓存
+    		PrivilegeAjaxMessage message=privilegeGroupService.updateGroupPrivilegeCache(groupId, appId);
+    		if (message.getCode().equals("1")) {
+    			map.put("status","1");
+    		} else {
+    			map.put("status", message.getCode());
+    			map.put("error_code", message.getMessage());/* 数据不存在 */
+    			writeErrorJson(response, map);
+    		}
     	}else{
     		map.put("status","0");
     		map.put("error_code","10001");
