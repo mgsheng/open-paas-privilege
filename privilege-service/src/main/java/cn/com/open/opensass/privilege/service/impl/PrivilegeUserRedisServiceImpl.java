@@ -25,7 +25,6 @@ import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserRedisService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
-import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
 import cn.com.open.opensass.privilege.vo.PrivilegeResourceVo;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -145,14 +144,14 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 			roleMap.put("resourceList", resourceSet);
 		}else {
 			PrivilegeAjaxMessage message=privilegeResourceService.getAppResRedis(appId);
-			JSONObject obj1 = new JSONObject().fromObject(message.getMessage());// 将json字符串转换为json对象
+			JSONObject obj1 = JSONObject.fromObject(message.getMessage());// 将json字符串转换为json对象
 			JSONArray objArray = JSONArray.fromObject(obj1.get("resourceList"));
 			roleMap.put("resourceList", objArray);
 		}
 		/*functionList  判断是否为管理员，若为管理员，查询应用资源缓存中functionList*/
 		if(boo){
 			PrivilegeAjaxMessage message=privilegeResourceService.getAppResRedis(appId);
-			JSONObject obj1 = new JSONObject().fromObject(message.getMessage());// 将json字符串转换为json对象
+			JSONObject obj1 = JSONObject.fromObject(message.getMessage());// 将json字符串转换为json对象
 			JSONArray objArray = JSONArray.fromObject(obj1.get("functionList"));
 			roleMap.put("functionList", objArray);
 		}else {
