@@ -166,9 +166,6 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 			List<Map<String, Object>> roles = privilegeRoleService.getRoleListByUserId(user.getAppUserId(),
 					user.getAppId());
 			roleMap.put("roleList", roles);
-			// resourceList
-			
-			
 			// user表多余的resourceId
 			List<String> resourceIds = new ArrayList<String>();
 			// resourceList
