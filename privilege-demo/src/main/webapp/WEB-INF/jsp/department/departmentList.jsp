@@ -112,6 +112,11 @@
          //添加
 		 $('#add').click(function() {
 		   // $("#updateDiv").hide();
+		   var groupId=$("#groupId").val(); 
+		   if (groupId!='') {
+                msgShow('系统提示', '请删除组织机构ID！', 'warning');
+                return false;
+            } 
 		   	clearChoose();
 		   	$('#wmodule').window('open');
          });
