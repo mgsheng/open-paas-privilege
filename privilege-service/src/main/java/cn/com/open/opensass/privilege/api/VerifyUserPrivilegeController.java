@@ -32,9 +32,6 @@ import net.sf.json.JSONObject;
 
 /**
  * 用户权限认证接口
- * 
- * @author Administrator
- *
  */
 @Controller
 @RequestMapping("/userRole/")
@@ -77,6 +74,7 @@ public class VerifyUserPrivilegeController extends BaseControllerUtil {
 			return;
 		}
 		Boolean states = false;
+		//是否为管理员
 		Boolean isManger = false;
 		PrivilegeUser privilegeUser = privilegeUserService.findByAppIdAndUserId(appId, appUserId);
 		log.info("getDataPrivilege用户数据，appid=" + appId + ",用户Id=" + appUserId);
@@ -90,11 +88,13 @@ public class VerifyUserPrivilegeController extends BaseControllerUtil {
 		}
 		states = redisDao.existUrlRedis(prifix, jsonKeyName, optUrl, appId, appUserId);
 		if (!states) {
+			//判断是否是管理员
 			List<PrivilegeRole> roles = privilegeRoleService.getRoleListByUserIdAndAppId(appUserId, appId);
 			for (PrivilegeRole role : roles) {
 				if (role.getRoleType() != null) {
 					if (role.getRoleType() == 2) {
 						isManger = true;
+						break;
 					}
 				}
 			}
