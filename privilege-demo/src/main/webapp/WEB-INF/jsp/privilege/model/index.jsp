@@ -444,6 +444,8 @@
 			if (node){
 				if(node.attributes.baseUrl!="" && typeof(node.attributes.baseUrl)!="undefined"){
 					msgShow('系统提示', '资源菜单下不能添加菜单目录！', 'info');
+				}else if(node.ismodule=="2"){
+					msgShow('系统提示', '功能下不能添加菜单目录！');
 				}else{
 					$("#url").hide();
 			 		$('#parentName').html(node.text);
