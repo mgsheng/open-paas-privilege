@@ -72,6 +72,10 @@ function getRoot(){
       }
       
    });
+	   //取消选中
+	function cancelAuthorizeRole() {
+		 $("#tt").tree("reload");
+	}
 	//勾选用户拥有的功能
 	function selected(){
 		$.post('${pageContext.request.contextPath}/managerUser/function?id='+'${id}',function(data){
