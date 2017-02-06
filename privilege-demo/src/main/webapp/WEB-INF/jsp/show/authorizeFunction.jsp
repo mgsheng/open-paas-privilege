@@ -69,10 +69,8 @@ function getRoot(){
       onLoadSuccess:function(node,data){
     	  getRoot();
     	 selected();
-      },
-      onClick:function(node){
-    	  alert("id="+node.id+"ismodule=="+node.ismodule);
       }
+      
    });
 	//勾选用户拥有的功能
 	function selected(){
