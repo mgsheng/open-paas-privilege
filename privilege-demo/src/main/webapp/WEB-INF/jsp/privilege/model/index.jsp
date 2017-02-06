@@ -522,35 +522,31 @@
     			 var url;
     			 var boo=true;
     			if(node){
-    				if(node.ismodule=="00"){
-       				  	msgShow('系统提示', '请选择子菜单！', 'info');
-       				  	boo=false;
-       			  	 }else if(node.ismodule=="0"){
-       			  	 		menuId=node.id;
-       		    	 		var childrenNodes = $('#deptree').tree('getChildren',node.target);
-       		    	 		if(childrenNodes!=null){
-       		    		 		$.each(childrenNodes,function(i,n){
-       		    		 			if(n.ismodule=="1"){
-       		    		 				menuIds.push(n.attributes.menuId);
-       			    		 			resourceIds.push(n.id);
-       		    		 			}else if (n.ismodule=="0") {
-       		    		 				menuIds.push(n.id);
-									}else {
-										functionIds.push(n.id);
-									}
-       		    		 		 	
-       			    	 		});
-       		    		 		menuIds.join(",");
-       		    		 		resourceIds.join(",");
-       		    		 		functionIds.join(",");
-       		    		 		if(functionIds.length>0){
-    		    			 		delFunctions(functionIds);
-    		    		 		}
-    		    		 		if(menuIds.length>0){
-    		    			 		delMenu(resourceIds, menuIds);
-    		    		 		}
-       		    	 		}
-       		    	 		url=encodeURI('${pageContext.request.contextPath}/module/deleteMenu?menuId='+menuId+'&resourceId='+resourceId);
+       			  	if(node.ismodule=="0"){
+     			  	 	menuId=node.id;
+     		    	 	var childrenNodes = $('#deptree').tree('getChildren',node.target);
+     		    	 	if(childrenNodes!=null){
+     		    		 	$.each(childrenNodes,function(i,n){
+     		    		 		if(n.ismodule=="1"){
+     		    		 			menuIds.push(n.attributes.menuId);
+     			    		 		resourceIds.push(n.id);
+     		    		 		}else if (n.ismodule=="0") {
+     		    		 			menuIds.push(n.id);
+								}else {
+								functionIds.push(n.id);
+								}
+     			    	 	});
+     		    		 	menuIds.join(",");
+     		    		 	resourceIds.join(",");
+     		    		 	functionIds.join(",");
+     		    		 	if(functionIds.length>0){
+  		    			 		delFunctions(functionIds);
+  		    		 		}
+  		    		 		if(menuIds.length>0){
+  		    			 		delMenu(resourceIds, menuIds);
+  		    		 		}
+     		    	 	}
+     		    	 	url=encodeURI('${pageContext.request.contextPath}/module/deleteMenu?menuId='+menuId+'&resourceId='+resourceId);
        		     	}else if (node.ismodule=="1") {
        		    	 	var childrenNodes = $('#deptree').tree('getChildren',node.target);
        		    	 	if(childrenNodes!=null){
