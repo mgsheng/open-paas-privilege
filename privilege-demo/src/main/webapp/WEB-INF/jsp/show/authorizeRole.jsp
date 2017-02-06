@@ -33,6 +33,10 @@
 		</div>
 	</body>
 	<script>
+		//取消勾选的ids
+		var unCheckRoleIds=[];
+		//勾选的ids
+		var onCheckRoleIds=[];
 		//加载授权角色
 		$(function(){
 				$('#AuthorizeRole').datagrid({
@@ -72,8 +76,29 @@
 									$('#AuthorizeRole').datagrid('checkRow', index);
 								}
 							});
-						}
-					}                
+						} 
+						var rows = $("#AuthorizeRole").datagrid("getRows");
+						if(onCheckRoleIds!=null){
+								$.each(onCheckRoleIds,function(i){
+										$.each(rows,function(n){
+												if(onCheckRoleIds[i]==rows[n].id){
+														$('#AuthorizeRole').datagrid('checkRow', n);
+													}
+											});
+									})
+							}
+					},
+					onUncheck: function(rowIndex,rowData){
+						unCheckRoleIds.push(rowData.id);
+						$.each(onCheckRoleIds,function(i){
+								if(rowData.id==onCheckRoleIds[i]){
+									onCheckRoleIds.splice(i,1); 
+									}
+							});
+			    	},
+			    	onCheck: function(rowIndex,rowData){
+			    		onCheckRoleIds.push(rowData.id);
+			    	}               
 				});
 		    
 			 //设置分页控件 
@@ -89,19 +114,19 @@
 		            $(this).pagination('loaded');
 		        } 
 		    }); 
+
 		});
 		//授权角色修改确认
 		function submitAuthorizeRole(){
-			var checkedItems = $('#AuthorizeRole').datagrid('getChecked');
-			var role = [];
-			$.each(checkedItems, function(index, item){
-				role.push(item.id);
-			 });             
-			 role.join(",");
-			 if(role==""){
-			 	role = null;
-			 }
-			 var url='${pageContext.request.contextPath}/managerUser/authorizeRole?id='+${id}+'&role='+role+'&userName=${userName}';
+			 unCheckRoleIds.join(",");
+			 if(unCheckRoleIds==""){
+				 unCheckRoleIds = null;
+				}
+			 onCheckRoleIds.join(",");
+			 if(onCheckRoleIds==""){
+				 onCheckRoleIds = null;
+				}
+			 var url='${pageContext.request.contextPath}/managerUser/authorizeRole?id='+${id}+'&role='+onCheckRoleIds+'&roleId='+unCheckRoleIds+'&userName=${userName}';
             $.post(url, function(data) {
                 if(data.result==true){
                  	msgShow('系统提示', '恭喜，授权角色成功！', 'info');
@@ -114,11 +139,15 @@
                  	var url='${pageContext.request.contextPath}/managerUser/role?id='+${id}+'&userName=${userName}';
                  	reload(url,name);
                 }
+                unCheckRoleIds=[];
+                onCheckRoleIds=[];
             });
 		};
 		
 		//授权角色窗口取消按钮
 		function cancelAuthorizeRole(){
+			unCheckRoleIds=[];
+            onCheckRoleIds=[];
 			var url='${pageContext.request.contextPath}/managerUser/role?id='+${id};
        		reload(url,name);
 		}
