@@ -396,7 +396,7 @@
                   				'parentId':parentId,
                  				'menuCode':code,
                   				'dislayOrder':displayOrder,
-                 				'menuLevel':menuLevel,
+                 				'menuLevel':parseInt(menuLevel)+1,
 								'parentId':parentId    
                   			}
                   		}); 
@@ -409,7 +409,7 @@
                   				'menuCode':code,
                   				'status':status,
                   				'dislayOrder':displayOrder,
-                 				'menuLevel':displayOrder
+                 				'menuLevel':parseInt(menuLevel)+1
                   			}
                   		}); 
 					}
@@ -501,8 +501,6 @@
 							textField:'name'
 						});
 						updataFunction(node);
-					}else if(node.ismodule=="00"){
-						 msgShow('系统提示', '请选择子菜单', 'info');
 					}else{
 						$('#wmodule').window('open');
 				         updateModel(node);
@@ -669,7 +667,7 @@
 				var code = data.attributes.menuCode;
 				var displayOrder = data.attributes.dislayOrder;
 				var status = data.attributes.status;
-				var menuLevel = data.attributes.menuLevel;
+				var menuLevel = data.attributes.menuLevel-1;
 				$('#menuId').val(menuId);
 				if(parentId==0){
 					$('#parentName').html('根节点');
