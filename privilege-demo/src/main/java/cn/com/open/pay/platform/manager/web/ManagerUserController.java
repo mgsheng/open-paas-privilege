@@ -792,11 +792,6 @@ public class ManagerUserController extends BaseControllerUtil {
 		map.put("limit", pageSize);
 		String result=sendPost(queryUserUrl, map);
 		JSONObject object=JSONObject.fromObject(result);
-		//int count = (int) object.get("total");
-		
-
-		
-
 		WebUtils.writeJson(response, object);
 		return;
 	}
