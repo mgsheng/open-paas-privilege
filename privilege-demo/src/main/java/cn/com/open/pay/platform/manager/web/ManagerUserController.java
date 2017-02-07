@@ -2,6 +2,7 @@ package cn.com.open.pay.platform.manager.web;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -269,34 +270,32 @@ public class ManagerUserController extends BaseControllerUtil {
 			}
 		}
 		// 删除取消勾选的角色
-				if (roleId != null && boo) {
-					Map<String, Object> signature = privilegeGetSignatureService.getSignature(appId);
-					signature.put("appId", appId);
-					signature.put("appUserId", appUserId);
-					signature.put("method", "1");
-					signature.put("privilegeRoleId", roleId);
-					signature.put("deptId", deptId);
-					signature.put("groupId", groupId);
-					signature.put("privilegeFunId", privilegeFunId);
-					signature.put("resourceId", resourceId);
-					reslut = sendPost(moditUserPrivilegeUrl, signature);
-					if (reslut != null && !("").equals(reslut)) {
-						JSONObject jsonObject = JSONObject.fromObject(reslut);
-						if (!("0").equals(jsonObject.get("status"))) {
-							System.err.println("删除成功");
-							boo = true;
-						} else {
-							boo = false;
-							System.err.println("删除失败");
-						}
-					} else {
-						boo = false;
-					}
+		if (roleId != null && boo) {
+			Map<String, Object> signature = privilegeGetSignatureService.getSignature(appId);
+			signature.put("appId", appId);
+			signature.put("appUserId", appUserId);
+			signature.put("method", "1");
+			signature.put("privilegeRoleId", roleId);
+			signature.put("deptId", deptId);
+			signature.put("groupId", groupId);
+			signature.put("privilegeFunId", privilegeFunId);
+			signature.put("resourceId", resourceId);
+			reslut = sendPost(moditUserPrivilegeUrl, signature);
+			if (reslut != null && !("").equals(reslut)) {
+				JSONObject jsonObject = JSONObject.fromObject(reslut);
+				if (!("0").equals(jsonObject.get("status"))) {
+					System.err.println("删除成功");
+					boo = true;
+				} else {
+					boo = false;
+					System.err.println("删除失败");
 				}
+			} else {
+				boo = false;
+			}
+		}
 		System.out.println("****************id:" + appUserId + "****************role:" + role);
-
 		// result = true表示该用户授权角色成功
-
 		jsonobj.put("result", boo);
 		WebUtils.writeJson(response, jsonobj);
 		return;
@@ -452,34 +451,28 @@ public class ManagerUserController extends BaseControllerUtil {
 		Signature.put("appId", appId);
 		Signature.put("appUserId", id);
 		String reslut = sendPost(getUserPrivilegeUrl, Signature);
-
-		List<Map<String, Object>> userResourceList = null;
-		List<Map<String, Object>> userFunctionList = null;
+		String[] functionIds=null;
+		String[] resourceIds=null;
 		if (reslut != null && !("").equals(reslut)) {
 			JSONObject jsonObject = JSONObject.fromObject(reslut);
-			Map JsnMap = (Map) jsonObject;
-			if (!("0").equals(JsnMap.get("status"))) {
-				userResourceList = (List<Map<String, Object>>) JsnMap.get("resourceList");
-				userFunctionList = (List<Map<String, Object>>) JsnMap.get("functionList");
+			if (!("0").equals(jsonObject.get("status"))) {
+				//用户表中 资源 与功能
+				String privilegeResId = (String) (jsonObject.get("resourceId").equals("null") ? "": jsonObject.get("resourceId"));
+				String privilegeFunId = (String) (jsonObject.get("privilegeFunId").equals("null") ? "": jsonObject.get("privilegeFunId"));
+				if (!("").equals(privilegeFunId)) {
+					functionIds= privilegeFunId.split(",");
+				}
+				if (!("").equals(privilegeResId)) {
+					resourceIds= privilegeResId.split(",");
+				}
 			} else {
 				System.err.println("该用户没有功能");
 			}
 		}
-		reslut = sendPost(userMenuRedisUrl, Signature);
-		List<Map<String, Object>> userMenuList = null;
-		if (reslut != null && !("").equals(reslut)) {
-			JSONObject jsonObject = JSONObject.fromObject(reslut);
-			Map JsnMap = (Map) jsonObject;
-			if (!("0").equals(JsnMap.get("status"))) {
-				userMenuList = (List<Map<String, Object>>) JsnMap.get("menuList");
-			} else {
-				System.err.println("该用户没有菜单");
-			}
-		}
+
 		Map<String, Object> aMap = new HashMap<String, Object>();
-		aMap.put("resourceList", userResourceList);
-		aMap.put("functionList", userFunctionList);
-		aMap.put("menuList", userMenuList);
+		aMap.put("resourceIds", resourceIds);
+		aMap.put("functionIds", functionIds);
 		System.err.println(JSONObject.fromObject(aMap).toString());
 		WebUtils.writeJson(response, JSONObject.fromObject(aMap));
 		return;
