@@ -221,7 +221,8 @@ public class RoleModifyPrivilegeController extends BaseControllerUtil{
 					}
 				}
 			}else{
-				if(!("").equals(tFuncIds)){
+				roleResourceList=privilegeRoleResourceService.findByPrivilegeRoleId(privilegeRoleId);
+				if(!("").equals(tFuncIds) && (roleResourceList==null || roleResourceList.size()==0)){
 					roleResource = new PrivilegeRoleResource();
 					roleResource.setPrivilegeRoleId(privilegeRoleId);
 					roleResource.setCreateUser(createUser);
