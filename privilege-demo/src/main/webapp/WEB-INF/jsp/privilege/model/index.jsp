@@ -231,11 +231,12 @@
                               		});
                              	//reload();
                             	$('#function').window('close');
-                    		}else {
+                    		}else if(data.returnMsg=='0') {
                     			msgShow('系统提示', '修改失败！', 'info');
                     			reload();
                             	$('#function').window('close');
 							}
+                    		$('#function').window('close');
                         });
         	}else {
         		$.post('${pageContext.request.contextPath}/module/addFunction',
@@ -257,12 +258,13 @@
                              		}]});
                              	//reload();
                             	$('#function').window('close');
-                    		}else{
+                    		}else if(data.returnMsg=='0'){
                     			msgShow('系统提示', '添加失败！', 'info');
                              	close();
                              	reload();
                             	$('#function').window('close');
                     		}
+                    		$('#function').window('close');
                         });
                
 			}
@@ -415,11 +417,12 @@
 					}
                 	
                  	$('#wmodule').window('close');
-                }else{
+                }else if(data.returnMsg=='0'){
                  	msgShow('系统提示', '系统错误！', 'info');
                 	reset();
                 	 close();
                 }
+                $('#wmodule').window('close');
             }); 
             
         }
@@ -573,7 +576,7 @@
     			                 	var Nodes = $('#deptree').tree('getSelected');
     			                 	$('#deptree').tree('pop',Nodes.target);
     			                 	getRoot();
-    			                }else{
+    			                }else if(data.returnMsg=='0'){
     			                 	msgShow('系统提示', '删除失败！', 'info');
     			                 	close();
     			                 	reload();
