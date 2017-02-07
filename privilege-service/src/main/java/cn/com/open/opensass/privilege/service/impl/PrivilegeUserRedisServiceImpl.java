@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import cn.com.open.opensass.privilege.dao.cache.RedisDao;
+import cn.com.open.opensass.privilege.model.PrivilegeFunction;
 import cn.com.open.opensass.privilege.model.PrivilegeRole;
+import cn.com.open.opensass.privilege.model.PrivilegeRoleResource;
 import cn.com.open.opensass.privilege.model.PrivilegeUser;
 import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
@@ -95,6 +97,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 		// resourceList
 		Set resourceSet = new HashSet();
 		if (!boo) {
+			
 			//roleResource 中functionId
 			List<String> FunIds = privilegeRoleResourceService.findUserResourcesFunId(appId, appUserId);
 			// 加入 user表中functionIds
@@ -156,14 +159,25 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 			roleMap.put("functionList", objArray);
 		}else {
 			// functionList
-			// roleResource表中functionIds
-			List<String> FunIds = privilegeRoleResourceService.findUserResourcesFunId(appId, appUserId);
+			List<String> FunIds=new ArrayList<String>();
+			List<Map<String, Object>> privilegeFunctions = new ArrayList<Map<String, Object>>();
+			List<PrivilegeRoleResource> rivilegeRoleResources=privilegeRoleResourceService.findUserRoleResources(appId, appUserId);
+			for(PrivilegeRoleResource roleResource:rivilegeRoleResources){
+				if (roleResource.getPrivilegeFunId()==null||("").equals(roleResource.getPrivilegeFunId())) {
+					List<Map<String, Object>> functions=privilegeFunctionService.getFunctionByRId(roleResource.getResourceId());
+					privilegeFunctions.addAll(functions);
+				}else {
+					// roleResource表中functionIds
+					FunIds.add(roleResource.getPrivilegeFunId());
+				}
+			}
+			
+			//List<String> FunIds = privilegeRoleResourceService.findUserResourcesFunId(appId, appUserId);
 			// 加入 user表中functionIds
 			if (privilegeFunctionIds != null && !("").equals(privilegeFunctionIds)) {
 				FunIds.add(privilegeFunctionIds);
 			}
 			// 查询相应function
-			List<Map<String, Object>> privilegeFunctions = new ArrayList<Map<String, Object>>();
 			if (FunIds != null&&FunIds.size()>0) {
 				for (String funIds : FunIds) {
 					String[] functionIds = funIds.split(",");
