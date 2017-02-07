@@ -45,6 +45,7 @@
 	</div>
 </body>
 <script>
+//修改tree 图标样式
 function getRoot(){
 	var node=$('#tt').tree('getRoots');
 	$.each(node,function(i,n){
@@ -67,7 +68,8 @@ function getRoot(){
 	$('#tt').tree({ 
  	  url: '${pageContext.request.contextPath}/managerUser/tree', 
       onLoadSuccess:function(node,data){
-    	  getRoot();
+    	 getRoot();
+    	 //勾选用户用户有的功能与资源
     	 selected();
       }
       
@@ -80,18 +82,17 @@ function getRoot(){
 	function selected(){
 		$.post('${pageContext.request.contextPath}/managerUser/function?id='+'${id}',function(data){
 				if(data.functionList!=null){
-					$.each(data.functionList,function(i,n){
+					$.each(data.functionIds,function(i,n){
 						var node=$("#tt").tree('find',n);
 						if(node!=null){
 							if(node.ismodule=="2"){
 								$("#tt").tree('check',node.target);
 							}
-							
 						}
 					});
 				}
 				if(data.resourceList!=null){
-					$.each(data.resourceList,function(i,m){
+					$.each(data.resourceIds,function(i,m){
 						var node=$("#tt").tree('find',m);
 						if(node!=null){
 							if(node.ismodule=="1"){
@@ -100,9 +101,7 @@ function getRoot(){
 									$("#tt").tree('check',node.target);
 								}
 							}
-							
 						}
-						
 					});
 				}
 			},"json");
