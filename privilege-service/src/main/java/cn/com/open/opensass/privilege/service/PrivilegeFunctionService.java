@@ -26,7 +26,7 @@ public interface PrivilegeFunctionService {
 	 * @param pageSize
 	 * @return
 	 */
-	List<PrivilegeFunction>getFunctionByRId(String resourceId);
+	List<Map<String, Object>>getFunctionByRId(String resourceId);
 	
 	List<Map<String, Object>>getFunctionMap(String resourceId);
 	List<Map<String, Object>> getFunctionListByUserId(String appUserId,String appId);
