@@ -81,7 +81,7 @@ function getRoot(){
 	//勾选用户拥有的功能
 	function selected(){
 		$.post('${pageContext.request.contextPath}/managerUser/function?id='+'${id}',function(data){
-				if(data.functionList!=null){
+				if(data.functionIds!=null){
 					$.each(data.functionIds,function(i,n){
 						var node=$("#tt").tree('find',n);
 						if(node!=null){
@@ -91,7 +91,7 @@ function getRoot(){
 						}
 					});
 				}
-				if(data.resourceList!=null){
+				if(data.resourceIds!=null){
 					$.each(data.resourceIds,function(i,m){
 						var node=$("#tt").tree('find',m);
 						if(node!=null){
