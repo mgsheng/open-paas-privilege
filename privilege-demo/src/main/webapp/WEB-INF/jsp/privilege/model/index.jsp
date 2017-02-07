@@ -528,7 +528,7 @@
        			  	if(node.ismodule=="0"){
      			  	 	menuId=node.id;
      		    	 	var childrenNodes = $('#deptree').tree('getChildren',node.target);
-     		    	 	if(childrenNodes!=null){
+     		    	 	if(childrenNodes.length>0){
      		    		 	$.each(childrenNodes,function(i,n){
      		    		 		if(n.ismodule=="1"){
      		    		 			menuIds.push(n.attributes.menuId);
@@ -536,7 +536,7 @@
      		    		 		}else if (n.ismodule=="0") {
      		    		 			menuIds.push(n.id);
 								}else {
-								functionIds.push(n.id);
+									functionIds.push(n.id);
 								}
      			    	 	});
      		    		 	menuIds.join(",");
@@ -552,14 +552,15 @@
      		    	 	url=encodeURI('${pageContext.request.contextPath}/module/deleteMenu?menuId='+menuId+'&resourceId='+resourceId);
        		     	}else if (node.ismodule=="1") {
        		    	 	var childrenNodes = $('#deptree').tree('getChildren',node.target);
-       		    	 	if(childrenNodes!=null){
+       		    	 	console.log(childrenNodes);
+       		    	 	if(childrenNodes.length>0){
        		    		 	$.each(childrenNodes,function(i,n){
        		    				 functionIds.push(n.id);
        			    	 	});
        		    		 	functionIds.join(",");
        		    		 	delFunctions(functionIds);
        		    		 }
-       		    	 
+       		    	 	
        		    	 	resourceId=node.id;
        		    		menuId=node.attributes.menuId;
        		    	 	url=encodeURI(encodeURI('${pageContext.request.contextPath}/module/deleteMenu?menuId='+menuId+'&resourceId='+resourceId));
