@@ -242,31 +242,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		} else {
 			boo = false;
 		}
-		// 删除取消勾选的角色
-		if (roleId != null && boo) {
-			Map<String, Object> signature = privilegeGetSignatureService.getSignature(appId);
-			signature.put("appId", appId);
-			signature.put("appUserId", appUserId);
-			signature.put("method", "1");
-			signature.put("privilegeRoleId", roleId);
-			signature.put("deptId", deptId);
-			signature.put("groupId", groupId);
-			signature.put("privilegeFunId", privilegeFunId);
-			signature.put("resourceId", resourceId);
-			reslut = sendPost(moditUserPrivilegeUrl, signature);
-			if (reslut != null && !("").equals(reslut)) {
-				JSONObject jsonObject = JSONObject.fromObject(reslut);
-				if (!("0").equals(jsonObject.get("status"))) {
-					System.err.println("删除成功");
-					boo = true;
-				} else {
-					boo = false;
-					System.err.println("删除失败");
-				}
-			} else {
-				boo = false;
-			}
-		}
+		
 		if (role != null && boo) {
 			// 添加勾选的角色
 			Map<String, Object> signature = privilegeGetSignatureService.getSignature(appId);
@@ -292,6 +268,31 @@ public class ManagerUserController extends BaseControllerUtil {
 				boo = false;
 			}
 		}
+		// 删除取消勾选的角色
+				if (roleId != null && boo) {
+					Map<String, Object> signature = privilegeGetSignatureService.getSignature(appId);
+					signature.put("appId", appId);
+					signature.put("appUserId", appUserId);
+					signature.put("method", "1");
+					signature.put("privilegeRoleId", roleId);
+					signature.put("deptId", deptId);
+					signature.put("groupId", groupId);
+					signature.put("privilegeFunId", privilegeFunId);
+					signature.put("resourceId", resourceId);
+					reslut = sendPost(moditUserPrivilegeUrl, signature);
+					if (reslut != null && !("").equals(reslut)) {
+						JSONObject jsonObject = JSONObject.fromObject(reslut);
+						if (!("0").equals(jsonObject.get("status"))) {
+							System.err.println("删除成功");
+							boo = true;
+						} else {
+							boo = false;
+							System.err.println("删除失败");
+						}
+					} else {
+						boo = false;
+					}
+				}
 		System.out.println("****************id:" + appUserId + "****************role:" + role);
 
 		// result = true表示该用户授权角色成功
