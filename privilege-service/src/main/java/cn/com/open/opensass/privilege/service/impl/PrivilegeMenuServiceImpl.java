@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeMenuRepository;
 import cn.com.open.opensass.privilege.model.PrivilegeMenu;
 import cn.com.open.opensass.privilege.model.PrivilegeRole;
+import cn.com.open.opensass.privilege.model.PrivilegeRoleResource;
 import cn.com.open.opensass.privilege.model.PrivilegeUser;
 import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleResourceService;
@@ -124,9 +125,20 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 
 		{
 			List<PrivilegeMenu> privilegeMenuList = getMenuListByUserId(appUserId, appId);
-			//通过查找RoleResource中functionId 查找相应的菜单
-			List<String> FunIds = privilegeRoleResourceService.findUserResourcesFunId(user.getAppId(),
-					user.getAppUserId());
+			//通过查找RoleResource  查找相应的菜单
+			List<String> FunIds=new ArrayList<String>();
+			List<PrivilegeRoleResource> rivilegeRoleResources=privilegeRoleResourceService.findUserRoleResources(appId, appUserId);
+			for(PrivilegeRoleResource roleResource:rivilegeRoleResources){
+				if (roleResource.getPrivilegeFunId()==null||("").equals(roleResource.getPrivilegeFunId())) {
+					List<PrivilegeMenu> menus=getMenuListByResourceId(roleResource.getResourceId());
+					privilegeMenuList.addAll(menus);
+				}else{
+					//RoleResource 中functionId
+					FunIds.add(roleResource.getPrivilegeFunId());
+				}
+			}
+//			List<String> FunIds = privilegeRoleResourceService.findUserResourcesFunId(user.getAppId(),
+//					user.getAppUserId());
 			
 			//根据user表中functionId resourceId 查询菜单
 			String functionIds = user.getPrivilegeFunId();
