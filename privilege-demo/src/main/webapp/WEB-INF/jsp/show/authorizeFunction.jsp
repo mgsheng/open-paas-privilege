@@ -81,7 +81,7 @@ function getRoot(){
 		$.post('${pageContext.request.contextPath}/managerUser/function?id='+'${id}',function(data){
 				if(data.functionList!=null){
 					$.each(data.functionList,function(i,n){
-						var node=$("#tt").tree('find',n.functionId);
+						var node=$("#tt").tree('find',n);
 						if(node!=null){
 							if(node.ismodule=="2"){
 								$("#tt").tree('check',node.target);
@@ -92,7 +92,7 @@ function getRoot(){
 				}
 				if(data.resourceList!=null){
 					$.each(data.resourceList,function(i,m){
-						var node=$("#tt").tree('find',m.resourceId);
+						var node=$("#tt").tree('find',m);
 						if(node!=null){
 							if(node.ismodule=="1"){
 								var nn=$("#tt").tree('getChildren',node.target);
@@ -105,22 +105,6 @@ function getRoot(){
 						
 					});
 				}
-				if(data.menuList!=null){
-					$.each(data.menuList,function(i,n){
-						var node=$("#tt").tree('find',n.menuId);
-						if(node!=null){
-							if(node.ismodule=="0"){
-									var nn=$("#tt").tree('getChildren',node.target);
-									if(nn.length<=0){
-										$("#tt").tree('check',node.target);
-									}
-									
-								}
-							
-						}
-					});
-				}
-		 
 			},"json");
 	}
 		
