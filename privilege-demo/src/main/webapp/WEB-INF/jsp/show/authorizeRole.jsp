@@ -98,6 +98,11 @@
 			    	},
 			    	onCheck: function(rowIndex,rowData){
 			    		onCheckRoleIds.push(rowData.id);
+			    		$.each(unCheckRoleIds,function(i){
+							if(rowData.id==unCheckRoleIds[i]){
+								unCheckRoleIds.splice(i,1); 
+								}
+						});
 			    	}               
 				});
 		    
@@ -128,6 +133,8 @@
 				}
 			 var url='${pageContext.request.contextPath}/managerUser/authorizeRole?id='+${id}+'&role='+onCheckRoleIds+'&roleId='+unCheckRoleIds+'&userName=${userName}';
             $.post(url, function(data) {
+            	unCheckRoleIds=[];
+                onCheckRoleIds=[];
                 if(data.result==true){
                  	msgShow('系统提示', '恭喜，授权角色成功！', 'info');
                  	//刷新
@@ -139,8 +146,7 @@
                  	var url='${pageContext.request.contextPath}/managerUser/role?id='+${id}+'&userName=${userName}';
                  	reload(url,name);
                 }
-                unCheckRoleIds=[];
-                onCheckRoleIds=[];
+                
             });
 		};
 		
