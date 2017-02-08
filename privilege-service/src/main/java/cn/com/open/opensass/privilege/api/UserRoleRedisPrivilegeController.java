@@ -48,7 +48,6 @@ public class UserRoleRedisPrivilegeController extends BaseControllerUtil {
 
 		PrivilegeAjaxMessage message = privilegeUserRedisService.getRedisUserRole(appId, appUserId);
 		if (message.getCode().equals("1")) {
-			System.err.println(message.getMessage());
 			WebUtils.writeJson(response, message.getMessage());
 		} else {
 			map.put("status", message.getCode());
@@ -70,7 +69,6 @@ public class UserRoleRedisPrivilegeController extends BaseControllerUtil {
 		}
 		PrivilegeAjaxMessage ajaxMessage=privilegeUserRedisService.updateUserRoleRedis(appId, appUserId);
 		if (ajaxMessage.getCode().equals("1")) {
-			System.err.println(ajaxMessage.getMessage());
 			WebUtils.writeJson(response, ajaxMessage.getMessage());
 		} else {
 			map.put("status", ajaxMessage.getCode());
@@ -92,7 +90,6 @@ public class UserRoleRedisPrivilegeController extends BaseControllerUtil {
 		}
 		PrivilegeAjaxMessage ajaxMessage=privilegeUserRedisService.delUserRoleRedis(appId, appUserId);
 		if (ajaxMessage.getCode().equals("1")) {
-			System.err.println(ajaxMessage.getMessage());
 			WebUtils.writeJson(response, ajaxMessage.getMessage());
 		} else {
 			map.put("status", ajaxMessage.getCode());
