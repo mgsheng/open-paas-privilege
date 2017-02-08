@@ -32,48 +32,47 @@ import net.sf.json.JSONObject;
  */
 @Service("privilegeResourceService")
 public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
-	private static final String AppResRedisPrefix=RedisConstant.APPRES_CACHE;
+	private static final String AppResRedisPrefix = RedisConstant.APPRES_CACHE;
 	private static final Logger log = LoggerFactory.getLogger(PrivilegeResourceServiceImpl.class);
 	@Autowired
 	private RedisClientTemplate redisClientTemplate;
 	@Autowired
-    private RedisDao redisDao;
+	private RedisDao redisDao;
 	@Autowired
 	private PrivilegeFunctionService privilegeFunctionService;
-    @Autowired
-    private PrivilegeResourceRepository privilegeResourceRepository;
-    @Autowired
+	@Autowired
+	private PrivilegeResourceRepository privilegeResourceRepository;
+	@Autowired
 	private PrivilegeMenuService privilegeMenuService;
-    
+
 	@Override
 	public Boolean savePrivilegeResource(PrivilegeResource privilegeResource) {
-	  try {
-		  privilegeResourceRepository.savePrivilegeResource(privilegeResource);
-		  return true;
-	  } catch (Exception e) {
-		// TODO: handle exception
-		  return false;
-	  }
-		
-		
+		try {
+			privilegeResourceRepository.savePrivilegeResource(privilegeResource);
+			return true;
+		} catch (Exception e) {
+			// TODO: handle exception
+			return false;
+		}
+
 	}
 
 	@Override
-	public PrivilegeResource findByResourceId(String resourceId,String appId) {
+	public PrivilegeResource findByResourceId(String resourceId, String appId) {
 		// TODO Auto-generated method stub
-		return privilegeResourceRepository.findByResourceId(resourceId,appId);
+		return privilegeResourceRepository.findByResourceId(resourceId, appId);
 	}
 
 	@Override
-	public PrivilegeResource findByResourceCode(String resourceId,String appId) {
-		return privilegeResourceRepository.findByResourceCode(resourceId,appId);
+	public PrivilegeResource findByResourceCode(String resourceId, String appId) {
+		return privilegeResourceRepository.findByResourceCode(resourceId, appId);
 	}
 
 	@Override
-	public List<PrivilegeResource> findResourcePage(String menuId, String appId,
-			int startRow, int pageSize,String resourceLevel) {
+	public List<PrivilegeResource> findResourcePage(String menuId, String appId, int startRow, int pageSize,
+			String resourceLevel) {
 		// TODO Auto-generated method stub
-		return privilegeResourceRepository.findResourcePage(menuId, appId, startRow, pageSize,resourceLevel);
+		return privilegeResourceRepository.findResourcePage(menuId, appId, startRow, pageSize, resourceLevel);
 	}
 
 	@Override
@@ -93,69 +92,72 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 		try {
 			privilegeResourceRepository.deleteByResourceId(resourceIds);
 			return true;
-			
+
 		} catch (Exception e) {
 			// TODO: handle exception
 			return false;
 		}
 	}
 
-
 	@Override
 	public PrivilegeResourceVo findByResourceId(String resourceId) {
-		PrivilegeResourceVo resourceVo=new PrivilegeResourceVo();
-		PrivilegeResource resource=privilegeResourceRepository.findByResource_Id(resourceId);
-		if(resource!=null){
-		resourceVo.setAppId(resource.getAppId());
-		resourceVo.setBaseUrl(resource.getBaseUrl());
-		resourceVo.setDisplayOrder(resource.getDisplayOrder());
-		resourceVo.setMenuId(resource.getMenuId());
-		resourceVo.setResourceId(resource.getResourceId());
-		resourceVo.setResourceLevel(String.valueOf(resource.getResourceLevel()));
-		resourceVo.setResourceName(resource.getResourceName());
-		resourceVo.setResourceRule(resource.getResourceRule());
-		resourceVo.setStatus(resource.getStatus());
+		PrivilegeResourceVo resourceVo = new PrivilegeResourceVo();
+		PrivilegeResource resource = privilegeResourceRepository.findByResource_Id(resourceId);
+		if (resource.getResourceId()!=null&&!("").equals(resource.getResourceId())) {
+			resourceVo.setAppId(resource.getAppId());
+			resourceVo.setBaseUrl(resource.getBaseUrl());
+			resourceVo.setDisplayOrder(resource.getDisplayOrder());
+			resourceVo.setMenuId(resource.getMenuId());
+			resourceVo.setResourceId(resource.getResourceId());
+			resourceVo.setResourceLevel(String.valueOf(resource.getResourceLevel()));
+			resourceVo.setResourceName(resource.getResourceName());
+			resourceVo.setResourceRule(resource.getResourceRule());
+			resourceVo.setStatus(resource.getStatus());
 		}
 		return resourceVo;
 	}
 
-
 	@Override
 	public List<Map<String, Object>> getResourceListByUserId(String appUserId, String appId) {
-		List<PrivilegeResource> resources=privilegeResourceRepository.getResourceListByUserId(appUserId, appId);
-		List<Map<String, Object>> list=new ArrayList<Map<String,Object>>();
-		for(PrivilegeResource resource:resources){
-			Map<String, Object> map=new HashMap<String, Object>();
-			map.put("appId", resource.getAppId());
-			map.put("resourceId", resource.getResourceId());
-			map.put("resourceLevel", resource.getResourceLevel()+"");
-			map.put("resourceName", resource.getResourceName());
-			map.put("resourceRule", resource.getResourceRule());
-			map.put("dislayOrder ", resource.getDisplayOrder());
-			map.put("menuId", resource.getMenuId());
-			map.put("baseUrl", resource.getBaseUrl());
-			map.put("status", resource.getStatus());
-			list.add(map);
+		List<PrivilegeResource> resources = privilegeResourceRepository.getResourceListByUserId(appUserId, appId);
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		for (PrivilegeResource resource : resources) {
+			if (resource.getResourceId()!=null&&!("").equals(resource.getResourceId())) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("appId", resource.getAppId());
+				map.put("resourceId", resource.getResourceId());
+				map.put("resourceLevel", resource.getResourceLevel() + "");
+				map.put("resourceName", resource.getResourceName());
+				map.put("resourceRule", resource.getResourceRule());
+				map.put("dislayOrder ", resource.getDisplayOrder());
+				map.put("menuId", resource.getMenuId());
+				map.put("baseUrl", resource.getBaseUrl());
+				map.put("status", resource.getStatus());
+				list.add(map);
+			}
 		}
 		return list;
 	}
 
 	@Override
 	public List<PrivilegeResourceVo> findByGroupIdAndAppId(String groupId, String appId) {
-		List<PrivilegeResourceVo> privilegeResourceVos =new ArrayList<PrivilegeResourceVo>();
-		List<PrivilegeResource> privilegeResources=privilegeResourceRepository.findByGroupIdAndAppId(groupId, appId);
-		for(PrivilegeResource resource:privilegeResources){
-			PrivilegeResourceVo privilegeResourceVo=new PrivilegeResourceVo();
-			privilegeResourceVo.setAppId(resource.getAppId());
-			privilegeResourceVo.setBaseUrl(resource.getBaseUrl());
-			privilegeResourceVo.setDisplayOrder(resource.getDisplayOrder());
-			privilegeResourceVo.setMenuId(resource.getMenuId());
-			privilegeResourceVo.setResourceId(resource.getResourceId());
-			privilegeResourceVo.setResourceLevel(String.valueOf(resource.getResourceLevel()));
-			privilegeResourceVo.setResourceName(resource.getResourceName());
-			privilegeResourceVo.setResourceRule(resource.getResourceRule());
-			privilegeResourceVo.setStatus(resource.getStatus());
-			privilegeResourceVos.add(privilegeResourceVo);
+		List<PrivilegeResourceVo> privilegeResourceVos = new ArrayList<PrivilegeResourceVo>();
+		List<PrivilegeResource> privilegeResources = privilegeResourceRepository.findByGroupIdAndAppId(groupId, appId);
+		for (PrivilegeResource resource : privilegeResources) {
+			if (resource.getResourceId()!=null&&!("").equals(resource.getResourceId())) {
+				PrivilegeResourceVo privilegeResourceVo = new PrivilegeResourceVo();
+				privilegeResourceVo.setAppId(resource.getAppId());
+				privilegeResourceVo.setBaseUrl(resource.getBaseUrl());
+				privilegeResourceVo.setDisplayOrder(resource.getDisplayOrder());
+				privilegeResourceVo.setMenuId(resource.getMenuId());
+				privilegeResourceVo.setResourceId(resource.getResourceId());
+				privilegeResourceVo.setResourceLevel(String.valueOf(resource.getResourceLevel()));
+				privilegeResourceVo.setResourceName(resource.getResourceName());
+				privilegeResourceVo.setResourceRule(resource.getResourceRule());
+				privilegeResourceVo.setStatus(resource.getStatus());
+				privilegeResourceVos.add(privilegeResourceVo);
+			}
+			
 		}
 		return privilegeResourceVos;
 	}
@@ -174,44 +176,47 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 
 	@Override
 	public List<PrivilegeResourceVo> getResourceListByAppId(String appId) {
-		List<PrivilegeResourceVo> privilegeResourceVos =new ArrayList<PrivilegeResourceVo>();
-		List<PrivilegeResource> privilegeResources=privilegeResourceRepository.getResourceListByAppId(appId);
-		for(PrivilegeResource resource:privilegeResources){
-			PrivilegeResourceVo privilegeResourceVo=new PrivilegeResourceVo();
-			privilegeResourceVo.setAppId(resource.getAppId());
-			privilegeResourceVo.setBaseUrl(resource.getBaseUrl());
-			privilegeResourceVo.setDisplayOrder(resource.getDisplayOrder());
-			privilegeResourceVo.setMenuId(resource.getMenuId());
-			privilegeResourceVo.setResourceId(resource.getResourceId());
-			privilegeResourceVo.setResourceLevel(String.valueOf(resource.getResourceLevel()));
-			privilegeResourceVo.setResourceName(resource.getResourceName());
-			privilegeResourceVo.setResourceRule(resource.getResourceRule());
-			privilegeResourceVo.setStatus(resource.getStatus());
-			privilegeResourceVos.add(privilegeResourceVo);
+		List<PrivilegeResourceVo> privilegeResourceVos = new ArrayList<PrivilegeResourceVo>();
+		List<PrivilegeResource> privilegeResources = privilegeResourceRepository.getResourceListByAppId(appId);
+		for (PrivilegeResource resource : privilegeResources) {
+			if (resource.getResourceId()!=null&&!("").equals(resource.getResourceId())) {
+				PrivilegeResourceVo privilegeResourceVo = new PrivilegeResourceVo();
+				privilegeResourceVo.setAppId(resource.getAppId());
+				privilegeResourceVo.setBaseUrl(resource.getBaseUrl());
+				privilegeResourceVo.setDisplayOrder(resource.getDisplayOrder());
+				privilegeResourceVo.setMenuId(resource.getMenuId());
+				privilegeResourceVo.setResourceId(resource.getResourceId());
+				privilegeResourceVo.setResourceLevel(String.valueOf(resource.getResourceLevel()));
+				privilegeResourceVo.setResourceName(resource.getResourceName());
+				privilegeResourceVo.setResourceRule(resource.getResourceRule());
+				privilegeResourceVo.setStatus(resource.getStatus());
+				privilegeResourceVos.add(privilegeResourceVo);
+			}
+			
 		}
 		return privilegeResourceVos;
 	}
 
 	@Override
 	public PrivilegeAjaxMessage getAppResRedis(String appId) {
-		PrivilegeAjaxMessage ajaxMessage=new PrivilegeAjaxMessage();
-		//redis key
+		PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
+		// redis key
 		String AppResRedisKey = AppResRedisPrefix + appId;
 		String jsonString = redisClientTemplate.getString(AppResRedisKey);
-		//取缓存
+		// 取缓存
 		if (null != jsonString && jsonString.length() > 0) {
 			ajaxMessage.setCode("1");
 			ajaxMessage.setMessage(jsonString);
 			System.err.println("缓存");
 			return ajaxMessage;
 		}
-		Map<String, Object> redisMap=new HashMap<String, Object>();
+		Map<String, Object> redisMap = new HashMap<String, Object>();
 		log.info("从数据库获取数据");
-		//resourceList
-		List<PrivilegeResourceVo> resourceList=getResourceListByAppId(appId);
+		// resourceList
+		List<PrivilegeResourceVo> resourceList = getResourceListByAppId(appId);
 		redisMap.put("resourceList", resourceList);
-		//functionList
-		List<PrivilegeFunctionVo> functionList=privilegeFunctionService.getFunctionListByAppId(appId);
+		// functionList
+		List<PrivilegeFunctionVo> functionList = privilegeFunctionService.getFunctionListByAppId(appId);
 		redisMap.put("functionList", functionList);
 		redisClientTemplate.setString(AppResRedisKey, JSONObject.fromObject(redisMap).toString());
 		ajaxMessage.setCode("1");
@@ -241,37 +246,40 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 
 	@Override
 	public List<Map<String, Object>> getResourceListByFunIds(String[] functionIds) {
-		List<Map<String, Object>> list=new ArrayList<Map<String,Object>>();
-		List<PrivilegeResource> resources=privilegeResourceRepository.getResourceListByFunIds(functionIds);
-		for(PrivilegeResource resource:resources){
-			Map<String, Object> map=new HashMap<String, Object>();
-			map.put("appId", resource.getAppId());
-			map.put("resourceId", resource.getResourceId());
-			map.put("resourceLevel", resource.getResourceLevel()+"");
-			map.put("resourceName", resource.getResourceName());
-			map.put("resourceRule", resource.getResourceRule());
-			map.put("dislayOrder ", resource.getDisplayOrder());
-			map.put("menuId", resource.getMenuId());
-			map.put("baseUrl", resource.getBaseUrl());
-			map.put("status", resource.getStatus());
-			list.add(map);
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		List<PrivilegeResource> resources = privilegeResourceRepository.getResourceListByFunIds(functionIds);
+		for (PrivilegeResource resource : resources) {
+			if (resource.getResourceId() != null && !("").equals(resource.getResourceId())) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("appId", resource.getAppId());
+				map.put("resourceId", resource.getResourceId());
+				map.put("resourceLevel", resource.getResourceLevel() + "");
+				map.put("resourceName", resource.getResourceName());
+				map.put("resourceRule", resource.getResourceRule());
+				map.put("dislayOrder ", resource.getDisplayOrder());
+				map.put("menuId", resource.getMenuId());
+				map.put("baseUrl", resource.getBaseUrl());
+				map.put("status", resource.getStatus());
+				list.add(map);
+			}
+
 		}
 		return list;
 	}
 
 	@Override
 	public List<Map<String, Object>> getAllResource(List<Map<String, Object>> resources) {
-		List<PrivilegeMenu> menuList=new ArrayList<PrivilegeMenu>();
-		Set<PrivilegeMenuVo> privilegeMenuVoSet=new HashSet<PrivilegeMenuVo>();
-		for(Map<String, Object> map:resources){
-			List<PrivilegeMenu> menus=privilegeMenuService.getMenuListByResourceId(""+map.get("resourceId"));
+		List<PrivilegeMenu> menuList = new ArrayList<PrivilegeMenu>();
+		Set<PrivilegeMenuVo> privilegeMenuVoSet = new HashSet<PrivilegeMenuVo>();
+		for (Map<String, Object> map : resources) {
+			List<PrivilegeMenu> menus = privilegeMenuService.getMenuListByResourceId("" + map.get("resourceId"));
 			menuList.addAll(menus);
 		}
-		privilegeMenuVoSet=privilegeMenuService.getAllMenuByUserId(menuList, privilegeMenuVoSet);
-		for(PrivilegeMenuVo privilegeMenuVo:privilegeMenuVoSet){
-			if(null != privilegeMenuVo.getParentId() && privilegeMenuVo.getParentId().length() > 0){
+		privilegeMenuVoSet = privilegeMenuService.getAllMenuByUserId(menuList, privilegeMenuVoSet);
+		for (PrivilegeMenuVo privilegeMenuVo : privilegeMenuVoSet) {
+			if (null != privilegeMenuVo.getParentId() && privilegeMenuVo.getParentId().length() > 0) {
 				if (privilegeMenuVo.getParentId().equals("0")) {
-					List<Map<String, Object>> list=getResourceListByMenuId(privilegeMenuVo.getMenuId());
+					List<Map<String, Object>> list = getResourceListByMenuId(privilegeMenuVo.getMenuId());
 					resources.addAll(list);
 				}
 			}
@@ -281,23 +289,26 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 
 	@Override
 	public List<Map<String, Object>> getResourceListByMenuId(String menuId) {
-		List<Map<String, Object>> list=new ArrayList<Map<String,Object>>();
-		List<PrivilegeResource> resources=privilegeResourceRepository.getResourceListByMenuId(menuId);
-		for(PrivilegeResource resource:resources){
-			Map<String, Object> map=new HashMap<String, Object>();
-			map.put("appId", resource.getAppId());
-			map.put("resourceId", resource.getResourceId());
-			map.put("resourceLevel", resource.getResourceLevel()+"");
-			map.put("resourceName", resource.getResourceName());
-			map.put("resourceRule", resource.getResourceRule());
-			map.put("dislayOrder ", resource.getDisplayOrder());
-			map.put("menuId", resource.getMenuId());
-			map.put("baseUrl", resource.getBaseUrl());
-			map.put("status", resource.getStatus());
-			list.add(map);
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		List<PrivilegeResource> resources = privilegeResourceRepository.getResourceListByMenuId(menuId);
+		for (PrivilegeResource resource : resources) {
+			if (resource.getResourceId()!=null&&!("").equals(resource.getResourceId())) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("appId", resource.getAppId());
+				map.put("resourceId", resource.getResourceId());
+				map.put("resourceLevel", resource.getResourceLevel() + "");
+				map.put("resourceName", resource.getResourceName());
+				map.put("resourceRule", resource.getResourceRule());
+				map.put("dislayOrder ", resource.getDisplayOrder());
+				map.put("menuId", resource.getMenuId());
+				map.put("baseUrl", resource.getBaseUrl());
+				map.put("status", resource.getStatus());
+				list.add(map);
+			}
+			
 		}
 		return list;
-	
+
 	}
 
 	@Override
