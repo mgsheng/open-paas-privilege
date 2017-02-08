@@ -22,7 +22,7 @@
 		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="addMenu">AddMenu</a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="add">AddResFun</a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" id="edit"></a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" id="delete" ></a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" id="delete2" ></a>
 	</div>
 	<div class="easyui-panel" style="padding:5px;height: 95%;overflow-x:scroll;">
 		  <ul id="deptree"  style="height: 100%"class="easyui-tree" 
@@ -523,15 +523,6 @@
             });
             //删除
           $('#delete').click(function() {
-            	 var node = $('#deptree').tree('getSelected');
-    		     var menuId;
-    		     var resourceId;
-    		     var functionId;
-    		     var functionIds=[];
-    		     var menuIds=[];
-    		     var resourceIds=[];
-    			 var url;
-    			 var boo=true;
     			if(node){
        			  	if(node.ismodule=="0"){
      			  	 	menuId=node.id;
@@ -597,6 +588,80 @@
 		     	}
               
          });
+
+          $('#delete2').click(function() {
+              
+         	 var node = $('#deptree').tree('getSelected');
+  	   		 if(node==null){
+  	   			msgShow('系统提示', '请选中要删除的数据', 'info');
+  	   		 }
+  	   		 if(node){
+	   				$.messager.confirm('系统提示', '是否确定删除?', function(r){
+	   					if(r){
+	   						var functionIds=[];
+	      		     		var menuIds=[];
+	      		     		var resourceIds=[];
+	      			 		var url;
+	      					if(node.ismodule=="0"){
+	      	  			  	 	//menuId=node.id;
+	      	  			  	 	//本菜单id
+	      	  			  		menuIds.push(node.id);
+	      	  		    	 	var childrenNodes = $('#deptree').tree('getChildren',node.target);
+	      	  		    	 	if(childrenNodes.length>0){
+	      	  		    	 			$.each(childrenNodes,function(i,n){
+	      	  		    		 			if(n.ismodule=="1"){
+	      	  		    		 				menuIds.push(n.attributes.menuId);
+	      	  			    		 			resourceIds.push(n.id);
+	      	  		    		 			}else if (n.ismodule=="0") {
+	      	  		    		 				menuIds.push(n.id);
+	      									}else {
+	      										functionIds.push(n.id);
+	      									}
+	      	  			    	 		});
+	      	  		    		 		menuIds.join(",");
+	      	  		    		 		resourceIds.join(",");
+	      	  		    		 		functionIds.join(",");
+	      	  		    		 	
+	      	  		    	 		}
+	      	  		    	 		url=encodeURI('${pageContext.request.contextPath}/module/deleteModuel?menuId='+menuIds+'&resourceId='+resourceIds+'&functionId='+functionIds+'&appId=${appId}');
+	      	    		     	}else if (node.ismodule=="1") {
+	      	    		    	 	var childrenNodes = $('#deptree').tree('getChildren',node.target);
+	      	    		    	 	console.log(childrenNodes);
+	      	    		    	 	if(childrenNodes.length>0){
+	      	    		    		 	$.each(childrenNodes,function(i,n){
+	      	    		    				 functionIds.push(n.id);
+	      	    			    	 	});
+	      	    		    		 	functionIds.join(",");
+	      	    		    		 }
+	      	    		    	 	
+	      	    		    	 	resourceIds.push(node.id);
+	      	    		    	 	menuIds.push(node.attributes.menuId);
+	      	    		    	 	menuIds.join(",");
+	      			    		 	resourceIds.join(",");
+	      			    		 	url=encodeURI('${pageContext.request.contextPath}/module/deleteModuel?menuId='+menuIds+'&resourceId='+resourceIds+'&functionId='+functionIds+'&appId=${appId}');
+	      	    				}else {
+	      	    					functionIds.push(node.id);
+	      	    					functionIds.join(",");
+	      	    					console.log(functionIds);
+	      	    					url=encodeURI('${pageContext.request.contextPath}/module/deleteModuel?functionId='+functionIds+'&appId=${appId}');
+	      	    				}
+	      	 					$.post(url,function(data) {
+	      	 			             if(data.returnMsg=='1'){
+	      	 			             	msgShow('系统提示', '恭喜，删除成功！', 'info');
+	      	 			             	var Nodes = $('#deptree').tree('getSelected');
+	      	 			             	$('#deptree').tree('pop',Nodes.target);
+	      	 			                getRoot();
+	      	 			             }else if(data.returnMsg=='0'){
+	      	 			                 msgShow('系统提示', '删除失败！', 'info');
+	      	 			                 close();
+	      	 			                 reload();
+	      	 			             }
+	      	 			        }); 
+	      	 			     	
+	 	   				}
+  	   			});
+	   		}
+      });
             
              $('#btnEp').click(function() {
                  serverLogin();
@@ -607,17 +672,7 @@
 			
 			
 });
-	    	//删除子菜单
-	    	function delMenu(resourceIds,menuIds){
-	    		$.post('${pageContext.request.contextPath}/module/deleteMenu?resourceId='+resourceIds+'&menuId='+menuIds+'&appId=${appId}',
-	    				function(data){});
-	    	}
-	    	//删除子功能
-	    	function delFunctions(functionIds){
-	    		$.post('${pageContext.request.contextPath}/module/delFunction?functionId='+functionIds+'&appId=${appId}',
-	    				
-	    				function(data){});
-	    	}
+	    
 		    //清空
 			function reset(){
 				jQuery('#parentName').val('');
