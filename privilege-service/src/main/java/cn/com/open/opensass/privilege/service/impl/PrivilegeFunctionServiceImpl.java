@@ -79,27 +79,30 @@ public class PrivilegeFunctionServiceImpl implements PrivilegeFunctionService {
 		List<PrivilegeFunction> privilegeFunctions=privilegeFunctionRepository.getFunctionByRId(resourceId);
 		List<Map<String, Object>> list=new ArrayList<Map<String,Object>>();
 		for(PrivilegeFunction function:privilegeFunctions){
-			Map<String, Object> map=new HashMap<String, Object>();
-			map.put("resourceId", function.getResourceId());
-			map.put("functionId", function.id());
-			map.put("optId", function.getOperationId());
-			map.put("optUrl", function.getOptUrl());
-			list.add(map);
+			if (function.id()!=null&&!("").equals(function.id())) {
+				Map<String, Object> map=new HashMap<String, Object>();
+				map.put("resourceId", function.getResourceId());
+				map.put("functionId", function.id());
+				map.put("optId", function.getOperationId());
+				map.put("optUrl", function.getOptUrl());
+				list.add(map);
+			}
 		}
 		return list;
-		//return privilegeFunctionRepository.getFunctionByRId(resourceId);
 	}
 	@Override
 	public List<Map<String, Object>> getFunctionListByUserId(String appUserId, String appId) {
 		List<PrivilegeFunction> privilegeFunctions=privilegeFunctionRepository.getFunctionListByUserId(appUserId, appId);
 		List<Map<String, Object>> list=new ArrayList<Map<String,Object>>();
 		for(PrivilegeFunction function:privilegeFunctions){
-			Map<String, Object> map=new HashMap<String, Object>();
-			map.put("resourceId", function.getResourceId());
-			map.put("functionId", function.id());
-			map.put("optId", function.getOperationId());
-			map.put("optUrl", function.getOptUrl());
-			list.add(map);
+			if (function.id()!=null&&!("").equals(function.id())) {
+				Map<String, Object> map=new HashMap<String, Object>();
+				map.put("resourceId", function.getResourceId());
+				map.put("functionId", function.id());
+				map.put("optId", function.getOperationId());
+				map.put("optUrl", function.getOptUrl());
+				list.add(map);
+			}
 		}
 		
 		return list;
@@ -109,12 +112,14 @@ public class PrivilegeFunctionServiceImpl implements PrivilegeFunctionService {
 		List<Map<String, Object>> list=new ArrayList<Map<String, Object>>();
 		List<PrivilegeFunction> functions=privilegeFunctionRepository.getFunctionMap(resourceId);
 		for(PrivilegeFunction function:functions){
-			Map<String, Object> map=new HashMap<String, Object>();
-			map.put ("resourceId", function.getResourceId());
-			map.put("functionId", function.id());
-			map.put("optId", function.getOperationId() + "");
-			map.put("optUrl", function.getOptUrl());
-			list.add(map);
+			if (function.id()!=null&&!("").equals(function.id())) {
+				Map<String, Object> map=new HashMap<String, Object>();
+				map.put("resourceId", function.getResourceId());
+				map.put("functionId", function.id());
+				map.put("optId", function.getOperationId());
+				map.put("optUrl", function.getOptUrl());
+				list.add(map);
+			}
 		}
 		return list;
 	}
@@ -123,12 +128,14 @@ public class PrivilegeFunctionServiceImpl implements PrivilegeFunctionService {
 		List<PrivilegeFunctionVo> privilegeFunctionVos=new ArrayList<PrivilegeFunctionVo>();
 		List<PrivilegeFunction> privilegeFunctions=privilegeFunctionRepository.getFunctionListByAppId(appId);
 		for(PrivilegeFunction function:privilegeFunctions){
-			PrivilegeFunctionVo functionVo=new PrivilegeFunctionVo();
-			functionVo.setFunctionId(function.id());
-			functionVo.setOptId(function.getOperationId());
-			functionVo.setOptUrl(function.getOptUrl());
-			functionVo.setResourceId(function.getResourceId());
-			privilegeFunctionVos.add(functionVo);
+			if (function.id()!=null&&!("").equals(function.id())) {
+				PrivilegeFunctionVo functionVo=new PrivilegeFunctionVo();
+				functionVo.setFunctionId(function.id());
+				functionVo.setOptId(function.getOperationId());
+				functionVo.setOptUrl(function.getOptUrl());
+				functionVo.setResourceId(function.getResourceId());
+				privilegeFunctionVos.add(functionVo);
+			}
 		}
 		return privilegeFunctionVos;
 	}
@@ -137,12 +144,14 @@ public class PrivilegeFunctionServiceImpl implements PrivilegeFunctionService {
 		List<Map<String, Object>> privilegefunctions=new ArrayList<Map<String, Object>>();
 		List<PrivilegeFunction> functions= privilegeFunctionRepository.getFunctionListByFunctionIds(functionIds);
 		for(PrivilegeFunction function:functions){
-			Map<String, Object> map=new HashMap<String, Object>();
-			map.put ("resourceId", function.getResourceId());
-			map.put("functionId", function.getId());
-			map.put("optId", function.getOperationId() + "");
-			map.put("optUrl", function.getOptUrl());
-			privilegefunctions.add(map);
+			if (function.id()!=null&&!("").equals(function.id())) {
+				Map<String, Object> map=new HashMap<String, Object>();
+				map.put("resourceId", function.getResourceId());
+				map.put("functionId", function.id());
+				map.put("optId", function.getOperationId());
+				map.put("optUrl", function.getOptUrl());
+				privilegefunctions.add(map);
+			}
 		}
 		
 		return privilegefunctions;
