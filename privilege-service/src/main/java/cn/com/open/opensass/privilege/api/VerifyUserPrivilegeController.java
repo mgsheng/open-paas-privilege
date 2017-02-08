@@ -94,16 +94,13 @@ public class VerifyUserPrivilegeController extends BaseControllerUtil {
 				if (role.getRoleType() != null) {
 					if (role.getRoleType() == 2) {
 						isManger = true;
-						break;
+						map.put("status", "1");
+						writeErrorJson(response, map);
+						return;
 					}
 				}
 			}
-			PrivilegeUrl url = null;
-			if (isManger) {
-				url = privilegeUrlService.getAllPrivilegeUrl(appId);
-			} else {
-				url = privilegeUrlService.getPrivilegeUrl(appId, appUserId, privilegeUser);
-			}
+			PrivilegeUrl url = privilegeUrlService.getPrivilegeUrl(appId, appUserId, privilegeUser);
 			String json = url.getPrivilegeUrl();
 			JSONObject object = JSONObject.fromObject(json);
 			Map Jsonmap = (Map) object;
