@@ -128,7 +128,7 @@
 			</div>
 			<div region="south" border="false"
 				style="text-align:center; height: 30px; line-height: 30px;">
-				<a id="addFunct" class="easyui-linkbutton" icon="icon-ok"
+				<a id="addFunct2" class="easyui-linkbutton" icon="icon-ok"
 					href="javascript:void(0)"> 确定</a> <a id="btnCancel1"
 					class="easyui-linkbutton" icon="icon-cancel"
 					href="javascript:void(0)">取消</a>
@@ -211,17 +211,23 @@
         function closeFunction() {
             $('#function').window('close');
         }
-        $('#addFunct').click(function(){
+      //添加或修改功能
+        $('#addFunct2').click(function(){
+        	var optUrl = $('#opturl').val();
+        	if(optUrl == ''){
+            	msgShow('系统提示', '请输入Url！', 'warning');
+                return false;
+            }
         	var resourceId = $('#resourceId2').val();
         	var functionId = $('#functionId').val();
-        	var optUrl = $('#opturl').val();
+        	
         	var optId = $('#operName').combobox('getValue');
         	var optName=$('#operName').combobox('getText');
         	if(functionId!=""){
-        		$.post('${pageContext.request.contextPath}/module/editFunction',
+        		$.post('${pageContext.request.contextPath}/module/detail',
                     	{'functionId':functionId,'optUrl':optUrl,'operationId':optId,'appId':'${appId}'},
                     	function(data){
-                    		if(data.returnMsg=='1'){
+                    		if(data.returnMsg=='2'){
                              	msgShow('系统提示', '恭喜，修改成功！', 'info');
                              	close();
                              	 //var funNode=$('#deptree').tree('getSelected');
@@ -245,7 +251,7 @@
                         });
         		$('#functionId').val('');
         	}else {
-        		$.post('${pageContext.request.contextPath}/module/addFunction',
+        		$.post('${pageContext.request.contextPath}/module/addModuel',
                     	{'resourceId':resourceId,'optUrl':optUrl,'operationId':optId,'appId':'${appId}'},
                     	function(data){
                     		if(data.returnMsg=='1'){
@@ -276,7 +282,7 @@
         		$('#functionId').val("");
 			}
         });
-        //添加資源
+        //添加菜单或修改菜单
         function serverLogin() {
             var name = $('#moduleName').val();
             var code = $('#code').val();
@@ -303,9 +309,9 @@
 			var url="";
 			
 		    if(menuId==""){
-				url='${pageContext.request.contextPath}/module/addMenu';
+				url='${pageContext.request.contextPath}/module/addModuel';
 		    }else{
-				url='${pageContext.request.contextPath}/module/edit';
+				url='${pageContext.request.contextPath}/module/detail';
 		    }
              $.post(url, {
                  	'name':name,
