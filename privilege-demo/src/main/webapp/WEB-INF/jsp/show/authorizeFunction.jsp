@@ -66,7 +66,7 @@ function getRoot(){
 	});
 }
 	$('#tt').tree({ 
- 	  url: '${pageContext.request.contextPath}/managerUser/tree', 
+ 	  url: '${pageContext.request.contextPath}/managerUser/tree?appId=${appId}', 
       onLoadSuccess:function(node,data){
     	 getRoot();
     	 //勾选用户用户有的功能与资源
@@ -80,7 +80,7 @@ function getRoot(){
 	}
 	//勾选用户拥有的功能
 	function selected(){
-		$.post('${pageContext.request.contextPath}/managerUser/function?id='+'${id}',function(data){
+		$.post('${pageContext.request.contextPath}/managerUser/function?id=${id}&appId=${appId}',function(data){
 				if(data.functionIds!=null){
 					$.each(data.functionIds,function(i,n){
 						var node=$("#tt").tree('find',n);
@@ -128,7 +128,7 @@ function getRoot(){
 		});
 		resId.join(",");
 		funId.join(",");
-		 var url='${pageContext.request.contextPath}/managerUser/authorizeFun?id='+${id}+'&resource='+resId+'&function='+funId+'&userName=${userName}';
+		 var url='${pageContext.request.contextPath}/managerUser/authorizeFun?id=${id}&resource='+resId+'&function='+funId+'&userName=${userName}&appId=${appId}';
          $.post(url, function(data) {
              if(data.result==true){
               	msgShow('系统提示', '恭喜，授权功能成功！', 'info');
