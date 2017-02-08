@@ -83,11 +83,14 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	 */
 	@RequestMapping(value = "index")
 	public String stats(HttpServletRequest request, HttpServletResponse response, Model model) {
+		String appId=request.getParameter("appId");
+		model.addAttribute("appId",appId);
 		return "privilege/model/index";
 	}
 
 	@RequestMapping(value = "tree")
 	public void getModelTree(HttpServletRequest request, HttpServletResponse response) {
+		String appId=request.getParameter("appId");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("appId", appId);
 		String reslut = sendPost(appMenuRedisUrl, map);
@@ -366,6 +369,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	@RequestMapping(value = "delFunction")
 	public void delFunction(HttpServletRequest request, HttpServletResponse response) {
 		String functionId = request.getParameter("functionId");
+		String appId=request.getParameter("appId");
 		if (("undefined").equals(functionId)) {
 			return;
 		}
@@ -405,6 +409,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	@RequestMapping(value = "editFunction")
 	public void editFunction(HttpServletRequest request, HttpServletResponse response) {
 		String functionId = request.getParameter("functionId");
+		String appId=request.getParameter("appId");
 		String optUrl = request.getParameter("optUrl");
 		String operationId = request.getParameter("operationId");
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
@@ -445,6 +450,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	@RequestMapping(value = "addFunction")
 	public void addFunction(HttpServletRequest request, HttpServletResponse response) {
 		String resourceId = request.getParameter("resourceId");
+		String appId=request.getParameter("appId");
 		String optUrl = request.getParameter("optUrl");
 		String operationId = request.getParameter("operationId");
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
@@ -488,6 +494,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	@RequestMapping(value = "addMenu")
 	public void add(HttpServletRequest request, HttpServletResponse response) {
 		String menuName = request.getParameter("name");
+		String appId=request.getParameter("appId");
 		String menuCode = request.getParameter("code");
 		try {
 			menuName = java.net.URLEncoder.encode(menuName, "UTF-8");
@@ -571,6 +578,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	public void edit(HttpServletRequest request, HttpServletResponse response) {
 		String menuName = request.getParameter("name");
 		String menuCode = request.getParameter("code");
+		String appId=request.getParameter("appId");
 		try {
 			menuName = java.net.URLEncoder.encode(menuName, "UTF-8");
 			menuCode = java.net.URLEncoder.encode(menuCode, "UTF-8");
@@ -693,6 +701,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	@RequestMapping(value = "deleteMenu")
 	public void delete(HttpServletRequest request, HttpServletResponse response) {
 		String resourceId = request.getParameter("resourceId");
+		String appId=request.getParameter("appId");
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
 		map.put("appId", appId);
 		map.put("menuId", request.getParameter("menuId"));
