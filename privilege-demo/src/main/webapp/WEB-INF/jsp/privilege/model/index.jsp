@@ -21,7 +21,7 @@
 	</div>
 	<div class="easyui-panel" style="padding:5px;height: 95%;overflow-x:scroll;">
 		  <ul id="deptree"  style="height: 100%"class="easyui-tree" 
-			 data-options="method:'get',url:'${pageContext.request.contextPath}/module/tree'"> 
+			 data-options="method:'get',url:'${pageContext.request.contextPath}/module/tree?appId=${appId}'"> 
 	 </ul>
 	</div>
 	</div>
@@ -214,7 +214,7 @@
         	var optName=$('#operName').combobox('getText');
         	if(functionId!=""){
         		$.post('${pageContext.request.contextPath}/module/editFunction',
-                    	{'functionId':functionId,'optUrl':optUrl,'operationId':optId},
+                    	{'functionId':functionId,'optUrl':optUrl,'operationId':optId,'appId':'${appId}'},
                     	function(data){
                     		if(data.returnMsg=='1'){
                              	msgShow('系统提示', '恭喜，修改成功！', 'info');
@@ -238,9 +238,10 @@
 							}
                     		$('#function').window('close');
                         });
+        		$('#functionId').val('');
         	}else {
         		$.post('${pageContext.request.contextPath}/module/addFunction',
-                    	{'resourceId':resourceId,'optUrl':optUrl,'operationId':optId},
+                    	{'resourceId':resourceId,'optUrl':optUrl,'operationId':optId,'appId':'${appId}'},
                     	function(data){
                     		if(data.returnMsg=='1'){
                              	msgShow('系统提示', '恭喜，添加成功！', 'info');
@@ -258,6 +259,7 @@
                              		}]});
                              	//reload();
                             	$('#function').window('close');
+                            	
                     		}else if(data.returnMsg=='0'){
                     			msgShow('系统提示', '添加失败！', 'info');
                              	close();
@@ -266,7 +268,7 @@
                     		}
                     		$('#function').window('close');
                         });
-               
+        		$('#functionId').val("");
 			}
         });
         //添加資源
@@ -309,7 +311,8 @@
                  	'menuLevel':menuLevel,
                  	'url':moduleUrl,
                  	'menuId':menuId,
-                 	'resourceId':resourceId
+                 	'resourceId':resourceId,
+                 	'appId':'${appId}'
                  },function(data) {
                 if(data.returnMsg=='1'){
                  	msgShow('系统提示', '恭喜，添加成功！', 'info');
@@ -549,7 +552,7 @@
   		    			 		delMenu(resourceIds, menuIds);
   		    		 		}
      		    	 	}
-     		    	 	url=encodeURI('${pageContext.request.contextPath}/module/deleteMenu?menuId='+menuId+'&resourceId='+resourceId);
+     		    	 	url=encodeURI('${pageContext.request.contextPath}/module/deleteMenu?menuId='+menuId+'&resourceId='+resourceId+'&appId=${appId}');
        		     	}else if (node.ismodule=="1") {
        		    	 	var childrenNodes = $('#deptree').tree('getChildren',node.target);
        		    	 	console.log(childrenNodes);
@@ -563,10 +566,10 @@
        		    	 	
        		    	 	resourceId=node.id;
        		    		menuId=node.attributes.menuId;
-       		    	 	url=encodeURI(encodeURI('${pageContext.request.contextPath}/module/deleteMenu?menuId='+menuId+'&resourceId='+resourceId));
+       		    	 	url=encodeURI(encodeURI('${pageContext.request.contextPath}/module/deleteMenu?menuId='+menuId+'&resourceId='+resourceId+'&appId=${appId}'));
        				}else {
        					functionId=node.id;
-       					url=encodeURI('${pageContext.request.contextPath}/module/delFunction?functionId='+functionId);
+       					url=encodeURI('${pageContext.request.contextPath}/module/delFunction?functionId='+functionId+'&appId=${appId}');
        				}
     		
     				 	if (boo){
@@ -601,12 +604,12 @@
 });
 	    	//删除子菜单
 	    	function delMenu(resourceIds,menuIds){
-	    		$.post('${pageContext.request.contextPath}/module/deleteMenu?resourceId='+resourceIds+'&menuId='+menuIds,
+	    		$.post('${pageContext.request.contextPath}/module/deleteMenu?resourceId='+resourceIds+'&menuId='+menuIds+'&appId=${appId}',
 	    				function(data){});
 	    	}
 	    	//删除子功能
 	    	function delFunctions(functionIds){
-	    		$.post('${pageContext.request.contextPath}/module/delFunction?functionId='+functionIds,
+	    		$.post('${pageContext.request.contextPath}/module/delFunction?functionId='+functionIds+'&appId=${appId}',
 	    				
 	    				function(data){});
 	    	}
@@ -618,6 +621,7 @@
 				jQuery('#moduleUrl').val('');
 				jQuery('#code').val('');
 				jQuery('#display_order').val('');
+				$('#functionId').val('');
 				$('#menuLevel').val('');
 				$('#resourceId').val('');
 				$('#opturl').val('');
@@ -687,7 +691,7 @@
 			}
 			function reload(){
 			    $('#deptree').tree({
-                	url:'${pageContext.request.contextPath}/module/tree'
+                	url:'${pageContext.request.contextPath}/module/tree?appId=${appId}'
              	});
 			}
 			/*function expandAll(){
