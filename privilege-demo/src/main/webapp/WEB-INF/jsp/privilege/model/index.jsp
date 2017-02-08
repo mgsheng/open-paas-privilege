@@ -9,6 +9,11 @@
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
 	<script type="text/javascript"
 	src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
+	<style type="text/css">
+		.txt01{
+			width: 230px;
+		}
+	</style>
 </head>
 <body>
 	<div class="easyui-panel" title="模块管理" style="width:100%;max-width:100%;padding:20px 30px;height:540px;">
@@ -54,7 +59,7 @@
 					</tr>
 					<tr id="url">
 						<td>URL：</td>
-						<td><input id="moduleUrl" type="text" name="moduleUrl"class="txt01" />
+						<td><input id="moduleUrl" type="text" name="moduleUrl" class="txt01" />
 						</td>
 					</tr>
 					<tr>
