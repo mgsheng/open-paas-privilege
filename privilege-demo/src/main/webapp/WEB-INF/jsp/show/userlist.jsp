@@ -206,7 +206,7 @@
 			if ($('#tt').tabs('exists', userName)){
 			 	$('#tt').tabs('select', userName);
 			} else {
-				 var url = '${pageContext.request.contextPath}/managerUser/toRole?id='+userId+'&userName='+userName;
+				 var url = '${pageContext.request.contextPath}/managerUser/toRole?id='+userId+'&userName='+userName+'&appId='+${appId};
 			 	 var content = '<iframe scrolling="auto" frameborder="0" src="'+url+'" style="width:100%;height:100%;"></iframe>';
 				 $('#tt').tabs('add',{
 					 title:userName+'-授权角色',
@@ -221,7 +221,7 @@
 			if ($('#tt').tabs('exists', userName)){
 			 	$('#tt').tabs('select', userName);
 			} else {
-				 var url = '${pageContext.request.contextPath}/managerUser/toFunction?id='+userId+'&userName='+userName;
+				 var url = '${pageContext.request.contextPath}/managerUser/toFunction?id='+userId+'&userName='+userName+'&appId='+${appId};
 			 	 var content = '<iframe scrolling="auto" frameborder="0" src="'+url+'" style="width:100%;height:100%;"></iframe>';
 				 $('#tt').tabs('add',{
 					 title:userName+'-授权功能',
@@ -416,7 +416,7 @@
 				collapsible:true,
 				rownumbers:true,
 				pagination:true,
-		        url: "${pageContext.request.contextPath}/managerUser/findUserList",  
+		        url: "${pageContext.request.contextPath}/managerUser/findUserList?appId=${appId}",  
 		        pagination: true,//显示分页工具栏
 		        onLoadSuccess:function(data){
                     if (data.total<1){
