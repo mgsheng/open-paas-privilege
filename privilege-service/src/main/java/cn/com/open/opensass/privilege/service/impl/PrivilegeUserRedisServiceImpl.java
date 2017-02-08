@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import cn.com.open.opensass.privilege.dao.cache.RedisDao;
-import cn.com.open.opensass.privilege.model.PrivilegeFunction;
 import cn.com.open.opensass.privilege.model.PrivilegeRole;
 import cn.com.open.opensass.privilege.model.PrivilegeRoleResource;
 import cn.com.open.opensass.privilege.model.PrivilegeUser;
@@ -74,7 +73,6 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 		if (null != jsonString && jsonString.length() > 0) {
 			ajaxMessage.setCode("1");
 			ajaxMessage.setMessage(jsonString);
-			System.err.println("缓存");
 			return ajaxMessage;
 		}
 		log.info("从数据库获取数据");
@@ -124,23 +122,26 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 				Collections.addAll(resourceIdList, resourceIds1);
 				PrivilegeResourceVo resource = null;
 				for (String resourceId : resourceIdList) {
-					Map<String, Object> map2 = new HashMap<String, Object>();
 					resource = privilegeResourceService.findByResourceId(resourceId);
-					map2.put("appId", resource.getAppId());
-					map2.put("resourceId", resource.getResourceId());
-					map2.put("resourceLevel", resource.getResourceLevel());
-					map2.put("resourceName", resource.getResourceName());
-					map2.put("resourceRule", resource.getResourceRule());
-					map2.put("dislayOrder ", resource.getDisplayOrder());
-					map2.put("menuId", resource.getMenuId());
-					map2.put("baseUrl", resource.getBaseUrl());
-					map2.put("status", resource.getStatus());
-					// 通过查roleResource表 user表中functionId 获取的resource 是否包含
-					// user表中resource
-					if (!resourceList.contains(map2)) {
-						resourceIds.add(resourceId);
+					if (resource.getResourceId()!=null&&!("").equals(resource.getResourceId())) {
+						Map<String, Object> map2 = new HashMap<String, Object>();
+						map2.put("appId", resource.getAppId());
+						map2.put("resourceId", resource.getResourceId());
+						map2.put("resourceLevel", resource.getResourceLevel());
+						map2.put("resourceName", resource.getResourceName());
+						map2.put("resourceRule", resource.getResourceRule());
+						map2.put("dislayOrder ", resource.getDisplayOrder());
+						map2.put("menuId", resource.getMenuId());
+						map2.put("baseUrl", resource.getBaseUrl());
+						map2.put("status", resource.getStatus());
+						// 通过查roleResource表 user表中functionId 获取的resource 是否包含
+						// user表中resource
+						if (!resourceList.contains(map2)) {
+							resourceIds.add(resourceId);
+						}
+						resourceList.add(map2);
 					}
-					resourceList.add(map2);
+					
 				}
 			}
 			resourceSet.addAll(resourceList);
