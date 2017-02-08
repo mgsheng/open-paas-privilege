@@ -230,7 +230,14 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 			JSONObject obj1 = JSONObject.fromObject(roleMessage.getMessage());// 将json字符串转换为json对象
 			JSONArray objArray = (JSONArray) obj1.get("roleList");
 			roleMap.put("roleList", objArray);
-			objArray=(JSONArray) obj1.get("resourceList");
+			if (boo) {
+				//如果为管理员 返回应用所有资源
+				PrivilegeAjaxMessage message=privilegeResourceService.getAppResRedis(user.getAppId());
+				obj1=JSONObject.fromObject(message.getMessage());
+				objArray=(JSONArray) obj1.get("resourceList");
+			}else {
+				objArray=(JSONArray) obj1.get("resourceList");
+			}
 			roleMap.put("resourceList", objArray);
 			objArray=(JSONArray) obj1.get("functionList");
 			roleMap.put("functionList", objArray);
@@ -279,7 +286,15 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 			map.putAll(menuMap);
 		}else{
 			JSONObject obj1 = JSONObject.fromObject(menuMessage.getMessage());// 将json字符串转换为json对象
-			JSONArray objArray = (JSONArray) obj1.get("menuList");
+			JSONArray objArray = null;
+			if (boo) {
+				//如果为管理员 返回应用所有菜单
+				PrivilegeAjaxMessage message=privilegeMenuService.getAppMenuRedis(user.getAppId());
+				obj1=JSONObject.fromObject(message.getMessage());
+				objArray=(JSONArray) obj1.get("menuList");
+			}else {
+				objArray=(JSONArray) obj1.get("menuList");
+			}
 			menuMap.put("menuList", objArray);
 			map.putAll(menuMap);
 		}
