@@ -10,7 +10,6 @@ import cn.com.open.opensass.privilege.model.PrivilegeRoleResource;
 import cn.com.open.opensass.privilege.model.PrivilegeUser;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import cn.com.open.opensass.privilege.service.*;
-import cn.com.open.opensass.privilege.tools.WebUtils;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
@@ -162,6 +161,13 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 		List<PrivilegeRoleResource> rivilegeRoleResources = privilegeRoleResourceService.findUserRoleResources(appId,
 				appUserId);
 		for (PrivilegeRoleResource roleResource : rivilegeRoleResources) {
+			if (roleResource.getResourceId()!=null&&!("").equals(roleResource.getResourceId())) {
+				PrivilegeResource privilegeResource = privilegeResourceService.findByResourceId(roleResource.getResourceId(), appId);
+				if (null != privilegeResource && null != privilegeResource.getBaseUrl()
+						&& privilegeResource.getBaseUrl().length() > 0) {
+					setUrl.add(privilegeResource.getBaseUrl());
+				}
+			}
 			if (roleResource.getPrivilegeFunId() == null || ("").equals(roleResource.getPrivilegeFunId())) {
 				List<Map<String, Object>> functions = privilegeFunctionService.getFunctionByRId(roleResource.getResourceId());
 				for (Map<String, Object> map : functions) {
