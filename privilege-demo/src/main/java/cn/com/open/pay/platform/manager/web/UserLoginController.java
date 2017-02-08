@@ -1,7 +1,5 @@
 package cn.com.open.pay.platform.manager.web;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -11,16 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,20 +17,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import cn.com.open.pay.platform.manager.dev.PayManagerDev;
 import cn.com.open.pay.platform.manager.login.model.User;
 import cn.com.open.pay.platform.manager.login.service.UserService;
-import cn.com.open.pay.platform.manager.privilege.model.Manager;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
-import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource1;
-import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRoleDetails;
-import cn.com.open.pay.platform.manager.privilege.service.ManagerService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGetSignatureService;
-import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
-import cn.com.open.pay.platform.manager.privilege.service.PrivilegeRoleDetailsService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
 import net.sf.json.JSONArray;
@@ -59,14 +40,6 @@ public class UserLoginController extends BaseControllerUtil {
 	private UserService userService;
 	@Autowired
 	private PrivilegeGetSignatureService privilegeGetSignatureService;
-	@Autowired
-	private ManagerService managerService;
-	@Autowired
-	private PayManagerDev payManagerDev;
-	@Autowired
-	private PrivilegeRoleDetailsService privilegeRoleDetailsService;
-	@Autowired
-	private PrivilegeModuleService privilegeModuleService;
 	@Value("#{properties['get-privilege-user-uri']}")
 	private String getUserPrivilegeUrl;
 	@Value("#{properties['privilege-appres-redis-query-uri']}")
@@ -89,7 +62,6 @@ public class UserLoginController extends BaseControllerUtil {
 		log.info("-----------------------login start----------------");
 		Boolean flag = true;
 		String errorCode = "ok";
-		User user = null;
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("flag", flag);
 		map.put("errorCode", errorCode);
@@ -117,10 +89,9 @@ public class UserLoginController extends BaseControllerUtil {
 		Map<String, Object> menus = new HashMap<String, Object>();
 		if (result != null && !("").equals(result)) {
 			JSONObject jasonObject = JSONObject.fromObject(result);
-			Map JsonMap = (Map) jasonObject;
-			if ("0".equals(JsonMap.get("status"))) {
+			if ("0".equals(jasonObject.get("status"))) {
 				menus.put("status", "0");
-				menus.put("errMsg", JsonMap.get("errMsg"));
+				menus.put("errMsg", jasonObject.get("errMsg"));
 				model.addAttribute("menus", JSONObject.fromObject(menus));
 			} else {
 				JSONArray menu=jasonObject.getJSONArray("menuList");
