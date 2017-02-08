@@ -83,14 +83,14 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	 */
 	@RequestMapping(value = "index")
 	public String stats(HttpServletRequest request, HttpServletResponse response, Model model) {
-		String appId=request.getParameter("appId");
-		model.addAttribute("appId",appId);
+		String appId = request.getParameter("appId");
+		model.addAttribute("appId", appId);
 		return "privilege/model/index";
 	}
 
 	@RequestMapping(value = "tree")
 	public void getModelTree(HttpServletRequest request, HttpServletResponse response) {
-		String appId=request.getParameter("appId");
+		String appId = request.getParameter("appId");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("appId", appId);
 		String reslut = sendPost(appMenuRedisUrl, map);
@@ -108,7 +108,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		List<PrivilegeOperation> operationList = JSONArray.toList(objArray, PrivilegeOperation.class);
 		List<PrivilegeResource1> resourceList = JSONArray.toList(obj1Array, PrivilegeResource1.class);
 		List<PrivilegeFunction> functionList = JSONArray.toList(obj2Array, PrivilegeFunction.class);
-		
+
 		List<TreeNode> nodes = convertTreeNodeList(menuList);
 		JSONArray jsonArr = JSONArray.fromObject(buildTree2(nodes, resourceList, functionList, operationList));
 		if (request.getParameter("id") != null) {
@@ -369,7 +369,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	@RequestMapping(value = "delFunction")
 	public void delFunction(HttpServletRequest request, HttpServletResponse response) {
 		String functionId = request.getParameter("functionId");
-		String appId=request.getParameter("appId");
+		String appId = request.getParameter("appId");
 		if (("undefined").equals(functionId)) {
 			return;
 		}
@@ -409,7 +409,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	@RequestMapping(value = "editFunction")
 	public void editFunction(HttpServletRequest request, HttpServletResponse response) {
 		String functionId = request.getParameter("functionId");
-		String appId=request.getParameter("appId");
+		String appId = request.getParameter("appId");
 		String optUrl = request.getParameter("optUrl");
 		String operationId = request.getParameter("operationId");
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
@@ -450,7 +450,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	@RequestMapping(value = "addFunction")
 	public void addFunction(HttpServletRequest request, HttpServletResponse response) {
 		String resourceId = request.getParameter("resourceId");
-		String appId=request.getParameter("appId");
+		String appId = request.getParameter("appId");
 		String optUrl = request.getParameter("optUrl");
 		String operationId = request.getParameter("operationId");
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
@@ -494,7 +494,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	@RequestMapping(value = "addMenu")
 	public void add(HttpServletRequest request, HttpServletResponse response) {
 		String menuName = request.getParameter("name");
-		String appId=request.getParameter("appId");
+		String appId = request.getParameter("appId");
 		String menuCode = request.getParameter("code");
 		try {
 			menuName = java.net.URLEncoder.encode(menuName, "UTF-8");
@@ -578,7 +578,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	public void edit(HttpServletRequest request, HttpServletResponse response) {
 		String menuName = request.getParameter("name");
 		String menuCode = request.getParameter("code");
-		String appId=request.getParameter("appId");
+		String appId = request.getParameter("appId");
 		try {
 			menuName = java.net.URLEncoder.encode(menuName, "UTF-8");
 			menuCode = java.net.URLEncoder.encode(menuCode, "UTF-8");
@@ -653,37 +653,55 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	 * 修改模块
 	 * 
 	 * @param request
-	 * @param model
-	 * @param bool
+	 * @param response
 	 * @return
 	 */
 	@RequestMapping(value = "detail")
 	public void detail(HttpServletRequest request, HttpServletResponse response) {
-		String resourceId = request.getParameter("resourceId");
-		String appId=request.getParameter("appId");
-		String functionId = request.getParameter("functionId");
-		String menuId=request.getParameter("menuId");
-		String menuName = request.getParameter("name");
-		String menuCode = request.getParameter("code");
-		try {
-			menuName = java.net.URLEncoder.encode(menuName, "UTF-8");
-			menuCode = java.net.URLEncoder.encode(menuCode, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		String parentId = request.getParameter("parentId");
-		String status = request.getParameter("status");
-		String displayOrder = request.getParameter("displayOrder");
-		String url = request.getParameter("url");
-		String menuLevel = request.getParameter("menuLevel");
+		String appId = request.getParameter("appId");
 		String optUrl = request.getParameter("optUrl");
-		String operationId = request.getParameter("operationId");
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
 		map.put("appId", appId);
-		String reslut=null;
-		Boolean boo=false;
-		
-		if(url==null||("").equals(url)){
+		String reslut = null;
+		Boolean boo = false;
+		//optUrl为空 修改菜单  不为空修改功能
+		if (optUrl != null && !("").equals(optUrl)) {
+			String operationId = request.getParameter("operationId");
+			String functionId = request.getParameter("functionId");
+			map.put("optUrl", optUrl);
+			map.put("functionId", functionId);
+			map.put("operationId", operationId);
+			reslut = sendPost(modifyFunctionUrl, map);
+			if (reslut != null) {
+				JSONObject jsonObject = JSONObject.fromObject(reslut);
+				if (jsonObject.get("status").equals("1")) {
+					boo = true;
+				} else {
+					boo = false;
+				}
+			} else {
+				boo = false;
+			}
+		} else {
+			String menuId = request.getParameter("menuId");
+			String parentId = request.getParameter("parentId");
+			String status = request.getParameter("status");
+			String displayOrder = request.getParameter("displayOrder");
+			String url = request.getParameter("url");
+			String menuLevel = request.getParameter("menuLevel");
+			String menuName = request.getParameter("name");
+			String menuCode = request.getParameter("code");
+			String resourceId = request.getParameter("resourceId");
+			try {
+				if (menuName != null) {
+					menuName = java.net.URLEncoder.encode(menuName, "UTF-8");
+				}
+				if (menuCode != null) {
+					menuCode = java.net.URLEncoder.encode(menuCode, "UTF-8");
+				}
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
 			map.put("menuId", menuId);
 			map.put("menuName", menuName);
 			map.put("menuCode", menuCode);
@@ -691,8 +709,8 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 			map.put("status", status);
 			map.put("dislayOrder", displayOrder);
 			map.put("menuLevel", Integer.parseInt(menuLevel) + 1);
-			reslut=sendPost(modifyMenuUrl, map);
-			if (reslut != null&&!("").equals(reslut)) {
+			reslut = sendPost(modifyMenuUrl, map);
+			if (reslut != null) {
 				JSONObject jsonObject = JSONObject.fromObject(reslut);
 				if (jsonObject.get("status").equals(1)) {
 					boo = true;
@@ -702,11 +720,33 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 			} else {
 				boo = false;
 			}
-		}else{
-			
+			if (resourceId != null && !("").equals(resourceId) && !("undefined").equals(resourceId)) {
+				if (boo) {
+					// 修改
+					map.put("resourceName", menuName);
+					map.put("menuId", menuId);
+					map.put("baseUrl", url);
+					map.put("resourceId", resourceId);
+					reslut = sendPost(modifyResourceUrl, map);
+					if (reslut != null) {
+						JSONObject jsonObject = JSONObject.fromObject(reslut);
+						if (jsonObject.get("status").equals("1")) {
+							boo = true;
+						} else {
+							boo = false;
+						}
+					} else {
+						boo = false;
+					}
+				}
+			}
 		}
-		
-		
+		map.clear();
+		if (boo) {
+			map.put("returnMsg", "2");
+		} else {
+			map.put("returnMsg", "0");
+		}
 		WebUtils.writeErrorJson(response, map);
 
 	}
@@ -722,7 +762,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	@RequestMapping(value = "deleteMenu")
 	public void delete(HttpServletRequest request, HttpServletResponse response) {
 		String resourceId = request.getParameter("resourceId");
-		String appId=request.getParameter("appId");
+		String appId = request.getParameter("appId");
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
 		map.put("appId", appId);
 		map.put("menuId", request.getParameter("menuId"));
@@ -765,27 +805,139 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		}
 		WebUtils.writeErrorJson(response, map);
 	}
-
+	/**
+	 * 添加模块
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "addModuel")
+	public void addModuel(HttpServletRequest request, HttpServletResponse response) {
+		String appId = request.getParameter("appId");
+		String optUrl = request.getParameter("optUrl");
+		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
+		map.put("appId", appId);
+		String reslut = null;
+		Boolean boo = false;
+		//如果optUrl为空 则添加菜单  不为空添加功能
+		if (optUrl != null && !("").equals(optUrl)) {
+			String operationId = request.getParameter("operationId");
+			String resourceId = request.getParameter("resourceId");
+			String functionId=null;
+			map.put("optUrl", optUrl);
+			map.put("resourceId", resourceId);
+			map.put("operationId", operationId);
+			reslut = sendPost(addFunctionUrl, map);
+			if (reslut != null && !("").equals(reslut)) {
+				JSONObject jsonObject = JSONObject.fromObject(reslut);
+				if (jsonObject.get("status").equals("1")) {
+					boo = true;
+					functionId =(String) jsonObject.get("functionId");
+				} else {
+					boo = false;
+				}
+			} else {
+				boo = false;
+			}
+			map.clear();
+			if (boo) {
+				map.put("returnMsg", "1");
+				map.put("functionId", functionId);
+			} else {
+				map.put("returnMsg", "0");
+			}
+			WebUtils.writeErrorJson(response, map);
+		} else {
+			String menuName = request.getParameter("name");
+			String menuCode = request.getParameter("code");
+			try {
+				if (menuName!=null) {
+					menuName = java.net.URLEncoder.encode(menuName, "UTF-8");
+				}
+				if (menuCode!=null) {
+					menuCode = java.net.URLEncoder.encode(menuCode, "UTF-8");
+				}
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+			String parentId = request.getParameter("parentId");
+			String status = request.getParameter("status");
+			String displayOrder = request.getParameter("displayOrder");
+			String url = request.getParameter("url");
+			String menuLevel = request.getParameter("menuLevel");
+			map.put("appId", appId);
+			map.put("menuName", menuName);
+			map.put("menuCode", menuCode);
+			map.put("parentId", parentId);
+			map.put("status", status);
+			map.put("dislayOrder", displayOrder);
+			map.put("menuLevel", Integer.parseInt(menuLevel) + 1);
+			String menuId = null;
+			reslut = sendPost(addMenuUrl, map);
+			if (reslut != null) {
+				JSONObject jsonObject = JSONObject.fromObject(reslut);
+				if (jsonObject.get("status").equals("1")) {
+					boo = true;
+					menuId = (String) jsonObject.get("menuId");
+				} else {
+					boo = false;
+				}
+			} else {
+				boo = false;
+			}
+			String reourceId = null;
+			if (!url.equals("")) {// 添加带url的menu
+				if (boo) {
+					// 添加资源
+					map.put("resourceLevel", "0");
+					map.put("resourceName", menuName);
+					map.put("menuId", menuId);
+					map.put("baseUrl", url);
+					reslut = sendPost(addResourceUrl, map);
+					if (reslut != null) {
+						JSONObject jsonObject = JSONObject.fromObject(reslut);
+						if (jsonObject.get("status").equals("1")) {
+							reourceId = (String) jsonObject.get("resourceId");
+							boo = true;
+						} else {
+							boo = false;
+						}
+					} else {
+						boo = false;
+					}
+				}
+			}
+			map.clear();
+			if (boo) {
+				map.put("menuId", menuId);
+				map.put("resourceId", reourceId);
+				map.put("returnMsg", "1");
+			} else {
+				map.put("returnMsg", "0");
+			}
+			WebUtils.writeErrorJson(response, map);
+		}
+	}
 	/**
 	 * 删除模块
 	 * 
 	 * @param request
-	 * @param model
-	 * @param bool
+	 * @param response
 	 * @return
 	 */
 	@RequestMapping(value = "deleteModuel")
 	public void findModuel(HttpServletRequest request, HttpServletResponse response) {
 		String resourceId = request.getParameter("resourceId");
-		String appId=request.getParameter("appId");
+		String appId = request.getParameter("appId");
 		String functionId = request.getParameter("functionId");
-		String menuId=request.getParameter("menuId");
+		String menuId = request.getParameter("menuId");
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
 		map.put("appId", appId);
-		String reslut=null;
-		Boolean boo=false;
-		if (functionId!=null&&!("").equals(functionId)) {
-			map.put("functionId",functionId);
+		String reslut = null;
+		Boolean boo = false;
+		if (functionId != null && !("").equals(functionId)) {
+			map.put("functionId", functionId);
 			reslut = sendPost(delFunctionUrl, map);
 			if (reslut != null) {
 				JSONObject jsonObject = JSONObject.fromObject(reslut);
@@ -799,8 +951,8 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 				boo = false;
 			}
 		}
-		if (resourceId!=null&&!("").equals(resourceId)) {
-			map.put("resourceId",resourceId);
+		if (resourceId != null && !("").equals(resourceId)) {
+			map.put("resourceId", resourceId);
 			reslut = sendPost(delResourceUrl, map);
 			if (reslut != null) {
 				JSONObject jsonObject = JSONObject.fromObject(reslut);
@@ -814,8 +966,8 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 				boo = false;
 			}
 		}
-		if (menuId!=null&&!("").equals(menuId)) {
-			map.put("menuId",menuId);
+		if (menuId != null && !("").equals(menuId)) {
+			map.put("menuId", menuId);
 			reslut = sendPost(delMenuUrl, map);
 			if (reslut != null) {
 				JSONObject jsonObject = JSONObject.fromObject(reslut);
