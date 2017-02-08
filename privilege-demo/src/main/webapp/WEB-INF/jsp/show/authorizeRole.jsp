@@ -40,7 +40,7 @@
 		//加载授权角色
 		$(function(){
 				$('#AuthorizeRole').datagrid({
-					url: '${pageContext.request.contextPath}/managerUser/role?id='+'${id}'+'&userName'+'${userName}',
+					url: '${pageContext.request.contextPath}/managerUser/role?id=${id}&appId=${appId}',
 					type:'post',
 					collapsible:true,
 					rownumbers:true,
@@ -65,11 +65,12 @@
 						                     	return '<span title="禁用"><font color=gray>禁用</font></span>';     
 						                    }                     
 						                }}
-									]],
+									]], 
 					onLoadSuccess:function(data){
 						if (data.total<1){
                        		$.messager.alert("系统提示","没有符合查询条件的数据!","info");
-                  		}                   
+                  		}         
+                  		console.log(data);          
 						if(data){
 							$.each(data.rows, function(index, item){
 								if(item.checked){
@@ -77,7 +78,7 @@
 								}
 							});
 						} 
-						var rows = $("#AuthorizeRole").datagrid("getRows");
+					 	var rows = $("#AuthorizeRole").datagrid("getRows");
 						if(onCheckRoleIds!=null){
 								$.each(onCheckRoleIds,function(i){
 										$.each(rows,function(n){
@@ -85,8 +86,8 @@
 														$('#AuthorizeRole').datagrid('checkRow', n);
 													}
 											});
-									})
-							}
+									});
+							} 
 					},
 					onUncheck: function(rowIndex,rowData){
 						unCheckRoleIds.push(rowData.id);
@@ -131,19 +132,19 @@
 			 if(onCheckRoleIds==""){
 				 onCheckRoleIds = null;
 				}
-			 var url='${pageContext.request.contextPath}/managerUser/authorizeRole?id='+${id}+'&role='+onCheckRoleIds+'&roleId='+unCheckRoleIds+'&userName=${userName}';
+			 var url='${pageContext.request.contextPath}/managerUser/authorizeRole?id=${id}&role='+onCheckRoleIds+'&roleId='+unCheckRoleIds+'&userName=${userName}&appId=${appId}';
             $.post(url, function(data) {
             	unCheckRoleIds=[];
                 onCheckRoleIds=[];
                 if(data.result==true){
                  	msgShow('系统提示', '恭喜，授权角色成功！', 'info');
                  	//刷新
-                 	var url='${pageContext.request.contextPath}/managerUser/role?id='+${id}+'&userName=${userName}';
+                 	var url='${pageContext.request.contextPath}/managerUser/role?id=${id}&userName=${userName}&appId=${appId}';
                  	reload(url,name);
                 }else{
                   	msgShow('系统提示', '授权角色失败！', 'error');
                   	//刷新
-                 	var url='${pageContext.request.contextPath}/managerUser/role?id='+${id}+'&userName=${userName}';
+                 	var url='${pageContext.request.contextPath}/managerUser/role?id=${id}&userName=${userName}&appId=${appId}';
                  	reload(url,name);
                 }
                 
@@ -154,7 +155,7 @@
 		function cancelAuthorizeRole(){
 			unCheckRoleIds=[];
             onCheckRoleIds=[];
-			var url='${pageContext.request.contextPath}/managerUser/role?id='+${id};
+			var url='${pageContext.request.contextPath}/managerUser/role?id=${id}&appId=${appId}';
        		reload(url,name);
 		}
 		//弹出信息窗口 title:标题 msgString:提示信息 msgType:信息类型 [error,info,question,warning]
