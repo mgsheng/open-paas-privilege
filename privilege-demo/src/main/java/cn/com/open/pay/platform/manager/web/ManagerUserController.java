@@ -91,11 +91,13 @@ public class ManagerUserController extends BaseControllerUtil {
 			throws UnsupportedEncodingException {
 		log.info("-------------------------toRole       start------------------------------------");
 		String id = request.getParameter("id");
+		String appId=request.getParameter("appId");
 		String userName = request.getParameter("userName");
 		id = (id == null ? null : new String(id.getBytes("iso-8859-1"), "utf-8"));
 		userName = (userName == null ? null : new String(userName.getBytes("iso-8859-1"), "utf-8"));
 		model.addAttribute("id", id);
 		model.addAttribute("userName", userName);
+		model.addAttribute("appId", appId);
 		return "show/authorizeRole";
 	}
 
@@ -109,11 +111,13 @@ public class ManagerUserController extends BaseControllerUtil {
 			throws UnsupportedEncodingException {
 		log.info("-------------------------toFunction       start------------------------------------");
 		String id = request.getParameter("id");
+		String appId=request.getParameter("appId");
 		String userName = request.getParameter("userName");
 		id = (id == null ? null : new String(id.getBytes("iso-8859-1"), "utf-8"));
 		userName = (userName == null ? null : new String(userName.getBytes("iso-8859-1"), "utf-8"));
 		model.addAttribute("id", id);
 		model.addAttribute("userName", userName);
+		model.addAttribute("appId", appId);
 		return "show/authorizeFunction";
 	}
 
@@ -131,6 +135,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		String function = request.getParameter("function");
 		String resource = request.getParameter("resource");
 		String userName = request.getParameter("userName");
+		String appId=request.getParameter("appId");
 		Boolean boo = false;
 		JSONObject jsonobj = new JSONObject();
 		Map<String, Object> Signature = privilegeGetSignatureService.getSignature(appId);
@@ -217,6 +222,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		String appUserId = request.getParameter("id");
 		String role = request.getParameter("role");
 		String roleId = request.getParameter("roleId");
+		String appId = request.getParameter("appId"); 
 		String deptId = null;
 		String groupId = null;
 		String privilegeFunId = null;
@@ -303,7 +309,7 @@ public class ManagerUserController extends BaseControllerUtil {
 
 	@RequestMapping(value = "tree")
 	public void getModelTree(HttpServletRequest request, HttpServletResponse response) {
-
+		String appId=request.getParameter("appId");
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
 		map.put("appId", appId);
 		String s = sendPost(appMenuRedisUrl, map);
@@ -446,6 +452,7 @@ public class ManagerUserController extends BaseControllerUtil {
 	@RequestMapping("function")
 	public void function(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
 		String id = request.getParameter("id");
+		String appId=request.getParameter("appId");
 		id = (id == null ? null : new String(id.getBytes("iso-8859-1"), "utf-8"));
 		Map<String, Object> Signature = privilegeGetSignatureService.getSignature(appId);
 		Signature.put("appId", appId);
@@ -490,7 +497,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		log.info("-------------------------role        start------------------------------------");
 		String id = request.getParameter("id");
 		id = (id == null ? null : new String(id.getBytes("iso-8859-1"), "utf-8"));
-
+		String appId=request.getParameter("appId");
 		// 查找当前用户角色
 		Map<String, Object> Signature = privilegeGetSignatureService.getSignature(appId);
 		Signature.put("appId", appId);
@@ -573,7 +580,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		JSONArray jsonArr = JSONArray.fromObject(list1);
 		jsonObjArr.put("total", roleNum);
 		jsonObjArr.put("rows", jsonArr);
-		System.out.println(jsonArr);
+		System.out.println(jsonObjArr);
 		WebUtils.writeJson(response, jsonObjArr);
 		return;
 	}
@@ -728,8 +735,10 @@ public class ManagerUserController extends BaseControllerUtil {
 	 * @return 返回的是 jsp文件名路径及文件名
 	 */
 	@RequestMapping(value = "userList")
-	public String userList() {
+	public String userList(HttpServletRequest request, HttpServletResponse response,Model model) {
 		log.info("-------------------------userlist       start------------------------------------");
+		String appId=request.getParameter("appId");
+		model.addAttribute("appId",appId);
 		return "show/userlist";
 	}
 
@@ -737,6 +746,7 @@ public class ManagerUserController extends BaseControllerUtil {
 	public void findUserList(HttpServletRequest request, HttpServletResponse response) {
 		// 当前第几页
 		String page = request.getParameter("page");
+		String appId = request.getParameter("appId");
 		System.out.println(page);
 		// 每页显示的记录数
 		String rows = request.getParameter("rows");
@@ -747,7 +757,9 @@ public class ManagerUserController extends BaseControllerUtil {
 		int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10" : rows);
 		// 每页的开始记录 第一页为1 第二页为number +1
 		int startRow = (currentPage - 1) * pageSize;
+		//Map<String, Object> user=(Map<String, Object>) request.getSession().getAttribute("user");
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("appId", appId);
 		map.put("start", startRow);
 		map.put("limit", pageSize);
