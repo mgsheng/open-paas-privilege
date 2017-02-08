@@ -650,7 +650,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	}
 
 	/**
-	 * 编辑模块
+	 * 修改模块
 	 * 
 	 * @param request
 	 * @param model
@@ -658,34 +658,55 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	 * @return
 	 */
 	@RequestMapping(value = "detail")
-	public void detail(HttpServletRequest request, HttpServletResponse response, String id) {
-		// 返回
-		Map<String, Object> map = new LinkedHashMap<String, Object>();
-		if (!nullEmptyBlankJudge(id)) {
-			try {
-				PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(Integer.parseInt(id));
-				map.put("id", privilegeModule.getId());
-				map.put("parentId", privilegeModule.getParentId());
-				map.put("name", privilegeModule.getName());
-				map.put("url", privilegeModule.getUrl());
-				map.put("code", privilegeModule.getCode());
-				map.put("displayOrder", privilegeModule.getDisplayOrder());
-				map.put("status", privilegeModule.getStatus());
-				map.put("resources", privilegeModule.getResources());
-				PrivilegeModule parentModule = null;
-				if (privilegeModule.getParentId() != 0) {
-					parentModule = privilegeModuleService.getModuleById(privilegeModule.getParentId());
-					map.put("parentName", parentModule.getName());
-				}
-				map.put("returnMsg", "1");
-			} catch (Exception e) {
-				e.printStackTrace();
-				map.put("id", 0);
-				map.put("returnMsg", "0");
-			}
-		} else {
-			map.put("returnMsg", "0");
+	public void detail(HttpServletRequest request, HttpServletResponse response) {
+		String resourceId = request.getParameter("resourceId");
+		String appId=request.getParameter("appId");
+		String functionId = request.getParameter("functionId");
+		String menuId=request.getParameter("menuId");
+		String menuName = request.getParameter("name");
+		String menuCode = request.getParameter("code");
+		try {
+			menuName = java.net.URLEncoder.encode(menuName, "UTF-8");
+			menuCode = java.net.URLEncoder.encode(menuCode, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
 		}
+		String parentId = request.getParameter("parentId");
+		String status = request.getParameter("status");
+		String displayOrder = request.getParameter("displayOrder");
+		String url = request.getParameter("url");
+		String menuLevel = request.getParameter("menuLevel");
+		String optUrl = request.getParameter("optUrl");
+		String operationId = request.getParameter("operationId");
+		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
+		map.put("appId", appId);
+		String reslut=null;
+		Boolean boo=false;
+		
+		if(url==null||("").equals(url)){
+			map.put("menuId", menuId);
+			map.put("menuName", menuName);
+			map.put("menuCode", menuCode);
+			map.put("parentId", parentId);
+			map.put("status", status);
+			map.put("dislayOrder", displayOrder);
+			map.put("menuLevel", Integer.parseInt(menuLevel) + 1);
+			reslut=sendPost(modifyMenuUrl, map);
+			if (reslut != null&&!("").equals(reslut)) {
+				JSONObject jsonObject = JSONObject.fromObject(reslut);
+				if (jsonObject.get("status").equals(1)) {
+					boo = true;
+				} else {
+					boo = false;
+				}
+			} else {
+				boo = false;
+			}
+		}else{
+			
+		}
+		
+		
 		WebUtils.writeErrorJson(response, map);
 
 	}
@@ -746,15 +767,75 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	}
 
 	/**
-	 * 查询模块
+	 * 删除模块
 	 * 
 	 * @param request
 	 * @param model
 	 * @param bool
 	 * @return
 	 */
-	@RequestMapping(value = "findModuel")
+	@RequestMapping(value = "deleteModuel")
 	public void findModuel(HttpServletRequest request, HttpServletResponse response) {
+		String resourceId = request.getParameter("resourceId");
+		String appId=request.getParameter("appId");
+		String functionId = request.getParameter("functionId");
+		String menuId=request.getParameter("menuId");
+		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
+		map.put("appId", appId);
+		String reslut=null;
+		Boolean boo=false;
+		if (functionId!=null&&!("").equals(functionId)) {
+			map.put("functionId",functionId);
+			reslut = sendPost(delFunctionUrl, map);
+			if (reslut != null) {
+				JSONObject jsonObject = JSONObject.fromObject(reslut);
+				Map JsnMap = (Map) jsonObject;
+				if (JsnMap.get("status").equals("1")) {
+					boo = true;
+				} else {
+					boo = false;
+				}
+			} else {
+				boo = false;
+			}
+		}
+		if (resourceId!=null&&!("").equals(resourceId)) {
+			map.put("resourceId",resourceId);
+			reslut = sendPost(delResourceUrl, map);
+			if (reslut != null) {
+				JSONObject jsonObject = JSONObject.fromObject(reslut);
+				Map JsnMap = (Map) jsonObject;
+				if (JsnMap.get("status").equals("1")) {
+					boo = true;
+				} else {
+					boo = false;
+				}
+			} else {
+				boo = false;
+			}
+		}
+		if (menuId!=null&&!("").equals(menuId)) {
+			map.put("menuId",menuId);
+			reslut = sendPost(delMenuUrl, map);
+			if (reslut != null) {
+				JSONObject jsonObject = JSONObject.fromObject(reslut);
+				Map JsnMap = (Map) jsonObject;
+				if (JsnMap.get("status").equals("1")) {
+					boo = true;
+				} else {
+					boo = false;
+				}
+			} else {
+				boo = false;
+			}
+		}
+		map.clear();
+		if (boo) {
+			map.put("returnMsg", "1");
+		} else {
+			map.put("returnMsg", "0");
+		}
+		WebUtils.writeErrorJson(response, map);
 	}
 
 }
