@@ -57,7 +57,7 @@
 	<select id="getResourceListByFunId" resultMap="privilegeResourceMap" flushCache="true">
          SELECT pr.* FROM privilege_resource pr,privilege_function pf
 		WHERE pf.id =#{functionId}
-		AND pf.resource_id=pr.resource_id 
+		AND pf.resource_id=pr.resource_id and pr.appId=#{appId}
 	</select>
 	<select id="findAppResources"  resultType="java.lang.String" flushCache="true">
   		 SELECT base_url FROM privilege_resource WHERE app_id =#{appId} AND NOT(base_url IS NULL OR base_url='')
