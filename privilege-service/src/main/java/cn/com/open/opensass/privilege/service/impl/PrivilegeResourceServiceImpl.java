@@ -291,8 +291,8 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 	}
 
 	@Override
-	public PrivilegeResource getResourceListByFunId(String functionId) {
-		return privilegeResourceRepository.getResourceListByFunId(functionId);
+	public PrivilegeResource getResourceListByFunId(String functionId,String appId) {
+		return privilegeResourceRepository.getResourceListByFunId(functionId,appId);
 	}
 
 }
