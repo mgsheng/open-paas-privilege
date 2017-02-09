@@ -16,7 +16,7 @@ public interface PrivilegeResourceRepository extends Repository {
 	PrivilegeResource findByResourceCode(@Param("resourceId")String resourceId,@Param("appId")String appId);
 	void savePrivilegeResource(PrivilegeResource privilegeResource);
 	PrivilegeResource findByResourceId(@Param("resourceId")String resourceId,@Param("appId")String appId);
-	PrivilegeResource findByResource_Id(@Param("resourceId")String resourceId);
+	PrivilegeResource findByResource_Id(@Param("resourceId")String resourceId,@Param("appId")String appId);
 	void updatePrivilegeResource(PrivilegeResource privilegeResource);
 	List<PrivilegeResource> findResourcePage(@Param("menuId")String menuId,@Param("appId")String appId,@Param("startRow")int startRow,@Param("pageSize")int pageSize,@Param("resourceLevel")String resourceLevel);
 	void deleteByResourceId(@Param("resourceIds")String[] resourceIds);
@@ -25,7 +25,7 @@ public interface PrivilegeResourceRepository extends Repository {
 	List<PrivilegeResource> findResourceList(@Param("resourceIds")String [] resourceIds);
 	List<Map<String, Object>> findResourceMap(@Param("resourceIds")String [] resourceIds);
 	List<PrivilegeResource> getResourceListByAppId(@Param("appId")String appId);
-	List<PrivilegeResource> getResourceListByFunIds(@Param("functionIds")String[] functionIds);
+	List<PrivilegeResource> getResourceListByFunIds(@Param("functionIds")String[] functionIds,@Param("appId")String appId);
 	List<PrivilegeResource> getResourceListByMenuId(@Param("menuId")String menuId);
 	List<String> findAppResources(String appId);
 	PrivilegeResource getResourceListByFunId(String functionId);
