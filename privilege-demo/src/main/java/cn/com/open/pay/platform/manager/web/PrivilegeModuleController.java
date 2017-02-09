@@ -347,11 +347,9 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	@RequestMapping(value = "getAllOperation")
 	public void getAllOperation(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("appId", appId);
 		String reslut = sendPost(getAllOperationUrl, map);
 		JSONObject jsonObject = JSONObject.fromObject(reslut);
-		Map JsnMap = (Map) jsonObject;
-		JSONArray jsonArr = JSONArray.fromObject(JsnMap.get("operationList"));
+		JSONArray jsonArr = (JSONArray) jsonObject.get("operationList");
 		String str = jsonArr.toString();
 		System.err.println(str);
 		WebUtils.writeJson(response, str);
@@ -380,8 +378,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		String reslut = sendPost(delFunctionUrl, map);
 		if (reslut != null) {
 			JSONObject jsonObject = JSONObject.fromObject(reslut);
-			Map JsnMap = (Map) jsonObject;
-			if (JsnMap.get("status").equals("1")) {
+			if (jsonObject.get("status").equals("1")) {
 				boo = true;
 			} else {
 				boo = false;
@@ -421,8 +418,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		String reslut = sendPost(modifyFunctionUrl, map);
 		if (reslut != null) {
 			JSONObject jsonObject = JSONObject.fromObject(reslut);
-			Map JsnMap = (Map) jsonObject;
-			if (JsnMap.get("status").equals("1")) {
+			if (jsonObject.get("status").equals("1")) {
 				boo = true;
 			} else {
 				boo = false;
@@ -463,9 +459,8 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		String functionId = null;
 		if (reslut != null) {
 			JSONObject jsonObject = JSONObject.fromObject(reslut);
-			Map JsnMap = (Map) jsonObject;
-			if (JsnMap.get("status").equals("1")) {
-				functionId = (String) JsnMap.get("functionId");
+			if (jsonObject.get("status").equals("1")) {
+				functionId = (String) jsonObject.get("functionId");
 				boo = true;
 			} else {
 				boo = false;
@@ -520,10 +515,9 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		String reslut = sendPost(addMenuUrl, map2);
 		if (reslut != null) {
 			JSONObject jsonObject = JSONObject.fromObject(reslut);
-			Map JsnMap = (Map) jsonObject;
-			if (JsnMap.get("status").equals("1")) {
+			if (jsonObject.get("status").equals("1")) {
 				boo = true;
-				menuId = (String) JsnMap.get("menuId");
+				menuId = (String) jsonObject.get("menuId");
 			} else {
 				boo = false;
 			}
@@ -541,9 +535,8 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 				reslut = sendPost(addResourceUrl, map2);
 				if (reslut != null) {
 					JSONObject jsonObject = JSONObject.fromObject(reslut);
-					Map JsnMap = (Map) jsonObject;
-					if (JsnMap.get("status").equals("1")) {
-						reourceId = (String) JsnMap.get("resourceId");
+					if (jsonObject.get("status").equals("1")) {
+						reourceId = (String) jsonObject.get("resourceId");
 						boo = true;
 					} else {
 						boo = false;
@@ -607,8 +600,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		String reslut = sendPost(modifyMenuUrl, map2);
 		if (reslut != null) {
 			JSONObject jsonObject = JSONObject.fromObject(reslut);
-			Map JsnMap = (Map) jsonObject;
-			if (JsnMap.get("status").equals(1)) {
+			if (jsonObject.get("status").equals(1)) {
 				boo = true;
 			} else {
 				boo = false;
@@ -627,8 +619,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 				reslut = sendPost(modifyResourceUrl, map2);
 				if (reslut != null) {
 					JSONObject jsonObject = JSONObject.fromObject(reslut);
-					Map JsnMap = (Map) jsonObject;
-					if (JsnMap.get("status").equals("1")) {
+					if (jsonObject.get("status").equals("1")) {
 						boo = true;
 					} else {
 						boo = false;
