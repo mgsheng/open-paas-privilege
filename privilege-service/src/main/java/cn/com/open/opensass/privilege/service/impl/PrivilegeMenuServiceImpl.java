@@ -130,7 +130,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 			List<PrivilegeRoleResource> rivilegeRoleResources=privilegeRoleResourceService.findUserRoleResources(appId, appUserId);
 			for(PrivilegeRoleResource roleResource:rivilegeRoleResources){
 				if (roleResource.getPrivilegeFunId()==null||("").equals(roleResource.getPrivilegeFunId())) {
-					List<PrivilegeMenu> menus=getMenuListByResourceId(roleResource.getResourceId());
+					List<PrivilegeMenu> menus=getMenuListByResourceId(roleResource.getResourceId(),appId);
 					privilegeMenuList.addAll(menus);
 				}else{
 					//RoleResource 中functionId
@@ -150,7 +150,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 			if (FunIds != null&&FunIds.size()>0) {
 				for (String funIds : FunIds) {
 					String[] functIds = funIds.split(",");
-					List<PrivilegeMenu> menus = getMenuListByFunctionId(functIds);
+					List<PrivilegeMenu> menus = getMenuListByFunctionId(functIds,appId);
 					privilegeMenuList.addAll(menus);
 				}
 			}
@@ -158,7 +158,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 			if (resourceIds != null && !("").equals(resourceIds)) {
 				String[] resIds = resourceIds.split(",");
 				for (String id : resIds) {
-					List<PrivilegeMenu> menus = getMenuListByResourceId(id);
+					List<PrivilegeMenu> menus = getMenuListByResourceId(id,appId);
 					privilegeMenuList.addAll(menus);
 				}
 			}
@@ -237,7 +237,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 			Set<PrivilegeMenuVo> privilegeMenuVoSet) {
 			System.err.println(privilegeMenuList.isEmpty());
 		for (PrivilegeMenu privilegeMenu : privilegeMenuList) {
-			if (null != privilegeMenu.getParentId() && privilegeMenu.getParentId().length() > 0&&!("").equals(privilegeMenu.getParentId())) {
+			if (privilegeMenu!=null&&null != privilegeMenu.getParentId() && !("").equals(privilegeMenu.getParentId())) {
 				PrivilegeMenuVo privilegeMenuVo = new PrivilegeMenuVo();
 				privilegeMenuVo.setMenuId(privilegeMenu.id());
 				privilegeMenuVo.setParentId(privilegeMenu.getParentId());
@@ -250,7 +250,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 					privilegeMenuVoSet.add(privilegeMenuVo);
 				} else {
 					privilegeMenuVoSet.add(privilegeMenuVo);
-					PrivilegeMenu privilegeMenuListParents = getMenuById(privilegeMenu.getParentId());
+					PrivilegeMenu privilegeMenuListParents = getMenuById(privilegeMenu.getParentId(),privilegeMenu.getAppId());
 					if(privilegeMenuListParents!=null){
 						getAllMenuByUserId(Arrays.asList(privilegeMenuListParents), privilegeMenuVoSet);
 					}
@@ -268,9 +268,9 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 	 */
 
 	@Override
-	public PrivilegeMenu getMenuById(String menuId) {
+	public PrivilegeMenu getMenuById(String menuId,String appId) {
 
-		return privilegeMenuRepository.getMenuById(menuId);
+		return privilegeMenuRepository.getMenuById(menuId,appId);
 	}
 	
 	@Override
@@ -278,16 +278,18 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 		List<PrivilegeMenu> privilegeMenus=privilegeMenuRepository.getMenuListByAppId(appId);
 		List<PrivilegeMenuVo> privilegeMenuVos=new ArrayList<PrivilegeMenuVo>();
 		for(PrivilegeMenu privilegeMenu:privilegeMenus){
-			PrivilegeMenuVo privilegeMenuVo=new PrivilegeMenuVo();
-			privilegeMenuVo.setMenuId(privilegeMenu.id());
-			privilegeMenuVo.setParentId(privilegeMenu.getParentId());
-			privilegeMenuVo.setMenuName(privilegeMenu.getMenuName());
-			privilegeMenuVo.setMenuRule(privilegeMenu.getMenuRule());
-			privilegeMenuVo.setMenuLevel(privilegeMenu.getMenuLevel());
-			privilegeMenuVo.setMenuCode(privilegeMenu.getMenuCode());
-			privilegeMenuVo.setDisplayOrder(privilegeMenu.getDisplayOrder());
-			privilegeMenuVo.setStatus(privilegeMenu.getStatus());
-			privilegeMenuVos.add(privilegeMenuVo);
+			if (privilegeMenu!=null) {
+				PrivilegeMenuVo privilegeMenuVo=new PrivilegeMenuVo();
+				privilegeMenuVo.setMenuId(privilegeMenu.id());
+				privilegeMenuVo.setParentId(privilegeMenu.getParentId());
+				privilegeMenuVo.setMenuName(privilegeMenu.getMenuName());
+				privilegeMenuVo.setMenuRule(privilegeMenu.getMenuRule());
+				privilegeMenuVo.setMenuLevel(privilegeMenu.getMenuLevel());
+				privilegeMenuVo.setMenuCode(privilegeMenu.getMenuCode());
+				privilegeMenuVo.setDisplayOrder(privilegeMenu.getDisplayOrder());
+				privilegeMenuVo.setStatus(privilegeMenu.getStatus());
+				privilegeMenuVos.add(privilegeMenuVo);
+			}
 		}
 		return privilegeMenuVos;
 	}
@@ -348,13 +350,13 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 	}
 
 	@Override
-	public List<PrivilegeMenu> getMenuListByResourceId(String resourceId) {
-		return privilegeMenuRepository.getMenuListByResourceId(resourceId);
+	public List<PrivilegeMenu> getMenuListByResourceId(String resourceId,String appId) {
+		return privilegeMenuRepository.getMenuListByResourceId(resourceId,appId);
 	}
 
 	@Override
-	public List<PrivilegeMenu> getMenuListByFunctionId(String[] functionIds) {
-		return privilegeMenuRepository.getMenuListByFunctionId(functionIds);
+	public List<PrivilegeMenu> getMenuListByFunctionId(String[] functionIds,String appId) {
+		return privilegeMenuRepository.getMenuListByFunctionId(functionIds,appId);
 	}
 
 
