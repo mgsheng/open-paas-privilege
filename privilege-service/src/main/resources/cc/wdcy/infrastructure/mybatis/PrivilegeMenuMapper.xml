@@ -41,7 +41,7 @@
 	</select>
 	<select id="getMenuListByResourceId" resultMap="privilegeMenuMap" flushCache="true">
        		SELECT pm.* FROM privilege_menu pm,privilege_resource pr 
-			WHERE pr.resource_id=#{resourceId} AND pr.menu_id=pm.id
+			WHERE pr.resource_id=#{resourceId} AND pr.menu_id=pm.id and pm.app_id=#{appId}
     </select>
 	<select id="getMenuListByFunctionId" resultMap="privilegeMenuMap" flushCache="true">
       		 SELECT pm.* FROM privilege_function pf,privilege_resource pr,privilege_menu pm
@@ -49,7 +49,7 @@
         	<foreach item="item" index="index" collection="functionIds" open="(" separator="," close=")">  
           	#{item}  
         	</foreach>
-			AND pf.resource_id=pr.resource_id AND pr.menu_id=pm.id
+			AND pf.resource_id=pr.resource_id AND pr.menu_id=pm.id AND pm.app_id=#{appId}
     </select>
 	<select id="findByMenuId" resultMap="privilegeMenuMap" flushCache="true">
          select * from privilege_menu
@@ -69,13 +69,13 @@
 	</select>
     <select id="getMenuById" resultMap="privilegeMenuMap" flushCache="true">
         select * from privilege_menu
-        where  id = #{menuId}
+        where  id = #{menuId} and app_id=#{appId}
     </select>
     <select id="getMenuListByUserId" resultMap="privilegeMenuMap" flushCache="true">
         SELECT distinct e.* FROM privilege_user a,privilege_user_role b,privilege_role_resource c,privilege_resource    d,privilege_menu e
 WHERE a.app_userid=#{appUserId}
          and a.app_id=#{appId}
-AND a.uid=b.user_id AND b.privilege_roleid=c.privilege_roleid AND c.resource_id=d.resource_id AND d.menu_id=e.id
+AND a.uid=b.user_id AND b.privilege_roleid=c.privilege_roleid AND c.resource_id=d.resource_id AND d.menu_id=e.id and e.app_id=#{appId}
     </select>
       <select id="getMenuListByAppId" resultMap="privilegeMenuMap" flushCache="true">
        	select * from privilege_menu where app_id=#{appId}
