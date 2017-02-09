@@ -108,7 +108,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 					if(string != null && !("").equals(string)&&!("null").equals(string)){
 						String[] FunctionIds = string.split(",");
 						if (FunctionIds != null && FunctionIds.length > 0) {
-							List<Map<String, Object>> resources = privilegeResourceService.getResourceListByFunIds(FunctionIds);
+							List<Map<String, Object>> resources = privilegeResourceService.getResourceListByFunIds(FunctionIds,appId);
 							resourceList.addAll(resources);
 						}
 					}
@@ -122,7 +122,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 				Collections.addAll(resourceIdList, resourceIds1);
 				PrivilegeResourceVo resource = null;
 				for (String resourceId : resourceIdList) {
-					resource = privilegeResourceService.findByResourceId(resourceId);
+					resource = privilegeResourceService.findByResource_Id(resourceId,appId);
 					if (resource.getResourceId()!=null&&!("").equals(resource.getResourceId())) {
 						Map<String, Object> map2 = new HashMap<String, Object>();
 						map2.put("appId", resource.getAppId());
@@ -165,7 +165,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 			List<PrivilegeRoleResource> rivilegeRoleResources=privilegeRoleResourceService.findUserRoleResources(appId, appUserId);
 			for(PrivilegeRoleResource roleResource:rivilegeRoleResources){
 				if (roleResource.getPrivilegeFunId()==null||("").equals(roleResource.getPrivilegeFunId())) {
-					List<Map<String, Object>> functions=privilegeFunctionService.getFunctionByRId(roleResource.getResourceId());
+					List<Map<String, Object>> functions=privilegeFunctionService.getFunctionByRId(roleResource.getResourceId(),appId);
 					privilegeFunctions.addAll(functions);
 				}else {
 					// roleResource表中functionIds
@@ -189,7 +189,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 			// 查询单独的resource 包含的function
 			if (resourceIds.size() > 0) {
 				for (String resourceId : resourceIds) {
-					List<Map<String, Object>> list = privilegeFunctionService.getFunctionMap(resourceId);
+					List<Map<String, Object>> list = privilegeFunctionService.getFunctionMap(resourceId,appId);
 					privilegeFunctions.addAll(list);
 				}
 			}
