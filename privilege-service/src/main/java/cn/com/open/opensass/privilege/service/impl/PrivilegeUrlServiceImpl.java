@@ -171,7 +171,9 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 			if (roleResource.getPrivilegeFunId() == null || ("").equals(roleResource.getPrivilegeFunId())) {
 				List<Map<String, Object>> functions = privilegeFunctionService.getFunctionByRId(roleResource.getResourceId());
 				for (Map<String, Object> map : functions) {
-					setUrl.add((String) map.get("optUrl"));
+					if(map.get("optUrl")!=null&&!("").equals(map.get("optUrl"))){
+						setUrl.add((String) map.get("optUrl"));
+					}
 				}
 			} else {
 				// roleResource表中functionIds
