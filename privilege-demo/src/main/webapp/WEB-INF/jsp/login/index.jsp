@@ -72,13 +72,13 @@ function addNav(data) {
     $.each(childrens,function(i,n){
     		console.log(n);
     		$(n).addClass("easyui-panel");
-    		$(n).attr('data-options','fit:true,border:false');
-    		$(n).removeClass("panel");
+    		$(n).attr('data-options','fit:true,border:true');
+    		var body=$(n).children().eq(1);
+    		
         });
     $('.easyui-accordion li a').click(function(){
 		var tabTitle = $(this).children('.nav').text();
 		var url = '${pageContext.request.contextPath}'+$(this).attr("rel")+"?appId=${appId}";
-		console.log(url);
 		var menuid = $(this).attr("ref");
 		//var icon = getIcon(menuid,icon);
 
@@ -275,7 +275,7 @@ function addNav(data) {
 			公安机关备案号：110102005577号-4</div>
 	</div>
 	<div region="west" hide="true" split="true" title="导航菜单"
-		style="width:180px;" id="west">
+		style="width:230px;" id="west">
 		<div id="nav" class="easyui-accordion" fit="true" border="false"  >
 			<!--  导航内容 -->
 			
