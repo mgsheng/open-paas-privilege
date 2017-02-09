@@ -27,23 +27,25 @@ function menuClick(obj){
 	//var boo=$(obj).parent(".close").find('ul').first().css('display');
 	var boo=menu.css('display');
 	if(boo=='none'){
+		$(obj).addClass('accordion-header-selected');
 		menu.css('display','block');
 	}else{
+		$(obj).removeClass('accordion-header-selected');
 		menu.css('display','none');
 	} 
 }
 function GetMenuList(data, menulist) {
-    if (data.menus == null)
+    if (data.children == null)
         return menulist;
     else {
         menulist += '<ul>';
-        $.each(data.menus, function(i, sm) {
-            if (sm.url != null) {
-                menulist += '<li><div style="margin-bottom:-5px"><a ref="'+sm.menuId+'" href="#" rel="' + sm.url + '" ><span class="icon icon-mini-add" >&nbsp;</span><span class="nav">' + sm.menuName+ '</span></a></div></li> ';
+        $.each(data.children, function(i, sm) {
+            if (sm.attributes.baseUrl != null) {
+                menulist += '<li><div style="margin-bottom:-5px"><a ref="'+sm.id+'" href="#" rel="' +sm.attributes.baseUrl + '" ><span class="icon icon-mini-add" >&nbsp;</span><span class="nav">' + sm.text+ '</span></a></div></li> ';
             }
             else {
             	 menulist += '<li class="close" style="margin-bottom: 15px" >'
-            	 +'<div style="margin-left:-8px;margin-right:-15px" class=" panel-header accordion-header" onclick="menuClick(this)"><span class="panel-icon icon icon-more"></span><span class=" panel-title panel-with-icon">'+ sm.menuName +'</span></div>';
+            	 +'<div data-options="fit:true,border:false" style="margin-left:-8px;margin-right:-15px" class="easyui-accordion panel-header accordion-header" onclick="menuClick(this)"><span class="panel-icon icon icon-more"></span><span class=" panel-title panel-with-icon">'+ sm.text +'</span></div>';
             }
             menulist = GetMenuList(sm, menulist);
         })
@@ -59,15 +61,24 @@ function addNav(data) {
         menulist1 = GetMenuList(sm, menulist1);
         menulist1 = "<ul id='tt1' >" + menulist1.substring(4); 
         $('#nav').accordion('add', {
-            title: sm.menuName,
+            title: sm.text,
             content: menulist1,
             iconCls: 'icon icon-more'
         });
 
     });
+    var nav=$('#nav');
+    var childrens=nav.children();
+    $.each(childrens,function(i,n){
+    		console.log(n);
+    		$(n).addClass("easyui-panel");
+    		$(n).attr('data-options','fit:true,border:false');
+    		$(n).removeClass("panel");
+        });
     $('.easyui-accordion li a').click(function(){
 		var tabTitle = $(this).children('.nav').text();
 		var url = '${pageContext.request.contextPath}'+$(this).attr("rel")+"?appId=${appId}";
+		console.log(url);
 		var menuid = $(this).attr("ref");
 		//var icon = getIcon(menuid,icon);
 
@@ -84,12 +95,11 @@ function addNav(data) {
     $('#nav').accordion('select', t);
 
 }
-function InitLeftMenu(_menus) {
-	console.log(_menus);
+/* function InitLeftMenu(_menus) {
 	$("#nav").accordion({animate:false});
 	if(_menus.menus!=null&&_menus.menus.length>0){
 		   
-/* 	$.each(_menus.menus, function(i, n) {
+	$.each(_menus.menus, function(i, n) {
 		var menulist ='';
 		menulist +='<ul>';
 		if(n.menus!=null&&n.menus.length>0){
@@ -105,7 +115,7 @@ function InitLeftMenu(_menus) {
             iconCls: 'icon ' + n.icon
         });
 
-    }); */
+    }); 
 
 	$('.easyui-accordion li a').click(function(){
 		var tabTitle = $(this).children('.nav').text();
@@ -123,13 +133,13 @@ function InitLeftMenu(_menus) {
 	});
 
 	//选中第一个
-	/* var panels = $('#nav').accordion('panels');
+	var panels = $('#nav').accordion('panels');
 	var t = panels[0].panel('options').title;
-    $('#nav').accordion('select', t); */
+    $('#nav').accordion('select', t); 
 	}else{
 		alert("没有相应菜单");
 	}
-}	
+}	 */
 
 	 /* var _menus = {"menus":[
 					{"menuid":"","icon":"icon-sys","menuname":"用户管理",
@@ -266,7 +276,7 @@ function InitLeftMenu(_menus) {
 	</div>
 	<div region="west" hide="true" split="true" title="导航菜单"
 		style="width:180px;" id="west">
-		<div id="nav" class="easyui-accordion" fit="true" border="false">
+		<div id="nav" class="easyui-accordion" fit="true" border="false"  >
 			<!--  导航内容 -->
 			
 		</div>
