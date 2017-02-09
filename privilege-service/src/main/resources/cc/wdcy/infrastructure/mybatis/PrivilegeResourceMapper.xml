@@ -52,7 +52,7 @@
 		<foreach item="item" index="index" collection="functionIds" open="(" separator="," close=")">  
           #{item}  
         </foreach>
-		AND pf.resource_id=pr.resource_id 
+		AND pf.resource_id=pr.resource_id AND pr.app_id=#{appId}
 	</select>
 	<select id="getResourceListByFunId" resultMap="privilegeResourceMap" flushCache="true">
          SELECT pr.* FROM privilege_resource pr,privilege_function pf
@@ -65,6 +65,7 @@
 	<select id="findByResource_Id" resultMap="privilegeResourceMap" flushCache="true">
          select * from privilege_resource
          where  resource_id = #{resourceId}
+         and app_id=#{appId}
        
 	</select>
     <select id="findByResourceId" resultMap="privilegeResourceMap" flushCache="true">
@@ -83,8 +84,8 @@
 		SELECT DISTINCT d.*
 		 FROM privilege_user a,privilege_user_role b,privilege_role_resource c,privilege_resource d
 		WHERE a.app_userid=#{appUserId}
-         AND a.app_id=#{appId}
-		AND a.uid=b.user_id AND b.privilege_roleid=c.privilege_roleid AND c.resource_id=d.resource_id;
+         AND a.app_id=#{appId} AND a.uid=b.user_id AND b.privilege_roleid=c.privilege_roleid 
+         AND c.resource_id=d.resource_id AND d.app_id=#{appId}
 	</select>
 	 <select id="getResourceListByAppId" resultMap="privilegeResourceMap" flushCache="true">
 	 	select * from privilege_resource where app_id=#{appId}
