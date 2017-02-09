@@ -1,10 +1,14 @@
 package cn.com.open.pay.platform.manager.web;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -20,8 +24,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.pay.platform.manager.login.model.User;
 import cn.com.open.pay.platform.manager.login.service.UserService;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeFunction;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeOperation;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource1;
+import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGetSignatureService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
@@ -98,8 +105,10 @@ public class UserLoginController extends BaseControllerUtil {
 				JSONArray resource=jasonObject.getJSONArray("resourceList");
 				List<PrivilegeResource1> resourceList = JSONArray.toList(resource, PrivilegeResource1.class);
 				List<PrivilegeMenu> menuList = JSONArray.toList(menu, PrivilegeMenu.class);
-				JSONArray jsonArray2=treeMenuList(menuList,resourceList,"0");
-				menus.put("menus", jsonArray2);
+				//JSONArray jsonArray2=treeMenuList(menuList,resourceList,"0");
+				List<TreeNode> nodes = convertTreeNodeList(menuList);
+				JSONArray jsonArr = JSONArray.fromObject(buildTree2(nodes, resourceList));
+				menus.put("menus", jsonArr);
 				model.addAttribute("appId", appId);
 				model.addAttribute("menus", JSONObject.fromObject(menus));
 			}
@@ -133,6 +142,71 @@ public class UserLoginController extends BaseControllerUtil {
 		user.setUpdatePwdTime(new Date());
 		userService.updateUser(user);
 	}
+	private List<TreeNode> convertTreeNodeList(List<PrivilegeMenu> modules) {
+		List<TreeNode> nodes = null;
+		if (modules != null) {
+			nodes = new ArrayList<TreeNode>();
+			for (PrivilegeMenu menu : modules) {
+				TreeNode node = convertTreeNode(menu);
+				if (node != null) {
+					nodes.add(node);
+				}
+			}
+		}
+		return nodes;
+	}
+	protected List<TreeNode> buildTree2(List<TreeNode> treeNodes, List<PrivilegeResource1> resourceList) {
+		List<TreeNode> results = new ArrayList<TreeNode>();
+		Map<String, TreeNode> aidMap = new LinkedHashMap<String, TreeNode>();
+		for (TreeNode node : treeNodes) {
+			aidMap.put(node.getId(), node);
+		}
+		treeNodes = null;
+		Set<Entry<String, TreeNode>> entrySet = aidMap.entrySet();
+		for (Entry<String, TreeNode> entry : entrySet) {
+			String pid = entry.getValue().getPid();
+			TreeNode node = aidMap.get(pid);
+			if (node == null) {
+				results.add(entry.getValue());
+			} else {
+				List<TreeNode> children = node.getChildren();
+				if (children == null) {
+					children = new ArrayList<TreeNode>();
+					node.setChildren(children);
+				}
+				String menuId = entry.getValue().getId();
+				List<TreeNode> treeNodeList = new ArrayList<TreeNode>();
+				for (PrivilegeResource1 res : resourceList) {
+					if ((menuId).equals(res.getMenuId())) {
+						Map<String, Object> resourceMap = new HashMap<String, Object>();
+						resourceMap.put("baseUrl", res.getBaseUrl());
+						entry.getValue().setAttributes(resourceMap);
+						entry.getValue().setId(res.getResourceId());
+						entry.getValue().setText(res.getResourceName());
+					}
+				}
+				
+				children.add(entry.getValue());
+			}
+		}
+		aidMap = null;
+
+		return results;
+	}
+	
+	private TreeNode convertTreeNode(PrivilegeMenu privilegeMenu) {
+		TreeNode node = null;
+		if (privilegeMenu != null) {
+			node = new TreeNode();
+			node.setId(String.valueOf(privilegeMenu.getMenuId()));// 菜单ID
+			node.setText(privilegeMenu.getMenuName());// 菜单名称
+			node.setPid(String.valueOf(privilegeMenu.getParentId()));// 父级菜单ID
+			Map<String, Object> map = new HashMap<String, Object>();
+			node.setAttributes(map);
+		}
+		return node;
+	}
+	
 	//构建菜单tree Json
 	public JSONArray treeMenuList(List<PrivilegeMenu> menuList,List<PrivilegeResource1> resourceList, String parentId) {
 		JSONArray childMenu = new JSONArray();
