@@ -19,7 +19,7 @@ public interface PrivilegeMenuService {
 	//Map<String, Object> findByMenuId(String menuId);
 	Boolean updatePrivilegeMenu(PrivilegeMenu privilegeMenu);
 	Boolean deleteByMenuId(String[]  menuIds);
-	List<PrivilegeMenu> getMenuListByResourceId(String resourceId);
+	List<PrivilegeMenu> getMenuListByResourceId(String resourceId,String appId);
 
 	/**
 	 * 根据用户ID获取菜单列表
@@ -33,7 +33,7 @@ public interface PrivilegeMenuService {
 	 * @param menuId
 	 * @return
 	 */
-	PrivilegeMenu getMenuById(String menuId);
+	PrivilegeMenu getMenuById(String menuId,String appId);
 
 
 	/**
@@ -103,6 +103,6 @@ public interface PrivilegeMenuService {
 	 * @return 相应的提示信息
 	 */
 	PrivilegeAjaxMessage updateAppMenuRedis(String appId);
-	List<PrivilegeMenu> getMenuListByFunctionId(String[] functionIds);
+	List<PrivilegeMenu> getMenuListByFunctionId(String[] functionIds,String appId);
 	List<PrivilegeMenu> findByParentId(String parentId, String appId);
 }
