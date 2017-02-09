@@ -58,19 +58,20 @@ function addNav(data) {
     $.each(data, function(i, sm) {
         var menulist1 = "";
         //sm 常用菜单  邮件 列表
-        menulist1 = GetMenuList(sm, menulist1);
-        menulist1 = "<ul id='tt1' >" + menulist1.substring(4); 
-        $('#nav').accordion('add', {
-            title: sm.text,
-            content: menulist1,
-            iconCls: 'icon icon-more'
-        });
-
+        console.log(sm.pid);
+        if(sm.pid=="0"){
+        	menulist1 = GetMenuList(sm, menulist1);
+            menulist1 = "<ul id='tt1' >" + menulist1.substring(4); 
+            $('#nav').accordion('add', {
+                title: sm.text,
+                content: menulist1,
+                iconCls: 'icon icon-more'
+            });
+          }
     });
     var nav=$('#nav');
     var childrens=nav.children();
     $.each(childrens,function(i,n){
-    		console.log(n);
     		$(n).addClass("easyui-panel");
     		$(n).attr('data-options','fit:true,border:true');
     		var body=$(n).children().eq(1);
@@ -95,51 +96,7 @@ function addNav(data) {
     $('#nav').accordion('select', t);
 
 }
-/* function InitLeftMenu(_menus) {
-	$("#nav").accordion({animate:false});
-	if(_menus.menus!=null&&_menus.menus.length>0){
-		   
-	$.each(_menus.menus, function(i, n) {
-		var menulist ='';
-		menulist +='<ul>';
-		if(n.menus!=null&&n.menus.length>0){
-        	$.each(n.menus, function(j, o) {
-				menulist += '<li><div><a ref="'+o.menuid+'" href="#" rel="' + o.url + '" ><span class="icon '+o.icon+'" >&nbsp;</span><span class="nav">' + o.menuname + '</span></a></div></li> ';
-        	});
-		}
-		menulist += '</ul>';
 
-		$('#nav').accordion('add', {
-            title: n.menuname,
-            content: menulist,
-            iconCls: 'icon ' + n.icon
-        });
-
-    }); 
-
-	$('.easyui-accordion li a').click(function(){
-		var tabTitle = $(this).children('.nav').text();
-		var url = '${pageContext.request.contextPath}'+$(this).attr("rel")+"?appId=${appId}";
-		var menuid = $(this).attr("ref");
-		//var icon = getIcon(menuid,icon);
-
-		addTab(tabTitle,url,"");
-		$('.easyui-accordion li div').removeClass("selected");
-		$(this).parent().addClass("selected");
-	}).hover(function(){
-		$(this).parent().addClass("hover");
-	},function(){
-		$(this).parent().removeClass("hover");
-	});
-
-	//选中第一个
-	var panels = $('#nav').accordion('panels');
-	var t = panels[0].panel('options').title;
-    $('#nav').accordion('select', t); 
-	}else{
-		alert("没有相应菜单");
-	}
-}	 */
 
 	 /* var _menus = {"menus":[
 					{"menuid":"","icon":"icon-sys","menuname":"用户管理",
