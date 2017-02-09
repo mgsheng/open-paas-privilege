@@ -507,9 +507,8 @@ public class ManagerUserController extends BaseControllerUtil {
 		List<Map<String, Object>> userRoleList = null;
 		if (reslut != null && !("").equals(reslut)) {
 			JSONObject jsonObject = JSONObject.fromObject(reslut);
-			Map JsnMap = (Map) jsonObject;
-			if (!("0").equals(JsnMap.get("status"))) {
-				userRoleList = (List<Map<String, Object>>) JsnMap.get("roleList");
+			if (!("0").equals(jsonObject.get("status"))) {
+				userRoleList = (List<Map<String, Object>>) jsonObject.get("roleList");
 			} else {
 				System.err.println("该用户没有角色");
 			}
@@ -521,9 +520,8 @@ public class ManagerUserController extends BaseControllerUtil {
 		List<Map<String, Object>> RoleList = null;
 		if (reslut != null && !("").equals(reslut)) {
 			JSONObject jsonObject = JSONObject.fromObject(reslut);
-			Map JsnMap = (Map) jsonObject;
-			if (!("0").equals(JsnMap.get("status"))) {
-				RoleList = (List<Map<String, Object>>) JsnMap.get("roleList");
+			if (!("0").equals(jsonObject.get("status"))) {
+				RoleList = (List<Map<String, Object>>) jsonObject.get("roleList");
 			} else {
 				System.err.println("该app没有角色");
 			}
@@ -580,7 +578,6 @@ public class ManagerUserController extends BaseControllerUtil {
 		JSONArray jsonArr = JSONArray.fromObject(list1);
 		jsonObjArr.put("total", roleNum);
 		jsonObjArr.put("rows", jsonArr);
-		System.out.println(jsonObjArr);
 		WebUtils.writeJson(response, jsonObjArr);
 		return;
 	}
