@@ -79,7 +79,13 @@ function addNav(data) {
         });
     $('.easyui-accordion li a').click(function(){
 		var tabTitle = $(this).children('.nav').text();
-		var url = '${pageContext.request.contextPath}'+$(this).attr("rel")+"?appId=${appId}";
+		var url=$(this).attr("rel");
+		var string=url.substring(0,1);
+		if(string=="/"){
+			url = '${pageContext.request.contextPath}'+$(this).attr("rel")+"?appId=${appId}";
+		}else{
+			url = 'http://'+$(this).attr("rel");
+			}
 		var menuid = $(this).attr("ref");
 		//var icon = getIcon(menuid,icon);
 
