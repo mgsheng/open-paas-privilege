@@ -20,17 +20,18 @@
         create_time
     </sql>
     <select id="findByFunctionId" resultMap="privilegeFunctionMap" flushCache="true">
-        SELECT * FROM  privilege_function
-        where  id = #{functionId}
+    	SELECT pr.* FROM privilege_function pf ,privilege_resource pr WHERE pf.id=#{functionId} 
+    	AND pf.resource_id=pr.resource_id AND pr.app_id=#{appId}
     </select>
     <select id="findAppFunction" resultType="java.lang.String" flushCache="true">
         SELECT opt_url FROM privilege_function pf,privilege_resource pr WHERE pr.app_id=#{appId} AND pf.resource_id=pr.resource_id
     </select>
     <select id="getFunctionListByFunctionIds" resultMap="privilegeFunctionMap" flushCache="true">
-   		SELECT * FROM privilege_function WHERE id in  
+   		SELECT * FROM privilege_function pf,privilege_resource pr WHERE id in  
    		<foreach item="item" index="index" collection="functionIds" open="(" separator="," close=")">  
           #{item}  
-        </foreach>
+        </foreach>  
+        AND pr.app_id=#{appId} AND pr.resource_id=pf.resource_id
     </select>
     <select id="getFunctionListByUserId" resultMap="privilegeFunctionMap" flushCache="true">
     	SELECT DISTINCT d.* FROM privilege_user a,privilege_user_role b,privilege_role_resource c,
@@ -77,12 +78,12 @@
         delete from privilege_function where id=#{functionId}
     </delete>
     <select id="getFunctionByRId" resultMap="privilegeFunctionMap" flushCache="true">
-         select * from privilege_function
-         where  resource_id = #{resourceId}
+         select pf.* from privilege_function pf,privilege_resource pr
+         where   pr.resource_id=#{resourceId} and pr.app_id=#{appId} and pr.resource_id=pf.resource_id
 	</select>
 	  <select id="getFunctionMap" resultMap="privilegeFunctionMap" flushCache="true">
-         select * from privilege_function
-         where  resource_id = #{resourceId}
+          select pf.* from privilege_function pf,privilege_resource pr
+         where   pr.resource_id=#{resourceId} and pr.app_id=#{appId} and pr.resource_id=pf.resource_id
 	</select>
 	
   <delete id="deleteByFunctionIds">
