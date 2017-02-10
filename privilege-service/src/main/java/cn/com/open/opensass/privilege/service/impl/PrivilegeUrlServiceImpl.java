@@ -161,24 +161,27 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 		List<PrivilegeRoleResource> rivilegeRoleResources = privilegeRoleResourceService.findUserRoleResources(appId,
 				appUserId);
 		for (PrivilegeRoleResource roleResource : rivilegeRoleResources) {
-			if (roleResource.getResourceId()!=null&&!("").equals(roleResource.getResourceId())) {
-				PrivilegeResource privilegeResource = privilegeResourceService.findByResourceId(roleResource.getResourceId(), appId);
-				if (null != privilegeResource && null != privilegeResource.getBaseUrl()
-						&& privilegeResource.getBaseUrl().length() > 0) {
-					setUrl.add(privilegeResource.getBaseUrl());
-				}
-			}
-			if (roleResource.getPrivilegeFunId() == null || ("").equals(roleResource.getPrivilegeFunId())) {
-				List<Map<String, Object>> functions = privilegeFunctionService.getFunctionByRId(roleResource.getResourceId());
-				for (Map<String, Object> map : functions) {
-					if(map.get("optUrl")!=null&&!("").equals(map.get("optUrl"))){
-						setUrl.add((String) map.get("optUrl"));
+			if (roleResource!=null) {
+				if (roleResource.getResourceId()!=null&&!("").equals(roleResource.getResourceId())) {
+					PrivilegeResource privilegeResource = privilegeResourceService.findByResourceId(roleResource.getResourceId(), appId);
+					if (null != privilegeResource && null != privilegeResource.getBaseUrl()
+							&& privilegeResource.getBaseUrl().length() > 0) {
+						setUrl.add(privilegeResource.getBaseUrl());
 					}
 				}
-			} else {
-				// roleResource表中functionIds
-				functionIdList.add(roleResource.getPrivilegeFunId());
+				if (roleResource.getPrivilegeFunId() == null || ("").equals(roleResource.getPrivilegeFunId())) {
+					List<Map<String, Object>> functions = privilegeFunctionService.getFunctionByRId(roleResource.getResourceId(),appId);
+					for (Map<String, Object> map : functions) {
+						if(map.get("optUrl")!=null&&!("").equals(map.get("optUrl"))){
+							setUrl.add((String) map.get("optUrl"));
+						}
+					}
+				} else {
+					// roleResource表中functionIds
+					functionIdList.add(roleResource.getPrivilegeFunId());
+				}
 			}
+			
 		}
 		
 		if (null != functionIdList && functionIdList.size() > 0) {
@@ -187,11 +190,11 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 				for (String fid : functionIds) {
 					if (null != fid && fid.length() > 0) {
 						// 通过 roleResource表 functionId 查找资源
-						PrivilegeResource resource = privilegeResourceService.getResourceListByFunId(fid);
+						PrivilegeResource resource = privilegeResourceService.getResourceListByFunId(fid,appId);
 						if (null != resource && null != resource.getBaseUrl()) {
 							setUrl.add(resource.getBaseUrl());
 						}
-						PrivilegeFunction privilegeFunction = privilegeFunctionService.findByFunctionId(fid);
+						PrivilegeFunction privilegeFunction = privilegeFunctionService.findByFunctionId(fid,appId);
 						if (null != privilegeFunction && null != privilegeFunction.getOptUrl()
 								&& privilegeFunction.getOptUrl().length() > 0) {
 							setUrl.add(privilegeFunction.getOptUrl());
@@ -218,12 +221,12 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 			String[] functionIds = privilegeUser.getPrivilegeFunId().split(",");
 			for (String functionId : functionIds) {
 				if (null != functionId && functionId.length() > 0) {
-					PrivilegeResource resource = privilegeResourceService.getResourceListByFunId(functionId);
+					PrivilegeResource resource = privilegeResourceService.getResourceListByFunId(functionId,appId);
 					if (null != resource && null != resource.getBaseUrl()) {
 						setUrl.add(resource.getBaseUrl());
 					}
 
-					PrivilegeFunction privilegeFunction = privilegeFunctionService.findByFunctionId(functionId);
+					PrivilegeFunction privilegeFunction = privilegeFunctionService.findByFunctionId(functionId,appId);
 					if (null != privilegeFunction && null != privilegeFunction.getOptUrl()
 							&& privilegeFunction.getOptUrl().length() > 0) {
 						setUrl.add(privilegeFunction.getOptUrl());
