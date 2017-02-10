@@ -82,7 +82,7 @@ public class FunctionModifyPrivilegeController extends BaseControllerUtil {
 			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
 			return;
 		}
-		PrivilegeFunction pf = privilegeFunctionService.findByFunctionId(functionId);
+		PrivilegeFunction pf = privilegeFunctionService.findByFunctionId(functionId,appId);
 		if(pf!=null){
 			pf.setCreateTime(new Date());
 			pf.setCreateUser(createUser);
