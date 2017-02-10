@@ -210,7 +210,7 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 			if (FunIds != null&&FunIds.size()>0) {
 				for (String funIds : FunIds) {
 					String[] functionIds = funIds.split(",");
-					List<Map<String, Object>> functions = privilegeFunctionService.getFunctionListByFunctionIds(functionIds);
+					List<Map<String, Object>> functions = privilegeFunctionService.getFunctionListByFunctionIds(functionIds,user.getAppId());
 					privilegeFunctions.addAll(functions);
 				}
 			}
