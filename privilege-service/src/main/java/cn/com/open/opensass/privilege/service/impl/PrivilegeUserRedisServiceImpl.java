@@ -182,7 +182,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 			if (FunIds != null&&FunIds.size()>0) {
 				for (String funIds : FunIds) {
 					String[] functionIds = funIds.split(",");
-					List<Map<String, Object>> functions = privilegeFunctionService.getFunctionListByFunctionIds(functionIds);
+					List<Map<String, Object>> functions = privilegeFunctionService.getFunctionListByFunctionIds(functionIds,appId);
 					privilegeFunctions.addAll(functions);
 				}
 			}
