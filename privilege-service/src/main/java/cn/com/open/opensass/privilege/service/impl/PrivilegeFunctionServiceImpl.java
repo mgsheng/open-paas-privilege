@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +22,8 @@ public class PrivilegeFunctionServiceImpl implements PrivilegeFunctionService {
     @Autowired
     private PrivilegeFunctionRepository privilegeFunctionRepository;
     @Override
-    public PrivilegeFunction findByFunctionId(String functionId) {
-        return privilegeFunctionRepository.findByFunctionId(functionId);
+    public PrivilegeFunction findByFunctionId(String functionId,String appId) {
+        return privilegeFunctionRepository.findByFunctionId(functionId,appId);
     }
 	@Override
 	public Boolean savePrivilegeFunction(PrivilegeFunction privilegeFunction) {
@@ -75,11 +76,11 @@ public class PrivilegeFunctionServiceImpl implements PrivilegeFunctionService {
 		}
 	}
 	@Override
-	public List<Map<String, Object>> getFunctionByRId(String resourceId) {
-		List<PrivilegeFunction> privilegeFunctions=privilegeFunctionRepository.getFunctionByRId(resourceId);
+	public List<Map<String, Object>> getFunctionByRId(String resourceId,String appId) {
+		List<PrivilegeFunction> privilegeFunctions=privilegeFunctionRepository.getFunctionByRId(resourceId,appId);
 		List<Map<String, Object>> list=new ArrayList<Map<String,Object>>();
 		for(PrivilegeFunction function:privilegeFunctions){
-			if (function.id()!=null&&!("").equals(function.id())) {
+			if (function!=null&&function.id()!=null&&!("").equals(function.id())) {
 				Map<String, Object> map=new HashMap<String, Object>();
 				map.put("resourceId", function.getResourceId());
 				map.put("functionId", function.id());
@@ -95,7 +96,7 @@ public class PrivilegeFunctionServiceImpl implements PrivilegeFunctionService {
 		List<PrivilegeFunction> privilegeFunctions=privilegeFunctionRepository.getFunctionListByUserId(appUserId, appId);
 		List<Map<String, Object>> list=new ArrayList<Map<String,Object>>();
 		for(PrivilegeFunction function:privilegeFunctions){
-			if (function.id()!=null&&!("").equals(function.id())) {
+			if (function!=null&&function.id()!=null&&!("").equals(function.id())) {
 				Map<String, Object> map=new HashMap<String, Object>();
 				map.put("resourceId", function.getResourceId());
 				map.put("functionId", function.id());
@@ -108,11 +109,11 @@ public class PrivilegeFunctionServiceImpl implements PrivilegeFunctionService {
 		return list;
 	}
 	@Override
-	public List<Map<String, Object>> getFunctionMap(String resourceId) {
+	public List<Map<String, Object>> getFunctionMap(String resourceId,String appId) {
 		List<Map<String, Object>> list=new ArrayList<Map<String, Object>>();
-		List<PrivilegeFunction> functions=privilegeFunctionRepository.getFunctionMap(resourceId);
+		List<PrivilegeFunction> functions=privilegeFunctionRepository.getFunctionMap(resourceId,appId);
 		for(PrivilegeFunction function:functions){
-			if (function.id()!=null&&!("").equals(function.id())) {
+			if (function!=null&&function.id()!=null&&!("").equals(function.id())) {
 				Map<String, Object> map=new HashMap<String, Object>();
 				map.put("resourceId", function.getResourceId());
 				map.put("functionId", function.id());
@@ -128,7 +129,7 @@ public class PrivilegeFunctionServiceImpl implements PrivilegeFunctionService {
 		List<PrivilegeFunctionVo> privilegeFunctionVos=new ArrayList<PrivilegeFunctionVo>();
 		List<PrivilegeFunction> privilegeFunctions=privilegeFunctionRepository.getFunctionListByAppId(appId);
 		for(PrivilegeFunction function:privilegeFunctions){
-			if (function.id()!=null&&!("").equals(function.id())) {
+			if (function!=null&&function.id()!=null&&!("").equals(function.id())) {
 				PrivilegeFunctionVo functionVo=new PrivilegeFunctionVo();
 				functionVo.setFunctionId(function.id());
 				functionVo.setOptId(function.getOperationId());
@@ -140,11 +141,11 @@ public class PrivilegeFunctionServiceImpl implements PrivilegeFunctionService {
 		return privilegeFunctionVos;
 	}
 	@Override
-	public List<Map<String, Object>> getFunctionListByFunctionIds(String[] functionIds) {
+	public List<Map<String, Object>> getFunctionListByFunctionIds(String[] functionIds,String appId) {
 		List<Map<String, Object>> privilegefunctions=new ArrayList<Map<String, Object>>();
-		List<PrivilegeFunction> functions= privilegeFunctionRepository.getFunctionListByFunctionIds(functionIds);
+		List<PrivilegeFunction> functions= privilegeFunctionRepository.getFunctionListByFunctionIds(functionIds,appId);
 		for(PrivilegeFunction function:functions){
-			if (function.id()!=null&&!("").equals(function.id())) {
+			if (function!=null&&function.id()!=null&&!("").equals(function.id())) {
 				Map<String, Object> map=new HashMap<String, Object>();
 				map.put("resourceId", function.getResourceId());
 				map.put("functionId", function.id());
