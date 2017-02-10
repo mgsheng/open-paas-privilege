@@ -13,7 +13,7 @@ import cn.com.open.opensass.privilege.vo.PrivilegeFunctionVo;
  */
 public interface PrivilegeFunctionService {
     /*根据ID获取值*/
-    PrivilegeFunction findByFunctionId(String functionId);
+    PrivilegeFunction findByFunctionId(String functionId,String appId);
 	Boolean savePrivilegeFunction(PrivilegeFunction privilegeFunction);
 	List<PrivilegeFunction>findFunctionPage(String functionId,String startRow,String pageSize);
 	Boolean updatePrivilegeFunction(PrivilegeFunction privilegeFunction);
@@ -26,11 +26,11 @@ public interface PrivilegeFunctionService {
 	 * @param pageSize
 	 * @return
 	 */
-	List<Map<String, Object>>getFunctionByRId(String resourceId);
+	List<Map<String, Object>>getFunctionByRId(String resourceId,String appId);
 	
-	List<Map<String, Object>>getFunctionMap(String resourceId);
+	List<Map<String, Object>>getFunctionMap(String resourceId,String appId);
 	List<Map<String, Object>> getFunctionListByUserId(String appUserId,String appId);
 	List<PrivilegeFunctionVo> getFunctionListByAppId(String appId);
-	List<Map<String, Object>> getFunctionListByFunctionIds(String[] functionIds); 
+	List<Map<String, Object>> getFunctionListByFunctionIds(String[] functionIds,String appId); 
 	List<String> findAppFunction(String appId);
 }
