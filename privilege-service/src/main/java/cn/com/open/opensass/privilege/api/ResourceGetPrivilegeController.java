@@ -83,7 +83,7 @@ public class ResourceGetPrivilegeController extends BaseControllerUtil{
     			resourceMap.put("baseUrl", lists.get(i).getBaseUrl());
     			resourceMap.put("status", lists.get(i).getStatus());
     			if(!nullEmptyBlankJudge(lists.get(i).getResourceId())){
-    				List<Map<String, Object>> functionList=privilegeFunctionService.getFunctionMap(lists.get(i).getResourceId());
+    				List<Map<String, Object>> functionList=privilegeFunctionService.getFunctionMap(lists.get(i).getResourceId(),lists.get(i).getAppId());
         			if(functionList!=null&&functionList.size()>0){
         			 resourceMap.put("functionList", functionList);	
         			}
