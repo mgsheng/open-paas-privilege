@@ -109,7 +109,7 @@ public class RoleGetPrivilegeController extends BaseControllerUtil{
 					for(String funcId : funcIds){
 						if(!funcIdList.contains(funcId)){
 							funcIdList.add(funcId);
-							PrivilegeFunction privilegeFunction = privilegeFunctionService.findByFunctionId(funcId);
+							PrivilegeFunction privilegeFunction = privilegeFunctionService.findByFunctionId(funcId,appId);
 							if(privilegeFunction != null){
 								PrivilegeFunctionVo privilegeFunctionVo = new PrivilegeFunctionVo();
 	    						privilegeFunctionVo.setFunctionId(privilegeFunction.getId());
