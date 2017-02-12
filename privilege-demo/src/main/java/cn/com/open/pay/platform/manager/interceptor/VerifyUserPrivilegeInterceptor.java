@@ -63,10 +63,10 @@ public class VerifyUserPrivilegeInterceptor extends BaseControllerUtil implement
 				StringBuilder builder = new StringBuilder();
 				if (request.getHeader("x-requested-with") != null) {
 					response.setContentType("application/x-javascript;charset=utf-8");
-					builder.append("alert('您不具备该操作权限！');");
+					builder.append("alert('登陆超时！请重新登陆');");
 				} else {
 					builder.append("<script type=\"text/javascript\">");
-					builder.append("alert('您不具备该操作权限！');");
+					builder.append("alert('登陆超时！请重新登陆');");
 					builder.append("</script>");
 				}
 				out.print(builder.toString());
