@@ -286,6 +286,7 @@ privilege-demo/src/main/java/cn/com/open/pay/platform/manager/redis/impl/RedisDa
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/stats/BaseParams.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/stats/model/UserStatistics.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/stats/model/UserStatisticsParams.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/tools/AESUtils.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/tools/AbstractDomain.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/tools/BaseControllerUtil.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/tools/CommonUtils.java -text
