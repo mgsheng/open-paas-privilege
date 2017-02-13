@@ -111,7 +111,7 @@ public class UserLoginController extends BaseControllerUtil {
 		}
 		String userName = request.getParameter("username").trim();
 		String passWord = request.getParameter("password").trim();
-		String appId = request.getParameter("appId") == null ? "8" : request.getParameter("appId").trim();
+		String appId = request.getParameter("appId") == null||request.getParameter("appId") ==("") ? "8" : request.getParameter("appId").trim();
 		// 密码aes加密
 		try {
 			passWord = AESUtils.encrypt(passWord, client_secret);
@@ -166,6 +166,12 @@ public class UserLoginController extends BaseControllerUtil {
 				} else if ("0".equals(object.get("status"))) {
 					errorCode = (String) object.get("errMsg");
 				} else {
+					HttpSession session = request.getSession();
+					Map<String, Object> user = new HashMap<String, Object>();
+					user.put("username", userName);
+					user.put("appId", "8");
+					user.put("appUserId", "35");
+					session.setAttribute("user", user);
 					// String jsessionId = object.getString("jsessionId");
 					// Cookie cookie = new Cookie("jsessionId", jsessionId);
 					// cookie.setPath("/");
@@ -193,6 +199,7 @@ public class UserLoginController extends BaseControllerUtil {
 	public String login(HttpServletRequest request, HttpServletResponse response, Model model) {
 		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
 		if (user != null) {
+			String userName=(String) user.get("username");
 			String appId = (String) user.get("appId");
 			String appUserId = (String) user.get("appUserId");
 			Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
@@ -218,12 +225,14 @@ public class UserLoginController extends BaseControllerUtil {
 					JSONArray jsonArr = JSONArray.fromObject(buildTree2(nodes, resourceList));
 					System.err.println(jsonArr.toString());
 					menus.put("menus", jsonArr);
+					model.addAttribute("username", userName);
 					model.addAttribute("appId", appId);
 					model.addAttribute("menus", JSONObject.fromObject(menus));
 				}
 			} else {
 				menus.put("status", "0");
 				menus.put("errMsg", "没有相应菜单");
+				model.addAttribute("username", userName);
 				model.addAttribute("appId", appId);
 				model.addAttribute("menus", JSONObject.fromObject(menus));
 			}
@@ -244,15 +253,87 @@ public class UserLoginController extends BaseControllerUtil {
 
 	@RequestMapping(value = "update")
 	public void updatePassword(HttpServletRequest request, HttpServletResponse response) {
-		String password = request.getParameter("newpass");
-		String username = request.getParameter("userName");
-		User user = null;
-		user = userService.findByUsername(username);
-		// 刷新盐值，重新加密
-		user.buildPasswordSalt();
-		user.setPlanPassword(password);
-		user.setUpdatePwdTime(new Date());
-		userService.updateUser(user);
+		String newPass = request.getParameter("newpass");
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		Boolean boo=isNumeric(newPass);
+		if (boo) {
+			parameters.put("status", "2");
+			parameters.put("errMsg", "密码格式不正确，不能为纯数字");
+			WebUtils.writeJsonToMap(response, parameters);
+			return;
+		}else{
+			int value=verifyPassWordSAT(newPass);
+			if (value==1) {
+				parameters.put("status", "2");
+				parameters.put("errMsg", "密码格式不正确");
+				WebUtils.writeJsonToMap(response, parameters);
+				return;
+			}
+		}
+		// 从缓存获取token
+		String access_token = (String) redisClientTemplate.getObject(AppId + AccessTokenPrefix);
+		String client_id = map.get(client_secret);
+		// 是否用户密码验证成功 true为登陆成功
+		Boolean flag = false;
+		// 若缓存中没有token 获取token
+		if (access_token == null) {
+			parameters.put("client_id", client_id);
+			parameters.put("client_secret", client_secret);
+			parameters.put("scope", "read,write");
+			parameters.put("grant_type", "client_credentials");
+			String result = sendPost(getOauthTokenUrl, parameters);
+			if (result != null && !("").equals(result)) {
+				String aString = result.substring(0, 1);
+				if (aString.equals("{")) {
+					JSONObject object = JSONObject.fromObject(result);
+					access_token = (String) object.get("access_token");
+					if (access_token != null && !("").equals(access_token)) {
+						redisClientTemplate.setObjectByTime(AppId + AccessTokenPrefix, access_token, 43199);
+					}
+				}
+			}
+			parameters.clear();
+		}
+		
+		
+		String oldPass = request.getParameter("oldpass");
+		String userName = request.getParameter("userName");
+		try {
+			oldPass = AESUtils.encrypt(oldPass, client_secret);
+			newPass = AESUtils.encrypt(newPass, client_secret);
+			userName = java.net.URLEncoder.encode(userName, "UTF-8");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		parameters = privilegeGetSignatureService.getOauthSignature(AppId, client_id, access_token);
+		parameters.put("access_toke", "access_token");
+		parameters.put("account", userName);
+		parameters.put("old_pwd", oldPass);
+		parameters.put("new_pwd", newPass);
+		parameters.put("pwdtype", "MD5");
+		String url="http://user-service-openpre.myalauda.cn/spring-oauth-server/user/userCenterModiPwd";
+		String result=sendPost(url,parameters);
+		if (result != null && !("").equals(result)) {
+			String aString = result.substring(0, 1);
+			if (aString.equals("{")) {
+				JSONObject object = JSONObject.fromObject(result);
+				String status=object.getString("status");
+				if ("1".equals(status)) {
+					parameters.clear();
+					parameters.put("status", "1");
+					WebUtils.writeJsonToMap(response, parameters);
+				}else {
+					String errorCode=object.getString("error_code");
+					String errMsg=object.getString("errMsg");
+					parameters.clear();
+					parameters.put("status", "0");
+					parameters.put("errorCode", errorCode);
+					parameters.put("errMsg", errMsg);
+					WebUtils.writeJsonToMap(response, parameters);
+				}
+			}
+		}
+		
 	}
 
 	private List<TreeNode> convertTreeNodeList(List<PrivilegeMenu> modules) {
