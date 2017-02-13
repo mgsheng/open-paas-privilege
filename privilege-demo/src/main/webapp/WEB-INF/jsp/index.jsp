@@ -29,6 +29,9 @@
             <li class="placeHolder pwdIcon">
                 <input id="password" name="password" placeholder="请输入密码" class="pwd" type="password">
             </li>
+            <li class="placeHolder pwdIcon" style="display: none">
+                <input id="appId" name="appId" placeholder="请输入appId" class="appId" type="hidden">
+            </li>
             <li>
                 <div style="color: red;text-align: center;padding: 10px 0px 0px" id="error_code"></div>
             </li>
@@ -76,15 +79,15 @@
     	function btnSubmit(){
 				var username=$('#username').val();
 				var password=$('#password').val();
+				var appId=$('#appId').val();
 				$.post("${pageContext.request.contextPath}/user/loginVerify",
-					{username:username,password:password},
+					{username:username,password:password,appId:appId},
 	   				function(data){
 	   					if(data.flag){
-	   						window.location.href="${pageContext.request.contextPath}/user/login?userName="+username;
-	   						// location.href="${pageContext.request.contextPath}/login/index.jsp"
+	   						window.location.href="${pageContext.request.contextPath}/user/login";
 	   					}
 	   					else{
-	   						jQuery('#error_code').html('用户名密码错误，请重新获取！');
+	   						jQuery('#error_code').html(data.errorCode);
 	   					}
 	   				}
    				);
