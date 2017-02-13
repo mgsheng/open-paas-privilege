@@ -10,14 +10,16 @@ import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGetSignatureS
 import cn.com.open.pay.platform.manager.tools.DateTools;
 import cn.com.open.pay.platform.manager.tools.LoadPopertiesFile;
 import cn.com.open.pay.platform.manager.tools.StringTool;
+
 @Service("privilegeGetSignatureService")
 public class PrivilegeGetSignatureServiceImpl implements PrivilegeGetSignatureService {
 	final static String SEPARATOR = "&";
 	private Map<String, String> map = LoadPopertiesFile.loadProperties();
+	private static final String ALGORITHM = "HmacSHA1";
+	private static final String ENCODING = "UTF-8";
 
 	@Override
 	public Map<String, Object> getSignature(String appId) {
-		Boolean flag = true;
 		String key = map.get(appId);
 		String signature = "";
 		String timestamp = "";
@@ -50,6 +52,41 @@ public class PrivilegeGetSignatureServiceImpl implements PrivilegeGetSignatureSe
 		returnMap.put("timestamp", timestamp);
 		returnMap.put("signatureNonce", signatureNonce);
 		returnMap.put("appKey", appKey);
+		return returnMap;
+	}
+
+	@Override
+	public Map<String, Object> getOauthSignature(String appId, String client_id, String access_token) {
+		String key = map.get(appId);
+		String timestamp = "";
+		String signatureNonce = "";
+		String signature = "";
+		if (key != null) {
+			try {
+				timestamp = DateTools.getSolrDate(new Date());
+				signatureNonce = StringTool.getRandom(100, 1);
+				StringBuilder encryptText = new StringBuilder();
+				encryptText.append(client_id);
+				encryptText.append(SEPARATOR);
+				encryptText.append(access_token);
+				encryptText.append(SEPARATOR);
+				encryptText.append(timestamp);
+				encryptText.append(SEPARATOR);
+				encryptText.append(signatureNonce);
+				signature = cn.com.open.pay.platform.manager.tools.HMacSha1.HmacSHA1Encrypt(encryptText.toString(),
+						key);
+				signature = cn.com.open.pay.platform.manager.tools.HMacSha1.getNewResult(signature);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		returnMap.put("signature", signature);
+		returnMap.put("timestamp", timestamp);
+		returnMap.put("signatureNonce", signatureNonce);
+		returnMap.put("client_id", key);
+		returnMap.put("access_token", access_token);
 		return returnMap;
 	}
 
