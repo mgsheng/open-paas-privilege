@@ -54,21 +54,19 @@ function GetMenuList(data, menulist) {
     return menulist;
 }
 function addNav(data) {
-
-    $.each(data, function(i, sm) {
-        var menulist1 = "";
-        //sm 常用菜单  邮件 列表
-        console.log(sm.pid);
-        if(sm.pid=="0"){
-        	menulist1 = GetMenuList(sm, menulist1);
-            menulist1 = "<ul id='tt1' >" + menulist1.substring(4); 
-            $('#nav').accordion('add', {
-                title: sm.text,
-                content: menulist1,
-                iconCls: 'icon icon-more'
-            });
-          }
-    });
+	 $.each(data, function(i, sm) {
+	        var menulist1 = "";
+	        //sm 常用菜单  邮件 列表
+	        if(sm.pid=="0"){
+	        	menulist1 = GetMenuList(sm, menulist1);
+	            menulist1 = "<ul id='tt1' >" + menulist1.substring(4); 
+	            $('#nav').accordion('add', {
+	                title: sm.text,
+	                content: menulist1,
+	                iconCls: 'icon icon-more'
+	            });
+	          }
+	    });
     var nav=$('#nav');
     var childrens=nav.children();
     $.each(childrens,function(i,n){
@@ -124,7 +122,7 @@ function addNav(data) {
                 modal: true,
                 shadow: true,
                 closed: true,
-                height: 160,
+                height: 200,
                 resizable:false
             });
         }
@@ -133,17 +131,39 @@ function addNav(data) {
             $('#w').window('close');
         }
 
-        
+        //前端校验
+		function check(){
+			var regex_password= /^(\w){6,20}$/;
+			var regex=/^(?![^A-Za-z]+$)(?![^0-9]+$)[\x21-x7e]{6,12}$/;
+			var regex_pass=/(?!^[0-9]{6,20}$)^[0-9A-Za-z\u0020-\u007e]{6,20}$/;
+			var re=/^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{6,20}$/;
+			var password = $.trim($('#txtNewPass').val()) ;
+			if(password == "" || password == null || password == undefined || regex_password.test(password) != true){
+				$.messager.alert("系统提示","密码不能为空或格式不正确，请重新填写！","error");			
+				return false;
+		}
+        }
 
         //修改密码
         function serverLogin() {
-            var $newpass = $('#txtNewPass');
+        	var $oldpass = $('#txtOLdPass');
+        	var $newpass = $('#txtNewPass');
+        	
             var $rePass = $('#txtRePass');
-
+            if ($oldpass.val() == '') {
+                msgShow('系统提示', '请输入旧密码！', 'warning');
+                return false;
+            }
             if ($newpass.val() == '') {
                 msgShow('系统提示', '请输入密码！', 'warning');
                 return false;
-            }
+            }else {
+            	var a=$newpass.val().length;
+            	if(a<6||a>20){
+            		 	msgShow('系统提示', '请输入6~20位密码', 'warning');
+            		 	return false;
+                	}
+			}
             if ($rePass.val() == '') {
                 msgShow('系统提示', '请在一次输入密码！', 'warning');
                 return false;
@@ -153,13 +173,28 @@ function addNav(data) {
                 msgShow('系统提示', '两次密码不一至！请重新输入', 'warning');
                 return false;
             }
-            var userName="${userName}";
-            $.post('${pageContext.request.contextPath}//user/updatePassword?newpass=' + $newpass.val()+'&userName='+userName, function(msg) {
-                msgShow('系统提示', '恭喜，密码修改成功！', 'info');
-                $newpass.val('');
-                $rePass.val('');
-                close();
-                $('#w').window('close');
+            var userName="${username}";
+            console.log(userName);
+            $.post('${pageContext.request.contextPath}/user/update',
+                  {newpass:$newpass.val(),oldpass:$oldpass.val(),userName:"${username}"},
+                   function(data) {
+                     if (data.status=="1") {
+                			msgShow('系统提示', '恭喜，密码修改成功！', 'info');
+                			$oldpass.val('');
+                			$newpass.val('');
+    	                    $rePass.val('');
+    	                    close();
+    	                    $('#w').window('close');
+					}else if (data.status=="2"){
+						msgShow('系统提示', data.errMsg, 'info');
+					}else {
+						msgShow('系统提示', data.errMsg, 'info');
+						$newpass.val('');
+	                    $rePass.val('');
+	                    close();
+	                    //$('#w').window('close');
+					}
+                      
             });
             
         }
@@ -265,13 +300,18 @@ function addNav(data) {
 				style="padding: 10px; background: #fff; border: 1px solid #ccc;">
 				<table cellpadding=3>
 					<tr>
+						<td>旧密码：</td>
+						<td><input id="txtOLdPass" type="password" class="txt01" />
+						</td>
+					</tr>
+					<tr>
 						<td>新密码：</td>
-						<td><input id="txtNewPass" type="text" class="txt01" />
+						<td><input id="txtNewPass" type="password" class="txt01" />
 						</td>
 					</tr>
 					<tr>
 						<td>确认密码：</td>
-						<td><input id="txtRePass" type="text" class="txt01" />
+						<td><input id="txtRePass" type="password" class="txt01" />
 						</td>
 					</tr>
 				</table>
