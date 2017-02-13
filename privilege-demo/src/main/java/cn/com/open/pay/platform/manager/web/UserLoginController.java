@@ -1,6 +1,7 @@
 package cn.com.open.pay.platform.manager.web;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -219,6 +220,13 @@ public class UserLoginController extends BaseControllerUtil {
 					JSONArray resource = jasonObject.getJSONArray("resourceList");
 					List<PrivilegeResource1> resourceList = JSONArray.toList(resource, PrivilegeResource1.class);
 					List<PrivilegeMenu> menuList = JSONArray.toList(menu, PrivilegeMenu.class);
+					//根据DisplayOrder排序
+					java.util.Collections.sort(menuList, new Comparator<PrivilegeMenu>() {
+			            @Override
+			            public int compare(PrivilegeMenu o1, PrivilegeMenu o2) {
+			                return o1.getDisplayOrder()-o2.getDisplayOrder();
+			            }
+			        });
 					// JSONArray
 					List<TreeNode> nodes = convertTreeNodeList(menuList);
 					JSONArray jsonArr = JSONArray.fromObject(buildTree2(nodes, resourceList));
@@ -305,7 +313,8 @@ public class UserLoginController extends BaseControllerUtil {
 			e.printStackTrace();
 		}
 		parameters = privilegeGetSignatureService.getOauthSignature(AppId, client_id, access_token);
-		parameters.put("access_toke", "access_token");
+		parameters.put("access_toke", access_token);
+		parameters.put("client_id", client_id);
 		parameters.put("account", userName);
 		parameters.put("old_pwd", oldPass);
 		parameters.put("new_pwd", newPass);
@@ -337,15 +346,15 @@ public class UserLoginController extends BaseControllerUtil {
 
 	private List<TreeNode> convertTreeNodeList(List<PrivilegeMenu> modules) {
 		List<TreeNode> nodes = null;
-		if (modules != null) {
-			nodes = new ArrayList<TreeNode>();
-			for (PrivilegeMenu menu : modules) {
-				TreeNode node = convertTreeNode(menu);
-				if (node != null) {
-					nodes.add(node);
+			if (modules != null) {
+				nodes = new ArrayList<TreeNode>();
+				for (PrivilegeMenu menu : modules) {
+						TreeNode node = convertTreeNode(menu);
+						if (node != null) {
+							nodes.add(node);
+						}
 				}
 			}
-		}
 		return nodes;
 	}
 
@@ -369,7 +378,6 @@ public class UserLoginController extends BaseControllerUtil {
 					node.setChildren(children);
 				}
 				String menuId = entry.getValue().getId();
-				List<TreeNode> treeNodeList = new ArrayList<TreeNode>();
 				for (PrivilegeResource1 res : resourceList) {
 					if ((menuId).equals(res.getMenuId())) {
 						Map<String, Object> resourceMap = new HashMap<String, Object>();
@@ -396,6 +404,7 @@ public class UserLoginController extends BaseControllerUtil {
 			node.setText(privilegeMenu.getMenuName());
 			node.setPid(String.valueOf(privilegeMenu.getParentId()));
 			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("displayOrder", privilegeMenu.getDisplayOrder());
 			node.setAttributes(map);
 		}
 		return node;
