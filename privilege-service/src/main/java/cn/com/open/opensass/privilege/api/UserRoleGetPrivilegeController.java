@@ -235,6 +235,20 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 				PrivilegeAjaxMessage message=privilegeResourceService.getAppResRedis(user.getAppId());
 				obj1=JSONObject.fromObject(message.getMessage());
 				objArray=(JSONArray) obj1.get("resourceList");
+				List<PrivilegeResourceVo> resources = JSONArray.toList(objArray, PrivilegeResourceVo.class);
+				List<PrivilegeMenuVo> menuVos=privilegeMenuService.findMenuByResourceType(0);
+				//去重处理
+				Set<PrivilegeResourceVo>  privilegeResourceVos=new HashSet<PrivilegeResourceVo>();
+				for (PrivilegeMenuVo privilegeMenuVo : menuVos) {
+					if (privilegeMenuVo!=null) {
+						PrivilegeResourceVo privilegeResourceVo=privilegeResourceService.getResourceListByMenuId(privilegeMenuVo.getMenuId());
+						if (privilegeResourceVo!=null) {
+							privilegeResourceVos.add(privilegeResourceVo);
+						}
+					}
+				}
+				privilegeResourceVos.addAll(resources);
+				objArray=JSONArray.fromObject(privilegeResourceVos);
 			}else {
 				objArray=(JSONArray) obj1.get("resourceList");
 			}
@@ -247,7 +261,6 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 		// redis中没有menuMap，从数据库中查询并存入redis
 		Map<String, Object>	menuMap = new HashMap<String, Object>();
 		if (menuMessage.getCode().equals("0")) {
-			
 			List<PrivilegeMenu> privilegeMenuList = new ArrayList<PrivilegeMenu>();
 			if (boo) {// 有管理员角色获取所有应用下菜单
 				PrivilegeAjaxMessage message=privilegeMenuService.getAppMenuRedis(user.getAppId());
@@ -291,7 +304,14 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 				//如果为管理员 返回应用所有菜单
 				PrivilegeAjaxMessage message=privilegeMenuService.getAppMenuRedis(user.getAppId());
 				obj1=JSONObject.fromObject(message.getMessage());
-				objArray=(JSONArray) obj1.get("menuList");
+				JSONArray menuArray=obj1.getJSONArray("menuList");
+				List<PrivilegeMenuVo> menuVos=privilegeMenuService.findMenuByResourceType(0);
+				//objArray=(JSONArray) obj1.get("menuList");
+				List<PrivilegeMenuVo> menuList = JSONArray.toList(menuArray, PrivilegeMenuVo.class);
+				Set<PrivilegeMenuVo> set=new HashSet<PrivilegeMenuVo>();
+				set.addAll(menuVos);
+				set.addAll(menuList);
+				objArray=JSONArray.fromObject(set);
 			}else {
 				objArray=(JSONArray) obj1.get("menuList");
 			}
