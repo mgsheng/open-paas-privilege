@@ -262,27 +262,23 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 		return list;
 	}
 	@Override
-	public List<Map<String, Object>> getResourceListByMenuId(String menuId) {
-		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-		List<PrivilegeResource> resources = privilegeResourceRepository.getResourceListByMenuId(menuId);
-		for (PrivilegeResource resource : resources) {
-			if (resource!=null&&resource.getResourceId()!=null&&!("").equals(resource.getResourceId())) {
-				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("appId", resource.getAppId());
-				map.put("resourceId", resource.getResourceId());
-				map.put("resourceLevel", resource.getResourceLevel() + "");
-				map.put("resourceName", resource.getResourceName());
-				map.put("resourceRule", resource.getResourceRule());
-				map.put("dislayOrder ", resource.getDisplayOrder());
-				map.put("menuId", resource.getMenuId());
-				map.put("baseUrl", resource.getBaseUrl());
-				map.put("status", resource.getStatus());
-				list.add(map);
-			}
-			
+	public PrivilegeResourceVo getResourceListByMenuId(String menuId) {
+		PrivilegeResource resource = privilegeResourceRepository.getResourceListByMenuId(menuId);
+		PrivilegeResourceVo privilegeResourceVo = null;
+		if (resource!=null&&resource.getResourceId()!=null&&!("").equals(resource.getResourceId())) {
+			privilegeResourceVo=new PrivilegeResourceVo();
+			privilegeResourceVo.setAppId(resource.getAppId());
+			privilegeResourceVo.setBaseUrl(resource.getBaseUrl());
+			privilegeResourceVo.setDisplayOrder(resource.getDisplayOrder());
+			privilegeResourceVo.setMenuId(resource.getMenuId());
+			privilegeResourceVo.setResourceId(resource.getResourceId());
+			privilegeResourceVo.setResourceLevel(String.valueOf(resource.getResourceLevel()));
+			privilegeResourceVo.setResourceName(resource.getResourceName());
+			privilegeResourceVo.setResourceRule(resource.getResourceRule());
+			privilegeResourceVo.setStatus(resource.getStatus());
+			return privilegeResourceVo;
 		}
-		return list;
-
+		return privilegeResourceVo;
 	}
 
 	@Override
