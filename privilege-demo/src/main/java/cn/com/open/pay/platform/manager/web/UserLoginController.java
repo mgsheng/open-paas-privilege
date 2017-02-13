@@ -151,14 +151,29 @@ public class UserLoginController extends BaseControllerUtil {
 					}
 					if (flag) {
 						HttpSession session = request.getSession();
-						Map<String, Object> user = new HashMap<String, Object>();
-						user.put("username", userName);
-						user.put("appId", appID);
-						user.put("appUserId", appUserId);
-						session.setAttribute("user", user);
-						Cookie cookie = new Cookie("jsessionId", jsessionId);
-						cookie.setPath("/");
-						response.addCookie(cookie);
+						Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
+						map.put("appId", appId);
+						map.put("appUserId", appUserId);
+						result = sendPost(getUserPrivilegeUrl, map);
+						if (result != null && !("").equals(result)) {
+							JSONObject jasonObject = JSONObject.fromObject(result);
+							if ("0".equals(jasonObject.get("status"))) {
+								if (jasonObject.get("error_code").equals(10002)) {
+									flag=false;
+									errorCode = "该用户不存在";
+								}
+							}else {
+								Map<String, Object> user = new HashMap<String, Object>();
+								user.put("username", userName);
+								user.put("appId", appID);
+								user.put("appUserId", appUserId);
+								session.setAttribute("user", user);
+								Cookie cookie = new Cookie("jsessionId", jsessionId);
+								cookie.setPath("/");
+								response.addCookie(cookie);
+							}
+						} 
+						
 					} else {
 						errorCode = "您没有该产品信息";
 					}
@@ -210,6 +225,10 @@ public class UserLoginController extends BaseControllerUtil {
 			if (result != null && !("").equals(result)) {
 				JSONObject jasonObject = JSONObject.fromObject(result);
 				if ("0".equals(jasonObject.get("status"))) {
+					if (jasonObject.get("error_code").equals(10002)) {
+						model.addAttribute("error", "没有该用户");
+						return "/index";
+					}
 					menus.put("status", "0");
 					menus.put("errMsg", jasonObject.get("errMsg"));
 					model.addAttribute("menus", JSONObject.fromObject(menus));
