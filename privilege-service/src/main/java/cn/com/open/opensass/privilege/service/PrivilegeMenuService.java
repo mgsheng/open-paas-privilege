@@ -1,10 +1,8 @@
 package cn.com.open.opensass.privilege.service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import cn.com.open.opensass.privilege.model.PrivilegeGroupResource;
 import cn.com.open.opensass.privilege.model.PrivilegeMenu;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
@@ -20,7 +18,7 @@ public interface PrivilegeMenuService {
 	Boolean updatePrivilegeMenu(PrivilegeMenu privilegeMenu);
 	Boolean deleteByMenuId(String[]  menuIds);
 	List<PrivilegeMenu> getMenuListByResourceId(String resourceId,String appId);
-
+	List<PrivilegeMenuVo> findMenuByResourceType(Integer resourceType);
 	/**
 	 * 根据用户ID获取菜单列表
 	 * @param appUserId
