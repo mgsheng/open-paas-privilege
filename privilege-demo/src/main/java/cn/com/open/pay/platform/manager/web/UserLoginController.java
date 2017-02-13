@@ -1,7 +1,6 @@
 package cn.com.open.pay.platform.manager.web;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -18,14 +17,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.support.lob.OracleLobHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.alibaba.druid.sql.dialect.oracle.ast.stmt.OracleIfStatement.Else;
 
-import cn.com.open.pay.platform.manager.login.model.User;
 import cn.com.open.pay.platform.manager.login.service.UserService;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource1;
@@ -181,16 +177,6 @@ public class UserLoginController extends BaseControllerUtil {
 				} else if ("0".equals(object.get("status"))) {
 					errorCode = (String) object.get("errMsg");
 				} else {
-					HttpSession session = request.getSession();
-					Map<String, Object> user = new HashMap<String, Object>();
-					user.put("username", userName);
-					user.put("appId", "8");
-					user.put("appUserId", "35");
-					session.setAttribute("user", user);
-					// String jsessionId = object.getString("jsessionId");
-					// Cookie cookie = new Cookie("jsessionId", jsessionId);
-					// cookie.setPath("/");
-					// response.addCookie(cookie);
 					errorCode = "您没有该产品信息";
 				}
 			}
