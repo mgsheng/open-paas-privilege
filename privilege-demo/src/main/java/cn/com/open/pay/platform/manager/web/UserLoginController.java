@@ -22,7 +22,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 
-import cn.com.open.pay.platform.manager.login.service.UserService;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource1;
 import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
@@ -44,8 +43,7 @@ import net.sf.json.JSONObject;
 public class UserLoginController extends BaseControllerUtil {
 	private static final Logger log = LoggerFactory.getLogger(UserLoginController.class);
 	private Map<String, String> map = LoadPopertiesFile.loadProperties();
-	@Autowired
-	private UserService userService;
+	
 	@Autowired
 	private PrivilegeGetSignatureService privilegeGetSignatureService;
 	@Value("#{properties['get-privilege-user-uri']}")
@@ -211,10 +209,6 @@ public class UserLoginController extends BaseControllerUtil {
 			if (result != null && !("").equals(result)) {
 				JSONObject jasonObject = JSONObject.fromObject(result);
 				if ("0".equals(jasonObject.get("status"))) {
-					if (jasonObject.get("error_code").equals(10002)) {
-						model.addAttribute("error", "没有该用户");
-						return "/index";
-					}
 					menus.put("status", "0");
 					menus.put("errMsg", jasonObject.get("errMsg"));
 					model.addAttribute("menus", JSONObject.fromObject(menus));
