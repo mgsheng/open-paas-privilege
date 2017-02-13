@@ -37,6 +37,7 @@
 						<value>/payment/getPayment</value>
 						<value>/privilegeLog/findPrivilegeLog</value>
 						<value>/manage/getMerchantOrderRefund</value>
+						<value>/user/update</value>
 					</list>
 				</property>
 			</bean>
