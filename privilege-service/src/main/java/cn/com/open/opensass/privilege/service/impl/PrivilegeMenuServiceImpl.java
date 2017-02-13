@@ -371,5 +371,27 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 		return privilegeMenuRepository.getMenuListByAppId(appId);
 	}
 
+	@Override
+	public List<PrivilegeMenuVo> findMenuByResourceType(Integer resourceType) {
+		List<PrivilegeMenu> menuList=privilegeMenuRepository.findMenuByResourceType(resourceType);
+		List<PrivilegeMenuVo> menuVoList=new ArrayList<PrivilegeMenuVo>();
+		for (PrivilegeMenu privilegeMenu : menuList) {
+			if (privilegeMenu!=null) {
+				PrivilegeMenuVo privilegeMenuVo=new PrivilegeMenuVo();
+				privilegeMenuVo.setMenuId(privilegeMenu.id());
+				privilegeMenuVo.setParentId(privilegeMenu.getParentId());
+				privilegeMenuVo.setMenuName(privilegeMenu.getMenuName());
+				privilegeMenuVo.setMenuRule(privilegeMenu.getMenuRule());
+				privilegeMenuVo.setMenuLevel(privilegeMenu.getMenuLevel());
+				privilegeMenuVo.setMenuCode(privilegeMenu.getMenuCode());
+				privilegeMenuVo.setDisplayOrder(privilegeMenu.getDisplayOrder());
+				privilegeMenuVo.setStatus(privilegeMenu.getStatus());
+				menuVoList.add(privilegeMenuVo);
+			}
+		}	
+		return menuVoList;
+	}
+	
+
 
 }
