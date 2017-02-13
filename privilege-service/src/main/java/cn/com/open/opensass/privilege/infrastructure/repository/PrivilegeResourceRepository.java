@@ -26,7 +26,7 @@ public interface PrivilegeResourceRepository extends Repository {
 	List<Map<String, Object>> findResourceMap(@Param("resourceIds")String [] resourceIds);
 	List<PrivilegeResource> getResourceListByAppId(@Param("appId")String appId);
 	List<PrivilegeResource> getResourceListByFunIds(@Param("functionIds")String[] functionIds,@Param("appId")String appId);
-	List<PrivilegeResource> getResourceListByMenuId(@Param("menuId")String menuId);
+	PrivilegeResource getResourceListByMenuId(@Param("menuId")String menuId);
 	List<String> findAppResources(String appId);
 	PrivilegeResource getResourceListByFunId(@Param("functionId")String functionId,@Param("appId")String appId);
 }
