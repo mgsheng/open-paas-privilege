@@ -23,17 +23,14 @@
     <div class="login_box">
         <div class="login_title">登录</div>
         <ul>
-            <!-- <li class="placeHolder userIcon">
-                <input value="admin" id="username" name="username" placeholder="请输入用户名" class="username" type="text">
+             <li class="placeHolder userIcon">
+                <input value="" id="username" name="username" placeholder="请输入用户名" class="username" type="text">
             </li>
             <li class="placeHolder pwdIcon">
                 <input id="password" name="password" placeholder="请输入密码" class="pwd" type="password">
-            </li> -->
-             <li class="placeHolder userIcon">
-                <input value="23" id="appId" name="appId" placeholder="请输入appId" class="username" type="text">
             </li>
-            <li class="placeHolder pwdIcon">
-                <input id="appUserId" name="appUserId" placeholder="请输appUserId" class="pwd" type="text">
+             <li class="placeHolder pwdIcon" style="display: none">
+                <input id="appId" name="appId" placeholder="请输入appId" class="appId" type="hidden">
             </li>
             <li>
                 <div style="color: red;text-align: center;padding: 10px 0px 0px" id="error_code"></div>
@@ -49,7 +46,7 @@
     </form>
 </div>
 <script type="text/javascript">
-    /* var login = {};
+    var login = {};
     login.restoreCookies = function(){
         var username=document.getElementById("username");
         if(!username.value){
@@ -77,23 +74,20 @@
         login.setCookie("username",document.getElementById("username").value);
         return true;
     };
-    login.init("username"); */
+    login.init("username"); 
     
     	function btnSubmit(){
-				//var username=$('#username').val();
-				//var password=$('#password').val();
+				var username=$('#username').val();
+				var password=$('#password').val();
 				var appId=$('#appId').val();
-				var appUserId=$('#appUserId').val();
 				$.post("${pageContext.request.contextPath}/user/loginVerify",
-					{username:appId,password:appUserId},
+					{username:username,password:password,appId:appId},
 	   				function(data){
-	   					//if(data.flag){
-	   					if(true){
-	   						window.location.href="${pageContext.request.contextPath}/user/login?userName="+appId+"&appId="+appId+"&appUserId="+appUserId;
-	   						// location.href="${pageContext.request.contextPath}/login/index.jsp"
+	   					if(data.flag){
+	   						window.location.href="${pageContext.request.contextPath}/user/login";
 	   					}
 	   					else{
-	   						jQuery('#error_code').html('用户名密码错误，请重新获取！');
+	   						jQuery('#error_code').html(data.errorCode);
 	   					}
 	   				}
    				);
