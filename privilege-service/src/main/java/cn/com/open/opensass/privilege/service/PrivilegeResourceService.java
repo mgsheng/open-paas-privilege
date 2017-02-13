@@ -31,7 +31,7 @@ public interface PrivilegeResourceService {
 	PrivilegeAjaxMessage delAppResRedis(String appId);
 	PrivilegeAjaxMessage updateAppResRedis(String appId);
 	List<Map<String, Object>> getResourceListByFunIds(String[] functionIds,String appId);
-	List<Map<String, Object>> getResourceListByMenuId(String menuId);
+	PrivilegeResourceVo getResourceListByMenuId(String menuId);
 	List<String> findAppResources(String appId);
 	PrivilegeResource getResourceListByFunId(String functionId,String appId);
 }
