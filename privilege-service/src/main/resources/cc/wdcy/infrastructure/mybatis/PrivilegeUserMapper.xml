@@ -28,14 +28,21 @@
 	
 	<select id="findUserListByPage" resultMap="privilegeUserMap" flushCache="true">
          select * from privilege_user
-         where  app_id = #{appId} limit #{start},#{limit}
+         where  app_id = #{appId} 
+         <if test="groupId != null and groupId !=''" >
+        	and group_id = #{groupId}
+        </if>
+          limit #{start},#{limit}
 	</select>
 	<select id="findByUid" resultMap="privilegeUserMap" flushCache="true">
          select * from privilege_user
          where  uid = #{uId}
 	</select>
 	<select id="getUserCountByAppId"  resultType="java.lang.Integer">
-		SELECT count(1) from privilege_user where app_id=#{appId}
+		SELECT count(1) from privilege_user where app_id=#{appId} 
+		 <if test="groupId != null and groupId !=''" >
+        	and group_id = #{groupId}
+        </if>
 	</select>
  	<select id="findByAppIdAndAppUserId" resultMap="privilegeUserMap" flushCache="true">
  		select * from privilege_user where app_id=#{appId} and app_userid=#{appUserId}
