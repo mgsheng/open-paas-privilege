@@ -868,6 +868,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/api/MenuGetPrivil
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/MenuModifyPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/MenuRedisPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/PrivilegeOperationController.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/api/PrivilegeRoleController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/PrivilegeUserController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/ResourceAddPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/ResourceDelPrivilegeController.java -text
