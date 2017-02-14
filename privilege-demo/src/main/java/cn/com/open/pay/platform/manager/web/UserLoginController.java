@@ -22,7 +22,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource1;
 import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
@@ -44,7 +43,7 @@ import net.sf.json.JSONObject;
 public class UserLoginController extends BaseControllerUtil {
 	private static final Logger log = LoggerFactory.getLogger(UserLoginController.class);
 	private Map<String, String> map = LoadPopertiesFile.loadProperties();
-	
+
 	@Autowired
 	private PrivilegeGetSignatureService privilegeGetSignatureService;
 	@Value("#{properties['get-privilege-user-uri']}")
@@ -65,6 +64,8 @@ public class UserLoginController extends BaseControllerUtil {
 	private String AppId;
 	@Value("#{properties['user-modify-password-uri']}")
 	private String userModifyPasswordUrl;
+	@Value("#{properties['find-user-uri']}")
+	private String findUserUrl;
 	@Autowired
 	private RedisClientTemplate redisClientTemplate;
 	private static final String AccessTokenPrefix = RedisConstant.ACCESSTOKEN_CACHE;
@@ -101,14 +102,15 @@ public class UserLoginController extends BaseControllerUtil {
 					JSONObject object = JSONObject.fromObject(result);
 					access_token = (String) object.get("access_token");
 					if (access_token != null && !("").equals(access_token)) {
-						redisClientTemplate.setObjectByTime("8" + AccessTokenPrefix, access_token, 43199);
+						redisClientTemplate.setObjectByTime("8" + AccessTokenPrefix, access_token, 43190);
 					}
 				}
 			}
 		}
 		String userName = request.getParameter("username").trim();
 		String passWord = request.getParameter("password").trim();
-		String appId = request.getParameter("appId") == null||request.getParameter("appId") ==("") ? "8" : request.getParameter("appId").trim();
+		String appId = request.getParameter("appId") == null || request.getParameter("appId") == ("") ? "8"
+				: request.getParameter("appId").trim();
 		// 密码aes加密
 		try {
 			passWord = AESUtils.encrypt(passWord, client_secret);
@@ -146,20 +148,19 @@ public class UserLoginController extends BaseControllerUtil {
 							}
 						}
 					}
+					// 如果有该产品信息，调用查找用户接口，查看是否有对应的用户，若没有提示用户不存在，若存在用户则登陆
 					if (flag) {
 						HttpSession session = request.getSession();
 						Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
-						map.put("appId", appId);
+						map.put("appId", appID);
 						map.put("appUserId", appUserId);
-						result = sendPost(getUserPrivilegeUrl, map);
+						result = sendPost(findUserUrl, map);
 						if (result != null && !("").equals(result)) {
 							JSONObject jasonObject = JSONObject.fromObject(result);
 							if ("0".equals(jasonObject.get("status"))) {
-								if (jasonObject.get("error_code").equals(10002)) {
-									flag=false;
-									errorCode = "该用户不存在";
-								}
-							}else {
+								flag = false;
+								errorCode = "该用户不存在";
+							} else {
 								Map<String, Object> user = new HashMap<String, Object>();
 								user.put("username", userName);
 								user.put("appId", appID);
@@ -169,12 +170,10 @@ public class UserLoginController extends BaseControllerUtil {
 								cookie.setPath("/");
 								response.addCookie(cookie);
 							}
-						} 
-						
+						}
 					} else {
 						errorCode = "您没有该产品信息";
 					}
-
 				} else if ("0".equals(object.get("status"))) {
 					errorCode = (String) object.get("errMsg");
 				} else {
@@ -201,7 +200,7 @@ public class UserLoginController extends BaseControllerUtil {
 	public String login(HttpServletRequest request, HttpServletResponse response, Model model) {
 		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
 		if (user != null) {
-			String userName=(String) user.get("username");
+			String userName = (String) user.get("username");
 			String appId = (String) user.get("appId");
 			String appUserId = (String) user.get("appUserId");
 			Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
@@ -222,13 +221,13 @@ public class UserLoginController extends BaseControllerUtil {
 					JSONArray resource = jasonObject.getJSONArray("resourceList");
 					List<PrivilegeResource1> resourceList = JSONArray.toList(resource, PrivilegeResource1.class);
 					List<PrivilegeMenu> menuList = JSONArray.toList(menu, PrivilegeMenu.class);
-					//根据DisplayOrder排序
+					// 根据DisplayOrder排序
 					java.util.Collections.sort(menuList, new Comparator<PrivilegeMenu>() {
-			            @Override
-			            public int compare(PrivilegeMenu o1, PrivilegeMenu o2) {
-			                return o1.getDisplayOrder()-o2.getDisplayOrder();
-			            }
-			        });
+						@Override
+						public int compare(PrivilegeMenu o1, PrivilegeMenu o2) {
+							return o1.getDisplayOrder() - o2.getDisplayOrder();
+						}
+					});
 					// JSONArray
 					List<TreeNode> nodes = convertTreeNodeList(menuList);
 					JSONArray jsonArr = JSONArray.fromObject(buildTree2(nodes, resourceList));
@@ -249,7 +248,7 @@ public class UserLoginController extends BaseControllerUtil {
 			return "login/index";
 
 		}
-		return "/index";
+		return "/";
 
 	}
 
@@ -264,15 +263,15 @@ public class UserLoginController extends BaseControllerUtil {
 	public void updatePassword(HttpServletRequest request, HttpServletResponse response) {
 		String newPass = request.getParameter("newpass");
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		Boolean boo=isNumeric(newPass);
+		Boolean boo = isNumeric(newPass);
 		if (boo) {
 			parameters.put("status", "2");
 			parameters.put("errMsg", "密码格式不正确，不能为纯数字");
 			WebUtils.writeJsonToMap(response, parameters);
 			return;
-		}else{
-			int value=verifyPassWordSAT(newPass);
-			if (value==1) {
+		} else {
+			int value = verifyPassWordSAT(newPass);
+			if (value == 1) {
 				parameters.put("status", "2");
 				parameters.put("errMsg", "密码格式不正确");
 				WebUtils.writeJsonToMap(response, parameters);
@@ -297,16 +296,15 @@ public class UserLoginController extends BaseControllerUtil {
 					JSONObject object = JSONObject.fromObject(result);
 					access_token = (String) object.get("access_token");
 					if (access_token != null && !("").equals(access_token)) {
-						redisClientTemplate.setObjectByTime(AppId + AccessTokenPrefix, access_token, 43199);
+						redisClientTemplate.setObjectByTime(AppId + AccessTokenPrefix, access_token, 43190);
 					}
 				}
 			}
 			parameters.clear();
 		}
-		
-		
 		String oldPass = request.getParameter("oldpass");
 		String userName = request.getParameter("userName");
+		// 密码AES加密
 		try {
 			oldPass = AESUtils.encrypt(oldPass, client_secret);
 			newPass = AESUtils.encrypt(newPass, client_secret);
@@ -321,41 +319,46 @@ public class UserLoginController extends BaseControllerUtil {
 		parameters.put("old_pwd", oldPass);
 		parameters.put("new_pwd", newPass);
 		parameters.put("pwdtype", "MD5");
-		String result=sendPost(userModifyPasswordUrl,parameters);
+		String result = sendPost(userModifyPasswordUrl, parameters);
 		if (result != null && !("").equals(result)) {
 			String aString = result.substring(0, 1);
 			if (aString.equals("{")) {
 				JSONObject object = JSONObject.fromObject(result);
-				String status=object.getString("status");
+				String status = object.getString("status");
 				if ("1".equals(status)) {
 					parameters.clear();
 					parameters.put("status", "1");
 					WebUtils.writeJsonToMap(response, parameters);
-				}else {
-					String errorCode=object.getString("error_code");
-					String errMsg=object.getString("errMsg");
+				} else {
+					String errorCode = object.getString("error_code");
+					String errMsg = object.getString("errMsg");
 					parameters.clear();
 					parameters.put("status", "0");
 					parameters.put("errorCode", errorCode);
 					parameters.put("errMsg", errMsg);
 					WebUtils.writeJsonToMap(response, parameters);
 				}
+			} else {
+				parameters.clear();
+				parameters.put("status", "0");
+				parameters.put("errMsg", "修改失败");
+				WebUtils.writeJsonToMap(response, parameters);
 			}
 		}
-		
+
 	}
 
 	private List<TreeNode> convertTreeNodeList(List<PrivilegeMenu> modules) {
 		List<TreeNode> nodes = null;
-			if (modules != null) {
-				nodes = new ArrayList<TreeNode>();
-				for (PrivilegeMenu menu : modules) {
-						TreeNode node = convertTreeNode(menu);
-						if (node != null) {
-							nodes.add(node);
-						}
+		if (modules != null) {
+			nodes = new ArrayList<TreeNode>();
+			for (PrivilegeMenu menu : modules) {
+				TreeNode node = convertTreeNode(menu);
+				if (node != null) {
+					nodes.add(node);
 				}
 			}
+		}
 		return nodes;
 	}
 
