@@ -60,6 +60,18 @@
 	 select * from privilege_role
          where  app_id = #{appId}
 	</select>
+	<select id="getRoleListByAppIdAndGroupId" resultMap="privilegeRoleMap" flushCache="true">
+	 	select * from privilege_role where  app_id = #{appId}
+	 	<if test="groupId != null and groupId !=''" >
+        	and group_id = #{groupId}
+     	</if>
+	</select>
+	<select id="getRoleCountByAppIdAndGroupId"  resultType="java.lang.Integer">
+		SELECT count(1) from privilege_role where app_id=#{appId} 
+		 <if test="groupId != null and groupId !=''" >
+        	and group_id = #{groupId}
+        </if>
+	</select>
 	<select id="findRoleByAppId" resultType="java.lang.String" flushCache="true">
 		select privilege_roleid from privilege_role where app_id = #{appId}
 	</select>
