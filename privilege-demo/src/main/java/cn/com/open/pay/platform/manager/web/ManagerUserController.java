@@ -45,7 +45,7 @@ import cn.com.open.pay.platform.manager.tools.WebUtils;
 @Controller
 @RequestMapping("/managerUser/")
 public class ManagerUserController extends BaseControllerUtil {
-	private static final Logger log = LoggerFactory.getLogger(UserLoginController.class);
+	private static final Logger log = LoggerFactory.getLogger(ManagerUserController.class);
 	@Autowired
 	private UserService userService;
 
@@ -132,6 +132,7 @@ public class ManagerUserController extends BaseControllerUtil {
 	@RequestMapping("authorizeFun")
 	public void authorizeFunction(HttpServletRequest request, HttpServletResponse response)
 			throws UnsupportedEncodingException {
+		log.info("-------------------------authorizeFun start------------------------------------");
 		String id = request.getParameter("id");
 		String function = request.getParameter("function");
 		String resource = request.getParameter("resource");
@@ -452,6 +453,7 @@ public class ManagerUserController extends BaseControllerUtil {
 	 */
 	@RequestMapping("function")
 	public void function(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+		log.info("-------------------------function start------------------------------------");
 		String id = request.getParameter("id");
 		String appId=request.getParameter("appId");
 		id = (id == null ? null : new String(id.getBytes("iso-8859-1"), "utf-8"));
@@ -497,7 +499,10 @@ public class ManagerUserController extends BaseControllerUtil {
 	public void role(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
 		log.info("-------------------------role        start------------------------------------");
 		Map<String, Object> user=(Map<String, Object>) request.getSession().getAttribute("user");
-		String groupId=user.get("groupId").equals("null")?null:(String)user.get("groupId");
+		String groupId=null;
+		if (user!=null) {
+			groupId=user.get("groupId").equals("null")?null:(String)user.get("groupId");
+		}
 		String id = request.getParameter("id");
 		id = (id == null ? null : new String(id.getBytes("iso-8859-1"), "utf-8"));
 		String appId=request.getParameter("appId");
@@ -745,8 +750,12 @@ public class ManagerUserController extends BaseControllerUtil {
 
 	@RequestMapping("findUserList")
 	public void findUserList(HttpServletRequest request, HttpServletResponse response) {
+		
 		Map<String, Object> user=(Map<String, Object>) request.getSession().getAttribute("user");
-		String groupId=user.get("groupId").equals("null")?null:(String)user.get("groupId");
+		String groupId=null;
+		if (user!=null) {
+			groupId=user.get("groupId").equals("null")?null:(String)user.get("groupId");
+		}
 		// 当前第几页
 		String page = request.getParameter("page");
 		String appId = request.getParameter("appId");
@@ -758,8 +767,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10" : rows);
 		// 每页的开始记录 第一页为1 第二页为number +1
 		int startRow = (currentPage - 1) * pageSize;
-		//Map<String, Object> user=(Map<String, Object>) request.getSession().getAttribute("user");
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String,Object>();
 		map.put("groupId", groupId);
 		map.put("appId", appId);
 		map.put("start", startRow);
