@@ -560,7 +560,9 @@ public class BaseControllerUtil {
 			}
 		  }
 		   String temp_params = sb.toString(); 
-		   params = temp_params.substring(0, temp_params.length() - 1);  
+		   if (temp_params.length()>0) {
+			   params = temp_params.substring(0, temp_params.length() - 1);  
+		   }
             // 创建URL对象  
             java.net.URL connURL = new java.net.URL(url);  
             // 打开URL连接  
