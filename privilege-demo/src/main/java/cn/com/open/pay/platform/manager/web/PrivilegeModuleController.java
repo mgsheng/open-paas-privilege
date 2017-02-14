@@ -1,7 +1,6 @@
 package cn.com.open.pay.platform.manager.web;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeFunction;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
-import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeOperation;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource1;
 import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
@@ -42,8 +40,7 @@ import cn.com.open.pay.platform.manager.tools.WebUtils;
 @Controller
 @RequestMapping("/module/")
 public class PrivilegeModuleController extends BaseControllerUtil {
-	@Autowired
-	private PrivilegeModuleService privilegeModuleService;
+	
 	@Value("#{properties['privilege-appmenu-redis-query-uri']}")
 	private String appMenuRedisUrl;
 	@Value("#{properties['appId']}")
@@ -351,7 +348,6 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		JSONObject jsonObject = JSONObject.fromObject(reslut);
 		JSONArray jsonArr = (JSONArray) jsonObject.get("operationList");
 		String str = jsonArr.toString();
-		System.err.println(str);
 		WebUtils.writeJson(response, str);
 		return;
 	}
