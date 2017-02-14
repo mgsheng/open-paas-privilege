@@ -32,8 +32,8 @@ public class PrivilegeRoleController extends BaseControllerUtil {
 	@RequestMapping("getRole")
 	public void getRole(HttpServletRequest request, HttpServletResponse response) {
 		log.info("----getRole start---");
-		String appId = request.getParameter("appId").trim();
-		String groupId = request.getParameter("groupId").trim();
+		String appId = request.getParameter("appId");
+		String groupId = request.getParameter("groupId");
 		if (!paraMandatoryCheck(Arrays.asList(appId))) {
 			paraMandaChkAndReturn(10000, response, "必传参数中有空值");
 			return;
