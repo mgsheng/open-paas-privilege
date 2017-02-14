@@ -56,7 +56,6 @@ function GetMenuList(data, menulist) {
 function addNav(data) {
 	 $.each(data, function(i, sm) {
 	        var menulist1 = "";
-	        //sm 常用菜单  邮件 列表
 	        if(sm.pid=="0"){
 	        	menulist1 = GetMenuList(sm, menulist1);
 	            menulist1 = "<ul id='tt1' >" + menulist1.substring(4); 
@@ -114,7 +113,7 @@ function addNav(data) {
 								   ]
 						}
 				]}; */
-        //设置登录窗口
+        //设置修改密码窗口
         function openPwd() {
             $('#w').window({
                 title: '修改密码',
@@ -126,22 +125,9 @@ function addNav(data) {
                 resizable:false
             });
         }
-        //关闭登录窗口
+        //关闭窗口
         function closePwd() {
             $('#w').window('close');
-        }
-
-        //前端校验
-		function check(){
-			var regex_password= /^(\w){6,20}$/;
-			var regex=/^(?![^A-Za-z]+$)(?![^0-9]+$)[\x21-x7e]{6,12}$/;
-			var regex_pass=/(?!^[0-9]{6,20}$)^[0-9A-Za-z\u0020-\u007e]{6,20}$/;
-			var re=/^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{6,20}$/;
-			var password = $.trim($('#txtNewPass').val()) ;
-			if(password == "" || password == null || password == undefined || regex_password.test(password) != true){
-				$.messager.alert("系统提示","密码不能为空或格式不正确，请重新填写！","error");			
-				return false;
-		}
         }
 
         //修改密码
@@ -173,7 +159,6 @@ function addNav(data) {
                 return false;
             }
             var userName="${username}";
-            console.log(userName);
             $.post('${pageContext.request.contextPath}/user/update',
                   {newpass:$newpass.val(),oldpass:$oldpass.val(),userName:"${username}"},
                    function(data) {
@@ -234,7 +219,7 @@ function addNav(data) {
             $('#loginOut').click(function() {
                 $.messager.confirm('系统提示', '您确定要退出本次登录吗?', function(r) {
                     if (r) {
-                        location.href = '${pageContext.request.contextPath}/index.jsp';
+                        location.href = '${pageContext.request.contextPath}/';
                     }
                 });
             });
