@@ -22,6 +22,7 @@ import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import net.sf.json.JSONObject;
 /**
+ * 获取数据getUser?appId=&groupId=&start=&start=
  */
 @Controller
 @RequestMapping("/user/")
@@ -34,10 +35,10 @@ public class PrivilegeUserController extends BaseControllerUtil{
 	@RequestMapping("getUser")
 	public void getOperationName(HttpServletRequest request,HttpServletResponse response){
 		log.info("----getUser start---");
-    	String appId=request.getParameter("appId").trim();
-    	String groupId=request.getParameter("groupId").trim();
-    	String start=request.getParameter("start").trim();
-    	String limit=request.getParameter("limit").trim();
+    	String appId=request.getParameter("appId");
+    	String groupId=request.getParameter("groupId");
+    	String start=request.getParameter("start");
+    	String limit=request.getParameter("c");
     	
     	if(!paraMandatoryCheck(Arrays.asList(appId,start,limit))){
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
