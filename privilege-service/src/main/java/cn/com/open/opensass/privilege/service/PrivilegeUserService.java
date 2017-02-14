@@ -22,6 +22,6 @@ public interface PrivilegeUserService {
 
 	Boolean updatePrivilegeUser(PrivilegeUser user);
 	ArrayList<String> findUserResources(String appId, String appUserId); 
-	List<PrivilegeUser> findUserListByPage(String appId, int start, int limit);
-	int getUserCountByAppId(String appId);
+	List<PrivilegeUser> findUserListByPage(String appId, int start, int limit,String groupId);
+	int getUserCountByAppId(String appId,String groupId);
 }
