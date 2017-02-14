@@ -16,10 +16,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.opensass.privilege.model.PrivilegeGroup;
-import cn.com.open.opensass.privilege.model.PrivilegeOperation;
 import cn.com.open.opensass.privilege.model.PrivilegeUser;
 import cn.com.open.opensass.privilege.service.PrivilegeGroupService;
-import cn.com.open.opensass.privilege.service.PrivilegeOperationService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import net.sf.json.JSONObject;
@@ -35,17 +33,18 @@ public class PrivilegeUserController extends BaseControllerUtil{
 	private PrivilegeGroupService privilegeGroupService;
 	@RequestMapping("getUser")
 	public void getOperationName(HttpServletRequest request,HttpServletResponse response){
-
-    	String appId=request.getParameter("appId");
-    	String start=request.getParameter("start");
-    	String limit=request.getParameter("limit");
+		log.info("----getUser start---");
+    	String appId=request.getParameter("appId").trim();
+    	String groupId=request.getParameter("groupId").trim();
+    	String start=request.getParameter("start").trim();
+    	String limit=request.getParameter("limit").trim();
     	
     	if(!paraMandatoryCheck(Arrays.asList(appId,start,limit))){
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
               return;
     	}  
     	List<PrivilegeGroup> groupList=privilegeGroupService.findByAppId(appId);
-    	List<PrivilegeUser> userList=privilegeUserService.findUserListByPage(appId, Integer.parseInt(start) ,  Integer.parseInt(limit));
+    	List<PrivilegeUser> userList=privilegeUserService.findUserListByPage(appId, Integer.parseInt(start) ,  Integer.parseInt(limit),groupId);
 		List<JSONObject> objectList=new ArrayList<JSONObject>();
     	for (PrivilegeUser privilegeUser : userList) {
 			JSONObject object=JSONObject.fromObject(privilegeUser);
@@ -58,7 +57,7 @@ public class PrivilegeUserController extends BaseControllerUtil{
 			objectList.add(object);
 		}
 		
-		int count=privilegeUserService.getUserCountByAppId(appId);
+		int count=privilegeUserService.getUserCountByAppId(appId,groupId);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("rows", objectList);
 		map.put("total", count);
