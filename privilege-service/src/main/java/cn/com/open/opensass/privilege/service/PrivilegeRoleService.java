@@ -23,14 +23,23 @@ public interface PrivilegeRoleService {
 
 	List<String> findRoleByAppId(String appId);
 
-	List<PrivilegeRole> findRoleByPage(String privilegeRoleId, String appId,int start, int limit);
+	List<PrivilegeRole> findRoleByPage(String privilegeRoleId, String appId, int start, int limit);
 
 	int findRoleNoPage(String privilegeRoleId, String appId);
-	
-	List<Map<String, Object>> getRoleListByUserId(String appUserId,String appId);
+
+	List<Map<String, Object>> getRoleListByUserId(String appUserId, String appId);
+
 	PrivilegeAjaxMessage getAppRoleRedis(String appId);
+
 	List<Map<String, Object>> getRoleListByAppId(String appId);
+
 	PrivilegeAjaxMessage delAppRoleRedis(String appId);
+
 	PrivilegeAjaxMessage updateAppRoleRedis(String appId);
-	List<PrivilegeRole> getRoleListByUserIdAndAppId(String appUserId,String appId);
+
+	List<PrivilegeRole> getRoleListByUserIdAndAppId(String appUserId, String appId);
+
+	List<PrivilegeRole> getRoleListByAppIdAndGroupId(String appId, String groupId);
+
+	int getRoleCountByAppIdAndGroupId(String appId, String groupId);
 }
