@@ -2,6 +2,7 @@ package cn.com.open.pay.platform.manager.web;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -27,7 +28,6 @@ import cn.com.open.pay.platform.manager.privilege.model.PrivilegeOperation;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource1;
 import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGetSignatureService;
-import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
 
@@ -88,6 +88,11 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	@RequestMapping(value = "tree")
 	public void getModelTree(HttpServletRequest request, HttpServletResponse response) {
 		String appId = request.getParameter("appId");
+		if (request.getParameter("id") != null) {
+			JSONArray jsonArr = new JSONArray();
+			WebUtils.writeJson(response, jsonArr);
+			return;
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("appId", appId);
 		String reslut = sendPost(appMenuRedisUrl, map);
@@ -105,12 +110,15 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		List<PrivilegeOperation> operationList = JSONArray.toList(objArray, PrivilegeOperation.class);
 		List<PrivilegeResource1> resourceList = JSONArray.toList(obj1Array, PrivilegeResource1.class);
 		List<PrivilegeFunction> functionList = JSONArray.toList(obj2Array, PrivilegeFunction.class);
-
+		//根据菜单的displayOrder排序，由小到大
+		java.util.Collections.sort(menuList, new Comparator<PrivilegeMenu>() {
+            @Override
+            public int compare(PrivilegeMenu menu1, PrivilegeMenu menu2) {
+                return menu1.getDisplayOrder()-menu2.getDisplayOrder();
+            }
+        });
 		List<TreeNode> nodes = convertTreeNodeList(menuList);
 		JSONArray jsonArr = JSONArray.fromObject(buildTree2(nodes, resourceList, functionList, operationList));
-		if (request.getParameter("id") != null) {
-			jsonArr = new JSONArray();
-		}
 		WebUtils.writeJson(response, jsonArr);
 	}
 
@@ -757,8 +765,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		String reslut = sendPost(delMenuUrl, map);
 		if (reslut != null) {
 			JSONObject jsonObject = JSONObject.fromObject(reslut);
-			Map JsnMap = (Map) jsonObject;
-			if (JsnMap.get("status").equals("1")) {
+			if (jsonObject.get("status").equals("1")) {
 				boo = true;
 			} else {
 				boo = false;
@@ -772,8 +779,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 				reslut = sendPost(delResourceUrl, map);
 				if (reslut != null) {
 					JSONObject jsonObject = JSONObject.fromObject(reslut);
-					Map JsnMap = (Map) jsonObject;
-					if (JsnMap.get("status").equals("1")) {
+					if (jsonObject.get("status").equals("1")) {
 						boo = true;
 					} else {
 						boo = false;
@@ -928,8 +934,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 			reslut = sendPost(delFunctionUrl, map);
 			if (reslut != null) {
 				JSONObject jsonObject = JSONObject.fromObject(reslut);
-				Map JsnMap = (Map) jsonObject;
-				if (JsnMap.get("status").equals("1")) {
+				if (jsonObject.get("status").equals("1")) {
 					boo = true;
 				} else {
 					boo = false;
@@ -943,8 +948,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 			reslut = sendPost(delResourceUrl, map);
 			if (reslut != null) {
 				JSONObject jsonObject = JSONObject.fromObject(reslut);
-				Map JsnMap = (Map) jsonObject;
-				if (JsnMap.get("status").equals("1")) {
+				if (jsonObject.get("status").equals("1")) {
 					boo = true;
 				} else {
 					boo = false;
@@ -958,8 +962,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 			reslut = sendPost(delMenuUrl, map);
 			if (reslut != null) {
 				JSONObject jsonObject = JSONObject.fromObject(reslut);
-				Map JsnMap = (Map) jsonObject;
-				if (JsnMap.get("status").equals("1")) {
+				if (jsonObject.get("status").equals("1")) {
 					boo = true;
 				} else {
 					boo = false;
