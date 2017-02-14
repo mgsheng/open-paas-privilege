@@ -63,6 +63,8 @@ public class UserLoginController extends BaseControllerUtil {
 	private String userLoginUrl;
 	@Value("#{properties['appId']}")
 	private String AppId;
+	@Value("#{properties['user-modify-password-uri']}")
+	private String userModifyPasswordUrl;
 	@Autowired
 	private RedisClientTemplate redisClientTemplate;
 	private static final String AccessTokenPrefix = RedisConstant.ACCESSTOKEN_CACHE;
@@ -319,8 +321,7 @@ public class UserLoginController extends BaseControllerUtil {
 		parameters.put("old_pwd", oldPass);
 		parameters.put("new_pwd", newPass);
 		parameters.put("pwdtype", "MD5");
-		String url="http://user-service-openpre.myalauda.cn/spring-oauth-server/user/userCenterModiPwd";
-		String result=sendPost(url,parameters);
+		String result=sendPost(userModifyPasswordUrl,parameters);
 		if (result != null && !("").equals(result)) {
 			String aString = result.substring(0, 1);
 			if (aString.equals("{")) {
