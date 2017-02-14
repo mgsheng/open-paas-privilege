@@ -34,6 +34,16 @@ public class VerifyUserPrivilegeInterceptor extends BaseControllerUtil implement
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
+		String url = request.getRequestURI();
+		// 是否过滤
+		boolean doFilter = true;
+		for (String s : uncheckUrls) {
+			if (url.indexOf(s) != -1) {
+				// 如果uri中包含不过滤的uri，则不进行过滤
+				doFilter = false;
+				return true;
+			}
+		}
 		// 从session中获取登录者实体
 		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
 		// 如果session中存在登录者实体，则继续
@@ -54,16 +64,6 @@ public class VerifyUserPrivilegeInterceptor extends BaseControllerUtil implement
 			}
 			out.print(builder.toString());
 			return false;
-		}
-		String url = request.getRequestURI();
-		// 是否过滤
-		boolean doFilter = true;
-		for (String s : uncheckUrls) {
-			if (url.indexOf(s) != -1) {
-				// 如果uri中包含不过滤的uri，则不进行过滤
-				doFilter = false;
-				break;
-			}
 		}
 		if (doFilter) {
 			url = url.replaceAll(request.getContextPath(), "");
