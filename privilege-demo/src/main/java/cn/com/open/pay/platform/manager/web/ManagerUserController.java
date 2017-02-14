@@ -2,7 +2,6 @@ package cn.com.open.pay.platform.manager.web;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -80,6 +79,8 @@ public class ManagerUserController extends BaseControllerUtil {
 	private String userMenuRedisUrl;
 	@Value("#{properties['query-privilege-user-uri']}")
 	private String queryUserUrl;
+	@Value("#{properties['privilege-get-role-uri']}")
+	private String queryRoleUrl;
 
 	/**
 	 * 跳转到用户信息列表的页面
@@ -495,6 +496,8 @@ public class ManagerUserController extends BaseControllerUtil {
 	@RequestMapping("role")
 	public void role(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
 		log.info("-------------------------role        start------------------------------------");
+		Map<String, Object> user=(Map<String, Object>) request.getSession().getAttribute("user");
+		String groupId=user.get("groupId").equals("null")?null:(String)user.get("groupId");
 		String id = request.getParameter("id");
 		id = (id == null ? null : new String(id.getBytes("iso-8859-1"), "utf-8"));
 		String appId=request.getParameter("appId");
@@ -516,7 +519,8 @@ public class ManagerUserController extends BaseControllerUtil {
 		// appRole
 		Map<String, Object> SignatureMap = new HashMap<String, Object>();
 		SignatureMap.put("appId", appId);
-		reslut = sendPost(getAppRoleRedis, SignatureMap);
+		SignatureMap.put("groupId", groupId);
+		reslut = sendPost(queryRoleUrl, SignatureMap);
 		List<Map<String, Object>> RoleList = null;
 		if (reslut != null && !("").equals(reslut)) {
 			JSONObject jsonObject = JSONObject.fromObject(reslut);
@@ -741,13 +745,13 @@ public class ManagerUserController extends BaseControllerUtil {
 
 	@RequestMapping("findUserList")
 	public void findUserList(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> user=(Map<String, Object>) request.getSession().getAttribute("user");
+		String groupId=user.get("groupId").equals("null")?null:(String)user.get("groupId");
 		// 当前第几页
 		String page = request.getParameter("page");
 		String appId = request.getParameter("appId");
-		System.out.println(page);
 		// 每页显示的记录数
 		String rows = request.getParameter("rows");
-		System.out.println(rows);
 		// 当前页
 		int currentPage = Integer.parseInt((page == null || page == "0") ? "1" : page);
 		// 每页显示条数
@@ -756,7 +760,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		int startRow = (currentPage - 1) * pageSize;
 		//Map<String, Object> user=(Map<String, Object>) request.getSession().getAttribute("user");
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+		map.put("groupId", groupId);
 		map.put("appId", appId);
 		map.put("start", startRow);
 		map.put("limit", pageSize);
