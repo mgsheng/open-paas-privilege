@@ -24,6 +24,6 @@ public interface PrivilegeUserRepository extends Repository {
 
 	void updatePrivilegeUser(PrivilegeUser user);
 	ArrayList<String> findUserResources(@Param("appId") String appId, @Param("appUserId") String appUserId);
-	List<PrivilegeUser> findUserListByPage(@Param("appId")String appId,@Param("start") int start,@Param("limit") int limit);
-	int getUserCountByAppId(String appId);
+	List<PrivilegeUser> findUserListByPage(@Param("appId")String appId,@Param("start") int start,@Param("limit") int limit,@Param("groupId")String groupId);
+	int getUserCountByAppId(@Param("appId")String appId,@Param("groupId")String groupId);
 }
