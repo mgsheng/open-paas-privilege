@@ -148,7 +148,6 @@ function addNav(data) {
         function serverLogin() {
         	var $oldpass = $('#txtOLdPass');
         	var $newpass = $('#txtNewPass');
-        	
             var $rePass = $('#txtRePass');
             if ($oldpass.val() == '') {
                 msgShow('系统提示', '请输入旧密码！', 'warning');
@@ -225,13 +224,16 @@ function addNav(data) {
                 serverLogin();
             });
 
-			$('#btnCancel').click(function(){closePwd();});
+			$('#btnCancel').click(function(){
+				closePwd();
+				$('#txtOLdPass').val('');
+	        	$('#txtNewPass').val('');
+	            $('#txtRePass').val('');
+			});
 
             $('#loginOut').click(function() {
                 $.messager.confirm('系统提示', '您确定要退出本次登录吗?', function(r) {
-
                     if (r) {
-                     
                         location.href = '${pageContext.request.contextPath}/index.jsp';
                     }
                 });
@@ -319,9 +321,9 @@ function addNav(data) {
 			<div region="south" border="false"
 				style="text-align: right; height: 30px; line-height: 30px;">
 				<a id="btnEp" class="easyui-linkbutton" icon="icon-ok"
-					href="javascript:void(0)"> 确定</a> <a id="btnCancel"
+					href="javascript:void(0)"></a> <a id="btnCancel"
 					class="easyui-linkbutton" icon="icon-cancel"
-					href="javascript:void(0)">取消</a>
+					href="javascript:void(0)"></a>
 			</div>
 		</div>
 	</div>
