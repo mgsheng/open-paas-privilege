@@ -162,8 +162,17 @@ public class PrivilegeRoleServiceImpl implements PrivilegeRoleService {
 
 	@Override
 	public List<PrivilegeRole> getRoleListByUserIdAndAppId(String appUserId, String appId) {
-		// TODO Auto-generated method stub
 		return privilegeRoleRepository.getRoleListByUserIdAndAppId(appUserId, appId);
+	}
+
+	@Override
+	public List<PrivilegeRole> getRoleListByAppIdAndGroupId(String appId, String groupId) {
+		return privilegeRoleRepository.getRoleListByAppIdAndGroupId(appId, groupId);
+	}
+
+	@Override
+	public int getRoleCountByAppIdAndGroupId(String appId, String groupId) {
+		return privilegeRoleRepository.getRoleCountByAppIdAndGroupId(appId, groupId);
 	}
 
 }
