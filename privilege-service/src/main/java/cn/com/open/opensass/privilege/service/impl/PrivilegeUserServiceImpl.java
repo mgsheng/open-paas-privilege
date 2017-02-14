@@ -78,13 +78,13 @@ public class PrivilegeUserServiceImpl implements PrivilegeUserService {
 	}
 
 	@Override
-	public List<PrivilegeUser> findUserListByPage(String appId, int start, int limit) {
-		return privilegeUserRepository.findUserListByPage(appId, start, limit);
+	public List<PrivilegeUser> findUserListByPage(String appId, int start, int limit,String groupId) {
+		return privilegeUserRepository.findUserListByPage(appId, start, limit,groupId);
 	}
 
 	@Override
-	public int getUserCountByAppId(String appId) {
-		return privilegeUserRepository.getUserCountByAppId(appId);
+	public int getUserCountByAppId(String appId,String groupId) {
+		return privilegeUserRepository.getUserCountByAppId(appId,groupId);
 	}
 
 }
