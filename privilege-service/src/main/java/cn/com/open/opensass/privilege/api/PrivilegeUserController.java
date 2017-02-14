@@ -38,7 +38,7 @@ public class PrivilegeUserController extends BaseControllerUtil{
     	String appId=request.getParameter("appId");
     	String groupId=request.getParameter("groupId");
     	String start=request.getParameter("start");
-    	String limit=request.getParameter("c");
+    	String limit=request.getParameter("limit");
     	
     	if(!paraMandatoryCheck(Arrays.asList(appId,start,limit))){
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
