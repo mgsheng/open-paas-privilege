@@ -18,7 +18,7 @@ public interface PrivilegeUserService {
 
 	Boolean delUserByAppIdAndAppUserId(String appId, String appUserId);
 	
-	PrivilegeUser findByAppIdAndUserId(String appUserId, String appId);
+	PrivilegeUser findByAppIdAndUserId(String appId, String appUserId);
 
 	Boolean updatePrivilegeUser(PrivilegeUser user);
 	ArrayList<String> findUserResources(String appId, String appUserId); 
