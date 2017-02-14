@@ -6,8 +6,14 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title>登录</title>
     <meta charset="utf-8">
+    <link href="${pageContext.request.contextPath}/css/default.css"
+	rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" type="text/css"
+	href="${pageContext.request.contextPath}/css/themes/default/easyui.css" />
     <link href="${pageContext.request.contextPath}/css/login.css" rel="stylesheet" type="text/css">
     <script src="${pageContext.request.contextPath}/js/jquery-1.4.4.min.js" type="text/javascript"></script>
+    <script type="text/javascript"
+	src="${pageContext.request.contextPath}/js/jquery.easyui.min.1.2.2.js"></script>
     <script language="JavaScript">
         if(window != top){
             top.location.href="/";
@@ -46,6 +52,9 @@
     </form>
 </div>
 <script type="text/javascript">
+	function msgShow(title, msgString, msgType) {
+		$.messager.alert(title, msgString, msgType);
+	}
     var login = {};
     login.restoreCookies = function(){
         var username=document.getElementById("username");
@@ -79,6 +88,14 @@
     	function btnSubmit(){
 				var username=$('#username').val();
 				var password=$('#password').val();
+				if (username == '') {
+					msgShow('系统提示', '请在输入用户名！', 'warning');
+	                return false;
+	            }
+				if (password == '') {
+	                msgShow('系统提示', '请在输入密码！', 'warning');
+	                return false;
+	            }
 				var appId=$('#appId').val();
 				$.post("${pageContext.request.contextPath}/user/loginVerify",
 					{username:username,password:password,appId:appId},
