@@ -34,71 +34,62 @@ public class VerifyUserPrivilegeInterceptor extends BaseControllerUtil implement
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
+		// 从session中获取登录者实体
+		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
+		// 如果session中存在登录者实体，则继续
+		if (null == user) {
+			// 如果session中不存在登录者实体，则弹出框提示重新登录
+			// 设置request和response的字符集，防止乱码
+			request.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding("UTF-8");
+			PrintWriter out = response.getWriter();
+			StringBuilder builder = new StringBuilder();
+			if (request.getHeader("x-requested-with") != null) {
+				response.setContentType("application/x-javascript;charset=utf-8");
+				builder.append("alert('登陆超时！请重新登陆');");
+			} else {
+				builder.append("<script type=\"text/javascript\">");
+				builder.append("alert('登陆超时！请重新登陆');");
+				builder.append("</script>");
+			}
+			out.print(builder.toString());
+			return false;
+		}
 		String url = request.getRequestURI();
-		String serverUri = "/privilege-dome/";
 		// 是否过滤
 		boolean doFilter = true;
-		if (url.equals(serverUri)) {
-			doFilter = false;
-		} else {
-			for (String s : uncheckUrls) {
-
-				if (url.indexOf(s) != -1) {
-					// 如果uri中包含不过滤的uri，则不进行过滤
-					doFilter = false;
-					break;
-				}
+		for (String s : uncheckUrls) {
+			if (url.indexOf(s) != -1) {
+				// 如果uri中包含不过滤的uri，则不进行过滤
+				doFilter = false;
+				break;
 			}
 		}
-
 		if (doFilter) {
-			// 从session中获取登录者实体
-			Map<String, Object> user= (Map<String, Object>) request.getSession().getAttribute("user");
-			if (null == user) {
-				// 如果session中不存在登录者实体，则弹出框提示重新登录
-				// 设置request和response的字符集，防止乱码
+			url = url.replaceAll(request.getContextPath(), "");
+			Map<String, Object> map = privilegeGetSignatureService.getSignature((String) user.get("appId"));
+			map.put("appId", user.get("appId"));
+			map.put("appUserId", user.get("appUserId"));
+			map.put("optUrl", url);
+			String reult = sendPost(VerifyUserPrivilegeUri, map);
+			JSONObject object = JSONObject.fromObject(reult);
+			if (object.get("status").equals("1")) {
+				return true;
+			} else {
 				request.setCharacterEncoding("UTF-8");
 				response.setCharacterEncoding("UTF-8");
 				PrintWriter out = response.getWriter();
 				StringBuilder builder = new StringBuilder();
 				if (request.getHeader("x-requested-with") != null) {
 					response.setContentType("application/x-javascript;charset=utf-8");
-					builder.append("alert('登陆超时！请重新登陆');");
+					builder.append("alert('您不具备该操作权限！');");
 				} else {
 					builder.append("<script type=\"text/javascript\">");
-					builder.append("alert('登陆超时！请重新登陆');");
+					builder.append("alert('您不具备该操作权限！');");
 					builder.append("</script>");
 				}
 				out.print(builder.toString());
 				return false;
-			} else {
-				// 如果session中存在登录者实体，则继续
-				url = url.replaceAll(request.getContextPath(), "");
-				Map<String, Object> map = privilegeGetSignatureService.getSignature((String)user.get("appId"));
-				map.put("appId", user.get("appId"));
-				map.put("appUserId", user.get("appUserId"));
-				map.put("optUrl", url);
-				String reult = sendPost(VerifyUserPrivilegeUri, map);
-				JSONObject object = JSONObject.fromObject(reult);
-				Map map2 = (Map) object;
-				if (map2.get("status").equals("1")) {
-					return true;
-				} else {
-					request.setCharacterEncoding("UTF-8");
-					response.setCharacterEncoding("UTF-8");
-					PrintWriter out = response.getWriter();
-					StringBuilder builder = new StringBuilder();
-					if (request.getHeader("x-requested-with") != null) {
-						response.setContentType("application/x-javascript;charset=utf-8");
-						builder.append("alert('您不具备该操作权限！');");
-					} else {
-						builder.append("<script type=\"text/javascript\">");
-						builder.append("alert('您不具备该操作权限！');");
-						builder.append("</script>");
-					}
-					out.print(builder.toString());
-					return false;
-				}
 			}
 		} else {
 			return true;
