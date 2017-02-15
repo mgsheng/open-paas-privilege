@@ -16,16 +16,16 @@
 				<property name="uncheckUrls">
 					<list>
 						<value>login</value>
+						<value>loginOut</value>
 						<value>loginVerify</value>
 						<value>js</value>
 						<value>css</value>
 						<value>images</value>
 						<value>findUsers</value>
-						<value>getRoleMessage</value>
+						<value>getRoleMessage</value> 
 						<value>tree</value>
 						<value>QueryRoleDetails</value>
 						<value>getAllOperation</value>
-						<value>userList</value>
 						<value>/managerUser/role</value>
 						<value>/managerUser/authorizeRole</value>
 						<value>/managerUser/function</value>
