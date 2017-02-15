@@ -9,10 +9,12 @@
 
 
     <!--<import resource="security.xml"/>-->
+    <!--拦截器,验证是否有该权限 -->
 	 <mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/**" />
 			<bean class="cn.com.open.pay.platform.manager.interceptor.VerifyUserPrivilegeInterceptor" >
+				<!-- 不拦截uri -->
 				<property name="uncheckUrls">
 					<list>
 						<value>login</value>
