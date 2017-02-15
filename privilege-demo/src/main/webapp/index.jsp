@@ -89,11 +89,11 @@
 				var username=$('#username').val();
 				var password=$('#password').val();
 				if (username == '') {
-					msgShow('系统提示', '请在输入用户名！', 'warning');
+					msgShow('系统提示', '请输入用户名！', 'warning');
 	                return false;
 	            }
 				if (password == '') {
-	                msgShow('系统提示', '请在输入密码！', 'warning');
+	                msgShow('系统提示', '请输入密码！', 'warning');
 	                return false;
 	            }
 				var appId=$('#appId').val();
