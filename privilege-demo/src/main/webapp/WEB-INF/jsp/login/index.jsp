@@ -38,7 +38,7 @@ function GetMenuList(data, menulist) {
     if (data.children == null)
         return menulist;
     else {
-        menulist += '<ul style="height: 200px; overflow-y: auto;">';
+        menulist += '<ul>';
         $.each(data.children, function(i, sm) {
             if (sm.attributes.baseUrl != null) {
                 menulist += '<li><div style="margin-bottom:-5px"><a ref="'+sm.id+'" href="#" rel="' +sm.attributes.baseUrl + '" ><span class="icon icon-mini-add" >&nbsp;</span><span class="nav">' + sm.text+ '</span></a></div></li> ';
