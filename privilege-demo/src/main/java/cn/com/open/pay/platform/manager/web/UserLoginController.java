@@ -248,7 +248,7 @@ public class UserLoginController extends BaseControllerUtil {
 			return "login/index";
 
 		}
-		return "/";
+		return "/index";
 
 	}
 
@@ -328,7 +328,6 @@ public class UserLoginController extends BaseControllerUtil {
 				if ("1".equals(status)) {
 					parameters.clear();
 					parameters.put("status", "1");
-					WebUtils.writeJsonToMap(response, parameters);
 				} else {
 					String errorCode = object.getString("error_code");
 					String errMsg = object.getString("errMsg");
@@ -336,18 +335,36 @@ public class UserLoginController extends BaseControllerUtil {
 					parameters.put("status", "0");
 					parameters.put("errorCode", errorCode);
 					parameters.put("errMsg", errMsg);
-					WebUtils.writeJsonToMap(response, parameters);
 				}
 			} else {
 				parameters.clear();
 				parameters.put("status", "0");
 				parameters.put("errMsg", "修改失败");
-				WebUtils.writeJsonToMap(response, parameters);
+				
 			}
 		}
+		WebUtils.writeJsonToMap(response, parameters);
 
 	}
-
+	/**
+	 * 登出跳转
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "loginOut")
+	public String loginOut(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> user=(Map<String, Object>) request.getSession().getAttribute("user");
+		if (user!=null) {
+			request.getSession().removeAttribute("user");
+		}
+		return "/index";
+	}
+	/**
+	 * @param modules
+	 * @return
+	 */
 	private List<TreeNode> convertTreeNodeList(List<PrivilegeMenu> modules) {
 		List<TreeNode> nodes = null;
 		if (modules != null) {
@@ -361,7 +378,12 @@ public class UserLoginController extends BaseControllerUtil {
 		}
 		return nodes;
 	}
-
+	/**
+	 * 构建tree
+	 * @param treeNodes
+	 * @param resourceLists
+	 * @return
+	 */
 	protected List<TreeNode> buildTree2(List<TreeNode> treeNodes, List<PrivilegeResource1> resourceList) {
 		List<TreeNode> results = new ArrayList<TreeNode>();
 		Map<String, TreeNode> aidMap = new LinkedHashMap<String, TreeNode>();
