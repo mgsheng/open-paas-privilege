@@ -38,7 +38,7 @@ function GetMenuList(data, menulist) {
     if (data.children == null)
         return menulist;
     else {
-        menulist += '<ul>';
+        menulist += '<ul style="height: 200px; overflow-y: auto;">';
         $.each(data.children, function(i, sm) {
             if (sm.attributes.baseUrl != null) {
                 menulist += '<li><div style="margin-bottom:-5px"><a ref="'+sm.id+'" href="#" rel="' +sm.attributes.baseUrl + '" ><span class="icon icon-mini-add" >&nbsp;</span><span class="nav">' + sm.text+ '</span></a></div></li> ';
@@ -58,7 +58,7 @@ function addNav(data) {
 	        var menulist1 = "";
 	        if(sm.pid=="0"){
 	        	menulist1 = GetMenuList(sm, menulist1);
-	            menulist1 = "<ul id='tt1' >" + menulist1.substring(4); 
+	           // menulist1 = "<ul id='tt1' >" + menulist1.substring(4); 
 	            $('#nav').accordion('add', {
 	                title: sm.text,
 	                content: menulist1,
@@ -219,7 +219,7 @@ function addNav(data) {
             $('#loginOut').click(function() {
                 $.messager.confirm('系统提示', '您确定要退出本次登录吗?', function(r) {
                     if (r) {
-                        location.href = '${pageContext.request.contextPath}/';
+                    	window.location.href="${pageContext.request.contextPath}/user/loginOut";
                     }
                 });
             });
