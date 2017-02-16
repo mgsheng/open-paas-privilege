@@ -8,12 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
-
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +18,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource1;
 import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
@@ -43,17 +39,10 @@ import net.sf.json.JSONObject;
 public class UserLoginController extends BaseControllerUtil {
 	private static final Logger log = LoggerFactory.getLogger(UserLoginController.class);
 	private Map<String, String> map = LoadPopertiesFile.loadProperties();
-
 	@Autowired
 	private PrivilegeGetSignatureService privilegeGetSignatureService;
 	@Value("#{properties['get-privilege-user-uri']}")
 	private String getUserPrivilegeUrl;
-	@Value("#{properties['privilege-appres-redis-query-uri']}")
-	private String appResRedisUrl;
-	@Value("#{properties['privilege-appmenu-redis-query-uri']}")
-	private String appMenuRedisUrl;
-	@Value("#{properties['getSignature-uri']}")
-	private String getSignatureUrl;
 	@Value("#{properties['8']}")
 	private String client_secret;
 	@Value("#{properties['get-oauth-token-uri']}")
@@ -166,10 +155,8 @@ public class UserLoginController extends BaseControllerUtil {
 								user.put("username", userName);
 								user.put("appId", appID);
 								user.put("appUserId", appUserId);
+								user.put("jsessionId", jsessionId);
 								session.setAttribute("user", user);
-								Cookie cookie = new Cookie("jsessionId", jsessionId);
-								cookie.setPath("/");
-								response.addCookie(cookie);
 							}
 						}
 					} else {
@@ -204,6 +191,7 @@ public class UserLoginController extends BaseControllerUtil {
 			String userName = (String) user.get("username");
 			String appId = (String) user.get("appId");
 			String appUserId = (String) user.get("appUserId");
+			String jsessionId = (String) user.get("jsessionId");
 			Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
 			map.put("appId", appId);
 			map.put("appUserId", appUserId);
@@ -236,6 +224,7 @@ public class UserLoginController extends BaseControllerUtil {
 					menus.put("menus", jsonArr);
 					model.addAttribute("username", userName);
 					model.addAttribute("appId", appId);
+					model.addAttribute("jsessionId", jsessionId);
 					model.addAttribute("menus", JSONObject.fromObject(menus));
 				}
 			} else {
