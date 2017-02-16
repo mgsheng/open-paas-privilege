@@ -84,12 +84,12 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 	@Override
 	public PrivilegeAjaxMessage findGroupPrivilege(String groupId, String appId) {
 		PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
-		PrivilegeGroup group = privilegeGroupRepository.findByGroupId(groupId, appId);
+		/*PrivilegeGroup group = privilegeGroupRepository.findByGroupId(groupId, appId);
 		if (null == group) {
 			ajaxMessage.setCode("0");
 			ajaxMessage.setMessage("Group Is Null");
 			return ajaxMessage;
-		}
+		}*/
 
 		String PRIVILEGESERVICE_GROUPCACHE_APPID_GROUPID = groupCachePrefix + appId + SIGN + groupId;
 
@@ -104,7 +104,7 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 		}
 		log.info("从数据库获取数据");
 		Map<String, Object> redisMap = new HashMap<String, Object>();
-		redisMap.put("groupName", group.getGroupName());
+		//redisMap.put("groupName", group.getGroupName());
 		// 根据组Id和appId 查询资源
 		List<PrivilegeResourceVo> resourceList = privilegeResourceService.findByGroupIdAndAppId(groupId, appId);
 		redisMap.put("resourceList", resourceList);
