@@ -78,16 +78,11 @@
 							data-options="singleSelect:true,method:'get'" fit="true">
 							<thead>
 								<tr>
-									<th data-options="field:'uid',align:'center'" hidden="true" style="width:15%;max-width:100%;">ID</th>
-									<th data-options="field:'appUserId',align:'center'" hidden="true" style="width:15%;max-width:100%;">ID</th>
-									<!-- <th data-options="field:'password',align:'center'" hidden="true" style="width:15%;max-width:100%;">密码</th> -->
-									<th data-options="field:'appUserName',align:'center'" style="width:15%;max-width:100%;">用&nbsp;&nbsp;户&nbsp;&nbsp;名</th>
-									<!-- <th data-options="field:'realName',align:'center'" style="width:15%;max-width:100%;">真实姓名</th> -->
-									<!-- <th data-options="field:'nickName',align:'center'" style="width:15%;max-width:100%;">昵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称</th> -->
-									<th data-options="field:'groupName',align:'center'" style="width:15%;max-width:100%;">所属部门</th> 
-									<th data-options="field:'deptId',align:'center'" hidden="true" style="width:15%;max-width:100%;">所属部门ID</th>
-									<!-- <th data-options="field:'createTime',align:'center'" style="width:18%;max-width:100%;">注册时间</th> -->
-									<!-- <th data-options="field:'lastLoginTime',align:'center'" style="width:18%;max-width:100%;">上次登陆时间</th> -->
+									<th data-options="field:'Id',align:'center'" hidden="true" style="width:15%;max-width:100%;">ID</th>
+									<th data-options="field:'userId',align:'center'" hidden="true" style="width:15%;max-width:100%;">ID</th>
+									<th data-options="field:'groupId',align:'center'" hidden="true" style="width:15%;max-width:100%;">groupId</th>
+									<th data-options="field:'userName',align:'center'" style="width:15%;max-width:100%;">用&nbsp;&nbsp;户&nbsp;&nbsp;名</th>
+									<th data-options="field:'groupName',align:'center'" style="width:15%;max-width:100%;">所属组织结构</th> 
 							 </tr>
 						</thead>
 					</table>
@@ -203,8 +198,8 @@
 		
 		//添加tab页面
 		function addPanel(userName,userId){
-			if ($('#tt').tabs('exists', userName)){
-			 	$('#tt').tabs('select', userName);
+			if ($('#tt').tabs('exists', userName+'-授权角色')){
+			 	$('#tt').tabs('select', userName+'-授权角色');
 			} else {
 				 var url = '${pageContext.request.contextPath}/managerUser/toRole?id='+userId+'&userName='+userName+'&appId='+${appId};
 			 	 var content = '<iframe scrolling="auto" frameborder="0" src="'+url+'" style="width:100%;height:100%;"></iframe>';
@@ -217,11 +212,11 @@
 			}
 		}
 		//添加tab页面
-		function addPanel2(userName,userId){
-			if ($('#tt').tabs('exists', userName)){
-			 	$('#tt').tabs('select', userName);
+		function addPanel2(userName,userId,groupId){
+			if ($('#tt').tabs('exists', userName+'-授权功能')){
+			 	$('#tt').tabs('select', userName+'-授权功能');
 			} else {
-				 var url = '${pageContext.request.contextPath}/managerUser/toFunction?id='+userId+'&userName='+userName+'&appId='+${appId};
+				 var url = '${pageContext.request.contextPath}/managerUser/toFunction?id='+userId+'&userName='+userName+'&groupId='+groupId+'&appId='+${appId};
 			 	 var content = '<iframe scrolling="auto" frameborder="0" src="'+url+'" style="width:100%;height:100%;"></iframe>';
 				 $('#tt').tabs('add',{
 					 title:userName+'-授权功能',
@@ -245,9 +240,10 @@
 			if (row){
 				$.messager.confirm('系统提示', '是否确定授权?', function(r){
 					if(r){
-						var userId = row.appUserId;
-						var userName=row.appUserName;
-						addPanel2(userName,userId);
+						var userId = row.userId;
+						var userName=row.userName;
+						var groupId=row.groupId;
+						addPanel2(userName,userId,groupId);
 					}
 				});
 			}else{
@@ -260,8 +256,8 @@
 			if (row){
 				$.messager.confirm('系统提示', '是否确定授权?', function(r){
 					if(r){
-						var userId = row.appUserId;
-						var userName=row.appUserName;
+						var userId = row.userId;
+						var userName=row.userName;
 						addPanel(userName,userId);
 					}
 				});
