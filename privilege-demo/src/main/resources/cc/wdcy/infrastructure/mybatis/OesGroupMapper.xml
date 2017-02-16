@@ -4,12 +4,14 @@
 	<resultMap type="OesGroup" id="oesGroupMap">
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="group_code" property="groupCode" jdbcType="VARCHAR" />
+		<result column="group_type_name" property="groupTypeName" jdbcType="VARCHAR" />
 		<result column="group_name" property="groupName" jdbcType="VARCHAR" />
 		<result column="group_type" property="groupType" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Insert_Column_List">
 	  id,
 	  group_code,
+	  group_type_name,
 	  group_name,
 	  group_type
 	</sql>
