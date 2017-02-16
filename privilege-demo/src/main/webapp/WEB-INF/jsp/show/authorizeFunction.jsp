@@ -65,15 +65,28 @@ function getRoot(){
 		});
 	});
 }
-	$('#tt').tree({ 
- 	  url: '${pageContext.request.contextPath}/managerUser/tree?appId=${appId}', 
-      onLoadSuccess:function(node,data){
-    	 getRoot();
-    	 //勾选用户用户有的功能与资源
-    	 selected();
-      }
-      
-   });
+	//页面预加载
+	$(function(){
+		$.ajax({type:'GET',
+			url:'${pageContext.request.contextPath}/managerUser/tree?appId=${appId}&groupId=${groupId}',
+			success:function(data) {
+					if(data.status=="0"){
+						msgShow('系统提示', '该组织机构无权限！', 'info');
+					}else {
+						var json=data.tree;
+						if (json.length>0) {
+							$('#tt').tree({data: json});
+							getRoot();
+							selected();
+						}else {
+							msgShow('系统提示', '该组织机构无权限！', 'info');
+						}
+						
+					}
+				}
+		});
+	});
+ 
 	   //取消选中
 	function cancelAuthorizeRole() {
 		 $("#tt").tree("reload");
