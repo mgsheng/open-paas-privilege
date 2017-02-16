@@ -1,5 +1,6 @@
 package cn.com.open.pay.platform.manager.web;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -23,7 +24,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.pay.platform.manager.privilege.model.OesGroup;
-import cn.com.open.pay.platform.manager.privilege.model.PrivilegeFunction;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeOperation;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource1;
@@ -31,7 +31,6 @@ import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
 import cn.com.open.pay.platform.manager.privilege.service.OesGroupService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGetSignatureService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
-import cn.com.open.pay.platform.manager.tools.LoadPopertiesFile;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
 
 
@@ -46,10 +45,8 @@ public class OesGroupController extends BaseControllerUtil{
 	private static final Logger log = LoggerFactory.getLogger(OesGroupController.class);
 	@Autowired
 	private OesGroupService oesGroupService;
-	/*@Autowired
-	private PrivilegeGetSignatureService privilegeGetSignatureService;
-	private Map<String, String> map = LoadPopertiesFile.loadProperties();
-	
+	@Autowired
+	private PrivilegeGetSignatureService privilegeGetSignatureService;	
 
 	@Value("#{properties['privilege-appres-redis-query-uri']}")
 	private String appResRedisUrl;
@@ -57,9 +54,8 @@ public class OesGroupController extends BaseControllerUtil{
 	private String appMenuRedisUrl;
 	@Value("#{properties['privilege-get-operation-uri']}")
 	private String getAllOperationUrl;
-	
-	@Value("#{properties['getAllOrganizationByAppkey-uri']}")
-	private String getAllOrganizationByAppkeyUrl;*/
+	@Value("#{properties['privilege-group-modify-uri']}")
+	private String groupPrivilegeModifyUrl;
 	
     /**
      * 跳转到机构管理页面
@@ -101,7 +97,164 @@ public class OesGroupController extends BaseControllerUtil{
 		return;
     }
     
-    /*@RequestMapping(value = "tree")
+    /**
+     * 添加机构
+     * @return Json
+     */
+    @RequestMapping("addGroup")
+    public void addGroup(HttpServletRequest request,HttpServletResponse response,Model model) {
+    	log.info("-------------------------addGroup start------------------------------------");
+    	String groupCode = request.getParameter("groupCode");
+    	String groupTypeName = request.getParameter("groupTypeName");
+    	String groupName = request.getParameter("groupName");
+    	String groupType = request.getParameter("groupType");
+    	String result;
+    	OesGroup group = oesGroupService.findByCode(groupCode);
+    	if(group==null){
+    		OesGroup g=new OesGroup();
+    		g.setGroupCode(groupCode);
+    		g.setGroupName(groupName);
+    		g.setGroupTypeName(groupTypeName);
+    		g.setGroupType(groupType);
+    		Boolean f = oesGroupService.saveGroup(g);
+    		if(f){
+    			result="0";//add success
+    		}else{
+    			result="1";//add field
+    		}
+    	}else{
+    		result="2";//group exist
+    	}	
+    	Map<String, Object> map = new HashMap<String,Object>();
+    	map.put("result", result);
+    	JSONObject json = JSONObject.fromObject(map);
+		WebUtils.writeJson(response, json);
+		return;
+    }
+    
+    /**
+	 * 跳转到机构授权资源页面
+	 * 
+	 * @return 返回的是 jsp文件名路径及文件名
+	 */
+	@RequestMapping(value = "toRes")
+	public String toRes(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws UnsupportedEncodingException {
+		log.info("-------------------------toRes       start------------------------------------");
+		String groupId = request.getParameter("groupId");
+		String groupName = request.getParameter("groupName");
+		String appid = request.getParameter("appId");
+		
+		String id = request.getParameter("id");
+		String appId=request.getParameter("appId");
+		String userName = request.getParameter("userName");
+		id = (id == null ? null : new String(id.getBytes("iso-8859-1"), "utf-8"));
+		userName = (userName == null ? null : new String(userName.getBytes("iso-8859-1"), "utf-8"));
+		model.addAttribute("groupId", groupId);
+		model.addAttribute("groupName", groupName);
+		model.addAttribute("appId", appId);
+		return "privilege/group/authorizeRes";
+	}
+	
+	/**
+	 * 授权用户功能
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws UnsupportedEncodingException
+	 */
+	@RequestMapping("authorizeRes")
+	public void authorizeRes(HttpServletRequest request, HttpServletResponse response)
+			throws UnsupportedEncodingException {
+		log.info("-------------------------authorizeRes start------------------------------------");
+		String groupId = request.getParameter("groupId");
+		String resource = request.getParameter("resource");
+		String appId=request.getParameter("appId");
+		Boolean boo = false;
+		JSONObject jsonobj = new JSONObject();
+		Map<String, Object> Signature = privilegeGetSignatureService.getSignature(appId);
+		Signature.put("appId", appId);
+		Signature.put("groupId", groupId);
+		Signature.put("groupPrivilege", resource);
+		Signature.put("method", "0");
+		String reslut = sendPost(groupPrivilegeModifyUrl, Signature);
+		if (reslut != null && !("").equals(reslut)) {
+			JSONObject jsonObject = JSONObject.fromObject(reslut);
+			if (!("0").equals(jsonObject.get("status"))) {
+				boo = true;
+			} else {
+				boo = false;
+			}
+		}
+		
+		
+		/*List<Map<String, Object>> userRoleList = null;
+		if (reslut != null && !("").equals(reslut)) {
+			JSONObject jsonObject = JSONObject.fromObject(reslut);
+			if (!("0").equals(jsonObject.get("status"))) {
+				boo = true;
+			} else {
+				boo = false;
+				// 如果用户不存在 添加用户
+				if (("10002").equals(String.valueOf(jsonObject.get("error_code")))) {
+					Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
+					map.put("appId", appId);
+					map.put("appUserId", id);
+					map.put("resourceId", resource);
+					map.put("privilegeFunId", function);
+					map.put("appUserName", userName);
+					reslut = sendPost(addPrivilegeUserUrl, map);
+					if (reslut != null && !("").equals(reslut)) {
+						jsonObject = JSONObject.fromObject(reslut);
+						if (!("0").equals(jsonObject.get("status"))) {
+							boo = true;
+							jsonobj.put("result", boo);
+							WebUtils.writeJson(response, jsonobj);
+							return;
+						} else {
+							boo = false;
+							jsonobj.put("result", boo);
+							WebUtils.writeJson(response, jsonobj);
+							return;
+						}
+					} else {
+						boo = false;
+					}
+				}
+				System.err.println("该用户没有角色");
+			}
+		} else {
+			boo = false;
+		}
+		// 更新资源与功能
+		if (boo) {
+			Map<String, Object> signature = privilegeGetSignatureService.getSignature(appId);
+			signature.put("appId", appId);
+			signature.put("appUserId", id);
+			signature.put("method", "1");
+			signature.put("resourceId", resource);
+			signature.put("privilegeFunId", function);
+			reslut = sendPost(moditUserPrivilegeUrl, signature);
+			if (reslut != null && !("").equals(reslut)) {
+				JSONObject jsonObject = JSONObject.fromObject(reslut);
+				if (!("0").equals(jsonObject.get("status"))) {
+					System.err.println("修改成功");
+					boo = true;
+				} else {
+					boo = false;
+					System.err.println("修改失败");
+				}
+			} else {
+				boo = false;
+			}
+		}*/
+		jsonobj.put("result", boo);
+		WebUtils.writeJson(response, jsonobj);
+		return;
+
+	}
+    
+    @RequestMapping(value = "tree")
 	public void getModelTree(HttpServletRequest request, HttpServletResponse response) {
 		String appId = request.getParameter("appId");
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
@@ -114,17 +267,18 @@ public class OesGroupController extends BaseControllerUtil{
 		String s1 = sendPost(appResRedisUrl, map);
 		JSONObject obj1 = new JSONObject().fromObject(s1);// 将json字符串转换为json对象
 		JSONArray obj1Array = JSONArray.fromObject(obj1.get("resourceList"));
-		JSONArray obj2Array = JSONArray.fromObject(obj1.get("functionList"));
+		//JSONArray obj2Array = JSONArray.fromObject(obj1.get("functionList"));
 		String operation = sendPost(getAllOperationUrl, map);
 		obj = JSONObject.fromObject(operation);
 		objArray = JSONArray.fromObject(obj.get("operationList"));
 		// 将json对象转换为java对象
 		List<PrivilegeOperation> operationList = JSONArray.toList(objArray, PrivilegeOperation.class);
 		List<PrivilegeResource1> resourceList = JSONArray.toList(obj1Array, PrivilegeResource1.class);
-		List<PrivilegeFunction> functionList = JSONArray.toList(obj2Array, PrivilegeFunction.class);
+		//List<PrivilegeFunction> functionList = JSONArray.toList(obj2Array, PrivilegeFunction.class);
 
 		List<TreeNode> nodes = convertTreeNodeList(menuList);
-		JSONArray jsonArr = JSONArray.fromObject(buildTree2(nodes, resourceList, functionList, operationList));
+		//JSONArray jsonArr = JSONArray.fromObject(buildTree2(nodes, resourceList, functionList, operationList));
+		JSONArray jsonArr = JSONArray.fromObject(buildTree(nodes, resourceList));
 		WebUtils.writeJson(response, jsonArr);
 	}
 
@@ -142,10 +296,10 @@ public class OesGroupController extends BaseControllerUtil{
 		return nodes;
 	}
 
-	*//**
+	/**
 	 * @param departments
 	 * @return
-	 *//*
+	 */
 	private TreeNode convertTreeNode(PrivilegeMenu privilegeMenu) {
 		TreeNode node = null;
 		if (privilegeMenu != null) {
@@ -163,13 +317,56 @@ public class OesGroupController extends BaseControllerUtil{
 		return node;
 	}
 
-	*//**
+	/**
 	 * 添加时构建树
 	 * 
 	 * @param treeNodes
 	 * @return
-	 *//*
-	protected List<TreeNode> buildTree2(List<TreeNode> treeNodes, List<PrivilegeResource1> resourceList,
+	 */
+	protected List<TreeNode> buildTree(List<TreeNode> treeNodes, List<PrivilegeResource1> resourceList) {
+		List<TreeNode> results = new ArrayList<TreeNode>();
+		Map<String, TreeNode> aidMap = new LinkedHashMap<String, TreeNode>();
+		for (TreeNode node : treeNodes) {
+			aidMap.put(node.getId(), node);
+		}
+		treeNodes = null;
+		Set<Entry<String, TreeNode>> entrySet = aidMap.entrySet();
+		for (Entry<String, TreeNode> entry : entrySet) {
+			String pid = entry.getValue().getPid();
+			TreeNode node = aidMap.get(pid);
+			if (node == null) {
+				results.add(entry.getValue());
+			} else {
+				List<TreeNode> children = node.getChildren();
+				if (children == null) {
+					children = new ArrayList<TreeNode>();
+					node.setChildren(children);
+					node.setState("closed");
+				}
+
+				String menuId = entry.getValue().getId();
+				for (PrivilegeResource1 res : resourceList) {
+					if ((menuId).equals("m" + res.getMenuId())) {
+						entry.getValue().setId("r" + res.getResourceId());
+						entry.getValue().setText(res.getResourceName());
+						entry.getValue().setIsmodule("1");
+					}
+				}
+				children.add(entry.getValue());
+			}
+		}
+		aidMap = null;
+
+		return results;
+	}
+	
+	/**
+	 * 添加时构建树
+	 * 
+	 * @param treeNodes
+	 * @return
+	 */
+	/*protected List<TreeNode> buildTree2(List<TreeNode> treeNodes, List<PrivilegeResource1> resourceList,
 			List<PrivilegeFunction> functionList, List<PrivilegeOperation> operationList) {
 		List<TreeNode> results = new ArrayList<TreeNode>();
 		Map<String, TreeNode> aidMap = new LinkedHashMap<String, TreeNode>();
