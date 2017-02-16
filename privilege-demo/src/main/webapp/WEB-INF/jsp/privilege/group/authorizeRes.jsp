@@ -45,66 +45,57 @@
 	</div>
 </body>
 <script>
-//修改tree 图标样式
-function getRoot(){
-	var node=$('#tt').tree('getRoots');
-	$.each(node,function(i,n){
-		if($(n.target).children(".tree-icon").hasClass('tree-file')){
-			$(n.target).children(".tree-icon").removeClass('tree-file').addClass("tree-folder");
-		}
-		$(n.target).children(".tree-icon").addClass("tree-folder");
-		var children=$('#tt').tree('getChildren',n.target);
-		$.each(children,function(i,m){
-			if(m.ismodule=="0"){
-				if($(m.target).children(".tree-icon").hasClass('tree-file')){
-					$(m.target).children(".tree-icon").removeClass('tree-file').addClass("tree-folder");
-				}
-			}else if (m.ismodule=="1") {
-				$(m.target).children(".tree-icon").addClass("icon icon-mini-add");
+	//修改tree 图标样式
+	function getRoot(){
+		var node=$('#tt').tree('getRoots');
+		$.each(node,function(i,n){
+			if($(n.target).children(".tree-icon").hasClass('tree-file')){
+				$(n.target).children(".tree-icon").removeClass('tree-file').addClass("tree-folder");
 			}
+			$(n.target).children(".tree-icon").addClass("tree-folder");
+			var children=$('#tt').tree('getChildren',n.target);
+			$.each(children,function(i,m){
+				if(m.ismodule=="0"){
+					if($(m.target).children(".tree-icon").hasClass('tree-file')){
+						$(m.target).children(".tree-icon").removeClass('tree-file').addClass("tree-folder");
+					}
+				}else if (m.ismodule=="1") {
+					$(m.target).children(".tree-icon").addClass("icon icon-mini-add");
+				}
+			});
 		});
-	});
-}
+	}
+	//加载菜单树
 	$('#tt').tree({ 
  	  url: '${pageContext.request.contextPath}/oesGroup/tree?appId=${appId}', 
       onLoadSuccess:function(node,data){
-    	 getRoot();
+    	 //getRoot();
     	 //勾选用户用户有的资源
-    	 //selected();
+    	 selected();
       }
       
    });
 	   //取消选中
-	function cancelAuthorizeRole() {
+	function cancelAuthorizeFun() {
 		 $("#tt").tree("reload");
 	}
-	//勾选用户拥有的功能
+	//勾选机构拥有的功能
 	function selected(){
 		$.post('${pageContext.request.contextPath}/oesGroup/getRes?groupId=${groupId}&appId=${appId}',function(data){
-				if(data.functionIds!=null){
-					$.each(data.functionIds,function(i,n){
-						var node=$("#tt").tree('find',n);
-						if(node!=null){
-							if(node.ismodule=="2"){
+			if(data.resourceIds!=null){
+				$.each(data.resourceIds,function(i,m){
+					var node=$("#tt").tree('find',"r"+m);
+					if(node!=null){
+						if(node.ismodule=="1"){
+							var nn=$("#tt").tree('getChildren',node.target);
+							if(nn.length<=0){
 								$("#tt").tree('check',node.target);
 							}
 						}
-					});
-				}
-				if(data.resourceIds!=null){
-					$.each(data.resourceIds,function(i,m){
-						var node=$("#tt").tree('find',m);
-						if(node!=null){
-							if(node.ismodule=="1"){
-								var nn=$("#tt").tree('getChildren',node.target);
-								if(nn.length<=0){
-									$("#tt").tree('check',node.target);
-								}
-							}
-						}
-					});
-				}
-			},"json");
+					}
+				});
+			}
+		},"json");
 	}
 		
 	//提示信息
@@ -112,16 +103,19 @@ function getRoot(){
 		$.messager.alert(title, msgString, msgType);
 	}
 	
+	//展开某节点
+	function expand(node){
+    	$('#deptree1').tree('expandTo', node.target);
+    	if($('#deptree1').tree('getChildren', node.target)!=null){
+    		$('#deptree1').tree('expand', node.target);
+    	}
+    }
 	
 	//授权确认
 	function submitAuthorizeRes(){
 		var resId=[];
-		//var funId=[];
 		var select=$('#tt').tree('getChecked', 'checked');
 		$.each(select, function(i, n) {
-			/*if(n.ismodule==2){
-				funId.push(n.id);
-			}else */
 			if(n.ismodule==1){
 				if(n.id.substring(0,1)=='r'){
 					resId.push(n.id.substring(1,n.id.length));
@@ -130,7 +124,6 @@ function getRoot(){
 			console.log(n.text);
 		});
 		resId.join(",");
-		//funId.join(",");
 		 var url='${pageContext.request.contextPath}/oesGroup/authorizeRes?groupId=${groupId}&resource='+resId+'&appId=${appId}';
          $.post(url, function(data) {
              if(data.result==true){
