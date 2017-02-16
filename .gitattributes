@@ -183,6 +183,7 @@ privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/myb
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/MerchantOrderInfoRepositoryMyBatis.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/MerchantOrderOfflineRepositoryMyBatis.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/MerchantOrderRefundRepositoryMyBatis.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/OesGroupRepositoryMyBatis.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/PayChannelDictionaryRepositoryMyBatis.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/PayChannelRateRepositoryMyBatis.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/PayChannelSwitchRepositoryMyBatis.java -text
@@ -204,6 +205,7 @@ privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/rep
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/MerchantOrderInfoRepository.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/MerchantOrderOfflineRepository.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/MerchantOrderRefundRepository.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/OesGroupRepository.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/PayChannelDictionaryRepository.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/PayChannelRateRepository.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/PayChannelSwitchRepository.java -text
@@ -249,6 +251,7 @@ privilege-demo/src/main/java/cn/com/open/pay/platform/manager/paychannel/service
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/AbstractDomain.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/Common.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/Manager.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/OesGroup.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/PrivilegeFunction.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/PrivilegeGroup.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/PrivilegeGroupResource.java -text
@@ -348,6 +351,7 @@ privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantInfoMap
 privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantOrderInfoMapper.xml -text
 privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantOrderOfflineMapper.xml -text
 privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantOrderRefundMapper.xml -text
+privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/OesGroupMapper.xml -text
 privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/PayChannelDictionaryMapper.xml -text
 privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/PayChannelRateMapper.xml -text
 privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/PayChannelSwitchMapper.xml -text
