@@ -65,6 +65,7 @@
 	 	<if test="groupId != null and groupId !=''" >
         	and group_id = #{groupId}
      	</if>
+     	 limit #{start},#{limit}
 	</select>
 	<select id="getRoleCountByAppIdAndGroupId"  resultType="java.lang.Integer">
 		SELECT count(1) from privilege_role where app_id=#{appId} 
