@@ -26,6 +26,22 @@ public class OesGroupServiceImpl implements OesGroupService {
 		int count=oesGroupRepository.findAllCount();
 		return count;
 	}
+
+	@Override
+	public OesGroup findByCode(String groupCode) {
+		OesGroup group=oesGroupRepository.findByCode(groupCode);
+		return null;
+	}
+
+	@Override
+	public Boolean saveGroup(OesGroup g) {
+		try{
+			oesGroupRepository.saveGroup(g);
+			return true;
+		}catch(Exception e){
+			return false;
+		}
+	}
 		
 
 }

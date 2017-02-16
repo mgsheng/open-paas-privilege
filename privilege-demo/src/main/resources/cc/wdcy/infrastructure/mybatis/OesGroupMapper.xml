@@ -24,6 +24,17 @@
 		select count(*) from oes_group
 	</select>
 	
+	<select id="findByCode" resultMap="oesGroupMap" flushCache="true">
+		select * from oes_group where group_code=#{groupCode}
+	</select>
+	
+	<insert id="saveGroup" parameterType="OesGroup" flushCache="true">
+        insert into oes_group
+        (group_Code,group_name,group_type_name,group_type)
+        values
+        (#{groupCode},#{groupName},#{groupTypeName},#{groupType})
+    </insert>
+    
 	<!-- <select id="findByGroupId" resultMap="privilegeGroupMap" flushCache="true">
          select * from privilege_group
          where  group_id = #{groupId}

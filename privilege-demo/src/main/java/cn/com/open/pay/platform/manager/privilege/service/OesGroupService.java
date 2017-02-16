@@ -9,5 +9,9 @@ public interface OesGroupService {
 	List<OesGroup> findAllByPage(int startRow, int pageSize);
 
 	int findAllCount();
+
+	OesGroup findByCode(String groupCode);
+
+	Boolean saveGroup(OesGroup g);
     
 }

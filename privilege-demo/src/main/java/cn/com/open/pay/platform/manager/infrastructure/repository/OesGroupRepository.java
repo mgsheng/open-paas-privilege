@@ -18,4 +18,8 @@ public interface OesGroupRepository extends Repository {
 
 	int findAllCount();
 
+	OesGroup findByCode(String groupCode);
+
+	void saveGroup(OesGroup g);
+
 }
