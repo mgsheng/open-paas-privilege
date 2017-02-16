@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.omg.CORBA.OBJ_ADAPTER;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ import cn.com.open.pay.platform.manager.privilege.model.PrivilegeOperation;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource1;
 import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
+import cn.com.open.pay.platform.manager.privilege.service.OesUserService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGetSignatureService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeResourceService;
@@ -48,7 +50,8 @@ public class ManagerUserController extends BaseControllerUtil {
 	private static final Logger log = LoggerFactory.getLogger(ManagerUserController.class);
 	@Autowired
 	private UserService userService;
-
+	@Autowired
+	private OesUserService oesUserService;
 	@Autowired
 	private PrivilegeLogService privilegeLogService;
 	@Autowired
@@ -92,7 +95,7 @@ public class ManagerUserController extends BaseControllerUtil {
 			throws UnsupportedEncodingException {
 		log.info("-------------------------toRole       start------------------------------------");
 		String id = request.getParameter("id");
-		String appId=request.getParameter("appId");
+		String appId = request.getParameter("appId");
 		String userName = request.getParameter("userName");
 		id = (id == null ? null : new String(id.getBytes("iso-8859-1"), "utf-8"));
 		userName = (userName == null ? null : new String(userName.getBytes("iso-8859-1"), "utf-8"));
@@ -112,13 +115,15 @@ public class ManagerUserController extends BaseControllerUtil {
 			throws UnsupportedEncodingException {
 		log.info("-------------------------toFunction       start------------------------------------");
 		String id = request.getParameter("id");
-		String appId=request.getParameter("appId");
+		String appId = request.getParameter("appId");
 		String userName = request.getParameter("userName");
+		String groupId = request.getParameter("groupId");
 		id = (id == null ? null : new String(id.getBytes("iso-8859-1"), "utf-8"));
 		userName = (userName == null ? null : new String(userName.getBytes("iso-8859-1"), "utf-8"));
 		model.addAttribute("id", id);
 		model.addAttribute("userName", userName);
 		model.addAttribute("appId", appId);
+		model.addAttribute("groupId", groupId);
 		return "show/authorizeFunction";
 	}
 
@@ -137,7 +142,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		String function = request.getParameter("function");
 		String resource = request.getParameter("resource");
 		String userName = request.getParameter("userName");
-		String appId=request.getParameter("appId");
+		String appId = request.getParameter("appId");
 		Boolean boo = false;
 		JSONObject jsonobj = new JSONObject();
 		Map<String, Object> Signature = privilegeGetSignatureService.getSignature(appId);
@@ -224,7 +229,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		String appUserId = request.getParameter("id");
 		String role = request.getParameter("role");
 		String roleId = request.getParameter("roleId");
-		String appId = request.getParameter("appId"); 
+		String appId = request.getParameter("appId");
 		String deptId = null;
 		String groupId = null;
 		String privilegeFunId = null;
@@ -241,7 +246,8 @@ public class ManagerUserController extends BaseControllerUtil {
 			if (!("0").equals(jsonObject.get("status"))) {
 				deptId = (String) (jsonObject.get("deptId").equals("null") ? "" : jsonObject.get("deptId"));
 				groupId = (String) (jsonObject.get("groupId").equals("null") ? "" : jsonObject.get("groupId"));
-				privilegeFunId = (String) (jsonObject.get("privilegeFunId").equals("null") ? "": jsonObject.get("privilegeFunId"));
+				privilegeFunId = (String) (jsonObject.get("privilegeFunId").equals("null") ? ""
+						: jsonObject.get("privilegeFunId"));
 				resourceId = (String) (jsonObject.get("resourceId").equals("null") ? "" : jsonObject.get("resourceId"));
 				boo = true;
 			} else {
@@ -251,7 +257,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		} else {
 			boo = false;
 		}
-		
+
 		if (role != null && boo) {
 			// 添加勾选的角色
 			Map<String, Object> signature = privilegeGetSignatureService.getSignature(appId);
@@ -311,31 +317,56 @@ public class ManagerUserController extends BaseControllerUtil {
 
 	@RequestMapping(value = "tree")
 	public void getModelTree(HttpServletRequest request, HttpServletResponse response) {
-		String appId=request.getParameter("appId");
-		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
-		map.put("appId", appId);
-		String s = sendPost(appMenuRedisUrl, map);
-		JSONObject obj = JSONObject.fromObject(s);// 将json字符串转换为json对象
-		JSONArray objArray = (JSONArray) obj.get("menuList");
-		// 将json对象转换为java对象
-		List<PrivilegeMenu> menuList = JSONArray.toList(objArray, PrivilegeMenu.class);
-		String s1 = sendPost(appResRedisUrl, map);
-		JSONObject obj1 = new JSONObject().fromObject(s1);// 将json字符串转换为json对象
-		JSONArray obj1Array = (JSONArray) obj1.get("resourceList");
-		JSONArray obj2Array = (JSONArray) obj1.get("functionList");
-		String operation = sendPost(getAllOperationUrl, map);
-		obj = JSONObject.fromObject(operation);
-		objArray = (JSONArray) obj.get("operationList");
-		// 将json对象转换为java对象
-		List<PrivilegeOperation> operationList = JSONArray.toList(objArray, PrivilegeOperation.class);
-		List<PrivilegeResource1> resourceList = JSONArray.toList(obj1Array, PrivilegeResource1.class);
-		List<PrivilegeFunction> functionList = JSONArray.toList(obj2Array, PrivilegeFunction.class);
-		List<TreeNode> nodes = convertTreeNodeList(menuList);
-		JSONArray jsonArr = JSONArray.fromObject(buildTree(nodes, resourceList, functionList, operationList));
+		JSONArray jsonArr=null;
+		Map<String, Object> map = new HashMap<String,Object>();
 		if (request.getParameter("id") != null) {
 			jsonArr = new JSONArray();
+			map.put("status", "1");
+			map.put("tree",jsonArr );
+			WebUtils.writeJsonToMap(response, map);
+			return;
 		}
-		WebUtils.writeJson(response, jsonArr);
+		
+		String groupId = request.getParameter("groupId");
+		String appId = request.getParameter("appId");
+		map.put("appId", appId);
+		map.put("groupId", groupId);
+		String url="http://localhost:8080/privilege-service/groupTest/getGroupPrivilegeRedis";
+		String s = sendPost(url, map);
+		if (s != null && !("").equals(s)) {
+			JSONObject jsonObject = JSONObject.fromObject(s);
+			if (!("0").equals(jsonObject.get("status"))) {
+				JSONObject obj = JSONObject.fromObject(s);// 将json字符串转换为json对象
+				JSONArray menuArray = (JSONArray) obj.get("menuList");
+				JSONArray resourceArray = (JSONArray) obj.get("resourceList");
+				// 将json对象转换为java对象
+				List<PrivilegeMenu> menuList = JSONArray.toList(menuArray, PrivilegeMenu.class);
+				String s1 = sendPost(appResRedisUrl, map);
+				JSONObject obj1 = new JSONObject().fromObject(s1);// 将json字符串转换为json对象
+				//JSONArray obj1Array = (JSONArray) obj1.get("resourceList");
+				JSONArray functionArray = (JSONArray) obj1.get("functionList");
+				String operation = sendPost(getAllOperationUrl, map);
+				obj = JSONObject.fromObject(operation);
+				JSONArray operationArray = (JSONArray) obj.get("operationList");
+				// 将json对象转换为java对象
+				List<PrivilegeOperation> operationList = JSONArray.toList(operationArray, PrivilegeOperation.class);
+				List<PrivilegeResource1> resourceList = JSONArray.toList(resourceArray, PrivilegeResource1.class);
+				List<PrivilegeFunction> functionList = JSONArray.toList(functionArray, PrivilegeFunction.class);
+				List<TreeNode> nodes = convertTreeNodeList(menuList);
+				jsonArr = JSONArray.fromObject(buildTree(nodes, resourceList, functionList, operationList));
+				map.clear();
+				map.put("status", "1");
+				map.put("tree",jsonArr );
+				WebUtils.writeJsonToMap(response, map);
+			} else {
+				System.err.println("组织结构不存在");
+				jsonArr = new JSONArray();
+				map.put("status", "0");
+				map.put("tree",jsonArr );
+				WebUtils.writeJsonToMap(response, map);
+			}
+		} 
+		
 	}
 
 	/**
@@ -455,25 +486,27 @@ public class ManagerUserController extends BaseControllerUtil {
 	public void function(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
 		log.info("-------------------------function start------------------------------------");
 		String id = request.getParameter("id");
-		String appId=request.getParameter("appId");
+		String appId = request.getParameter("appId");
 		id = (id == null ? null : new String(id.getBytes("iso-8859-1"), "utf-8"));
 		Map<String, Object> Signature = privilegeGetSignatureService.getSignature(appId);
 		Signature.put("appId", appId);
 		Signature.put("appUserId", id);
 		String reslut = sendPost(getUserPrivilegeUrl, Signature);
-		String[] functionIds=null;
-		String[] resourceIds=null;
+		String[] functionIds = null;
+		String[] resourceIds = null;
 		if (reslut != null && !("").equals(reslut)) {
 			JSONObject jsonObject = JSONObject.fromObject(reslut);
 			if (!("0").equals(jsonObject.get("status"))) {
-				//用户表中 资源 与功能
-				String privilegeResId = (String) (jsonObject.get("resourceId").equals("null") ? "": jsonObject.get("resourceId"));
-				String privilegeFunId = (String) (jsonObject.get("privilegeFunId").equals("null") ? "": jsonObject.get("privilegeFunId"));
+				// 用户表中 资源 与功能
+				String privilegeResId = (String) (jsonObject.get("resourceId").equals("null") ? ""
+						: jsonObject.get("resourceId"));
+				String privilegeFunId = (String) (jsonObject.get("privilegeFunId").equals("null") ? ""
+						: jsonObject.get("privilegeFunId"));
 				if (!("").equals(privilegeFunId)) {
-					functionIds= privilegeFunId.split(",");
+					functionIds = privilegeFunId.split(",");
 				}
 				if (!("").equals(privilegeResId)) {
-					resourceIds= privilegeResId.split(",");
+					resourceIds = privilegeResId.split(",");
 				}
 			} else {
 				System.err.println("该用户没有功能");
@@ -498,14 +531,14 @@ public class ManagerUserController extends BaseControllerUtil {
 	@RequestMapping("role")
 	public void role(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
 		log.info("-------------------------role        start------------------------------------");
-		Map<String, Object> user=(Map<String, Object>) request.getSession().getAttribute("user");
-		String groupId=null;
-		if (user!=null) {
-			groupId=user.get("groupId").equals("null")?null:(String)user.get("groupId");
+		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
+		String groupId = null;
+		if (user != null) {
+			groupId = user.get("groupId").equals("null") ? null : (String) user.get("groupId");
 		}
 		String id = request.getParameter("id");
 		id = (id == null ? null : new String(id.getBytes("iso-8859-1"), "utf-8"));
-		String appId=request.getParameter("appId");
+		String appId = request.getParameter("appId");
 		// 查找当前用户角色
 		Map<String, Object> Signature = privilegeGetSignatureService.getSignature(appId);
 		Signature.put("appId", appId);
@@ -521,20 +554,6 @@ public class ManagerUserController extends BaseControllerUtil {
 				System.err.println("该用户没有角色");
 			}
 		}
-		// appRole
-		Map<String, Object> SignatureMap = new HashMap<String, Object>();
-		SignatureMap.put("appId", appId);
-		SignatureMap.put("groupId", groupId);
-		reslut = sendPost(queryRoleUrl, SignatureMap);
-		List<Map<String, Object>> RoleList = null;
-		if (reslut != null && !("").equals(reslut)) {
-			JSONObject jsonObject = JSONObject.fromObject(reslut);
-			if (!("0").equals(jsonObject.get("status"))) {
-				RoleList = (List<Map<String, Object>>) jsonObject.get("roleList");
-			} else {
-				System.err.println("该app没有角色");
-			}
-		}
 		// 当前第几页
 		String page = request.getParameter("page");
 		// 每页显示的记录数
@@ -543,49 +562,40 @@ public class ManagerUserController extends BaseControllerUtil {
 		int currentPage = Integer.parseInt((page == null || page == "0") ? "1" : page);
 		// 每页显示条数
 		int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10" : rows);
-		// 每页的开始记录 第一页为1 第二页为number +1
 		int startRow = (currentPage - 1) * pageSize;
-		int endRow = startRow + (pageSize - 1);
-
-		/* 分页 */
-		// appRole 总数
-		int roleNum = 0;
-		List<Map<String, Object>> roleListPage = new ArrayList<Map<String, Object>>();
-		if (RoleList != null) {
-			roleNum = RoleList.size();
-			for (int i = startRow; i <= endRow; i++) {
-				if (i >= RoleList.size()) {
-					break;
-				} else {
-					roleListPage.add(RoleList.get(i));
-				}
+		// appRole
+		Map<String, Object> SignatureMap = new HashMap<String, Object>();
+		SignatureMap.put("appId", appId);
+		SignatureMap.put("groupId", groupId);
+		SignatureMap.put("start", startRow);
+		SignatureMap.put("limit", pageSize);
+		reslut = sendPost(queryRoleUrl, SignatureMap);
+		List<Map<String, Object>> RoleList = null;
+		int count = 0;
+		if (reslut != null && !("").equals(reslut)) {
+			JSONObject jsonObject = JSONObject.fromObject(reslut);
+			if (!("0").equals(jsonObject.get("status"))) {
+				RoleList = (List<Map<String, Object>>) jsonObject.get("roleList");
+				count = jsonObject.getInt("total");
+			} else {
+				System.err.println("该app没有角色");
 			}
 		}
-
 		JSONObject jsonObjArr = new JSONObject();
-
-		List<Map<String, Object>> list1 = new ArrayList<Map<String, Object>>();
-		for (Map<String, Object> map : roleListPage) {
+		for (Map<String, Object> map : RoleList) {
 			String roleId = (String) map.get("privilegeRoleId");
-			String roleName = (String) map.get("roleName");
-			Integer status = (Integer) map.get("status");
-			Map<String, Object> roleMap = new LinkedHashMap<String, Object>();
-			roleMap.put("id", roleId);
-			roleMap.put("name", roleName);
-			roleMap.put("status", status);
 			if (userRoleList == null || userRoleList.size() <= 0) {
-				roleMap.put("checked", false);
+				map.put("checked", false);
 			} else {
 				for (Map<String, Object> map2 : userRoleList) {
 					if (roleId.equals(map2.get("privilegeRoleId"))) {
-						roleMap.put("checked", true);
+						map.put("checked", true);
 					}
 				}
 			}
-			list1.add(roleMap);
 		}
-		JSONArray jsonArr = JSONArray.fromObject(list1);
-		jsonObjArr.put("total", roleNum);
+		JSONArray jsonArr = JSONArray.fromObject(RoleList);
+		jsonObjArr.put("total", count);
 		jsonObjArr.put("rows", jsonArr);
 		WebUtils.writeJson(response, jsonObjArr);
 		return;
@@ -741,24 +751,23 @@ public class ManagerUserController extends BaseControllerUtil {
 	 * @return 返回的是 jsp文件名路径及文件名
 	 */
 	@RequestMapping(value = "userList")
-	public String userList(HttpServletRequest request, HttpServletResponse response,Model model) {
+	public String userList(HttpServletRequest request, HttpServletResponse response, Model model) {
 		log.info("-------------------------userlist       start------------------------------------");
-		String appId=request.getParameter("appId");
-		model.addAttribute("appId",appId);
+		String appId = request.getParameter("appId");
+		model.addAttribute("appId", appId);
 		return "show/userlist";
 	}
 
 	@RequestMapping("findUserList")
 	public void findUserList(HttpServletRequest request, HttpServletResponse response) {
-		
-		Map<String, Object> user=(Map<String, Object>) request.getSession().getAttribute("user");
-		String groupId=null;
-		if (user!=null) {
-			groupId=user.get("groupId").equals("null")?null:(String)user.get("groupId");
+
+		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
+		String groupId = null;
+		if (user != null) {
+			groupId = user.get("groupId").equals("null") ? null : (String) user.get("groupId");
 		}
 		// 当前第几页
 		String page = request.getParameter("page");
-		String appId = request.getParameter("appId");
 		// 每页显示的记录数
 		String rows = request.getParameter("rows");
 		// 当前页
@@ -767,14 +776,12 @@ public class ManagerUserController extends BaseControllerUtil {
 		int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10" : rows);
 		// 每页的开始记录 第一页为1 第二页为number +1
 		int startRow = (currentPage - 1) * pageSize;
-		Map<String, Object> map = new HashMap<String,Object>();
-		map.put("groupId", groupId);
-		map.put("appId", appId);
-		map.put("start", startRow);
-		map.put("limit", pageSize);
-		String result = sendPost(queryUserUrl, map);
-		JSONObject object = JSONObject.fromObject(result);
-		WebUtils.writeJson(response, object);
+		List<Map<String, Object>> oesUserList=oesUserService.getUserListByPage(groupId, startRow, pageSize);
+		int count=oesUserService.getUserCountByGroupId(groupId);
+		Map<String, Object> map=new HashMap<String,Object>();
+		map.put("rows", oesUserList);
+		map.put("total", count);
+		WebUtils.writeJson(response, JSONObject.fromObject(map));
 		return;
 	}
 
