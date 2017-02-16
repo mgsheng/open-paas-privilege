@@ -71,10 +71,6 @@ public class ManagerUserController extends BaseControllerUtil {
 	private String appResRedisUrl;
 	@Value("#{properties['privilege-get-operation-uri']}")
 	private String getAllOperationUrl;
-	@Value("#{properties['privilege-usermenu-redis-query-uri']}")
-	private String userMenuRedisUrl;
-	@Value("#{properties['query-privilege-user-uri']}")
-	private String queryUserUrl;
 	@Value("#{properties['privilege-get-role-uri']}")
 	private String queryRoleUrl;
 	@Value("#{properties['privilege-group-redis-query-uri']}")
@@ -328,7 +324,7 @@ public class ManagerUserController extends BaseControllerUtil {
 			JSONObject jsonObject = JSONObject.fromObject(s);
 			//status为1时，该组织机构存在，构建tree
 			if (!("0").equals(jsonObject.get("status"))) {
-				map.clear();
+				
 				JSONObject obj = JSONObject.fromObject(s);// 将json字符串转换为json对象
 				JSONArray menuArray = (JSONArray) obj.get("menuList");
 				//如果menuList不为空则构建tree,否则直接返回无权限状态
