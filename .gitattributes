@@ -208,6 +208,7 @@ privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/rep
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/MerchantOrderOfflineRepository.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/MerchantOrderRefundRepository.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/OesGroupRepository.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/OesUserRepository.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/PayChannelDictionaryRepository.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/PayChannelRateRepository.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/PayChannelSwitchRepository.java -text
