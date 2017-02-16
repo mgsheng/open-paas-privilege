@@ -34,13 +34,17 @@ public class PrivilegeRoleController extends BaseControllerUtil {
 		log.info("----getRole start---");
 		String appId = request.getParameter("appId");
 		String groupId = request.getParameter("groupId");
-		if (!paraMandatoryCheck(Arrays.asList(appId))) {
+		String start=request.getParameter("start");
+    	String limit=request.getParameter("limit");
+		if (!paraMandatoryCheck(Arrays.asList(appId,start,limit))) {
 			paraMandaChkAndReturn(10000, response, "必传参数中有空值");
 			return;
 		}
-		List<PrivilegeRole> roleList=service.getRoleListByAppIdAndGroupId(appId, groupId);
+		List<PrivilegeRole> roleList=service.getRoleListByAppIdAndGroupId(appId, groupId,Integer.parseInt(start) , Integer.parseInt(limit));
+		int count=service.getRoleCountByAppIdAndGroupId(appId, groupId);
 		Map<String, Object> roleMap = new HashMap<String, Object>();
 		roleMap.put("roleList", roleList);
+		roleMap.put("total", count);
 		writeSuccessJson(response, roleMap);
 		return;
 	}
