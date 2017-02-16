@@ -71,8 +71,10 @@ public class GroupGetPrivilegeController extends BaseControllerUtil{
 		if(!f){
 			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
 			return;
-		}
-    	List<PrivilegeGroupResource>lists=privilegeGroupResourceService.getPgrs(groupId,start, limit);
+		}		
+		
+		List<PrivilegeGroupResource> lists = privilegeGroupResourceService.getPgrs(groupId);
+    	//List<PrivilegeGroupResource>lists=privilegeGroupResourceService.getPgrs(groupId,start, limit);
     	if(lists!=null&&lists.size()>0){
 
     		Map<String, Object> groupMap=new HashMap<String, Object>();
