@@ -260,8 +260,8 @@ function addNav(data) {
 			公安机关备案号：110102005577号-4</div>
 	</div>
 	<div region="west" hide="true" split="true" title="导航菜单"
-		style="width:230px;" id="west">
-		<div id="nav" class="easyui-accordion" fit="true" border="false"  >
+		style="width:230px;overflow-y:auto;" id="west">
+		<div id="nav" class="easyui-accordion" border="false"  >
 			<!--  导航内容 -->
 			
 		</div>
