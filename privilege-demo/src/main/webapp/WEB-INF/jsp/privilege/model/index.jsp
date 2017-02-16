@@ -18,6 +18,7 @@
 <body>
 	<div class="easyui-panel" title="模块管理" style="width:100%;max-width:100%;padding:20px 30px;height:540px;">
 	<div style="padding:2px 5px; text-align: right;">
+		<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" id="reload" onclick="reload()">reload</a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="addRoot">AddRoot</a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="addMenu">AddMenu</a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="add">AddResFun</a>
