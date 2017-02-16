@@ -166,8 +166,8 @@ public class PrivilegeRoleServiceImpl implements PrivilegeRoleService {
 	}
 
 	@Override
-	public List<PrivilegeRole> getRoleListByAppIdAndGroupId(String appId, String groupId) {
-		return privilegeRoleRepository.getRoleListByAppIdAndGroupId(appId, groupId);
+	public List<PrivilegeRole> getRoleListByAppIdAndGroupId(String appId, String groupId,int start, int limit) {
+		return privilegeRoleRepository.getRoleListByAppIdAndGroupId(appId, groupId,start,limit);
 	}
 
 	@Override
