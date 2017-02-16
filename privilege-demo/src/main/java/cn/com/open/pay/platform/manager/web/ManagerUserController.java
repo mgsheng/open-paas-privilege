@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
-import org.omg.CORBA.OBJ_ADAPTER;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,18 +63,12 @@ public class ManagerUserController extends BaseControllerUtil {
 	private String getUserPrivilegeUrl;
 	@Value("#{properties['modify-privilege-user-uri']}")
 	private String moditUserPrivilegeUrl;
-	@Value("#{properties['privilege-approle-redis-query-uri']}")
-	private String getAppRoleRedis;
 	@Value("#{properties['appId']}")
 	private String appId;
 	@Value("#{properties['add-privilege-user-uri']}")
 	private String addPrivilegeUserUrl;
-	@Value("#{properties['privilege-appmenu-redis-query-uri']}")
-	private String appMenuRedisUrl;
 	@Value("#{properties['privilege-appres-redis-query-uri']}")
 	private String appResRedisUrl;
-	@Value("#{properties['privilege-operation-name-uri']}")
-	private String getOperationNameUrl;
 	@Value("#{properties['privilege-get-operation-uri']}")
 	private String getAllOperationUrl;
 	@Value("#{properties['privilege-usermenu-redis-query-uri']}")
@@ -84,6 +77,8 @@ public class ManagerUserController extends BaseControllerUtil {
 	private String queryUserUrl;
 	@Value("#{properties['privilege-get-role-uri']}")
 	private String queryRoleUrl;
+	@Value("#{properties['privilege-group-redis-query-uri']}")
+	private String getGroupCacheUrl;
 
 	/**
 	 * 跳转到用户信息列表的页面
@@ -273,10 +268,8 @@ public class ManagerUserController extends BaseControllerUtil {
 			if (reslut != null && !("").equals(reslut)) {
 				JSONObject jsonObject = JSONObject.fromObject(reslut);
 				if (!("0").equals(jsonObject.get("status"))) {
-					System.err.println("添加成功");
 					boo = true;
 				} else {
-					System.err.println("添加失败");
 					boo = false;
 				}
 			} else {
@@ -298,11 +291,9 @@ public class ManagerUserController extends BaseControllerUtil {
 			if (reslut != null && !("").equals(reslut)) {
 				JSONObject jsonObject = JSONObject.fromObject(reslut);
 				if (!("0").equals(jsonObject.get("status"))) {
-					System.err.println("删除成功");
 					boo = true;
 				} else {
 					boo = false;
-					System.err.println("删除失败");
 				}
 			} else {
 				boo = false;
@@ -319,6 +310,7 @@ public class ManagerUserController extends BaseControllerUtil {
 	public void getModelTree(HttpServletRequest request, HttpServletResponse response) {
 		JSONArray jsonArr=null;
 		Map<String, Object> map = new HashMap<String,Object>();
+		//防止组织结构菜单树 异步加载
 		if (request.getParameter("id") != null) {
 			jsonArr = new JSONArray();
 			map.put("status", "1");
@@ -326,40 +318,44 @@ public class ManagerUserController extends BaseControllerUtil {
 			WebUtils.writeJsonToMap(response, map);
 			return;
 		}
-		
 		String groupId = request.getParameter("groupId");
 		String appId = request.getParameter("appId");
 		map.put("appId", appId);
 		map.put("groupId", groupId);
-		String url="http://localhost:8080/privilege-service/groupTest/getGroupPrivilegeRedis";
-		String s = sendPost(url, map);
+		//获取组织结构缓存
+		String s = sendPost(getGroupCacheUrl, map);
 		if (s != null && !("").equals(s)) {
 			JSONObject jsonObject = JSONObject.fromObject(s);
+			//status为1时，该组织机构存在，构建tree
 			if (!("0").equals(jsonObject.get("status"))) {
+				map.clear();
 				JSONObject obj = JSONObject.fromObject(s);// 将json字符串转换为json对象
 				JSONArray menuArray = (JSONArray) obj.get("menuList");
-				JSONArray resourceArray = (JSONArray) obj.get("resourceList");
-				// 将json对象转换为java对象
-				List<PrivilegeMenu> menuList = JSONArray.toList(menuArray, PrivilegeMenu.class);
-				String s1 = sendPost(appResRedisUrl, map);
-				JSONObject obj1 = new JSONObject().fromObject(s1);// 将json字符串转换为json对象
-				//JSONArray obj1Array = (JSONArray) obj1.get("resourceList");
-				JSONArray functionArray = (JSONArray) obj1.get("functionList");
-				String operation = sendPost(getAllOperationUrl, map);
-				obj = JSONObject.fromObject(operation);
-				JSONArray operationArray = (JSONArray) obj.get("operationList");
-				// 将json对象转换为java对象
-				List<PrivilegeOperation> operationList = JSONArray.toList(operationArray, PrivilegeOperation.class);
-				List<PrivilegeResource1> resourceList = JSONArray.toList(resourceArray, PrivilegeResource1.class);
-				List<PrivilegeFunction> functionList = JSONArray.toList(functionArray, PrivilegeFunction.class);
-				List<TreeNode> nodes = convertTreeNodeList(menuList);
-				jsonArr = JSONArray.fromObject(buildTree(nodes, resourceList, functionList, operationList));
-				map.clear();
-				map.put("status", "1");
-				map.put("tree",jsonArr );
+				//如果menuList不为空则构建tree,否则直接返回无权限状态
+				if (menuArray.size()>0) {
+					JSONArray resourceArray = (JSONArray) obj.get("resourceList");
+					// 将json对象转换为java对象
+					List<PrivilegeMenu> menuList = JSONArray.toList(menuArray, PrivilegeMenu.class);
+					String s1 = sendPost(appResRedisUrl, map);
+					JSONObject obj1 = new JSONObject().fromObject(s1);// 将json字符串转换为json对象
+					JSONArray functionArray = (JSONArray) obj1.get("functionList");
+					String operation = sendPost(getAllOperationUrl, map);
+					obj = JSONObject.fromObject(operation);
+					JSONArray operationArray = (JSONArray) obj.get("operationList");
+					// 将json对象转换为java对象
+					List<PrivilegeOperation> operationList = JSONArray.toList(operationArray, PrivilegeOperation.class);
+					List<PrivilegeResource1> resourceList = JSONArray.toList(resourceArray, PrivilegeResource1.class);
+					List<PrivilegeFunction> functionList = JSONArray.toList(functionArray, PrivilegeFunction.class);
+					List<TreeNode> nodes = convertTreeNodeList(menuList);
+					jsonArr = JSONArray.fromObject(buildTree(nodes, resourceList, functionList, operationList));
+					map.put("status", "1");
+					map.put("tree",jsonArr );
+				}else {
+					map.put("status", "0");
+					map.put("tree",new JSONArray());
+				}
 				WebUtils.writeJsonToMap(response, map);
 			} else {
-				System.err.println("组织结构不存在");
 				jsonArr = new JSONArray();
 				map.put("status", "0");
 				map.put("tree",jsonArr );
