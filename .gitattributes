@@ -265,6 +265,7 @@ privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/Pr
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/PrivilegeRoleDetails.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/TreeNode.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/ManagerService.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/OesGroupService.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/PrivilegeGetSignatureService.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/PrivilegeGroupResourceService.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/PrivilegeGroupService.java -text
@@ -274,6 +275,7 @@ privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/PrivilegeRoleDetailsService.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/PrivilegeRoleService.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/impl/ManagerServiceImpl.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/impl/OesGroupServiceImpl.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/impl/PrivilegeGetSignatureServiceImpl.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/impl/PrivilegeGroupResourceServiceImpl.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/impl/PrivilegeGroupServiceImpl.java -text
@@ -333,6 +335,7 @@ privilege-demo/src/main/java/cn/com/open/pay/platform/manager/web/ManagerRoleCon
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/web/ManagerUserController.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/web/MerchantOrderOfflineController.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/web/MerchantOrderRefundController.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/web/OesGroupController.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/web/PayChannelRateController.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/web/PrivilegeGroupController.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/web/PrivilegeLogController.java -text
