@@ -90,20 +90,6 @@ public class ManagerRoleController extends BaseControllerUtil {
 			groupId = user.get("groupId").equals("null") ? null : (String) user.get("groupId");
 		}
 		String appId = request.getParameter("appId");
-		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
-		map.put("appId", appId);
-		map.put("groupId", groupId);
-		String s = sendPost(queryRoleUrl, map);
-		JSONObject job = JSONObject.fromObject(s);
-		map.clear();
-		List<Map<String, Object>> roles = JSONArray.fromObject(job.get("roleList"));
-		for (Map<String, Object> m : roles) {
-			if ((Integer) (m.get("status")) == 0) {
-				m.put("status", "有效");
-			} else {
-				m.put("status", "无效");
-			}
-		}
 		// 当前第几页
 		String page = request.getParameter("page");
 		// 每页显示的记录数
@@ -112,27 +98,29 @@ public class ManagerRoleController extends BaseControllerUtil {
 		int currentPage = Integer.parseInt((page == null || page == "0") ? "1" : page);
 		// 每页显示条数
 		int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10" : rows);
-		// 每页的开始记录 第一页为1 第二页为number +1
 		int startRow = (currentPage - 1) * pageSize;
-		int endRow = startRow + (pageSize - 1);
-		/* 分页 */
-		// appRole 总数
-		int roleNum = 0;
-		List<Map<String, Object>> roleListPage = new ArrayList<Map<String, Object>>();
-		if (roles != null) {
-			roleNum = roles.size();
-			for (int i = startRow; i <= endRow; i++) {
-				if (i >= roles.size()) {
-					break;
+		// appRole
+		Map<String, Object> SignatureMap = new HashMap<String, Object>();
+		SignatureMap.put("appId", appId);
+		SignatureMap.put("groupId", groupId);
+		SignatureMap.put("start", startRow);
+		SignatureMap.put("limit", pageSize);
+		String s = sendPost(queryRoleUrl, SignatureMap);
+		JSONObject job = JSONObject.fromObject(s);
+		SignatureMap.clear();
+		List<Map<String, Object>> roles = JSONArray.fromObject(job.get("roleList"));
+		if (roles.size()>0) {
+			for (Map<String, Object> m : roles) {
+				if ((Integer) (m.get("status")) == 0) {
+					m.put("status", "有效");
 				} else {
-					roleListPage.add(roles.get(i));
+					m.put("status", "无效");
 				}
 			}
 		}
-		
-		map.put("rows", roleListPage);
-		map.put("total", roleNum);
-		WebUtils.writeErrorJson(response, map);
+		SignatureMap.put("rows", roles);
+		SignatureMap.put("total", job.getInt("total"));
+		WebUtils.writeErrorJson(response, SignatureMap);
 	}
 
 	/**
