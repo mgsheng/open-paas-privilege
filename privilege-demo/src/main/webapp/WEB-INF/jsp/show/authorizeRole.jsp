@@ -55,8 +55,8 @@
 					selectOnCheck: true,
 					checkOnSelect: true,
 					columns:[[{ field:'ck',checkbox:true,sortable:true},
-									{ field: 'id', title: 'ID',align:'center',sortable:true,width:'20%'},
-									{ field: 'name', title: '角色名称',align:'center',sortable:true,width:'20%'},
+									{ field: 'privilegeRoleId', title: 'ID',align:'center',sortable:true,width:'20%'},
+									{ field: 'roleName', title: '角色名称',align:'center',sortable:true,width:'20%'},
 									{ field: 'status', title: '状态',align:'center',sortable:true,width:'20%',
 										formatter : function(value, row, index) {  
 						                    if(value==0){  
@@ -70,7 +70,6 @@
 						if (data.total<1){
                        		$.messager.alert("系统提示","没有符合查询条件的数据!","info");
                   		}         
-                  		console.log(data);          
 						if(data){
 							$.each(data.rows, function(index, item){
 								if(item.checked){
