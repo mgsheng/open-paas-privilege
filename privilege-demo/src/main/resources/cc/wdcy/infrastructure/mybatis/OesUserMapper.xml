@@ -18,7 +18,7 @@
 		ou.user_id as userId FROM oes_user ou,oes_group og 
 		WHERE ou.group_id=og.group_code
 		<if test="groupId != null and groupId !='' " >
-        	og.group_code=#{groupId}
+        	and og.group_code=#{groupId}
      	</if>
      	limit #{start},#{limit}
 	</select>
