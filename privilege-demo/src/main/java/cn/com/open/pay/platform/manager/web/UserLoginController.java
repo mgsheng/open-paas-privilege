@@ -102,14 +102,14 @@ public class UserLoginController extends BaseControllerUtil {
 					JSONObject object = JSONObject.fromObject(result);
 					access_token = (String) object.get("access_token");
 					if (access_token != null && !("").equals(access_token)) {
-						redisClientTemplate.setObjectByTime("8" + AccessTokenPrefix, access_token, 43190);
+						redisClientTemplate.setObjectByTime(AppId + AccessTokenPrefix, access_token, 43190);
 					}
 				}
 			}
 		}
 		String userName = request.getParameter("username").trim();
 		String passWord = request.getParameter("password").trim();
-		String appId = request.getParameter("appId") == null || request.getParameter("appId") == ("") ? "8"
+		String appId = request.getParameter("appId") == null || request.getParameter("appId") == ("") ? AppId
 				: request.getParameter("appId").trim();
 		// 密码aes加密
 		try {
@@ -117,7 +117,7 @@ public class UserLoginController extends BaseControllerUtil {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		parameters = privilegeGetSignatureService.getOauthSignature("8", client_id, access_token);
+		parameters = privilegeGetSignatureService.getOauthSignature(AppId, client_id, access_token);
 		parameters.put("access_token", access_token);
 		parameters.put("client_id", client_id);
 		parameters.put("client_secret", client_secret);
@@ -125,6 +125,7 @@ public class UserLoginController extends BaseControllerUtil {
 		parameters.put("grant_type", "client_credentials");
 		parameters.put("username", userName);
 		parameters.put("password", passWord);
+		parameters.put("pwdtype", "MD5");
 		// 用户登陆
 		String result = sendPost(userLoginUrl, parameters);
 		if (result != null && !("").equals(result)) {
