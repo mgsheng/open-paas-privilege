@@ -13,6 +13,6 @@ import org.springframework.stereotype.Repository;
 public interface OesUserRepository extends Repository {
 	
 	List<Map<String, Object>> getUserListByPage(@Param("groupId") String groupId,@Param("start") int start,@Param("limit") int limit);
-	int getUserCountByGroupId(String groupId);
+	int getUserCountByGroupId(@Param("groupId")String groupId);
 	
 }
