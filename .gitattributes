@@ -356,6 +356,7 @@ privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantOrderIn
 privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantOrderOfflineMapper.xml -text
 privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantOrderRefundMapper.xml -text
 privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/OesGroupMapper.xml -text
+privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/OesUserMapper.xml -text
 privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/PayChannelDictionaryMapper.xml -text
 privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/PayChannelRateMapper.xml -text
 privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/PayChannelSwitchMapper.xml -text

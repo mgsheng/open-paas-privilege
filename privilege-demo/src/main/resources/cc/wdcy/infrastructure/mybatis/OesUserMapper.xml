@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.pay.platform.manager.infrastructure.mybatis.OesUserRepositoryMyBatis">
+	<resultMap type="OesUser" id="userMap">
+		<id property="id" column="id"  jdbcType="INTEGER" />
+		<result property="groupId" column="group_id" jdbcType="VARCHAR"/>
+		<result property="userName" column="user_name" jdbcType="VARCHAR"/>
+		<result property="userId" column="user_id" jdbcType="VARCHAR"/>
+	</resultMap>
+	<sql id="Column_List">
+		id,
+		group_id,
+		user_name,
+		user_id
+	</sql>
+	<select id="getUserListByPage" resultType="java.util.HashMap" flushCache="true">
+		SELECT og.group_name as groupName,ou.Id as Id,ou.group_id as groupId,ou.user_name as userName,
+		ou.user_id as userId FROM oes_user ou,oes_group og 
+		WHERE ou.group_id=og.group_code
+		<if test="groupId != null and groupId !='' " >
+        	og.group_code=#{groupId}
+     	</if>
+     	limit #{start},#{limit}
+	</select>
+	<select id="getUserCountByGroupId"  resultType="java.lang.Integer">
+		SELECT count(1) from oes_user 
+		 <if test="groupId != null and groupId !=''" >
+        	where group_id = #{groupId}
+        </if>
+	</select>
+</mapper>
