@@ -14,7 +14,7 @@ public class OesGroup extends AbstractDomain {
 	private String groupCode;
 	private String groupTypeName;
 	private String groupName;
-	private Date groupType;
+	private String groupType;
 	
 	public Integer getId() {
 		return id;
@@ -34,16 +34,16 @@ public class OesGroup extends AbstractDomain {
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;
 	}
-	public Date getGroupType() {
-		return groupType;
-	}
-	public void setGroupType(Date groupType) {
-		this.groupType = groupType;
-	}
 	public String getGroupTypeName() {
 		return groupTypeName;
 	}
 	public void setGroupTypeName(String groupTypeName) {
 		this.groupTypeName = groupTypeName;
+	}
+	public String getGroupType() {
+		return groupType;
+	}
+	public void setGroupType(String groupType) {
+		this.groupType = groupType;
 	}
 }
