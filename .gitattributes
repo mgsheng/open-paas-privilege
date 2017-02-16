@@ -372,6 +372,7 @@ privilege-demo/src/main/resources/disconf.properties -text
 privilege-demo/src/main/resources/emailtemplate/activation.html -text
 privilege-demo/src/main/resources/emailtemplate/resetpassword.html -text
 privilege-demo/src/main/resources/mybatis.xml -text
+privilege-demo/src/main/resources/oes-privilege-manager.properties -text
 privilege-demo/src/main/resources/pay-platform-manager.properties -text
 privilege-demo/src/main/resources/spring/appCtx-disconf.xml -text
 privilege-demo/src/main/resources/spring/context.xml -text
