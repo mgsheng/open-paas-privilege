@@ -173,6 +173,7 @@ privilege-demo/src/main/java/cn/com/open/pay/platform/manager/department/service
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/department/service/imp/DictTradePaymentServiceImp.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/department/service/imp/ManagerDepartmentServiceImp.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/department/service/imp/MerchantInfoServiceImp.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/dev/OesPrivilegeDev.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/dev/PayManagerDev.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/filter/SessionFilter.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/DictTradeChannelRepositoryMyBatis.java -text
