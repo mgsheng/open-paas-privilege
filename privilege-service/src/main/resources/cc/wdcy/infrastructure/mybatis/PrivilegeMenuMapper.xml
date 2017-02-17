@@ -32,12 +32,9 @@
 	  resource_type
 	</sql>
 	<select id="findMenuByGroupIdAndAppId" resultMap="privilegeMenuMap" flushCache="true">
-		
-		select  pm.* from privilege_group pg,privilege_group_resource pgr,
-		privilege_resource pr,privilege_menu pm
-		WHERE 
-		pg.app_id=#{appId}
-		AND #{groupId}=pgr.group_id AND pgr.resource_id=pr.resource_id AND pr.menu_id=pm.id
+		select  pm.* from privilege_group_resource pgr,privilege_resource pr,privilege_menu pm
+		WHERE pgr.app_id=#{appId} AND #{groupId}=pgr.group_id AND pgr.resource_id=pr.resource_id
+		AND pr.menu_id=pm.id
 	</select>
 	<select id="findMenuByResourceType" resultMap="privilegeMenuMap" flushCache="true">
 		select  * from privilege_menu 
@@ -65,7 +62,6 @@
          where  id = #{menuId} 
          or parent_id=#{menuId}
          and app_id=#{appId}
-        
          limit #{startRow},#{pageSize} 
 	</select>
 	<select id="getMenuListByParentId" resultMap="privilegeMenuMap" flushCache="true">
@@ -76,10 +72,10 @@
         where  id = #{menuId} and app_id=#{appId}
     </select>
     <select id="getMenuListByUserId" resultMap="privilegeMenuMap" flushCache="true">
-        SELECT distinct e.* FROM privilege_user a,privilege_user_role b,privilege_role_resource c,privilege_resource    d,privilege_menu e
-WHERE a.app_userid=#{appUserId}
-         and a.app_id=#{appId}
-AND a.uid=b.user_id AND b.privilege_roleid=c.privilege_roleid AND c.resource_id=d.resource_id AND d.menu_id=e.id and e.app_id=#{appId}
+        SELECT distinct e.* FROM privilege_user a,privilege_user_role b,privilege_role_resource c,
+        privilege_resource d,privilege_menu e WHERE a.app_userid=#{appUserId} and a.app_id=#{appId}
+		AND a.uid=b.user_id AND b.privilege_roleid=c.privilege_roleid AND c.resource_id=d.resource_id
+	    AND d.menu_id=e.id and e.app_id=#{appId}
     </select>
       <select id="getMenuListByAppId" resultMap="privilegeMenuMap" flushCache="true">
        	select * from privilege_menu where app_id=#{appId}
