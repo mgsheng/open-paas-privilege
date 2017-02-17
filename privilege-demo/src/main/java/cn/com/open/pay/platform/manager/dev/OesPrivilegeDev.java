@@ -3,7 +3,10 @@ package cn.com.open.pay.platform.manager.dev;
 public class OesPrivilegeDev {
 	private String appId;
 	private String userPrivilegeUrl;
-	private String client_secret;
+	private String clientSecret;
+	private String clientId;
+	private String grantType;
+	private String pwdType;
 	private String oauthTokenUrl;
 	private String userLoginUrl;
 	private String userModifyPasswordUrl;
@@ -25,6 +28,32 @@ public class OesPrivilegeDev {
 	private String modifyResourceUrl;
 	private String delResourceUrl;
 	
+	
+	
+	public String getGrantType() {
+		return grantType;
+	}
+	public void setGrantType(String grantType) {
+		this.grantType = grantType;
+	}
+	public String getPwdType() {
+		return pwdType;
+	}
+	public void setPwdType(String pwdType) {
+		this.pwdType = pwdType;
+	}
+	public String getClientSecret() {
+		return clientSecret;
+	}
+	public void setClientSecret(String clientSecret) {
+		this.clientSecret = clientSecret;
+	}
+	public String getClientId() {
+		return clientId;
+	}
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
 	public String getUserPrivilegeUrl() {
 		return userPrivilegeUrl;
 	}
@@ -54,12 +83,6 @@ public class OesPrivilegeDev {
 	}
 	public void setAppId(String appId) {
 		this.appId = appId;
-	}
-	public String getClient_secret() {
-		return client_secret;
-	}
-	public void setClient_secret(String client_secret) {
-		this.client_secret = client_secret;
 	}
 	public String getUserLoginUrl() {
 		return userLoginUrl;
