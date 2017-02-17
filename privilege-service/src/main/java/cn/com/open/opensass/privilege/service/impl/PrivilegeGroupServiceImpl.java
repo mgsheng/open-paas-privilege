@@ -1,5 +1,6 @@
 package cn.com.open.opensass.privilege.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -16,10 +17,12 @@ import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeGroupRe
 import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeMenuRepository;
 import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeResourceRepository;
 import cn.com.open.opensass.privilege.model.PrivilegeGroup;
+import cn.com.open.opensass.privilege.model.PrivilegeGroupResource;
 import cn.com.open.opensass.privilege.model.PrivilegeMenu;
 import cn.com.open.opensass.privilege.model.PrivilegeResource;
 import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
+import cn.com.open.opensass.privilege.service.PrivilegeGroupResourceService;
 import cn.com.open.opensass.privilege.service.PrivilegeGroupService;
 import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
 import cn.com.open.opensass.privilege.service.PrivilegeResourceService;
@@ -38,15 +41,14 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 	private PrivilegeGroupRepository privilegeGroupRepository;
 	@Autowired
 	private PrivilegeResourceService privilegeResourceService;
-	
-	@Autowired
-	private PrivilegeMenuRepository privilegeMenuRepository;
 	@Autowired
 	private RedisClientTemplate redisClientTemplate;
 	@Autowired
 	private PrivilegeMenuService privilegeMenuService;
 	@Autowired
 	private RedisDao redisDao;
+	@Autowired
+	private PrivilegeGroupResourceService privilegeGroupResourceService;
 	// 缓存前缀
 	private String groupCachePrefix = RedisConstant.PRIVILEGE_GROUPCACHE;
 	// 缓存间隔符
@@ -80,16 +82,16 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 		return groupPage;
 	}
 
-	// 查询组织机构
+	// 查询组织机构权限
 	@Override
 	public PrivilegeAjaxMessage findGroupPrivilege(String groupId, String appId) {
 		PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
-		/*PrivilegeGroup group = privilegeGroupRepository.findByGroupId(groupId, appId);
-		if (null == group) {
+		List<PrivilegeGroupResource> group =privilegeGroupResourceService.findByGroupIdAndAppId(groupId, appId); 
+		if (group.size()==0) {
 			ajaxMessage.setCode("0");
-			ajaxMessage.setMessage("Group Is Null");
+			ajaxMessage.setMessage("GroupResource Is Null");
 			return ajaxMessage;
-		}*/
+		}
 
 		String PRIVILEGESERVICE_GROUPCACHE_APPID_GROUPID = groupCachePrefix + appId + SIGN + groupId;
 
@@ -99,18 +101,45 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 			log.info("获取到缓存");
 			ajaxMessage.setCode("1");
 			ajaxMessage.setMessage(jsonString);
-			System.err.println("缓存" + jsonString);
 			return ajaxMessage;
 		}
 		log.info("从数据库获取数据");
 		Map<String, Object> redisMap = new HashMap<String, Object>();
-		//redisMap.put("groupName", group.getGroupName());
-		// 根据组Id和appId 查询资源
-		List<PrivilegeResourceVo> resourceList = privilegeResourceService.findByGroupIdAndAppId(groupId, appId);
+		// 根据遍历应用资源缓存，获取该组织机构拥有的资源
+		PrivilegeAjaxMessage message=privilegeResourceService.getAppResRedis(appId);
+		String appRedis=message.getMessage();
+		JSONObject Resobject=JSONObject.fromObject(appRedis);
+		List<Map<String, Object>> resourceVos=(List<Map<String, Object>>) Resobject.get("resourceList");
+		List<Map<String, Object>> resourceList=new ArrayList<Map<String, Object>>();
+		for(PrivilegeGroupResource privilegeGroupResource:group){
+			for(Map<String, Object> resourceVo:resourceVos){
+				if (privilegeGroupResource.getResourceId().equals(resourceVo.get("resourceId"))) {
+					resourceList.add(resourceVo);
+				}
+			}
+		}
 		redisMap.put("resourceList", resourceList);
-		// 根据groupId appId查询菜单
-		List<PrivilegeMenu> menuList = privilegeMenuRepository.findMenuByGroupIdAndAppId(groupId, appId);
-
+		// 根据遍历应用菜单缓存，查找组织机构拥有的菜单
+		message=privilegeMenuService.getAppMenuRedis(appId);
+		appRedis=message.getMessage();
+		JSONObject menuObject=JSONObject.fromObject(appRedis);
+		List<Map<String, Object>> menus=(List<Map<String, Object>>) menuObject.get("menuList");
+		List<PrivilegeMenu> menuList=new ArrayList<PrivilegeMenu>();
+		for (Map<String, Object> resource : resourceList) {
+			for (Map<String, Object> privilegeMenu : menus) {
+				if (privilegeMenu.get("menuId").equals(resource.get("menuId"))) {
+					PrivilegeMenu menu=new PrivilegeMenu();
+					menu.id((String) privilegeMenu.get("menuId"));
+					menu.setAppId((String)privilegeMenu.get("appId"));
+					menu.setMenuName((String)privilegeMenu.get("menuName"));
+					menu.setParentId((String)privilegeMenu.get("parentId"));
+					menu.setMenuRule((String)privilegeMenu.get("menuRule"));
+					menu.setDisplayOrder((Integer)privilegeMenu.get("displayOrder"));
+					menu.setMenuLevel((Integer)privilegeMenu.get("menuLevel"));
+					menuList.add(menu);
+				}
+			}
+		}
 		Set<PrivilegeMenuVo> privilegeMenuVoSet = new HashSet<PrivilegeMenuVo>();
 		// 获取所有父菜单
 		Set<PrivilegeMenuVo> allMenu = privilegeMenuService.getAllMenuByUserId(menuList, privilegeMenuVoSet);
