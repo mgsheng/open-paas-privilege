@@ -13,5 +13,7 @@ public interface OesGroupService {
 	OesGroup findByCode(String groupCode);
 
 	Boolean saveGroup(OesGroup g);
+	
+	List<OesGroup> findAll();
     
 }
