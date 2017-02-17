@@ -14,9 +14,19 @@ public class PrivilegeMenuVo implements Serializable {
     private int menuLevel;
     private int displayOrder;
     private String menuCode;
+    private String appId;
     private int status;
 
-    public String getMenuId() {
+    
+    public String getAppId() {
+		return appId;
+	}
+
+	public void setAppId(String appId) {
+		this.appId = appId;
+	}
+
+	public String getMenuId() {
         return menuId;
     }
 
