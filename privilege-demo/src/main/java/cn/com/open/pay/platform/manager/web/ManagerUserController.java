@@ -2,6 +2,7 @@ package cn.com.open.pay.platform.manager.web;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -19,16 +20,16 @@ import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import cn.com.open.pay.platform.manager.department.model.Department;
+import cn.com.open.pay.platform.manager.dev.OesPrivilegeDev;
 import cn.com.open.pay.platform.manager.log.service.PrivilegeLogService;
 import cn.com.open.pay.platform.manager.login.model.User;
 import cn.com.open.pay.platform.manager.login.service.UserService;
+import cn.com.open.pay.platform.manager.privilege.model.OesGroup;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeFunction;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
@@ -36,6 +37,7 @@ import cn.com.open.pay.platform.manager.privilege.model.PrivilegeOperation;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource1;
 import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
+import cn.com.open.pay.platform.manager.privilege.service.OesGroupService;
 import cn.com.open.pay.platform.manager.privilege.service.OesUserService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGetSignatureService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
@@ -59,22 +61,10 @@ public class ManagerUserController extends BaseControllerUtil {
 	private PrivilegeResourceService privilegeResourceService;
 	@Autowired
 	private PrivilegeGetSignatureService privilegeGetSignatureService;
-	@Value("#{properties['get-privilege-user-uri']}")
-	private String getUserPrivilegeUrl;
-	@Value("#{properties['modify-privilege-user-uri']}")
-	private String moditUserPrivilegeUrl;
-	@Value("#{properties['appId']}")
-	private String appId;
-	@Value("#{properties['add-privilege-user-uri']}")
-	private String addPrivilegeUserUrl;
-	@Value("#{properties['privilege-appres-redis-query-uri']}")
-	private String appResRedisUrl;
-	@Value("#{properties['privilege-get-operation-uri']}")
-	private String getAllOperationUrl;
-	@Value("#{properties['privilege-get-role-uri']}")
-	private String queryRoleUrl;
-	@Value("#{properties['privilege-group-redis-query-uri']}")
-	private String getGroupCacheUrl;
+	@Autowired
+	private OesPrivilegeDev oesPrivilegeDev;
+	@Autowired
+	private OesGroupService oesGroupService;
 
 	/**
 	 * 跳转到用户信息列表的页面
@@ -139,8 +129,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		Map<String, Object> Signature = privilegeGetSignatureService.getSignature(appId);
 		Signature.put("appId", appId);
 		Signature.put("appUserId", id);
-		String reslut = sendPost(getUserPrivilegeUrl, Signature);
-		List<Map<String, Object>> userRoleList = null;
+		String reslut = sendPost(oesPrivilegeDev.getUserPrivilegeUrl(), Signature);
 		if (reslut != null && !("").equals(reslut)) {
 			JSONObject jsonObject = JSONObject.fromObject(reslut);
 			if (!("0").equals(jsonObject.get("status"))) {
@@ -155,7 +144,7 @@ public class ManagerUserController extends BaseControllerUtil {
 					map.put("resourceId", resource);
 					map.put("privilegeFunId", function);
 					map.put("appUserName", userName);
-					reslut = sendPost(addPrivilegeUserUrl, map);
+					reslut = sendPost(oesPrivilegeDev.getAddPrivilegeUserUrl(), map);
 					if (reslut != null && !("").equals(reslut)) {
 						jsonObject = JSONObject.fromObject(reslut);
 						if (!("0").equals(jsonObject.get("status"))) {
@@ -186,7 +175,7 @@ public class ManagerUserController extends BaseControllerUtil {
 			signature.put("method", "1");
 			signature.put("resourceId", resource);
 			signature.put("privilegeFunId", function);
-			reslut = sendPost(moditUserPrivilegeUrl, signature);
+			reslut = sendPost(oesPrivilegeDev.getModitUserPrivilegeUrl(), signature);
 			if (reslut != null && !("").equals(reslut)) {
 				JSONObject jsonObject = JSONObject.fromObject(reslut);
 				if (!("0").equals(jsonObject.get("status"))) {
@@ -231,7 +220,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		Signature.put("appId", appId);
 		Signature.put("appUserId", appUserId);
 		// 查询当前用户权限
-		String reslut = sendPost(getUserPrivilegeUrl, Signature);
+		String reslut = sendPost(oesPrivilegeDev.getUserPrivilegeUrl(), Signature);
 		if (reslut != null && !("").equals(reslut)) {
 			JSONObject jsonObject = JSONObject.fromObject(reslut);
 			if (!("0").equals(jsonObject.get("status"))) {
@@ -260,7 +249,7 @@ public class ManagerUserController extends BaseControllerUtil {
 			signature.put("groupId", groupId);
 			signature.put("privilegeFunId", privilegeFunId);
 			signature.put("resourceId", resourceId);
-			reslut = sendPost(moditUserPrivilegeUrl, signature);
+			reslut = sendPost(oesPrivilegeDev.getModitUserPrivilegeUrl(), signature);
 			if (reslut != null && !("").equals(reslut)) {
 				JSONObject jsonObject = JSONObject.fromObject(reslut);
 				if (!("0").equals(jsonObject.get("status"))) {
@@ -283,7 +272,7 @@ public class ManagerUserController extends BaseControllerUtil {
 			signature.put("groupId", groupId);
 			signature.put("privilegeFunId", privilegeFunId);
 			signature.put("resourceId", resourceId);
-			reslut = sendPost(moditUserPrivilegeUrl, signature);
+			reslut = sendPost(oesPrivilegeDev.getModitUserPrivilegeUrl(), signature);
 			if (reslut != null && !("").equals(reslut)) {
 				JSONObject jsonObject = JSONObject.fromObject(reslut);
 				if (!("0").equals(jsonObject.get("status"))) {
@@ -304,13 +293,14 @@ public class ManagerUserController extends BaseControllerUtil {
 
 	@RequestMapping(value = "tree")
 	public void getModelTree(HttpServletRequest request, HttpServletResponse response) {
-		JSONArray jsonArr=null;
-		Map<String, Object> map = new HashMap<String,Object>();
-		//防止组织结构菜单树 异步加载
+		log.info("-------------------------tree       start------------------------------------");
+		JSONArray jsonArr = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		// 防止组织结构菜单树 异步加载
 		if (request.getParameter("id") != null) {
 			jsonArr = new JSONArray();
 			map.put("status", "1");
-			map.put("tree",jsonArr );
+			map.put("tree", jsonArr);
 			WebUtils.writeJsonToMap(response, map);
 			return;
 		}
@@ -318,47 +308,54 @@ public class ManagerUserController extends BaseControllerUtil {
 		String appId = request.getParameter("appId");
 		map.put("appId", appId);
 		map.put("groupId", groupId);
-		//获取组织结构缓存
-		String s = sendPost(getGroupCacheUrl, map);
+		// 获取组织结构缓存
+		String s = sendPost(oesPrivilegeDev.getGroupCacheUrl(), map);
 		if (s != null && !("").equals(s)) {
 			JSONObject jsonObject = JSONObject.fromObject(s);
-			//status为1时，该组织机构存在，构建tree
+			// status为1时，该组织机构存在，构建tree
 			if (!("0").equals(jsonObject.get("status"))) {
-				
+
 				JSONObject obj = JSONObject.fromObject(s);// 将json字符串转换为json对象
 				JSONArray menuArray = (JSONArray) obj.get("menuList");
-				//如果menuList不为空则构建tree,否则直接返回无权限状态
-				if (menuArray.size()>0) {
+				// 如果menuList不为空则构建tree,否则直接返回无权限状态
+				if (menuArray.size() > 0) {
 					JSONArray resourceArray = (JSONArray) obj.get("resourceList");
 					// 将json对象转换为java对象
 					List<PrivilegeMenu> menuList = JSONArray.toList(menuArray, PrivilegeMenu.class);
-					String s1 = sendPost(appResRedisUrl, map);
+					String s1 = sendPost(oesPrivilegeDev.getAppResRedisUrl(), map);
 					JSONObject obj1 = new JSONObject().fromObject(s1);// 将json字符串转换为json对象
 					JSONArray functionArray = (JSONArray) obj1.get("functionList");
-					String operation = sendPost(getAllOperationUrl, map);
+					String operation = sendPost(oesPrivilegeDev.getAllOperationUrl(), map);
 					obj = JSONObject.fromObject(operation);
 					JSONArray operationArray = (JSONArray) obj.get("operationList");
 					// 将json对象转换为java对象
 					List<PrivilegeOperation> operationList = JSONArray.toList(operationArray, PrivilegeOperation.class);
 					List<PrivilegeResource1> resourceList = JSONArray.toList(resourceArray, PrivilegeResource1.class);
 					List<PrivilegeFunction> functionList = JSONArray.toList(functionArray, PrivilegeFunction.class);
+					// 根据DisplayOrder排序
+					java.util.Collections.sort(menuList, new Comparator<PrivilegeMenu>() {
+						@Override
+						public int compare(PrivilegeMenu o1, PrivilegeMenu o2) {
+							return o1.getDisplayOrder() - o2.getDisplayOrder();
+						}
+					});
 					List<TreeNode> nodes = convertTreeNodeList(menuList);
 					jsonArr = JSONArray.fromObject(buildTree(nodes, resourceList, functionList, operationList));
 					map.put("status", "1");
-					map.put("tree",jsonArr );
-				}else {
+					map.put("tree", jsonArr);
+				} else {
 					map.put("status", "0");
-					map.put("tree",new JSONArray());
+					map.put("tree", new JSONArray());
 				}
 				WebUtils.writeJsonToMap(response, map);
 			} else {
 				jsonArr = new JSONArray();
 				map.put("status", "0");
-				map.put("tree",jsonArr );
+				map.put("tree", jsonArr);
 				WebUtils.writeJsonToMap(response, map);
 			}
-		} 
-		
+		}
+
 	}
 
 	/**
@@ -386,14 +383,11 @@ public class ManagerUserController extends BaseControllerUtil {
 				if (children == null) {
 					children = new ArrayList<TreeNode>();
 					node.setChildren(children);
-					node.setState("close");
+					node.setState("closed");
 				}
 				String menuId = entry.getValue().getId();
-				List<TreeNode> treeNodeList = new ArrayList<TreeNode>();
 				for (PrivilegeResource1 res : resourceList) {
-					// TreeNode treeNode=new TreeNode();
 					if ((menuId).equals(res.getMenuId())) {
-						entry.getValue().setState("closed");
 						entry.getValue().setId(res.getResourceId());
 						entry.getValue().setText(res.getResourceName());
 						entry.getValue().setIsmodule("1");
@@ -413,15 +407,8 @@ public class ManagerUserController extends BaseControllerUtil {
 							}
 						}
 						entry.getValue().setChildren(treeNodeList1);
-						// treeNodeList.add(entry.getValue());
 					}
 				}
-				/*
-				 * List<TreeNode> nodeList = entry.getValue().getChildren();
-				 * if(nodeList == null){ nodeList=treeNodeList; }else{
-				 * nodeList.addAll(treeNodeList); }
-				 * entry.getValue().setChildren(nodeList);
-				 */
 				children.add(entry.getValue());
 			}
 		}
@@ -483,7 +470,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		Map<String, Object> Signature = privilegeGetSignatureService.getSignature(appId);
 		Signature.put("appId", appId);
 		Signature.put("appUserId", id);
-		String reslut = sendPost(getUserPrivilegeUrl, Signature);
+		String reslut = sendPost(oesPrivilegeDev.getUserPrivilegeUrl(), Signature);
 		String[] functionIds = null;
 		String[] resourceIds = null;
 		if (reslut != null && !("").equals(reslut)) {
@@ -526,7 +513,10 @@ public class ManagerUserController extends BaseControllerUtil {
 		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
 		String groupId = null;
 		if (user != null) {
-			groupId = user.get("groupId").equals("null") ? null : (String) user.get("groupId");
+			Boolean isManager = (Boolean) user.get("isManager");
+			if (!isManager) {
+				groupId = user.get("groupId").equals("null") ? null : (String) user.get("groupId");
+			}
 		}
 		String id = request.getParameter("id");
 		id = (id == null ? null : new String(id.getBytes("iso-8859-1"), "utf-8"));
@@ -536,7 +526,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		Signature.put("appId", appId);
 		Signature.put("appUserId", id);
 
-		String reslut = sendPost(getUserPrivilegeUrl, Signature);
+		String reslut = sendPost(oesPrivilegeDev.getUserPrivilegeUrl(), Signature);
 		List<Map<String, Object>> userRoleList = null;
 		if (reslut != null && !("").equals(reslut)) {
 			JSONObject jsonObject = JSONObject.fromObject(reslut);
@@ -561,7 +551,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		SignatureMap.put("groupId", groupId);
 		SignatureMap.put("start", startRow);
 		SignatureMap.put("limit", pageSize);
-		reslut = sendPost(queryRoleUrl, SignatureMap);
+		reslut = sendPost(oesPrivilegeDev.getQueryRoleUrl(), SignatureMap);
 		List<Map<String, Object>> RoleList = null;
 		int count = 0;
 		if (reslut != null && !("").equals(reslut)) {
@@ -593,65 +583,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		return;
 	}
 
-	/**
-	 * 构建树
-	 * 
-	 * @param treeNodes
-	 * @return
-	 */
-	protected List<TreeNode> buildTree2(List<PrivilegeMenu> menuList, List<PrivilegeResource1> resourceList,
-			List<PrivilegeFunction> functionList, List<PrivilegeOperation> operationList) {
-		// 顶级菜单资源集合
-		List<TreeNode> results = new ArrayList<TreeNode>();
-		List<PrivilegeResource1> pMenus = new ArrayList<PrivilegeResource1>();
-		TreeNode treeNode = null;
-		for (PrivilegeMenu menu : menuList) {
-			String menuId = menu.getMenuId();
-			String menuname = menu.getMenuName();
-			List<TreeNode> childrenList = null;
-			if (menu.getParentId().equals("0")) {
-				treeNode = new TreeNode();
-				treeNode.setId("m" + menuId);
-				treeNode.setText(menuname);
-				treeNode.setIsmodule("0");
-				results.add(treeNode);
-				childrenList = new ArrayList<TreeNode>();
-			}
-
-			for (PrivilegeMenu menu2 : menuList) {
-				if (menu2.getParentId().equals(menu.getMenuId())) {
-					for (PrivilegeResource1 resource1 : resourceList) {
-						if (resource1.getMenuId().equals(menu2.getMenuId())) {
-							TreeNode node = new TreeNode();
-							List<TreeNode> childrenList2 = new ArrayList<TreeNode>();
-							node.setId("r" + resource1.getResourceId());
-							node.setText(resource1.getResourceName());
-							node.setIsmodule("1");
-							childrenList.add(node);
-							for (PrivilegeFunction function : functionList) {
-								if (function.getResourceId().equals(resource1.getResourceId())) {
-									TreeNode Funnode = new TreeNode();
-									Funnode.setId("f" + function.getFunctionId());
-									String optId = function.getOptId();
-									for (PrivilegeOperation operation : operationList) {
-										if (optId.equals(operation.getId())) {
-											Funnode.setText(operation.getName());
-										}
-									}
-									Funnode.setIsmodule("2");
-									childrenList2.add(Funnode);
-								}
-							}
-							node.setChildren(childrenList2);
-							treeNode.setChildren(childrenList);
-						}
-					}
-				}
-			}
-		}
-		return results;
-	}
-
+	
 	/**
 	 * 修改用户信息
 	 * 
@@ -752,12 +684,18 @@ public class ManagerUserController extends BaseControllerUtil {
 
 	@RequestMapping("findUserList")
 	public void findUserList(HttpServletRequest request, HttpServletResponse response) {
-
+		String groupId=request.getParameter("groupId");
 		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
-		String groupId = null;
-		if (user != null) {
-			groupId = user.get("groupId").equals("null") ? null : (String) user.get("groupId");
+		if (("").equals(groupId)) {
+			if (user != null) {
+				Boolean isManager = (Boolean) user.get("isManager");
+				if (!isManager) {
+					groupId = user.get("groupId").equals("null") ? null : (String) user.get("groupId");
+				}
+			}
 		}
+		
+		String userName = request.getParameter("userName");
 		// 当前第几页
 		String page = request.getParameter("page");
 		// 每页显示的记录数
@@ -768,9 +706,9 @@ public class ManagerUserController extends BaseControllerUtil {
 		int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10" : rows);
 		// 每页的开始记录 第一页为1 第二页为number +1
 		int startRow = (currentPage - 1) * pageSize;
-		List<Map<String, Object>> oesUserList=oesUserService.getUserListByPage(groupId, startRow, pageSize);
-		int count=oesUserService.getUserCountByGroupId(groupId);
-		Map<String, Object> map=new HashMap<String,Object>();
+		List<Map<String, Object>> oesUserList = oesUserService.getUserListByPage(groupId, startRow, pageSize, userName);
+		int count = oesUserService.getUserCount(groupId, userName);
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("rows", oesUserList);
 		map.put("total", count);
 		WebUtils.writeJson(response, JSONObject.fromObject(map));
@@ -778,84 +716,28 @@ public class ManagerUserController extends BaseControllerUtil {
 	}
 
 	/**
-	 * 根据条件（username：用户名；realname：真实姓名；nickname：昵称）实现查询用户操作
-	 * 
-	 * @param request
-	 * @param response
-	 * @return 查询完毕后返回查询结果 User对象或 User集合
-	 */
-	@RequestMapping("findUsers")
-	public void findUsers(HttpServletRequest request, HttpServletResponse response)
-			throws UnsupportedEncodingException {
-		log.info("-------------------------findUsers        start------------------------------------");
-		String username = request.getParameter("username");
-		String realname = request.getParameter("realname");
-		String nickname = request.getParameter("nickname");
-		String deptName = request.getParameter("deptName");
-		username = (username == null ? null : new String(username.getBytes("iso-8859-1"), "utf-8"));
-		realname = (realname == null ? null : new String(realname.getBytes("iso-8859-1"), "utf-8"));
-		nickname = (nickname == null ? null : new String(nickname.getBytes("iso-8859-1"), "utf-8"));
-		deptName = (deptName == null ? null : new String(deptName.getBytes("iso-8859-1"), "utf-8"));
-		// 当前第几页
-		String page = request.getParameter("page");
-		System.out.println(page);
-		// 每页显示的记录数
-		String rows = request.getParameter("rows");
-		System.out.println(rows);
-		// 当前页
-		int currentPage = Integer.parseInt((page == null || page == "0") ? "1" : page);
-		// 每页显示条数
-		int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10" : rows);
-		// 每页的开始记录 第一页为1 第二页为number +1
-		int startRow = (currentPage - 1) * pageSize;
-		// 将请求参数封装到User对象中
-		User user = new User();
-		user.setUsername(username);
-		user.setRealName(realname);
-		user.setNickName(nickname);
-		user.setDeptName(deptName);
-		user.setPageSize(pageSize);
-		user.setStartRow(startRow);
-		// System.out.println("-----------username："+username+"realname："+realname+"nickname："+nickname+"-----------");
-		List<User> users = userService.findUsers(user);
-		int count = userService.findUsersCount(user);
-		// for(User u : users){
-		// System.out.println(u.getCreate_Time());
-		// }
-
-		JSONArray jsonArr = JSONArray.fromObject(users);
-		JSONObject jsonObjArr = new JSONObject();
-		jsonObjArr.put("total", count);
-		jsonObjArr.put("rows", jsonArr);
-		// System.out.println(jsonArr);
-		WebUtils.writeJson(response, jsonObjArr);
-		return;
-	}
-
-	/**
-	 * 查询所有部门
+	 * 查询组织机构
 	 * 
 	 * @return 返回到前端json数据
 	 */
-	@RequestMapping(value = "findAllDepts")
-	public void findAllDepts(HttpServletRequest request, HttpServletResponse response, Model model) {
-		log.info("-------------------------findAllDepts         start------------------------------------");
-		List<Department> list = userService.findAllDepts();
-		List<Map<String, Object>> maps = new ArrayList<Map<String, Object>>();
-		Map<String, Object> map = null;
-		String str = null;
-		if (list != null) {
-			for (Department d : list) {
-				map = new HashMap<String, Object>();
-				map.put("id", d.getId());
-				map.put("text", d.getDeptName());
-				maps.add(map);
-			}
-			JSONArray jsonArr = JSONArray.fromObject(maps);
-			str = jsonArr.toString();
-			WebUtils.writeJson(response, str);
-			// System.out.println(str);
+	@RequestMapping(value = "findGroup")
+	public void findGroup(HttpServletRequest request, HttpServletResponse response, Model model) {
+		log.info("-------------------------findGroup         start------------------------------------");
+		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
+		String groupId = user.get("groupId").equals("null") ? null : (String) user.get("groupId");
+		Boolean isManager = (Boolean) user.get("isManager");
+		List<OesGroup> groupList = null;
+		//如果当前用户为管理员，显示所有组织结构，否则显示当前用户所在的组织机构
+		if (isManager) {
+			groupList = oesGroupService.findAll();
+		} else {
+			groupList = new ArrayList<OesGroup>();
+			OesGroup group = oesGroupService.findByCode(groupId);
+			groupList.add(group);
 		}
+
+		JSONArray jsonArr = JSONArray.fromObject(groupList);
+		WebUtils.writeJson(response, jsonArr);
 		return;
 	}
 
