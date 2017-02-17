@@ -235,7 +235,6 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 	@Override
 	public Set<PrivilegeMenuVo> getAllMenuByUserId(List<PrivilegeMenu> privilegeMenuList,
 			Set<PrivilegeMenuVo> privilegeMenuVoSet) {
-			System.err.println(privilegeMenuList.isEmpty());
 		for (PrivilegeMenu privilegeMenu : privilegeMenuList) {
 			if (privilegeMenu!=null&&null != privilegeMenu.getParentId() && !("").equals(privilegeMenu.getParentId())) {
 				PrivilegeMenuVo privilegeMenuVo = new PrivilegeMenuVo();
@@ -288,6 +287,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 				privilegeMenuVo.setMenuCode(privilegeMenu.getMenuCode());
 				privilegeMenuVo.setDisplayOrder(privilegeMenu.getDisplayOrder());
 				privilegeMenuVo.setStatus(privilegeMenu.getStatus());
+				privilegeMenuVo.setAppId(privilegeMenu.getAppId());
 				privilegeMenuVos.add(privilegeMenuVo);
 			}
 		}
