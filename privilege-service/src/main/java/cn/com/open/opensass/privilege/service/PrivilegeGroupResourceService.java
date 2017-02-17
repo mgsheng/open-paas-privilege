@@ -2,9 +2,7 @@ package cn.com.open.opensass.privilege.service;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
 
-import cn.com.open.opensass.privilege.model.PrivilegeGroup;
 import cn.com.open.opensass.privilege.model.PrivilegeGroupResource;
 
 /**
