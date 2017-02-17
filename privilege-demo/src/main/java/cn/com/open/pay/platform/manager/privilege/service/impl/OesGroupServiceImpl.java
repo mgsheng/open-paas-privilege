@@ -30,7 +30,7 @@ public class OesGroupServiceImpl implements OesGroupService {
 	@Override
 	public OesGroup findByCode(String groupCode) {
 		OesGroup group=oesGroupRepository.findByCode(groupCode);
-		return null;
+		return group;
 	}
 
 	@Override
@@ -41,6 +41,11 @@ public class OesGroupServiceImpl implements OesGroupService {
 		}catch(Exception e){
 			return false;
 		}
+	}
+
+	@Override
+	public List<OesGroup> findAll() {
+		return oesGroupRepository.findAll();
 	}
 		
 
