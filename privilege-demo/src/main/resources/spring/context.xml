@@ -160,6 +160,10 @@
     </bean>
        <bean id="payserviceDev" class="cn.com.open.pay.platform.manager.dev.PayManagerDev">
             <property name="server_host" value="${server_host}"></property>
-            
         </bean>
+     <bean id="oesPrivilegeDev" class="cn.com.open.pay.platform.manager.dev.OesPrivilegeDev">
+            <property name="appId" value="${appId}"></property>
+       </bean>
+        
+        
 </beans>
