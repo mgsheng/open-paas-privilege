@@ -16,7 +16,7 @@ public interface PrivilegeGroupResourceRepository extends Repository {
 
 	
 	void saveprivilegeGroupResource(PrivilegeGroupResource privilegeGroupResource);
-	PrivilegeGroupResource findByGroupIdAndResourceId(@Param("groupId")String groupId,@Param("resourceId")String resourceId);
+	PrivilegeGroupResource findByGroupIdAndResourceId(@Param("groupId")String groupId,@Param("resourceId")String resourceId,@Param("appId")String appId);
 	List<PrivilegeGroupResource> findGprs(@Param("groupId")String groupId);
 	void deleteResource(@Param("groupId")String groupId ,@Param("resourceId")String resourceId);
 	void deleteByGroup(@Param("groupId")String groupId);

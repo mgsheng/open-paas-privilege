@@ -24,9 +24,9 @@ public class PrivilegeGroupResourceServiceImpl implements PrivilegeGroupResource
 	
 	@Override
 	public PrivilegeGroupResource getPrivilegeGroupResource(String groupId,
-			String resourceId ) {
+			String resourceId, String appId) {
 			 		
-			return privilegeGroupResourceRepository.findByGroupIdAndResourceId(groupId, resourceId);			
+			return privilegeGroupResourceRepository.findByGroupIdAndResourceId(groupId, resourceId, appId);			
 		}
 	
 

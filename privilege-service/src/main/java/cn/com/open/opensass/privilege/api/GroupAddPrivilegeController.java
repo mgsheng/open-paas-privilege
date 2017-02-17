@@ -82,7 +82,7 @@ public class GroupAddPrivilegeController extends BaseControllerUtil{
 	    			map.put("status","0");
 	        		map.put("error_code","10002");
 	    		}else{
-	    			PrivilegeGroupResource pgr=privilegeGroupResourceService.getPrivilegeGroupResource(groupId, resourceId);
+	    			PrivilegeGroupResource pgr=privilegeGroupResourceService.getPrivilegeGroupResource(groupId, resourceId, appId);
 	    			if(pgr!=null){
 	    	    		map.put("status","0");
 	    	    		map.put("error_code","10002");
@@ -93,6 +93,7 @@ public class GroupAddPrivilegeController extends BaseControllerUtil{
 	    	    		pgr.setCreateUser(createUser);
 	    	    		pgr.setCreateUserId(createUserid);
 	    	    		pgr.setCreateTime(new Date());
+	    	    		pgr.setAppId(appId);
 	    	    		if(!nullEmptyBlankJudge(status)){
 	    	    			pgr.setStatus(Integer.parseInt(status));	
 	    	    		}else{
