@@ -160,10 +160,33 @@
     </bean>
        <bean id="payserviceDev" class="cn.com.open.pay.platform.manager.dev.PayManagerDev">
             <property name="server_host" value="${server_host}"></property>
-        </bean>
-     <bean id="oesPrivilegeDev" class="cn.com.open.pay.platform.manager.dev.OesPrivilegeDev">
-            <property name="appId" value="${appId}"></property>
        </bean>
-        
-        
+       <bean id="oesPrivilegeDev" class="cn.com.open.pay.platform.manager.dev.OesPrivilegeDev">
+       		<property name="appId" value="${appId}"></property>
+       		<property name="userPrivilegeUrl" value="${get-privilege-user-uri}"></property>
+       		<property name="clientSecret" value="${client-secret}"></property>
+       		<property name="clientId" value="${client-id}"></property>
+       		<property name="grantType" value="${grant_type}"></property>
+       		<property name="pwdType" value="${pwdtype}"></property>
+       		<property name="oauthTokenUrl" value="${get-oauth-token-uri}"></property>
+       		<property name="userLoginUrl" value="${user-oauth-login-uri}"></property>
+       		<property name="userModifyPasswordUrl" value="${user-modify-password-uri}"></property>
+       		<property name="findUserUrl" value="${find-user-uri}"></property>
+       		<property name="moditUserPrivilegeUrl" value="${modify-privilege-user-uri}"></property>
+       		<property name="addPrivilegeUserUrl" value="${add-privilege-user-uri}"></property>
+       		<property name="appMenuRedisUrl" value="${privilege-appmenu-redis-query-uri}"></property>
+       		<property name="appResRedisUrl" value="${privilege-appres-redis-query-uri}"></property>
+       		<property name="allOperationUrl" value="${privilege-get-operation-uri}"></property>
+       		<property name="queryRoleUrl" value="${privilege-get-role-uri}"></property>
+       		<property name="groupCacheUrl" value="${privilege-group-redis-query-uri}"></property>
+       		<property name="delFunctionUrl" value="${privilege-del-function-uri}"></property>
+       		<property name="addFunctionUrl" value="${privilege-add-function-uri}"></property>
+       		<property name="modifyFunctionUrl" value="${privilege-modify-function-uri}"></property>
+       		<property name="addMenuUrl" value="${privilege-menu-add-uri}"></property>
+       		<property name="modifyMenuUrl" value="${privilege-menu-modi-uri}"></property>
+       		<property name="delMenuUrl" value="${privilege-menu-del-uri}"></property>
+       		<property name="addResourceUrl" value="${privilege-add-resource-uri}"></property>
+       		<property name="modifyResourceUrl" value="${privilege-modify-resource-uri}"></property>
+       		<property name="delResourceUrl" value="${privilege-del-resource-uri}"></property>
+       </bean>
 </beans>
