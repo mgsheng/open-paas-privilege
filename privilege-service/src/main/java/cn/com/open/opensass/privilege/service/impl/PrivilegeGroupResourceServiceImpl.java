@@ -98,4 +98,10 @@ public class PrivilegeGroupResourceServiceImpl implements PrivilegeGroupResource
 		return privilegeGroupResourceRepository.findGprPage(groupId,Integer.parseInt(startRow), Integer.parseInt(pageSize));
 	}
 
+
+	@Override
+	public List<PrivilegeGroupResource> findByGroupIdAndAppId(String groupId, String appId) {
+		return privilegeGroupResourceRepository.findByGroupIdAndAppId(groupId, appId);
+	}
+
 }
