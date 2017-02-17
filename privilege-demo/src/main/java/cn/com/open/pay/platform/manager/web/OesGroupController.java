@@ -224,6 +224,9 @@ public class OesGroupController extends BaseControllerUtil{
 			Signature.put("method", "1");
 			result2 = sendPost(groupPrivilegeModifyUrl, Signature);
 		}
+		if((addIds==null || ("").equals(addIds)) && (delIds==null || ("").equals(delIds))){
+			Signature.put("method", "0");
+		}
 		JSONObject job1 = null;
 		JSONObject job2 = null;
 		Map<String, Object> m = new HashMap<String, Object>();

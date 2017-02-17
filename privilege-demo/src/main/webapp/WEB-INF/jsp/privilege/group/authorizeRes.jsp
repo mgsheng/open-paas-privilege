@@ -132,7 +132,6 @@
 		getIds();
 		var url='${pageContext.request.contextPath}/oesGroup/authorizeRes?groupId=${groupId}&addIds='+addIds+'&delIds='+delIds+'&appId=${appId}';
         $.post(url, function(data) {
-        	alert(data.result);
             if(data.result==true){
              	msgShow('系统提示', '恭喜，授权资源成功！', 'info');
             }else{
