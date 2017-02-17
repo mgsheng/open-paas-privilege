@@ -14,13 +14,13 @@ public class OesUserServiceImpl implements OesUserService {
 	private OesUserRepository oesUserRepository;
 
 	@Override
-	public List<Map<String, Object>> getUserListByPage(String groupId, int start, int limit) {
-		return oesUserRepository.getUserListByPage(groupId, start, limit);
+	public List<Map<String, Object>> getUserListByPage(String groupId, int start, int limit,String userName) {
+		return oesUserRepository.getUserListByPage(groupId, start, limit,userName);
 	}
 
 	@Override
-	public int getUserCountByGroupId(String groupId) {
-		return oesUserRepository.getUserCountByGroupId(groupId);
+	public int getUserCount(String groupId,String userName) {
+		return oesUserRepository.getUserCount(groupId,userName);
 	}
 	
 
