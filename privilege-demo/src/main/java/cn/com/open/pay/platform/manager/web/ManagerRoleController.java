@@ -87,7 +87,10 @@ public class ManagerRoleController extends BaseControllerUtil {
 		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
 		String groupId = null;
 		if (user != null) {
-			groupId = user.get("groupId").equals("null") ? null : (String) user.get("groupId");
+			Boolean isManager = (Boolean) user.get("isManager");
+			if (!isManager) {
+				groupId = user.get("groupId").equals("null") ? null : (String) user.get("groupId");
+			}
 		}
 		String appId = request.getParameter("appId");
 		// 当前第几页
