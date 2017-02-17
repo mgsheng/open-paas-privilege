@@ -20,12 +20,18 @@
 		<if test="groupId != null and groupId !='' " >
         	and og.group_code=#{groupId}
      	</if>
+     	<if test="userName != null and userName !='' " >
+        	and ou.user_name=#{userName}
+     	</if>
      	limit #{start},#{limit}
 	</select>
-	<select id="getUserCountByGroupId"  resultType="java.lang.Integer">
-		SELECT count(1) from oes_user 
+	<select id="getUserCount"  resultType="java.lang.Integer">
+		SELECT count(1) from oes_user where 1=1
 		 <if test="groupId != null and groupId !=''" >
-        	where group_id = #{groupId}
+        	and group_id = #{groupId}
         </if>
+        <if test="userName != null and userName !='' " >
+        	and user_name=#{userName}
+     	</if>
 	</select>
 </mapper>
