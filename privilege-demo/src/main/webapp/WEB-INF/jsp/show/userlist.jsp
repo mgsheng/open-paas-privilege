@@ -25,15 +25,12 @@
 											<td>
 													<input class="easyui-textbox" name="username" id="un" prompt="选填" style="width:100%;" label="用&nbsp;户&nbsp;名:"></input> 
 											</td>
-											
-											<td>	
-													<input class="easyui-textbox" name="realname" id="rn" prompt="选填"  style="width:100%" label="真实姓名:"></input> 
-											</td>
-											<td> 
-													<input class="easyui-textbox" name="nickname" id="nn" prompt="选填" style="width:100%" label="昵&nbsp;&nbsp;&nbsp;&nbsp;称:"></input> 
-											</td>
-											<td> 
-													<input class="easyui-textbox" name="deptname" id="dn" prompt="选填" style="width:100%" label="部&nbsp;&nbsp;&nbsp;&nbsp;门:"></input> 
+											<!-- <td>
+												机&nbsp;&nbsp;&nbsp;&nbsp;构：&nbsp;<select class="easyui-combobox" data-options="editable:false"  id="groupName" name="groupName" style="width:280px;height:24px;padding:5px;">
+												</select>
+											</td> -->
+											<td>
+												<input id="cc" class="easyui-combobox" name="dept" data-options="valueField:'groupCode',textField:'groupName'" label="机&nbsp;&nbsp;构:" style="width:280px;height:24px;padding:5px;">
 											</td>
 										</tr>
 										
@@ -401,18 +398,18 @@
 		// 查询用户方法
 		function findUsers(){
 			//用户名
+			var groupId = $('#cc').combobox('getValue');
+        	var groupName=$('#cc').combobox('getText');
 			var username = $('#un').val().trim();
-			//真实姓名
-			var realname = $('#rn').val().trim();
-			//昵称
-			var nickname = $('#nn').val().trim();
-			//部门
-			var deptName = $('#dn').val().trim();
 			$('#dg').datagrid({
 				collapsible:true,
 				rownumbers:true,
 				pagination:true,
-		        url: "${pageContext.request.contextPath}/managerUser/findUserList?appId=${appId}",  
+				queryParams: {
+					userName: username,
+					groupId:groupId
+				},
+		        url: "${pageContext.request.contextPath}/managerUser/findUserList",  
 		        pagination: true,//显示分页工具栏
 		        onLoadSuccess:function(data){
                     if (data.total<1){
@@ -561,6 +558,13 @@
 		//页面预加载
 		$(function(){
 			findUsers();
+			$.post('${pageContext.request.contextPath}/managerUser/findGroup',
+					function (data) {
+						$('#cc').combobox('loadData',data);
+						if (data.length==1) {
+							$('#cc').combobox('select',data[0].groupCode);
+						}
+					});
 		});
 		
 	</script>
