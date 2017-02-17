@@ -2,13 +2,167 @@ package cn.com.open.pay.platform.manager.dev;
 
 public class OesPrivilegeDev {
 	private String appId;
-
+	private String userPrivilegeUrl;
+	private String client_secret;
+	private String oauthTokenUrl;
+	private String userLoginUrl;
+	private String userModifyPasswordUrl;
+	private String findUserUrl;
+	private String moditUserPrivilegeUrl;
+	private String addPrivilegeUserUrl;
+	private String appMenuRedisUrl;
+	private String appResRedisUrl;
+	private String allOperationUrl;
+	private String queryRoleUrl;
+	private String groupCacheUrl;
+	private String delFunctionUrl;
+	private String addFunctionUrl;
+	private String modifyFunctionUrl;
+	private String addMenuUrl;
+	private String modifyMenuUrl;
+	private String delMenuUrl;
+	private String addResourceUrl;
+	private String modifyResourceUrl;
+	private String delResourceUrl;
+	
+	public String getUserPrivilegeUrl() {
+		return userPrivilegeUrl;
+	}
+	public void setUserPrivilegeUrl(String userPrivilegeUrl) {
+		this.userPrivilegeUrl = userPrivilegeUrl;
+	}
+	public String getOauthTokenUrl() {
+		return oauthTokenUrl;
+	}
+	public void setOauthTokenUrl(String oauthTokenUrl) {
+		this.oauthTokenUrl = oauthTokenUrl;
+	}
+	public String getAllOperationUrl() {
+		return allOperationUrl;
+	}
+	public void setAllOperationUrl(String allOperationUrl) {
+		this.allOperationUrl = allOperationUrl;
+	}
+	public String getGroupCacheUrl() {
+		return groupCacheUrl;
+	}
+	public void setGroupCacheUrl(String groupCacheUrl) {
+		this.groupCacheUrl = groupCacheUrl;
+	}
 	public String getAppId() {
 		return appId;
 	}
-
 	public void setAppId(String appId) {
 		this.appId = appId;
 	}
+	public String getClient_secret() {
+		return client_secret;
+	}
+	public void setClient_secret(String client_secret) {
+		this.client_secret = client_secret;
+	}
+	public String getUserLoginUrl() {
+		return userLoginUrl;
+	}
+	public void setUserLoginUrl(String userLoginUrl) {
+		this.userLoginUrl = userLoginUrl;
+	}
+	public String getUserModifyPasswordUrl() {
+		return userModifyPasswordUrl;
+	}
+	public void setUserModifyPasswordUrl(String userModifyPasswordUrl) {
+		this.userModifyPasswordUrl = userModifyPasswordUrl;
+	}
+	public String getFindUserUrl() {
+		return findUserUrl;
+	}
+	public void setFindUserUrl(String findUserUrl) {
+		this.findUserUrl = findUserUrl;
+	}
+	public String getModitUserPrivilegeUrl() {
+		return moditUserPrivilegeUrl;
+	}
+	public void setModitUserPrivilegeUrl(String moditUserPrivilegeUrl) {
+		this.moditUserPrivilegeUrl = moditUserPrivilegeUrl;
+	}
+	public String getAddPrivilegeUserUrl() {
+		return addPrivilegeUserUrl;
+	}
+	public void setAddPrivilegeUserUrl(String addPrivilegeUserUrl) {
+		this.addPrivilegeUserUrl = addPrivilegeUserUrl;
+	}
+	public String getAppMenuRedisUrl() {
+		return appMenuRedisUrl;
+	}
+	public void setAppMenuRedisUrl(String appMenuRedisUrl) {
+		this.appMenuRedisUrl = appMenuRedisUrl;
+	}
+	public String getAppResRedisUrl() {
+		return appResRedisUrl;
+	}
+	public void setAppResRedisUrl(String appResRedisUrl) {
+		this.appResRedisUrl = appResRedisUrl;
+	}
+	public String getQueryRoleUrl() {
+		return queryRoleUrl;
+	}
+	public void setQueryRoleUrl(String queryRoleUrl) {
+		this.queryRoleUrl = queryRoleUrl;
+	}
+	public String getDelFunctionUrl() {
+		return delFunctionUrl;
+	}
+	public void setDelFunctionUrl(String delFunctionUrl) {
+		this.delFunctionUrl = delFunctionUrl;
+	}
+	public String getAddFunctionUrl() {
+		return addFunctionUrl;
+	}
+	public void setAddFunctionUrl(String addFunctionUrl) {
+		this.addFunctionUrl = addFunctionUrl;
+	}
+	public String getModifyFunctionUrl() {
+		return modifyFunctionUrl;
+	}
+	public void setModifyFunctionUrl(String modifyFunctionUrl) {
+		this.modifyFunctionUrl = modifyFunctionUrl;
+	}
+	public String getAddMenuUrl() {
+		return addMenuUrl;
+	}
+	public void setAddMenuUrl(String addMenuUrl) {
+		this.addMenuUrl = addMenuUrl;
+	}
+	public String getModifyMenuUrl() {
+		return modifyMenuUrl;
+	}
+	public void setModifyMenuUrl(String modifyMenuUrl) {
+		this.modifyMenuUrl = modifyMenuUrl;
+	}
+	public String getDelMenuUrl() {
+		return delMenuUrl;
+	}
+	public void setDelMenuUrl(String delMenuUrl) {
+		this.delMenuUrl = delMenuUrl;
+	}
+	public String getAddResourceUrl() {
+		return addResourceUrl;
+	}
+	public void setAddResourceUrl(String addResourceUrl) {
+		this.addResourceUrl = addResourceUrl;
+	}
+	public String getModifyResourceUrl() {
+		return modifyResourceUrl;
+	}
+	public void setModifyResourceUrl(String modifyResourceUrl) {
+		this.modifyResourceUrl = modifyResourceUrl;
+	}
+	public String getDelResourceUrl() {
+		return delResourceUrl;
+	}
+	public void setDelResourceUrl(String delResourceUrl) {
+		this.delResourceUrl = delResourceUrl;
+	}
+	
 
 }
