@@ -19,6 +19,9 @@
 	<select id="findAllByPage" resultMap="oesGroupMap" flushCache="true">
 		select * from oes_group limit #{startRow},#{pageSize}
 	</select>
+	<select id="findAll" resultMap="oesGroupMap" flushCache="true">
+		select * from oes_group 
+	</select>
 	
 	<select id="findAllCount" resultType="java.lang.Integer" flushCache="true">
 		select count(*) from oes_group
