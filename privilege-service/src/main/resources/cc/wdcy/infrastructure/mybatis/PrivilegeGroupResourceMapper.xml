@@ -21,6 +21,10 @@
 		  app_id,
 		  status
 	</sql>
+	<select id="findByGroupIdAndAppId" resultMap="privilegeGroupResourceMap" flushCache="true">
+         select * from privilege_group_resource  where  group_id = #{groupId}
+         and app_id=#{appId}
+	</select>
 	<select id="findByGroupIdAndResourceId" resultMap="privilegeGroupResourceMap" flushCache="true">
          select 
            <include refid="Base_Column_List" />
