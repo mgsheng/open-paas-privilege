@@ -130,8 +130,6 @@
 			console.log(n.text);
 		});
 		getIds();
-		alert("addIds:"+addIds);
-		alert("delIds:"+delIds);
 		var url='${pageContext.request.contextPath}/oesGroup/authorizeRes?groupId=${groupId}&addIds='+addIds+'&delIds='+delIds+'&appId=${appId}';
         $.post(url, function(data) {
         	alert(data.result);
