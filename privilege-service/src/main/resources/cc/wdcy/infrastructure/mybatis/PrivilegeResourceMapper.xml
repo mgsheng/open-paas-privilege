@@ -31,16 +31,8 @@
 	</sql>
 	
 	<select id="findByGroupIdAndAppId" resultMap="privilegeResourceMap" flushCache="true">
-		SELECT DISTINCT
-			pr.*
-		FROM
-			privilege_group pg,
-			privilege_group_resource pgr,
-			privilege_resource pr
-		WHERE
-			pg.app_id=#{appId}
-			AND #{groupId}=pgr.group_id AND pgr.resource_id=pr.resource_id
-			
+		SELECT DISTINCT pr.* FROM privilege_group_resource pgr, privilege_resource pr
+		WHERE pgr.app_id=#{appId} AND #{groupId}=pgr.group_id AND pgr.resource_id=pr.resource_id
 	</select>
 	<select id="getResourceListByMenuId" resultMap="privilegeResourceMap" flushCache="true">
          select * from privilege_resource
