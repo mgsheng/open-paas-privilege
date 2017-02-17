@@ -14,10 +14,11 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import cn.com.open.pay.platform.manager.dev.OesPrivilegeDev;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource1;
 import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
@@ -26,7 +27,6 @@ import cn.com.open.pay.platform.manager.redis.impl.RedisClientTemplate;
 import cn.com.open.pay.platform.manager.redis.impl.RedisConstant;
 import cn.com.open.pay.platform.manager.tools.AESUtils;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
-import cn.com.open.pay.platform.manager.tools.LoadPopertiesFile;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -38,23 +38,10 @@ import net.sf.json.JSONObject;
 @RequestMapping("/user/")
 public class UserLoginController extends BaseControllerUtil {
 	private static final Logger log = LoggerFactory.getLogger(UserLoginController.class);
-	private Map<String, String> map = LoadPopertiesFile.loadProperties();
+	@Autowired
+	private OesPrivilegeDev oesPrivilegeDev;
 	@Autowired
 	private PrivilegeGetSignatureService privilegeGetSignatureService;
-	@Value("#{properties['get-privilege-user-uri']}")
-	private String getUserPrivilegeUrl;
-	@Value("#{properties['8']}")
-	private String client_secret;
-	@Value("#{properties['get-oauth-token-uri']}")
-	private String getOauthTokenUrl;
-	@Value("#{properties['user-oauth-login-uri']}")
-	private String userLoginUrl;
-	@Value("#{properties['appId']}")
-	private String AppId;
-	@Value("#{properties['user-modify-password-uri']}")
-	private String userModifyPasswordUrl;
-	@Value("#{properties['find-user-uri']}")
-	private String findUserUrl;
 	@Autowired
 	private RedisClientTemplate redisClientTemplate;
 	private static final String AccessTokenPrefix = RedisConstant.ACCESSTOKEN_CACHE;
@@ -69,10 +56,9 @@ public class UserLoginController extends BaseControllerUtil {
 	 */
 	@RequestMapping("loginVerify")
 	public void verify(HttpServletRequest request, HttpServletResponse response, String username, String password) {
-		log.info("-----------------------login start----------------");
+		log.info("-----------------------loginVerify start----------------");
 		// 从缓存获取token
-		String access_token = (String) redisClientTemplate.getObject(AppId + AccessTokenPrefix);
-		String client_id = map.get(client_secret);
+		String access_token = (String) redisClientTemplate.getObject(oesPrivilegeDev.getAppId() + AccessTokenPrefix);
 		// 是否用户密码验证成功 true为登陆成功
 		Boolean flag = false;
 		// 错误信息
@@ -80,43 +66,43 @@ public class UserLoginController extends BaseControllerUtil {
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		// 若缓存中没有token 获取token
 		if (access_token == null) {
-			parameters.put("client_id", client_id);
-			parameters.put("client_secret", client_secret);
+			parameters.put("client_id", oesPrivilegeDev.getClientId());
+			parameters.put("client_secret", oesPrivilegeDev.getClientSecret());
 			parameters.put("scope", "read,write");
-			parameters.put("grant_type", "client_credentials");
-			String result = sendPost(getOauthTokenUrl, parameters);
+			parameters.put("grant_type", oesPrivilegeDev.getGrantType());
+			String result = sendPost(oesPrivilegeDev.getOauthTokenUrl(), parameters);
 			if (result != null && !("").equals(result)) {
 				String aString = result.substring(0, 1);
 				if (aString.equals("{")) {
 					JSONObject object = JSONObject.fromObject(result);
 					access_token = (String) object.get("access_token");
 					if (access_token != null && !("").equals(access_token)) {
-						redisClientTemplate.setObjectByTime(AppId + AccessTokenPrefix, access_token, 43190);
+						redisClientTemplate.setObjectByTime(oesPrivilegeDev.getAppId() + AccessTokenPrefix, access_token, 43190);
 					}
 				}
 			}
 		}
 		String userName = request.getParameter("username").trim();
 		String passWord = request.getParameter("password").trim();
-		String appId = request.getParameter("appId") == null || request.getParameter("appId") == ("") ? AppId
+		String appId = request.getParameter("appId") == null || request.getParameter("appId") == ("") ? oesPrivilegeDev.getAppId()
 				: request.getParameter("appId").trim();
 		// 密码aes加密
 		try {
-			passWord = AESUtils.encrypt(passWord, client_secret);
+			passWord = AESUtils.encrypt(passWord, oesPrivilegeDev.getClientSecret());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		parameters = privilegeGetSignatureService.getOauthSignature(AppId, client_id, access_token);
+		parameters = privilegeGetSignatureService.getOauthSignature(oesPrivilegeDev.getAppId(), oesPrivilegeDev.getClientId(), access_token);
 		parameters.put("access_token", access_token);
-		parameters.put("client_id", client_id);
-		parameters.put("client_secret", client_secret);
+		parameters.put("client_id", oesPrivilegeDev.getClientId());
+		parameters.put("client_secret", oesPrivilegeDev.getClientSecret());
 		parameters.put("scope", "read,write");
-		parameters.put("grant_type", "client_credentials");
+		parameters.put("grant_type", oesPrivilegeDev.getGrantType());
 		parameters.put("username", userName);
 		parameters.put("password", passWord);
-		parameters.put("pwdtype", "MD5");
+		parameters.put("pwdtype", oesPrivilegeDev.getPwdType());
 		// 用户登陆
-		String result = sendPost(userLoginUrl, parameters);
+		String result = sendPost(oesPrivilegeDev.getUserLoginUrl(), parameters);
 		if (result != null && !("").equals(result)) {
 			String aString = result.substring(0, 1);
 			if (aString.equals("{")) {
@@ -144,7 +130,7 @@ public class UserLoginController extends BaseControllerUtil {
 						Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
 						map.put("appId", appID);
 						map.put("appUserId", appUserId);
-						result = sendPost(findUserUrl, map);
+						result = sendPost(oesPrivilegeDev.getFindUserUrl(), map);
 						if (result != null && !("").equals(result)) {
 							JSONObject jasonObject = JSONObject.fromObject(result);
 							if ("0".equals(jasonObject.get("status"))) {
@@ -186,6 +172,7 @@ public class UserLoginController extends BaseControllerUtil {
 	 */
 	@RequestMapping(value = "login")
 	public String login(HttpServletRequest request, HttpServletResponse response, Model model) {
+		log.info("-----------------------login start----------------");
 		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
 		if (user != null) {
 			String userName = (String) user.get("username");
@@ -195,7 +182,7 @@ public class UserLoginController extends BaseControllerUtil {
 			Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
 			map.put("appId", appId);
 			map.put("appUserId", appUserId);
-			String result = sendPost(getUserPrivilegeUrl, map);
+			String result = sendPost(oesPrivilegeDev.getUserPrivilegeUrl(), map);
 			Map<String, Object> menus = new HashMap<String, Object>();
 			if (result != null && !("").equals(result)) {
 				JSONObject jasonObject = JSONObject.fromObject(result);
@@ -205,7 +192,9 @@ public class UserLoginController extends BaseControllerUtil {
 					model.addAttribute("menus", JSONObject.fromObject(menus));
 				} else {
 					String groupId = jasonObject.getString("groupId");
+					Boolean isManager=jasonObject.getBoolean("isManager");
 					user.put("groupId", groupId);
+					user.put("isManager", isManager);
 					JSONArray menu = jasonObject.getJSONArray("menuList");
 					JSONArray resource = jasonObject.getJSONArray("resourceList");
 					List<PrivilegeResource1> resourceList = JSONArray.toList(resource, PrivilegeResource1.class);
@@ -220,7 +209,6 @@ public class UserLoginController extends BaseControllerUtil {
 					// JSONArray
 					List<TreeNode> nodes = convertTreeNodeList(menuList);
 					JSONArray jsonArr = JSONArray.fromObject(buildTree2(nodes, resourceList));
-					System.err.println(jsonArr.toString());
 					menus.put("menus", jsonArr);
 					model.addAttribute("username", userName);
 					model.addAttribute("appId", appId);
@@ -251,6 +239,7 @@ public class UserLoginController extends BaseControllerUtil {
 
 	@RequestMapping(value = "update")
 	public void updatePassword(HttpServletRequest request, HttpServletResponse response) {
+		log.info("-----------------------updatePassWord start----------------");
 		String newPass = request.getParameter("newpass");
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		Boolean boo = isNumeric(newPass);
@@ -269,24 +258,21 @@ public class UserLoginController extends BaseControllerUtil {
 			}
 		}
 		// 从缓存获取token
-		String access_token = (String) redisClientTemplate.getObject(AppId + AccessTokenPrefix);
-		String client_id = map.get(client_secret);
-		// 是否用户密码验证成功 true为登陆成功
-		Boolean flag = false;
+		String access_token = (String) redisClientTemplate.getObject(oesPrivilegeDev.getAppId() + AccessTokenPrefix);
 		// 若缓存中没有token 获取token
 		if (access_token == null) {
-			parameters.put("client_id", client_id);
-			parameters.put("client_secret", client_secret);
+			parameters.put("client_id", oesPrivilegeDev.getClientId());
+			parameters.put("client_secret", oesPrivilegeDev.getClientSecret());
 			parameters.put("scope", "read,write");
-			parameters.put("grant_type", "client_credentials");
-			String result = sendPost(getOauthTokenUrl, parameters);
+			parameters.put("grant_type", oesPrivilegeDev.getGrantType());
+			String result = sendPost(oesPrivilegeDev.getOauthTokenUrl(), parameters);
 			if (result != null && !("").equals(result)) {
 				String aString = result.substring(0, 1);
 				if (aString.equals("{")) {
 					JSONObject object = JSONObject.fromObject(result);
 					access_token = (String) object.get("access_token");
 					if (access_token != null && !("").equals(access_token)) {
-						redisClientTemplate.setObjectByTime(AppId + AccessTokenPrefix, access_token, 43190);
+						redisClientTemplate.setObjectByTime(oesPrivilegeDev.getAppId() + AccessTokenPrefix, access_token, 43190);
 					}
 				}
 			}
@@ -296,20 +282,20 @@ public class UserLoginController extends BaseControllerUtil {
 		String userName = request.getParameter("userName");
 		// 密码AES加密
 		try {
-			oldPass = AESUtils.encrypt(oldPass, client_secret);
-			newPass = AESUtils.encrypt(newPass, client_secret);
+			oldPass = AESUtils.encrypt(oldPass, oesPrivilegeDev.getClientSecret());
+			newPass = AESUtils.encrypt(newPass, oesPrivilegeDev.getClientSecret());
 			userName = java.net.URLEncoder.encode(userName, "UTF-8");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		parameters = privilegeGetSignatureService.getOauthSignature(AppId, client_id, access_token);
+		parameters = privilegeGetSignatureService.getOauthSignature(oesPrivilegeDev.getAppId(), oesPrivilegeDev.getClientId(), access_token);
 		parameters.put("access_toke", access_token);
-		parameters.put("client_id", client_id);
+		parameters.put("client_id", oesPrivilegeDev.getClientId());
 		parameters.put("account", userName);
 		parameters.put("old_pwd", oldPass);
 		parameters.put("new_pwd", newPass);
-		parameters.put("pwdtype", "MD5");
-		String result = sendPost(userModifyPasswordUrl, parameters);
+		parameters.put("pwdtype", oesPrivilegeDev.getPwdType());
+		String result = sendPost(oesPrivilegeDev.getUserModifyPasswordUrl(), parameters);
 		if (result != null && !("").equals(result)) {
 			String aString = result.substring(0, 1);
 			if (aString.equals("{")) {
@@ -345,6 +331,7 @@ public class UserLoginController extends BaseControllerUtil {
 	 */
 	@RequestMapping(value = "loginOut")
 	public String loginOut(HttpServletRequest request, HttpServletResponse response) {
+		log.info("-----------------------loginOut start----------------");
 		Map<String, Object> user=(Map<String, Object>) request.getSession().getAttribute("user");
 		if (user!=null) {
 			request.getSession().removeAttribute("user");
