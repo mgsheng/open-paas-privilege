@@ -45,6 +45,10 @@
 	</div>
 </body>
 <script>
+	var initialResIds='';//用于存放修改界面中选中的resource
+	var checkedResIds='';//存放选中的resource
+	var addIds='';//存放修改时添加的权限Id
+	var delIds='';//存放修改时删除的权限Id
 	//修改tree 图标样式
 	function getRoot(){
 		var node=$('#tt').tree('getRoots');
@@ -81,6 +85,7 @@
 	}
 	//勾选机构拥有的功能
 	function selected(){
+		initialResIds="";
 		$.post('${pageContext.request.contextPath}/oesGroup/getRes?groupId=${groupId}&appId=${appId}',function(data){
 			if(data.resourceIds!=null){
 				$.each(data.resourceIds,function(i,m){
@@ -92,6 +97,7 @@
 								$("#tt").tree('check',node.target);
 							}
 						}
+						initialResIds+=node.id.replace('r','')+",";
 					}
 				});
 			}
@@ -113,27 +119,62 @@
 	
 	//授权确认
 	function submitAuthorizeRes(){
-		var resId=[];
+		checkedResIds="";
 		var select=$('#tt').tree('getChecked', 'checked');
 		$.each(select, function(i, n) {
 			if(n.ismodule==1){
 				if(n.id.substring(0,1)=='r'){
-					resId.push(n.id.substring(1,n.id.length));
+					checkedResIds+=n.id.substring(1,n.id.length)+",";
 				}
 			}
 			console.log(n.text);
 		});
-		resId.join(",");
-		 var url='${pageContext.request.contextPath}/oesGroup/authorizeRes?groupId=${groupId}&resource='+resId+'&appId=${appId}';
-         $.post(url, function(data) {
-             if(data.result==true){
-              	msgShow('系统提示', '恭喜，授权资源成功！', 'info');
-             }else{
-               	msgShow('系统提示', '授权资源失败！', 'error');
-               	//刷新
-               	$('#tt').tree('reload');
-             }
-         }); 
+		getIds();
+		alert("addIds:"+addIds);
+		alert("delIds:"+delIds);
+		var url='${pageContext.request.contextPath}/oesGroup/authorizeRes?groupId=${groupId}&addIds='+addIds+'&delIds='+delIds+'&appId=${appId}';
+        $.post(url, function(data) {
+        	alert(data.result);
+            if(data.result==true){
+             	msgShow('系统提示', '恭喜，授权资源成功！', 'info');
+            }else{
+             	msgShow('系统提示', '授权资源失败！', 'error');
+              	//刷新
+              	$('#tt').tree('reload');
+            }
+        }); 
+	}
+	
+	//获取添加删除的resId
+    function getIds(){
+    	addIds='';
+    	delIds='';
+    	if(checkedResIds != initialResIds){//resource前后不一致
+    		var checkedRes=checkedResIds.split(",");
+    		var initialRes=initialResIds.split(",");
+    		for(var i=0;i<checkedRes.length;i++){
+    			var bool=false;
+    			for(var j=0;j<initialRes.length;j++){
+    				if(checkedRes[i]===initialRes[j]){
+    					bool=true;
+    				}
+    			}
+    			if(!bool){
+    				addIds+=checkedRes[i]+",";
+    			}
+    		}
+    		for(var i=0;i<initialRes.length;i++){
+    			var bool=false;
+    			for(var j=0;j<checkedRes.length;j++){
+    				if(initialRes[i]===checkedRes[j]){
+    					bool=true;
+    				}
+    			}
+    			if(!bool){
+    				delIds+=initialRes[i]+",";
+    			}
+    		}
+    	}
 	}
 	
 </script>

@@ -204,23 +204,39 @@ public class OesGroupController extends BaseControllerUtil{
 			throws UnsupportedEncodingException {
 		log.info("-------------------------authorizeRes start------------------------------------");
 		String groupId = request.getParameter("groupId");
-		String resource = request.getParameter("resource");
 		String appId=request.getParameter("appId");
+		String addIds=request.getParameter("addIds");
+		String delIds=request.getParameter("delIds");
 		Boolean boo = false;
 		JSONObject jsonobj = new JSONObject();
 		Map<String, Object> Signature = privilegeGetSignatureService.getSignature(appId);
 		Signature.put("appId", appId);
 		Signature.put("groupId", groupId);
-		Signature.put("groupPrivilege", resource);
-		Signature.put("method", "0");
-		String reslut = sendPost(groupPrivilegeModifyUrl, Signature);
-		if (reslut != null && !("").equals(reslut)) {
-			JSONObject jsonObject = JSONObject.fromObject(reslut);
-			if (!("0").equals(jsonObject.get("status"))) {
-				boo = true;
-			} else {
-				boo = false;
-			}
+		String result1="";
+		String result2="";
+		if(addIds!=null && !("").equals(addIds)){
+			Signature.put("groupPrivilege", addIds);
+			Signature.put("method", "0");
+			result1 = sendPost(groupPrivilegeModifyUrl, Signature);
+		}
+		if(delIds!=null && !("").equals(delIds)){
+			Signature.put("groupPrivilege", delIds);
+			Signature.put("method", "1");
+			result2 = sendPost(groupPrivilegeModifyUrl, Signature);
+		}
+		JSONObject job1 = null;
+		JSONObject job2 = null;
+		Map<String, Object> m = new HashMap<String, Object>();
+		if (result1 == null || ("").equals(result1)) {
+			result1 = "{'status':'1'}";
+		}
+		job1 = JSONObject.fromObject(result1);
+		if (result2 == null || ("").equals(result2)) {
+			result2 = "{'status':'1'}";
+		}
+		job2 = JSONObject.fromObject(result2);
+		if (("1").equals(job1.get("status")) && ("1").equals(job2.get("status"))) {
+			boo=true;
 		}
 		jsonobj.put("result", boo);
 		WebUtils.writeJson(response, jsonobj);
