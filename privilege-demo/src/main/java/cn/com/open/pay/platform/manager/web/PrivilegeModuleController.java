@@ -16,12 +16,14 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.pay.platform.manager.dev.OesPrivilegeDev;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeFunction;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeOperation;
@@ -40,36 +42,11 @@ import cn.com.open.pay.platform.manager.tools.WebUtils;
 @Controller
 @RequestMapping("/module/")
 public class PrivilegeModuleController extends BaseControllerUtil {
-	
-	@Value("#{properties['privilege-appmenu-redis-query-uri']}")
-	private String appMenuRedisUrl;
-	@Value("#{properties['appId']}")
-	private String appId;
-	@Value("#{properties['privilege-appres-redis-query-uri']}")
-	private String appResRedisUrl;
-	@Value("#{properties['privilege-get-operation-uri']}")
-	private String getAllOperationUrl;
-	@Value("#{properties['privilege-del-function-uri']}")
-	private String delFunctionUrl;
-	@Value("#{properties['privilege-add-function-uri']}")
-	private String addFunctionUrl;
-	@Value("#{properties['privilege-modify-function-uri']}")
-	private String modifyFunctionUrl;
-	@Value("#{properties['privilege-menu-add-uri']}")
-	private String addMenuUrl;
-	@Value("#{properties['privilege-menu-modi-uri']}")
-	private String modifyMenuUrl;
-	@Value("#{properties['privilege-menu-del-uri']}")
-	private String delMenuUrl;
-	@Value("#{properties['privilege-add-resource-uri']}")
-	private String addResourceUrl;
-	@Value("#{properties['privilege-modify-resource-uri']}")
-	private String modifyResourceUrl;
-	@Value("#{properties['privilege-del-resource-uri']}")
-	private String delResourceUrl;
+	private static final Logger log = LoggerFactory.getLogger(PrivilegeModuleController.class);
 	@Autowired
 	private PrivilegeGetSignatureService privilegeGetSignatureService;
-
+	@Autowired
+	private OesPrivilegeDev oesPrivilegeDev;
 	/**
 	 * 跳转模块管理页面
 	 * 
@@ -80,6 +57,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	 */
 	@RequestMapping(value = "index")
 	public String stats(HttpServletRequest request, HttpServletResponse response, Model model) {
+		log.info("-------------------------index      start------------------------------------");
 		String appId = request.getParameter("appId");
 		model.addAttribute("appId", appId);
 		return "privilege/model/index";
@@ -87,6 +65,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 
 	@RequestMapping(value = "tree")
 	public void getModelTree(HttpServletRequest request, HttpServletResponse response) {
+		log.info("-------------------------tree      start------------------------------------");
 		String appId = request.getParameter("appId");
 		if (request.getParameter("id") != null) {
 			JSONArray jsonArr = new JSONArray();
@@ -95,15 +74,15 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("appId", appId);
-		String reslut = sendPost(appMenuRedisUrl, map);
+		String reslut = sendPost(oesPrivilegeDev.getAppMenuRedisUrl(), map);
 		JSONObject obj = JSONObject.fromObject(reslut);// 将json字符串转换为json对象
 		JSONArray objArray = (JSONArray) obj.get("menuList");
 		List<PrivilegeMenu> menuList = JSONArray.toList(objArray, PrivilegeMenu.class);
-		String s1 = sendPost(appResRedisUrl, map);
+		String s1 = sendPost(oesPrivilegeDev.getAppResRedisUrl(), map);
 		JSONObject obj1 = new JSONObject().fromObject(s1);// 将json字符串转换为json对象
 		JSONArray obj1Array = (JSONArray) obj1.get("resourceList");
 		JSONArray obj2Array = (JSONArray) obj1.get("functionList");
-		String operation = sendPost(getAllOperationUrl, map);
+		String operation = sendPost(oesPrivilegeDev.getAllOperationUrl(), map);
 		obj = JSONObject.fromObject(operation);
 		objArray = (JSONArray) obj.get("operationList");
 		// 将json对象转换为java对象
@@ -188,12 +167,10 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 				if (children == null) {
 					children = new ArrayList<TreeNode>();
 					node.setChildren(children);
-					node.setState("close");
+					node.setState("closed");
 				}
 				String menuId = entry.getValue().getId();
-				List<TreeNode> treeNodeList = new ArrayList<TreeNode>();
 				for (PrivilegeResource1 res : resourceList) {
-					// TreeNode treeNode=new TreeNode();
 					if ((menuId).equals(res.getMenuId())) {
 						Map<String, Object> resourceMap = new HashMap<String, Object>();
 						resourceMap.put("baseUrl", res.getBaseUrl());
@@ -228,15 +205,8 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 							}
 						}
 						entry.getValue().setChildren(treeNodeList1);
-						// treeNodeList.add(entry.getValue());
 					}
 				}
-				/*
-				 * List<TreeNode> nodeList = entry.getValue().getChildren();
-				 * if(nodeList == null){ nodeList=treeNodeList; }else{
-				 * nodeList.addAll(treeNodeList); }
-				 * entry.getValue().setChildren(nodeList);
-				 */
 				children.add(entry.getValue());
 			}
 		}
@@ -245,404 +215,20 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		return results;
 	}
 
-	/**
-	 * 构建树
-	 * 
-	 * @param treeNodes
-	 * @return
-	 */
-	protected List<TreeNode> buildTree(List<PrivilegeMenu> menuList, List<PrivilegeResource1> resourceList,
-			List<PrivilegeFunction> functionList, List<PrivilegeOperation> operationList) {
-		// 顶级菜单资源集合
-		List<TreeNode> results = new ArrayList<TreeNode>();
-
-		Map<String, TreeNode> aidMap = new LinkedHashMap<String, TreeNode>();
-		List<TreeNode> nodes = null;
-		if (menuList != null) {
-			nodes = new ArrayList<TreeNode>();
-			for (PrivilegeMenu menu : menuList) {
-				TreeNode node = null;
-				if (menu != null && menu.getParentId().equals("0")) {
-					// if(menu!=null){
-					node = new TreeNode();
-					node.setId(String.valueOf(menu.getMenuId()));// 菜单ID
-					node.setChecked(false);
-					node.setText(menu.getMenuName());// 菜单名称
-					node.setTarget("");
-					node.setPid(String.valueOf(menu.getParentId()));// 父级部门ID
-					node.setResource(menu.getMenuLevel() + "");
-					node.setIsmodule("0");
-					Map<String, Object> map = new HashMap<String, Object>();
-					map.put("menuCode", menu.getMenuCode());
-					map.put("menuLevel", menu.getMenuLevel());
-					map.put("menuRule", menu.getMenuRule());
-					map.put("dislayOrder", menu.getDisplayOrder());
-					map.put("parentId", menu.getParentId());
-					map.put("status", menu.getDisplayOrder());
-					node.setAttributes(map);
-				}
-				if (node != null) {
-					nodes.add(node);
-					aidMap.put(node.getId(), node);
-				}
-			}
-		}
-		nodes = null;
-		Set<Entry<String, TreeNode>> entrySet = aidMap.entrySet();
-		for (Entry<String, TreeNode> entry : entrySet) {
-			String pid = entry.getValue().getId();
-			TreeNode node = aidMap.get(pid);
-			List<TreeNode> childrenList = new ArrayList<TreeNode>();
-			for (PrivilegeMenu menu : menuList) {
-				if (menu.getParentId().equals(pid)) {
-					for (PrivilegeResource1 resource : resourceList) {
-						TreeNode node1 = null;
-						if (resource.getMenuId().equals(menu.getMenuId())) {
-							node1 = new TreeNode();
-							List<TreeNode> childrenList2 = new ArrayList<TreeNode>();
-							Map<String, Object> resourceMap = new HashMap<String, Object>();
-							resourceMap.put("baseUrl", resource.getBaseUrl());
-							resourceMap.put("menuId", menu.getMenuId());
-							resourceMap.put("menuCode", menu.getMenuCode());
-							resourceMap.put("menuLevel", menu.getMenuLevel());
-							resourceMap.put("menuRule", menu.getMenuRule());
-							resourceMap.put("parentId", menu.getParentId());
-							resourceMap.put("dislayOrder", menu.getDisplayOrder());
-							resourceMap.put("status", menu.getDisplayOrder());
-							node1.setAttributes(resourceMap);
-							node1.setId(resource.getResourceId());
-							node1.setText(resource.getResourceName());
-							node1.setState("closed");
-							node1.setIsmodule("1");
-							for (PrivilegeFunction function : functionList) {
-								if (function.getResourceId().equals(resource.getResourceId())) {
-									TreeNode Funnode = new TreeNode();
-									Funnode.setId(function.getFunctionId());
-									String optId = function.getOptId();
-									Map<String, Object> map = new HashMap<String, Object>();
-									map.put("optId", optId);
-									map.put("optUrl", function.getOptUrl());
-									for (PrivilegeOperation operation : operationList) {
-										if (optId.equals(operation.getId())) {
-											Funnode.setText(operation.getName());
-										}
-									}
-									Funnode.setAttributes(map);
-									Funnode.setIsmodule("2");
-									if (Funnode != null) {
-										childrenList2.add(Funnode);
-									}
-								}
-							}
-							node1.setChildren(childrenList2);
-						}
-						if (node1 != null) {
-							childrenList.add(node1);
-						}
-					}
-				}
-			}
-			node.setChildren(childrenList);
-			results.add(node);
-		}
-		aidMap = null;
-		return results;
-	}
+	
 
 	@RequestMapping(value = "getAllOperation")
 	public void getAllOperation(HttpServletRequest request, HttpServletResponse response) {
+		log.info("-------------------------getAllOperation      start------------------------------------");
 		Map<String, Object> map = new HashMap<String, Object>();
-		String reslut = sendPost(getAllOperationUrl, map);
+		String reslut = sendPost(oesPrivilegeDev.getAllOperationUrl(), map);
 		JSONObject jsonObject = JSONObject.fromObject(reslut);
 		JSONArray jsonArr = (JSONArray) jsonObject.get("operationList");
 		String str = jsonArr.toString();
-		WebUtils.writeJson(response, str);
+		WebUtils.writeJson(response, jsonArr);
 		return;
 	}
 
-	/**
-	 * 删除资源功能
-	 * 
-	 * @param request
-	 * @param model
-	 * @param bool
-	 * @return
-	 */
-	@RequestMapping(value = "delFunction")
-	public void delFunction(HttpServletRequest request, HttpServletResponse response) {
-		String functionId = request.getParameter("functionId");
-		String appId = request.getParameter("appId");
-		if (("undefined").equals(functionId)) {
-			return;
-		}
-		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
-		map.put("appId", appId);
-		map.put("functionId", functionId);
-		Boolean boo = false;
-		String reslut = sendPost(delFunctionUrl, map);
-		if (reslut != null) {
-			JSONObject jsonObject = JSONObject.fromObject(reslut);
-			if (jsonObject.get("status").equals("1")) {
-				boo = true;
-			} else {
-				boo = false;
-			}
-		} else {
-			boo = false;
-		}
-		map.clear();
-		if (boo) {
-			map.put("returnMsg", "1");
-		} else {
-			map.put("returnMsg", "0");
-		}
-		WebUtils.writeErrorJson(response, map);
-	}
-
-	/**
-	 * 修改资源功能
-	 * 
-	 * @param request
-	 * @param model
-	 * @param bool
-	 * @return
-	 */
-	@RequestMapping(value = "editFunction")
-	public void editFunction(HttpServletRequest request, HttpServletResponse response) {
-		String functionId = request.getParameter("functionId");
-		String appId = request.getParameter("appId");
-		String optUrl = request.getParameter("optUrl");
-		String operationId = request.getParameter("operationId");
-		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
-		map.put("appId", appId);
-		map.put("functionId", functionId);
-		map.put("optUrl", optUrl);
-		map.put("operationId", operationId);
-		Boolean boo = false;
-		String reslut = sendPost(modifyFunctionUrl, map);
-		if (reslut != null) {
-			JSONObject jsonObject = JSONObject.fromObject(reslut);
-			if (jsonObject.get("status").equals("1")) {
-				boo = true;
-			} else {
-				boo = false;
-			}
-		} else {
-			boo = false;
-		}
-		map.clear();
-		if (boo) {
-			map.put("returnMsg", "1");
-		} else {
-			map.put("returnMsg", "0");
-		}
-		WebUtils.writeErrorJson(response, map);
-	}
-
-	/**
-	 * 添加资源功能
-	 * 
-	 * @param request
-	 * @param model
-	 * @param bool
-	 * @return
-	 */
-	@RequestMapping(value = "addFunction")
-	public void addFunction(HttpServletRequest request, HttpServletResponse response) {
-		String resourceId = request.getParameter("resourceId");
-		String appId = request.getParameter("appId");
-		String optUrl = request.getParameter("optUrl");
-		String operationId = request.getParameter("operationId");
-		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
-		map.put("appId", appId);
-		map.put("resourceId", resourceId);
-		map.put("optUrl", optUrl);
-		map.put("operationId", operationId);
-		Boolean boo = false;
-		String reslut = sendPost(addFunctionUrl, map);
-		String functionId = null;
-		if (reslut != null) {
-			JSONObject jsonObject = JSONObject.fromObject(reslut);
-			if (jsonObject.get("status").equals("1")) {
-				functionId = (String) jsonObject.get("functionId");
-				boo = true;
-			} else {
-				boo = false;
-			}
-		} else {
-			boo = false;
-		}
-		map.clear();
-		if (boo) {
-			map.put("returnMsg", "1");
-			map.put("functionId", functionId);
-		} else {
-			map.put("returnMsg", "0");
-		}
-		WebUtils.writeErrorJson(response, map);
-	}
-
-	/**
-	 * 添加模块
-	 * 
-	 * @param request
-	 * @param model
-	 * @param bool
-	 * @return
-	 */
-	@RequestMapping(value = "addMenu")
-	public void add(HttpServletRequest request, HttpServletResponse response) {
-		String menuName = request.getParameter("name");
-		String appId = request.getParameter("appId");
-		String menuCode = request.getParameter("code");
-		try {
-			menuName = java.net.URLEncoder.encode(menuName, "UTF-8");
-			menuCode = java.net.URLEncoder.encode(menuCode, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		String parentId = request.getParameter("parentId");
-		String status = request.getParameter("status");
-		String displayOrder = request.getParameter("displayOrder");
-		String url = request.getParameter("url");
-		String menuLevel = request.getParameter("menuLevel");
-		Map<String, Object> map2 = privilegeGetSignatureService.getSignature(appId);
-		map2.put("appId", appId);
-		map2.put("menuName", menuName);
-		map2.put("menuCode", menuCode);
-		map2.put("parentId", parentId);
-		map2.put("status", status);
-		map2.put("dislayOrder", displayOrder);
-		map2.put("menuLevel", Integer.parseInt(menuLevel) + 1);
-		Boolean boo = false;
-		String menuId = null;
-		String reslut = sendPost(addMenuUrl, map2);
-		if (reslut != null) {
-			JSONObject jsonObject = JSONObject.fromObject(reslut);
-			if (jsonObject.get("status").equals("1")) {
-				boo = true;
-				menuId = (String) jsonObject.get("menuId");
-			} else {
-				boo = false;
-			}
-		} else {
-			boo = false;
-		}
-		String reourceId = null;
-		if (!url.equals("")) {// 添加带url的menu
-			if (boo) {
-				// 添加资源
-				map2.put("resourceLevel", "0");
-				map2.put("resourceName", menuName);
-				map2.put("menuId", menuId);
-				map2.put("baseUrl", url);
-				reslut = sendPost(addResourceUrl, map2);
-				if (reslut != null) {
-					JSONObject jsonObject = JSONObject.fromObject(reslut);
-					if (jsonObject.get("status").equals("1")) {
-						reourceId = (String) jsonObject.get("resourceId");
-						boo = true;
-					} else {
-						boo = false;
-					}
-				} else {
-					boo = false;
-				}
-			}
-		}
-
-		map2.clear();
-
-		if (boo) {
-			map2.put("menuId", menuId);
-			map2.put("resourceId", reourceId);
-			map2.put("returnMsg", "1");
-		} else {
-			map2.put("returnMsg", "0");
-		}
-		WebUtils.writeErrorJson(response, map2);
-	}
-
-	/**
-	 * 编辑模块
-	 * 
-	 * @param request
-	 * @param model
-	 * @param bool
-	 * @return
-	 */
-	@RequestMapping(value = "edit")
-	public void edit(HttpServletRequest request, HttpServletResponse response) {
-		String menuName = request.getParameter("name");
-		String menuCode = request.getParameter("code");
-		String appId = request.getParameter("appId");
-		try {
-			menuName = java.net.URLEncoder.encode(menuName, "UTF-8");
-			menuCode = java.net.URLEncoder.encode(menuCode, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		String menuId = request.getParameter("menuId");
-		String resourceId = request.getParameter("resourceId");
-		String parentId = request.getParameter("parentId");
-		String status = request.getParameter("status");
-		String displayOrder = request.getParameter("displayOrder");
-		String url = request.getParameter("url");
-		String menuLevel = request.getParameter("menuLevel");
-		Map<String, Object> map2 = privilegeGetSignatureService.getSignature(appId);
-		map2.put("appId", appId);
-		map2.put("menuId", menuId);
-		map2.put("menuName", menuName);
-		map2.put("menuCode", menuCode);
-		map2.put("parentId", parentId);
-		map2.put("status", status);
-		map2.put("dislayOrder", displayOrder);
-		map2.put("menuLevel", Integer.parseInt(menuLevel) + 1);
-		Boolean boo = false;
-		String reslut = sendPost(modifyMenuUrl, map2);
-		if (reslut != null) {
-			JSONObject jsonObject = JSONObject.fromObject(reslut);
-			if (jsonObject.get("status").equals(1)) {
-				boo = true;
-			} else {
-				boo = false;
-			}
-		} else {
-			boo = false;
-		}
-		if (resourceId != null && !("").equals(resourceId) && !("undefined").equals(resourceId)) {
-			if (boo) {
-				// 修改
-				map2.put("resourceName", menuName);
-				map2.put("menuId", menuId);
-				map2.put("baseUrl", url);
-				map2.put("resourceId", resourceId);
-				// String reourceId = null;
-				reslut = sendPost(modifyResourceUrl, map2);
-				if (reslut != null) {
-					JSONObject jsonObject = JSONObject.fromObject(reslut);
-					if (jsonObject.get("status").equals("1")) {
-						boo = true;
-					} else {
-						boo = false;
-					}
-				} else {
-					boo = false;
-				}
-			}
-		}
-
-		map2.clear();
-		if (boo) {
-			map2.put("returnMsg", "2");
-		} else {
-			map2.put("returnMsg", "0");
-		}
-		WebUtils.writeErrorJson(response, map2);
-
-	}
 
 	/**
 	 * 修改模块
@@ -653,6 +239,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	 */
 	@RequestMapping(value = "detail")
 	public void detail(HttpServletRequest request, HttpServletResponse response) {
+		log.info("-------------------------detail       start------------------------------------");
 		String appId = request.getParameter("appId");
 		String optUrl = request.getParameter("optUrl");
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
@@ -666,7 +253,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 			map.put("optUrl", optUrl);
 			map.put("functionId", functionId);
 			map.put("operationId", operationId);
-			reslut = sendPost(modifyFunctionUrl, map);
+			reslut = sendPost(oesPrivilegeDev.getModifyFunctionUrl(), map);
 			if (reslut != null) {
 				JSONObject jsonObject = JSONObject.fromObject(reslut);
 				if (jsonObject.get("status").equals("1")) {
@@ -704,7 +291,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 			map.put("status", status);
 			map.put("dislayOrder", displayOrder);
 			map.put("menuLevel", Integer.parseInt(menuLevel) + 1);
-			reslut = sendPost(modifyMenuUrl, map);
+			reslut = sendPost(oesPrivilegeDev.getModifyMenuUrl(), map);
 			if (reslut != null) {
 				JSONObject jsonObject = JSONObject.fromObject(reslut);
 				if (jsonObject.get("status").equals(1)) {
@@ -722,7 +309,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 					map.put("menuId", menuId);
 					map.put("baseUrl", url);
 					map.put("resourceId", resourceId);
-					reslut = sendPost(modifyResourceUrl, map);
+					reslut = sendPost(oesPrivilegeDev.getModifyResourceUrl(), map);
 					if (reslut != null) {
 						JSONObject jsonObject = JSONObject.fromObject(reslut);
 						if (jsonObject.get("status").equals("1")) {
@@ -747,58 +334,6 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	}
 
 	/**
-	 * 删除模块
-	 * 
-	 * @param request
-	 * @param model
-	 * @param bool
-	 * @return
-	 */
-	@RequestMapping(value = "deleteMenu")
-	public void delete(HttpServletRequest request, HttpServletResponse response) {
-		String resourceId = request.getParameter("resourceId");
-		String appId = request.getParameter("appId");
-		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
-		map.put("appId", appId);
-		map.put("menuId", request.getParameter("menuId"));
-		Boolean boo = false;
-		String reslut = sendPost(delMenuUrl, map);
-		if (reslut != null) {
-			JSONObject jsonObject = JSONObject.fromObject(reslut);
-			if (jsonObject.get("status").equals("1")) {
-				boo = true;
-			} else {
-				boo = false;
-			}
-		} else {
-			boo = false;
-		}
-		if (resourceId != null && !("undefined").equals(resourceId)) {
-			if (boo) {
-				map.put("resourceId", request.getParameter("resourceId"));
-				reslut = sendPost(delResourceUrl, map);
-				if (reslut != null) {
-					JSONObject jsonObject = JSONObject.fromObject(reslut);
-					if (jsonObject.get("status").equals("1")) {
-						boo = true;
-					} else {
-						boo = false;
-					}
-				} else {
-					boo = false;
-				}
-			}
-		}
-
-		map.clear();
-		if (boo) {
-			map.put("returnMsg", "1");
-		} else {
-			map.put("returnMsg", "0");
-		}
-		WebUtils.writeErrorJson(response, map);
-	}
-	/**
 	 * 添加模块
 	 * 
 	 * @param request
@@ -807,6 +342,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	 */
 	@RequestMapping(value = "addModuel")
 	public void addModuel(HttpServletRequest request, HttpServletResponse response) {
+		log.info("-------------------------addModuel   start------------------------------------");
 		String appId = request.getParameter("appId");
 		String optUrl = request.getParameter("optUrl");
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
@@ -821,7 +357,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 			map.put("optUrl", optUrl);
 			map.put("resourceId", resourceId);
 			map.put("operationId", operationId);
-			reslut = sendPost(addFunctionUrl, map);
+			reslut = sendPost(oesPrivilegeDev.getAddFunctionUrl(), map);
 			if (reslut != null && !("").equals(reslut)) {
 				JSONObject jsonObject = JSONObject.fromObject(reslut);
 				if (jsonObject.get("status").equals("1")) {
@@ -867,7 +403,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 			map.put("dislayOrder", displayOrder);
 			map.put("menuLevel", Integer.parseInt(menuLevel) + 1);
 			String menuId = null;
-			reslut = sendPost(addMenuUrl, map);
+			reslut = sendPost(oesPrivilegeDev.getAddMenuUrl(), map);
 			if (reslut != null) {
 				JSONObject jsonObject = JSONObject.fromObject(reslut);
 				if (jsonObject.get("status").equals("1")) {
@@ -887,7 +423,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 					map.put("resourceName", menuName);
 					map.put("menuId", menuId);
 					map.put("baseUrl", url);
-					reslut = sendPost(addResourceUrl, map);
+					reslut = sendPost(oesPrivilegeDev.getAddResourceUrl(), map);
 					if (reslut != null) {
 						JSONObject jsonObject = JSONObject.fromObject(reslut);
 						if (jsonObject.get("status").equals("1")) {
@@ -921,6 +457,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	 */
 	@RequestMapping(value = "deleteModuel")
 	public void findModuel(HttpServletRequest request, HttpServletResponse response) {
+		log.info("-------------------------delModuel   start------------------------------------");
 		String resourceId = request.getParameter("resourceId");
 		String appId = request.getParameter("appId");
 		String functionId = request.getParameter("functionId");
@@ -931,7 +468,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		Boolean boo = false;
 		if (functionId != null && !("").equals(functionId)) {
 			map.put("functionId", functionId);
-			reslut = sendPost(delFunctionUrl, map);
+			reslut = sendPost(oesPrivilegeDev.getDelFunctionUrl(), map);
 			if (reslut != null) {
 				JSONObject jsonObject = JSONObject.fromObject(reslut);
 				if (jsonObject.get("status").equals("1")) {
@@ -945,7 +482,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		}
 		if (resourceId != null && !("").equals(resourceId)) {
 			map.put("resourceId", resourceId);
-			reslut = sendPost(delResourceUrl, map);
+			reslut = sendPost(oesPrivilegeDev.getDelResourceUrl(), map);
 			if (reslut != null) {
 				JSONObject jsonObject = JSONObject.fromObject(reslut);
 				if (jsonObject.get("status").equals("1")) {
@@ -959,7 +496,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		}
 		if (menuId != null && !("").equals(menuId)) {
 			map.put("menuId", menuId);
-			reslut = sendPost(delMenuUrl, map);
+			reslut = sendPost(oesPrivilegeDev.getDelMenuUrl(), map);
 			if (reslut != null) {
 				JSONObject jsonObject = JSONObject.fromObject(reslut);
 				if (jsonObject.get("status").equals("1")) {
