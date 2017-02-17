@@ -162,21 +162,7 @@
 	$('#deptree').tree({
 		onLoadSuccess:function(node, data){
 			getRoot();
-		},
-		onClick:function(node){
-			console.log("text=="+node.text);
-			console.log("parentId=="+node.attributes.parentId);
-			if(node.ismodule=="0"){
-				console.log("menuId=="+node.id+"status=="+node.attributes.status);
-				console.log("menuLevel="+node.attributes.menuLevel);
-			}else if (node.ismodule=="1") {
-				console.log("menuID="+node.attributes.menuId);
-				console.log("menuLevel="+node.attributes.menuLevel);
-				console.log("resourceId=="+node.id+"status=="+node.attributes.status+"url="+node.attributes.baseUrl);
-			}
 		}
-	
-		
 	}); 
 	   //设置=窗口
         function openPwd() {
@@ -760,15 +746,8 @@
 			    $('#deptree').tree({
                 	url:'${pageContext.request.contextPath}/module/tree?appId=${appId}'
              	});
-			}
-			/*function expandAll(){
-				var node = $('#deptree').tree('getSelected');
-				if (node){
-					$('#deptree').tree('expandAll', node.target);
-				} else {
-					$('#deptree').tree('expandAll');
-				}
-			}*/
+			} 
+			
 	
 </script>
 </html>
