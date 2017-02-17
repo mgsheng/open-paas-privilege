@@ -9,6 +9,7 @@ public class PrivilegeGroupResource {
 	private Date createTime;
 	private String createUser;
 	private String createUserId;
+	private String appId;
 	private int status;
 	
 	public int getId() {
@@ -53,6 +54,12 @@ public class PrivilegeGroupResource {
 	}
 	public void setResourceId(String resourceId) {
 		this.resourceId = resourceId;
+	}
+	public String getAppId() {
+		return appId;
+	}
+	public void setAppId(String appId) {
+		this.appId = appId;
 	}
 	
 	

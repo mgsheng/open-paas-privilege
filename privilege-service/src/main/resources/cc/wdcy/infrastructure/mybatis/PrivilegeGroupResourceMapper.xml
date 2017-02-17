@@ -8,6 +8,7 @@
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
 		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
 		<result column="create_userid" property="createUserId" jdbcType="VARCHAR" />
+		<result column="app_id" property="appId" jdbcType="VARCHAR" />
 		<result column="status" property="status" jdbcType="INTEGER" />
 	</resultMap>
 		<sql id="Base_Column_List">
@@ -17,13 +18,14 @@
 		  create_time,
 		  create_user,
 		  create_userid,
+		  app_id,
 		  status
 	</sql>
 	<select id="findByGroupIdAndResourceId" resultMap="privilegeGroupResourceMap" flushCache="true">
          select 
            <include refid="Base_Column_List" />
            from privilege_group_resource
-         where  group_id = #{groupId}
+         where  group_id = #{groupId} and app_id = #{appId}
          <if test="resourceId != null and resourceId !=''">
          and resource_id=#{resourceId}
          </if>
@@ -48,9 +50,9 @@
     </update>
 	<insert id="saveprivilegeGroupResource" parameterType="PrivilegeGroupResource" useGeneratedKeys="true" keyProperty="id">
         insert into privilege_group_resource
-        (group_id,resource_id,create_time,create_user,create_userid,status)
+        (group_id,resource_id,create_time,create_user,create_userid,app_id,status)
         values
-        (#{groupId},#{resourceId},#{createTime},#{createUser},#{createUserId},#{status})
+        (#{groupId},#{resourceId},#{createTime},#{createUser},#{createUserId},#{appId},#{status})
     </insert>
       <delete id="deleteResource">
         delete from privilege_group_resource where group_id=#{groupId} and resource_id = #{resourceId} 
