@@ -156,4 +156,14 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 		return privilegeGroupRepository.findByAppId(appId);
 	}
 
+	@Override
+	public Boolean deleteByGroupId(String groupId, String appId) {
+		try{
+			privilegeGroupRepository.deleteByGroupId(groupId,appId);
+			return true;
+		}catch(Exception e){
+			return false;
+		}
+	}
+
 }

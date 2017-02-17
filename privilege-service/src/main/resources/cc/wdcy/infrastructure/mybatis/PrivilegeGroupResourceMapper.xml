@@ -55,16 +55,16 @@
         (#{groupId},#{resourceId},#{createTime},#{createUser},#{createUserId},#{appId},#{status})
     </insert>
       <delete id="deleteResource">
-        delete from privilege_group_resource where group_id=#{groupId} and resource_id = #{resourceId} 
+        delete from privilege_group_resource where group_id=#{groupId} and resource_id = #{resourceId} and app_id = #{appId}
     </delete>
       <delete id="deleteByGroup">
-        delete from privilege_group_resource where group_id=#{groupId}
+        delete from privilege_group_resource where group_id=#{groupId} and app_id=#{appId}
     </delete>
     <select id="findGprs" parameterType="String" resultMap="privilegeGroupResourceMap">
           select 
            <include refid="Base_Column_List" />
            from privilege_group_resource
-         where  group_id = #{groupId}
+         where  group_id = #{groupId} and app_id = #{appId}
 	</select>
 	<select id="findResourceIdsByGroupId" parameterType="String" resultType="String" flushCache="true">
          select 

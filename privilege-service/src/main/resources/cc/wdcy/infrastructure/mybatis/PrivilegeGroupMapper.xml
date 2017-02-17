@@ -36,6 +36,9 @@
          and app_id=#{appId}
          limit #{startRow},#{pageSize} 
 	</select>
+	<delete id="deleteByGroupId">
+		 delete from privilege_group where group_id=#{groupId} and app_id=#{appId}
+	</delete>
     <update id="updatePrivilegeGroup" parameterType="PrivilegeGroup" flushCache="true">
         update privilege_group set
         <if test="groupId != null and groupId !=''">

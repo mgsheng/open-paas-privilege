@@ -96,7 +96,7 @@ public class GroupModifyPrivilegeController extends BaseControllerUtil{
     	String resourceId="";
     	for(int i=0;i<groupPrivileges.length;i++){
     		resourceId=groupPrivileges[i];
-    			PrivilegeGroupResource pgr=privilegeGroupResourceService.getPrivilegeGroupResource(groupId, resourceId);
+    			PrivilegeGroupResource pgr=privilegeGroupResourceService.getPrivilegeGroupResource(groupId, resourceId, appId);
     			if(method.equals("0")){
     			if(pgr!=null){
     				pgr.setGroupId(groupId);
@@ -104,6 +104,7 @@ public class GroupModifyPrivilegeController extends BaseControllerUtil{
     	    		pgr.setCreateUser(createUser);
     	    		pgr.setCreateUserId(createUserid);
     	    		pgr.setCreateTime(new Date());
+    	    		pgr.setAppId(appId);
     	    		if(!nullEmptyBlankJudge(status)){
     	    			pgr.setStatus(Integer.parseInt(status));	
     	    		}else{
@@ -121,6 +122,7 @@ public class GroupModifyPrivilegeController extends BaseControllerUtil{
         	    		pgr.setCreateUser(createUser);
         	    		pgr.setCreateUserId(createUserid);
         	    		pgr.setCreateTime(new Date());
+        	    		pgr.setAppId(appId);
         	    		if(!nullEmptyBlankJudge(status)){
         	    			pgr.setStatus(Integer.parseInt(status));	
         	    		}else{
@@ -134,7 +136,7 @@ public class GroupModifyPrivilegeController extends BaseControllerUtil{
         	    		
     	    	    }
     			}else if(method.equals("1")&&pgr!=null){
-    				Boolean df=privilegeGroupResourceService.deleteResource(groupId, resourceId);
+    				Boolean df=privilegeGroupResourceService.deleteResource(groupId, resourceId, appId);
     				 if (!df){
         	    		 paraMandaChkAndReturn(10004, response,"删除失败");
         	    		 return;

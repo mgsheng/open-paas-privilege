@@ -68,22 +68,42 @@ public class GroupDelPrivilegeController extends BaseControllerUtil{
 			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
 			return;
 		}
-    	List<PrivilegeGroupResource> lists=privilegeGroupResourceService.getPgrs(groupId);
+		Boolean df=privilegeGroupService.deleteByGroupId(groupId,appId);
+		if(df){
+			Boolean df1=privilegeGroupResourceService.deleteByGroupId(groupId,appId);
+			if(!df1){
+				paraMandaChkAndReturn(10002, response,"机构资源关系删除失败");
+	            return;
+			}
+			//删除缓存
+			PrivilegeAjaxMessage message=privilegeGroupService.delGroupPrivilegeCache(groupId, appId);
+			if (message.getCode().equals("1")) {
+    			map.put("status","1");
+    		} else {
+    			map.put("status", message.getCode());
+    			map.put("error_code", message.getMessage()); //数据不存在 
+    			writeErrorJson(response, map);
+    		}
+		}else{
+			paraMandaChkAndReturn(10001, response,"机构删除失败");
+            return;
+		}
+    	/*List<PrivilegeGroupResource> lists=privilegeGroupResourceService.getPgrs(groupId,appId);
     	if(lists!=null&&lists.size()>0){
-    		privilegeGroupResourceService.deleteByGroupId(groupId);
+    		Boolean df=privilegeGroupResourceService.deleteByGroupId(groupId,appId);
     		//更新缓存
     		PrivilegeAjaxMessage message=privilegeGroupService.updateGroupPrivilegeCache(groupId, appId);
     		if (message.getCode().equals("1")) {
     			map.put("status","1");
     		} else {
     			map.put("status", message.getCode());
-    			map.put("error_code", message.getMessage());/* 数据不存在 */
+    			map.put("error_code", message.getMessage()); 数据不存在 
     			writeErrorJson(response, map);
     		}
     	}else{
     		map.put("status","0");
     		map.put("error_code","10001");
-    	}
+    	}*/
     	if(map.get("status")=="0"){
     		writeErrorJson(response,map);
     	}else{

@@ -19,4 +19,5 @@ public interface PrivilegeGroupService {
 	PrivilegeAjaxMessage delGroupPrivilegeCache(String groupId,String appId);
 	PrivilegeAjaxMessage updateGroupPrivilegeCache(String groupId,String appId);
 	List<PrivilegeGroup> findByAppId(String appId);
+	Boolean deleteByGroupId(String groupId, String appId);
 }

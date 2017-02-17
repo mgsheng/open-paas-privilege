@@ -44,9 +44,9 @@ public class PrivilegeGroupResourceServiceImpl implements PrivilegeGroupResource
 	}
 
 	@Override
-	public Boolean deleteResource(String groupId, String resourceId) {
+	public Boolean deleteResource(String groupId, String resourceId, String appId) {
 		try {
-			privilegeGroupResourceRepository.deleteResource(groupId, resourceId);
+			privilegeGroupResourceRepository.deleteResource(groupId, resourceId, appId);
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -55,15 +55,15 @@ public class PrivilegeGroupResourceServiceImpl implements PrivilegeGroupResource
 	}
 
 	@Override
-	public List<PrivilegeGroupResource> getPgrs(String groupId) {
+	public List<PrivilegeGroupResource> getPgrs(String groupId,String appId) {
 		// TODO Auto-generated method stub
-		return privilegeGroupResourceRepository.findGprs(groupId);
+		return privilegeGroupResourceRepository.findGprs(groupId,appId);
 	}
 
 	@Override
-	public Boolean deleteByGroupId(String groupId) {
+	public Boolean deleteByGroupId(String groupId,String appId) {
 		try {
-			privilegeGroupResourceRepository.deleteByGroup(groupId);
+			privilegeGroupResourceRepository.deleteByGroup(groupId,appId);
 			return true;
 		} catch (Exception e) {
 			// TODO: handle exception

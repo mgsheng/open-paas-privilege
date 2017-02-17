@@ -73,7 +73,7 @@ public class GroupGetPrivilegeController extends BaseControllerUtil{
 			return;
 		}		
 		
-		List<PrivilegeGroupResource> lists = privilegeGroupResourceService.getPgrs(groupId);
+		List<PrivilegeGroupResource> lists = privilegeGroupResourceService.getPgrs(groupId,appId);
     	//List<PrivilegeGroupResource>lists=privilegeGroupResourceService.getPgrs(groupId,start, limit);
     	if(lists!=null&&lists.size()>0){
 
