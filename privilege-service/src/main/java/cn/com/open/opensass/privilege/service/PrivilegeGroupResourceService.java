@@ -2,6 +2,8 @@ package cn.com.open.opensass.privilege.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import cn.com.open.opensass.privilege.model.PrivilegeGroup;
 import cn.com.open.opensass.privilege.model.PrivilegeGroupResource;
 
@@ -17,4 +19,5 @@ public interface PrivilegeGroupResourceService {
 	Boolean updatePrivilegeGroupResource(PrivilegeGroupResource privilegeGroupResource);
 	List<String> findResourceIdsByGroupId(String groupId);
 	List<PrivilegeGroupResource> getPgrs(String groupId,String startRow,String pageSize);
+	List<PrivilegeGroupResource> findByGroupIdAndAppId(String groupId, String appId);
 }
