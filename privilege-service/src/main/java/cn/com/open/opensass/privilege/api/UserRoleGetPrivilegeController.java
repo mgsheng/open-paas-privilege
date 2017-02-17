@@ -132,6 +132,7 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 				}
 			}
 		}
+		map.put("isManager", boo);
 		// redis中没有roleMap，从数据库中查询并存入redis
 		Map<String, Object> roleMap = new HashMap<String, Object>();
 		if (roleMessage.getCode().equals("0")) {
