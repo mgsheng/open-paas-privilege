@@ -135,10 +135,10 @@ public class OesGroupController extends BaseControllerUtil{
 	public String toRes(HttpServletRequest request, HttpServletResponse response, Model model)
 			throws UnsupportedEncodingException {
 		log.info("-------------------------toRes       start------------------------------------");
-		String groupId = request.getParameter("groupId");
+		String groupCode = request.getParameter("groupCode");
 		String groupName = request.getParameter("groupName");
 		String appId=request.getParameter("appId");
-		model.addAttribute("groupId", groupId);
+		model.addAttribute("groupCode", groupCode);
 		model.addAttribute("groupName", groupName);
 		model.addAttribute("appId", appId);
 		return "privilege/group/authorizeRes";
@@ -153,10 +153,10 @@ public class OesGroupController extends BaseControllerUtil{
 		public void getRes(HttpServletRequest request, HttpServletResponse response)
 				throws UnsupportedEncodingException {
 			log.info("-------------------------getRes       start------------------------------------");
-			String groupId = request.getParameter("groupId");
+			String groupCode = request.getParameter("groupCode");
 			String appId = request.getParameter("appId");
 			Map<String, Object> Signature = privilegeGetSignatureService.getSignature(appId);
-			Signature.put("groupId", groupId);
+			Signature.put("groupId", groupCode);
 			Signature.put("appId",appId);
 			Signature.put("start",0);
 			Signature.put("limit",10);
@@ -195,7 +195,7 @@ public class OesGroupController extends BaseControllerUtil{
 	public void authorizeRes(HttpServletRequest request, HttpServletResponse response)
 			throws UnsupportedEncodingException {
 		log.info("-------------------------authorizeRes start------------------------------------");
-		String groupId = request.getParameter("groupId");
+		String groupCode = request.getParameter("groupCode");//对应privilege_group_resource中的groupId
 		String appId=request.getParameter("appId");
 		String addIds=request.getParameter("addIds");
 		String delIds=request.getParameter("delIds");
@@ -203,7 +203,7 @@ public class OesGroupController extends BaseControllerUtil{
 		JSONObject jsonobj = new JSONObject();
 		Map<String, Object> Signature = privilegeGetSignatureService.getSignature(appId);
 		Signature.put("appId", appId);
-		Signature.put("groupId", groupId);
+		Signature.put("groupId", groupCode);
 		String result1="";
 		String result2="";
 		if(addIds!=null && !("").equals(addIds)){

@@ -103,9 +103,9 @@
 			if (row){
 				$.messager.confirm('系统提示', '是否确定授权?', function(r){
 					if(r){
-						var groupId = row.id;
+						var groupCode = row.groupCode;
 						var groupName=row.groupName;
-						addPanel2(groupName,groupId);
+						addPanel2(groupName,groupCode);
 					}
 				});
 			}else{
@@ -114,11 +114,11 @@
 		}
 		
 		//添加tab页面
-		function addPanel2(groupName,groupId){
+		function addPanel2(groupName,groupCode){
 			if ($('#tt').tabs('exists', groupName)){
 			 	$('#tt').tabs('select', groupName);
 			} else {
-				 var url = '${pageContext.request.contextPath}/oesGroup/toRes?groupId='+groupId+'&groupName='+groupName+'&appId='+${appId};
+				 var url = '${pageContext.request.contextPath}/oesGroup/toRes?groupCode='+groupCode+'&groupName='+groupName+'&appId='+${appId};
 			 	 var content = '<iframe scrolling="auto" frameborder="0" src="'+url+'" style="width:100%;height:100%;"></iframe>';
 				 $('#tt').tabs('add',{
 					 title:groupName+'-授权资源',
@@ -168,7 +168,7 @@
 		}
 		
 		// 查询用户方法
-		function findUsers(){
+		function findGroups(){
 			$('#dg').datagrid({
 				collapsible:true,
 				rownumbers:true,
@@ -239,7 +239,7 @@
 		
 		//页面预加载
 		$(function(){
-			findUsers();
+			findGroups();
 		});
 	</script>
 </html>

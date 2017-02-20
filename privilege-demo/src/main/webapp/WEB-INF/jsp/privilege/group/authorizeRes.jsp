@@ -27,8 +27,8 @@
 		<div id="authorizeResWin" class="botton"
 			style="margin-top: 0; width: 50%; height: 1000px; border: 1px;">
 			<div id="tbFun" style="padding: 10px 10px;">
-				<span style="text-align: left;" hidden="true"> <input
-					class="easyui-textbox" id="${groupId}" name="${groupName}" hidden="true">
+				<span style="text-align: left;" hidden="true"> 
+				<input class="easyui-textbox" id="${groupCode}" name="${groupName}" hidden="true"/>
 				</span> &nbsp;&nbsp;&nbsp;&nbsp; <span style="float: right;"> <a
 					href="#" class="easyui-linkbutton" iconCls="icon-ok" plain="true"
 					id="ok" onclick="submitAuthorizeRes();">确认</a> <a href="#"
@@ -40,15 +40,14 @@
 			
 			<ul id="tt" class="easyui-tree" style="height: 100%" data-options="
 				method:'get',animate:true,checkbox:true,lines:true,cascadeCheck:true"></ul>
-			
 		</div>
 	</div>
 </body>
 <script>
-	var initialResIds='';//用于存放修改界面中选中的resource
-	var checkedResIds='';//存放选中的resource
-	var addIds='';//存放修改时添加的权限Id
-	var delIds='';//存放修改时删除的权限Id
+	var initialResIds="";//用于存放修改界面中选中的resource
+	var checkedResIds="";//存放选中的resource
+	var addIds="";//存放修改时添加的权限Id
+	var delIds="";//存放修改时删除的权限Id
 	//修改tree 图标样式
 	function getRoot(){
 		var node=$('#tt').tree('getRoots');
@@ -77,16 +76,15 @@
     	 //勾选用户用户有的资源
     	 selected();
       }
-      
-   });
-	   //取消选中
+    });
+	//取消选中
 	function cancelAuthorizeFun() {
 		 $("#tt").tree("reload");
 	}
 	//勾选机构拥有的功能
 	function selected(){
 		initialResIds="";
-		$.post('${pageContext.request.contextPath}/oesGroup/getRes?groupId=${groupId}&appId=${appId}',function(data){
+		$.post('${pageContext.request.contextPath}/oesGroup/getRes?groupCode=${groupCode}&appId=${appId}',function(data){
 			if(data.resourceIds!=null){
 				$.each(data.resourceIds,function(i,m){
 					var node=$("#tt").tree('find',"r"+m);
@@ -130,10 +128,11 @@
 			console.log(n.text);
 		});
 		getIds();
-		var url='${pageContext.request.contextPath}/oesGroup/authorizeRes?groupId=${groupId}&addIds='+addIds+'&delIds='+delIds+'&appId=${appId}';
+		var url='${pageContext.request.contextPath}/oesGroup/authorizeRes?groupCode=${groupCode}&addIds='+addIds+'&delIds='+delIds+'&appId=${appId}';
         $.post(url, function(data) {
             if(data.result==true){
              	msgShow('系统提示', '恭喜，授权资源成功！', 'info');
+             	initialResIds=checkedResIds;
             }else{
              	msgShow('系统提示', '授权资源失败！', 'error');
               	//刷新
@@ -144,8 +143,8 @@
 	
 	//获取添加删除的resId
     function getIds(){
-    	addIds='';
-    	delIds='';
+    	addIds="";
+    	delIds="";
     	if(checkedResIds != initialResIds){//resource前后不一致
     		var checkedRes=checkedResIds.split(",");
     		var initialRes=initialResIds.split(",");
