@@ -18,11 +18,11 @@ import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.pay.platform.manager.dev.OesPrivilegeDev;
 import cn.com.open.pay.platform.manager.privilege.model.OesGroup;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeFunction;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
@@ -47,17 +47,9 @@ public class OesGroupController extends BaseControllerUtil{
 	private OesGroupService oesGroupService;
 	@Autowired
 	private PrivilegeGetSignatureService privilegeGetSignatureService;	
-
-	@Value("#{properties['privilege-appres-redis-query-uri']}")
-	private String appResRedisUrl;
-	@Value("#{properties['privilege-appmenu-redis-query-uri']}")
-	private String appMenuRedisUrl;
-	@Value("#{properties['privilege-get-operation-uri']}")
-	private String getAllOperationUrl;
-	@Value("#{properties['privilege-group-modify-uri']}")
-	private String groupPrivilegeModifyUrl;
-	@Value("#{properties['privilege-group-query-uri']}")
-	private String groupPrivilegeQueryUrl;
+	@Autowired
+	private OesPrivilegeDev oesPrivilegeDev;
+	
 	
     /**
      * 跳转到机构管理页面
@@ -168,7 +160,7 @@ public class OesGroupController extends BaseControllerUtil{
 			Signature.put("appId",appId);
 			Signature.put("start",0);
 			Signature.put("limit",10);
-			String reslut = sendPost(groupPrivilegeQueryUrl, Signature);
+			String reslut = sendPost(oesPrivilegeDev.getGroupPrivilegeQueryUrl(), Signature);
 			String[] resourceIds = null;
 			if (reslut != null && !("").equals(reslut)) {
 				JSONObject jsonObject = JSONObject.fromObject(reslut);
@@ -217,12 +209,12 @@ public class OesGroupController extends BaseControllerUtil{
 		if(addIds!=null && !("").equals(addIds)){
 			Signature.put("groupPrivilege", addIds);
 			Signature.put("method", "0");
-			result1 = sendPost(groupPrivilegeModifyUrl, Signature);
+			result1 = sendPost(oesPrivilegeDev.getGroupPrivilegeModifyUrl(), Signature);
 		}
 		if(delIds!=null && !("").equals(delIds)){
 			Signature.put("groupPrivilege", delIds);
 			Signature.put("method", "1");
-			result2 = sendPost(groupPrivilegeModifyUrl, Signature);
+			result2 = sendPost(oesPrivilegeDev.getGroupPrivilegeModifyUrl(), Signature);
 		}
 		if((addIds==null || ("").equals(addIds)) && (delIds==null || ("").equals(delIds))){
 			Signature.put("method", "0");
@@ -251,16 +243,16 @@ public class OesGroupController extends BaseControllerUtil{
 		String appId = request.getParameter("appId");
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
 		map.put("appId", appId);
-		String s = sendPost(appMenuRedisUrl, map);
+		String s = sendPost(oesPrivilegeDev.getAppMenuRedisUrl(), map);
 		JSONObject obj = JSONObject.fromObject(s);// 将json字符串转换为json对象
 		JSONArray objArray = JSONArray.fromObject(obj.get("menuList"));
 		// 将json对象转换为java对象
 		List<PrivilegeMenu> menuList = JSONArray.toList(objArray, PrivilegeMenu.class);
-		String s1 = sendPost(appResRedisUrl, map);
+		String s1 = sendPost(oesPrivilegeDev.getAppResRedisUrl(), map);
 		JSONObject obj1 = new JSONObject().fromObject(s1);// 将json字符串转换为json对象
 		JSONArray obj1Array = JSONArray.fromObject(obj1.get("resourceList"));
 		JSONArray obj2Array = JSONArray.fromObject(obj1.get("functionList"));
-		String operation = sendPost(getAllOperationUrl, map);
+		String operation = sendPost(oesPrivilegeDev.getAllOperationUrl(), map);
 		obj = JSONObject.fromObject(operation);
 		objArray = JSONArray.fromObject(obj.get("operationList"));
 		// 将json对象转换为java对象
