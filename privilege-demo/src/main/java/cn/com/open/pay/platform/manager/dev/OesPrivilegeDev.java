@@ -27,9 +27,57 @@ public class OesPrivilegeDev {
 	private String addResourceUrl;
 	private String modifyResourceUrl;
 	private String delResourceUrl;
+	private String appRoleRedisUrl;
+	private String roleDelUrl;
+	private String roleAddUrl;
+	private String rolePrivilegeUrl;
+	private String roleModiUrl;
+	private String groupPrivilegeModifyUrl;
+	private String groupPrivilegeQueryUrl;
 	
 	
-	
+	public String getGroupPrivilegeModifyUrl() {
+		return groupPrivilegeModifyUrl;
+	}
+	public void setGroupPrivilegeModifyUrl(String groupPrivilegeModifyUrl) {
+		this.groupPrivilegeModifyUrl = groupPrivilegeModifyUrl;
+	}
+	public String getGroupPrivilegeQueryUrl() {
+		return groupPrivilegeQueryUrl;
+	}
+	public void setGroupPrivilegeQueryUrl(String groupPrivilegeQueryUrl) {
+		this.groupPrivilegeQueryUrl = groupPrivilegeQueryUrl;
+	}
+	public String getAppRoleRedisUrl() {
+		return appRoleRedisUrl;
+	}
+	public void setAppRoleRedisUrl(String appRoleRedisUrl) {
+		this.appRoleRedisUrl = appRoleRedisUrl;
+	}
+	public String getRoleDelUrl() {
+		return roleDelUrl;
+	}
+	public void setRoleDelUrl(String roleDelUrl) {
+		this.roleDelUrl = roleDelUrl;
+	}
+	public String getRoleAddUrl() {
+		return roleAddUrl;
+	}
+	public void setRoleAddUrl(String roleAddUrl) {
+		this.roleAddUrl = roleAddUrl;
+	}
+	public String getRolePrivilegeUrl() {
+		return rolePrivilegeUrl;
+	}
+	public void setRolePrivilegeUrl(String rolePrivilegeUrl) {
+		this.rolePrivilegeUrl = rolePrivilegeUrl;
+	}
+	public String getRoleModiUrl() {
+		return roleModiUrl;
+	}
+	public void setRoleModiUrl(String roleModiUrl) {
+		this.roleModiUrl = roleModiUrl;
+	}
 	public String getGrantType() {
 		return grantType;
 	}
