@@ -23,4 +23,9 @@ public interface OesGroupRepository extends Repository {
 	void saveGroup(OesGroup g);
 	
 	List<OesGroup> findAll();
+
+	List<OesGroup> findByPage(@Param("groupName")String groupName, @Param("groupCode")String groupCode, @Param("startRow")int startRow,
+			@Param("pageSize")int pageSize);
+
+	int findCount(@Param("groupName")String groupName, @Param("groupCode")String groupCode);
 }

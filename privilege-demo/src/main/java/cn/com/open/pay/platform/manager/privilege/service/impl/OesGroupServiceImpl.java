@@ -47,6 +47,17 @@ public class OesGroupServiceImpl implements OesGroupService {
 	public List<OesGroup> findAll() {
 		return oesGroupRepository.findAll();
 	}
+
+	@Override
+	public List<OesGroup> findByPage(String groupName, String groupCode, int startRow, int pageSize) {
+		return oesGroupRepository.findByPage(groupName,groupCode,startRow,pageSize);
+	}
+
+	@Override
+	public int findCount(String groupName, String groupCode) {
+		int count=oesGroupRepository.findCount(groupName,groupCode);
+		return count;
+	}
 		
 
 }

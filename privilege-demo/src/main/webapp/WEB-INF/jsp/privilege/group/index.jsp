@@ -19,8 +19,27 @@
 					<div style="border:0 solid;margin-bottom:0;" fit="true" >
 						<div class="top" style="width: 100%">
 							<div class="easyui-panel" title="操作" style="padding-top:1%;" fit="true" >
-								<form id="fm" method="post" action="/managerUser/findUsers">
+								<form id="fm" method="post" action="/oesGroup/findGroups">
+									<table cellpadding="5%"  style="margin-left:4%;">
+										<tr style="width:100%;">
+											<td>
+												<input class="easyui-textbox" name="queryGroupCode" id="queryGroupCode" prompt="选填" style="width:100%;" label="机构编码:"></input> 
+											</td>
+											<td>
+												<input id="queryGroupName" class="easyui-combobox" data-options="valueField:'groupCode',textField:'groupName'" label="机构名称:" style="width:280px;height:24px;padding:5px;">
+											</td>
+										</tr>
+										
+									</table>
 									<div style="width:100%;padding:0.8%;">
+										<a href="javascript:void(0)" class="easyui-linkbutton" onclick="findGroups();" style="margin-left:3.5%;padding-bottom:0.6%;display:inline;">
+											<span style="font-weight:bold;">查&nbsp;&nbsp;&nbsp;&nbsp;询</span>
+											<span class="icon-search">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+										</a>
+										<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm();" style="margin-left:2%;padding-bottom:0.6%;display:inline;">
+											<span style="font-weight:bold;">清&nbsp;&nbsp;&nbsp;&nbsp;除</span>
+											<span class="icon-clear">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+										</a>
 										<%--<a href="javascript:void(0)" class="easyui-linkbutton" onclick="openAddWin();" style="margin-left:2%;padding-bottom:0.6%;display:inline;">
 											<span style="font-weight:bold;">添加机构</span>
 											<span class="icon-add">&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -167,13 +186,21 @@
 			$.messager.alert(title, msgString, msgType);
 		}
 		
-		// 查询用户方法
+		// 查询机构方法
 		function findGroups(){
+        	var groupName=$('#queryGroupName').combobox('getText');
+			var groupCode = $('#queryGroupCode').val().trim();
+			var appId=${appId};
 			$('#dg').datagrid({
 				collapsible:true,
 				rownumbers:true,
 				pagination:true,
-		        url: "${pageContext.request.contextPath}/oesGroup/getGroupList?appId=${appId}",  
+				queryParams: {
+					groupName: groupName,
+					groupCode: groupCode,
+					appId: appId
+				},
+		        url: "${pageContext.request.contextPath}/oesGroup/getGroupList",  
 		        pagination: true,//显示分页工具栏
 		        onLoadSuccess:function(data){
                     if (data.total<1){
@@ -197,7 +224,7 @@
 		    }); 
 		}
 		
-		// 提交（用户信息）
+		// 提交（机构信息）
 		function submitAddForm(){
 			var groupCode = $.trim($('#groupCode').val()) ;
 			var groupTypeName = $.trim($('#groupTypeName').val());
@@ -236,10 +263,22 @@
 				}
 			});
 		}
+
+        // 清除查询表单
+		function clearForm(){
+			$('#fm').form('clear');
+		}
 		
 		//页面预加载
 		$(function(){
 			findGroups();
+			$.post('${pageContext.request.contextPath}/oesGroup/findGroup',
+					function (data) {
+						$('#queryGroupName').combobox('loadData',data);
+						if (data.length==1) {
+							$('#queryGroupName').combobox('select',data[0].groupCode);
+						}
+					});
 		});
 	</script>
 </html>

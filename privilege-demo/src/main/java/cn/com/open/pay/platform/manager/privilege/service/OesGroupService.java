@@ -15,5 +15,10 @@ public interface OesGroupService {
 	Boolean saveGroup(OesGroup g);
 	
 	List<OesGroup> findAll();
+
+	List<OesGroup> findByPage(String groupName, String groupCode, int startRow,
+			int pageSize);
+
+	int findCount(String groupName, String groupCode);
     
 }

@@ -70,9 +70,11 @@ public class OesGroupController extends BaseControllerUtil{
     public void getGroupMessage(HttpServletRequest request,HttpServletResponse response) {
     	log.info("-------------------------getGroupMessage start------------------------------------");
     	Map<String, Object> map = new HashMap<String,Object>();
+    	String groupName=request.getParameter("groupName");
+    	String groupCode=request.getParameter("groupCode");
+		String appId = request.getParameter("appId");
     	// 当前第几页
 		String page = request.getParameter("page");
-		String appId = request.getParameter("appId");
 		// 每页显示的记录数
 		String rows = request.getParameter("rows");
 		// 当前页
@@ -81,8 +83,8 @@ public class OesGroupController extends BaseControllerUtil{
 		int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10" : rows);
 		// 每页的开始记录 第一页为1 第二页为number +1
 		int startRow = (currentPage - 1) * pageSize;
-		List<OesGroup> oesGroup = oesGroupService.findAllByPage(startRow,pageSize);
-		int count = oesGroupService.findAllCount();
+		List<OesGroup> oesGroup = oesGroupService.findByPage(groupName,groupCode,startRow,pageSize);
+		int count = oesGroupService.findCount(groupName,groupCode);
 		JSONArray jsonArr = JSONArray.fromObject(oesGroup);
 		JSONObject jsonObjArr = new JSONObject();  
 		jsonObjArr.put("total", count);
@@ -238,6 +240,32 @@ public class OesGroupController extends BaseControllerUtil{
 		return;
 	}
     
+	/**
+	 * 查询组织机构
+	 * 
+	 * @return 返回到前端json数据
+	 */
+	@RequestMapping(value = "findGroup")
+	public void findGroup(HttpServletRequest request, HttpServletResponse response, Model model) {
+		log.info("-------------------------findGroup         start------------------------------------");
+		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
+		String groupId = user.get("groupId").equals("null") ? null : (String) user.get("groupId");
+		Boolean isManager = (Boolean) user.get("isManager");
+		List<OesGroup> groupList = null;
+		//如果当前用户为管理员，显示所有组织结构，否则显示当前用户所在的组织机构
+		if (isManager) {
+			groupList = oesGroupService.findAll();
+		} else {
+			groupList = new ArrayList<OesGroup>();
+			OesGroup group = oesGroupService.findByCode(groupId);
+			groupList.add(group);
+		}
+
+		JSONArray jsonArr = JSONArray.fromObject(groupList);
+		WebUtils.writeJson(response, jsonArr);
+		return;
+	}
+	
     @RequestMapping(value = "tree")
 	public void getModelTree(HttpServletRequest request, HttpServletResponse response) {
 		String appId = request.getParameter("appId");
