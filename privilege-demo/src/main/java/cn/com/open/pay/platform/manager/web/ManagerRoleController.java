@@ -19,10 +19,11 @@ import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import cn.com.open.pay.platform.manager.dev.OesPrivilegeDev;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeFunction;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeOperation;
@@ -44,29 +45,14 @@ public class ManagerRoleController extends BaseControllerUtil {
 	@Autowired
 	private PrivilegeRoleDetailsService privilegeRoleDetailsService;
 	@Autowired
+	private OesPrivilegeDev oesPrivilegeDev;
+	@Autowired
 	private PrivilegeModuleService privilegeModuleService;
 	@Autowired
 	private PrivilegeResourceService privilegeResourceService;
 	@Autowired
 	private PrivilegeGetSignatureService privilegeGetSignatureService;
-	@Value("#{properties['privilege-approle-redis-query-uri']}")
-	private String appRoleRedisUrl;
-	@Value("#{properties['privilege-appres-redis-query-uri']}")
-	private String appResRedisUrl;
-	@Value("#{properties['privilege-appmenu-redis-query-uri']}")
-	private String appMenuRedisUrl;
-	@Value("#{properties['privilege-role-del-uri']}")
-	private String roleDelUrl;
-	@Value("#{properties['privilege-role-add-uri']}")
-	private String roleAddUrl;
-	@Value("#{properties['get-role-privilege-uri']}")
-	private String getRolePrivilegeUrl;
-	@Value("#{properties['privilege-role-modi-uri']}")
-	private String roleModiUrl;
-	@Value("#{properties['privilege-get-operation-uri']}")
-	private String getAllOperationUrl;
-	@Value("#{properties['privilege-get-role-uri']}")
-	private String queryRoleUrl;
+	
 
 	/**
 	 * 跳转到查询角色的页面
@@ -108,7 +94,7 @@ public class ManagerRoleController extends BaseControllerUtil {
 		SignatureMap.put("groupId", groupId);
 		SignatureMap.put("start", startRow);
 		SignatureMap.put("limit", pageSize);
-		String s = sendPost(queryRoleUrl, SignatureMap);
+		String s = sendPost(oesPrivilegeDev.getQueryRoleUrl(), SignatureMap);
 		JSONObject job = JSONObject.fromObject(s);
 		SignatureMap.clear();
 		List<Map<String, Object>> roles = JSONArray.fromObject(job.get("roleList"));
@@ -210,7 +196,7 @@ public class ManagerRoleController extends BaseControllerUtil {
 		map.put("createUser", "");
 		map.put("createUserId", "");
 
-		String s = sendPost(roleAddUrl, map);
+		String s = sendPost(oesPrivilegeDev.getRoleAddUrl(), map);
 		JSONObject job = JSONObject.fromObject(s);
 		WebUtils.writeErrorJson(response, job);
 	}
@@ -292,7 +278,7 @@ public class ManagerRoleController extends BaseControllerUtil {
 				map.put("rolePrivilege", resourceIds);
 				map.put("privilegeFunId", functionIds);
 				map.put("method", 0);// 0-添加权限，1-删除权限
-				s1 = sendPost(roleModiUrl, map);
+				s1 = sendPost(oesPrivilegeDev.getRoleModiUrl(), map);
 			}
 			resourceIds = "";
 			functionIds = "";
@@ -321,11 +307,11 @@ public class ManagerRoleController extends BaseControllerUtil {
 				map.put("rolePrivilege", resourceIds);
 				map.put("privilegeFunId", functionIds);
 				map.put("method", 1);// 0-添加权限，1-删除权限
-				s2 = sendPost(roleModiUrl, map);
+				s2 = sendPost(oesPrivilegeDev.getRoleModiUrl(), map);
 			}
 		} else {
 			map.put("method", 0);// 如果没有添加或删除权限，默认给一个值
-			s1 = sendPost(roleModiUrl, map);
+			s1 = sendPost(oesPrivilegeDev.getRoleModiUrl(), map);
 		}
 
 		JSONObject job1 = null;
@@ -362,7 +348,7 @@ public class ManagerRoleController extends BaseControllerUtil {
 		map.put("privilegeRoleId", privilegeRoleId);
 		map.put("createUser", "");
 		map.put("createUserId", "");
-		String s = sendPost(roleDelUrl, map);
+		String s = sendPost(oesPrivilegeDev.getRoleDelUrl(), map);
 		JSONObject job = JSONObject.fromObject(s);
 		WebUtils.writeErrorJson(response, job);
 	}
@@ -385,7 +371,7 @@ public class ManagerRoleController extends BaseControllerUtil {
 		map.put("limit", "50");
 		map.put("deptId", "");
 		map.put("groupId", "");
-		String s = sendPost(getRolePrivilegeUrl, map);
+		String s = sendPost(oesPrivilegeDev.getRolePrivilegeUrl(), map);
 		JSONObject o = JSONObject.fromObject(s);
 		List<Map<String, Object>> roles = JSONArray.fromObject(o.get("roleList"));
 		Map<String, Object> m = roles.get(0);
@@ -422,16 +408,16 @@ public class ManagerRoleController extends BaseControllerUtil {
 		String appId = request.getParameter("appId");
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
 		map.put("appId", appId);
-		String s = sendPost(appMenuRedisUrl, map);
+		String s = sendPost(oesPrivilegeDev.getAppMenuRedisUrl(), map);
 		JSONObject obj = JSONObject.fromObject(s);// 将json字符串转换为json对象
 		JSONArray objArray = JSONArray.fromObject(obj.get("menuList"));
 		// 将json对象转换为java对象
 		List<PrivilegeMenu> menuList = JSONArray.toList(objArray, PrivilegeMenu.class);
-		String s1 = sendPost(appResRedisUrl, map);
+		String s1 = sendPost(oesPrivilegeDev.getAppResRedisUrl(), map);
 		JSONObject obj1 = new JSONObject().fromObject(s1);// 将json字符串转换为json对象
 		JSONArray obj1Array = JSONArray.fromObject(obj1.get("resourceList"));
 		JSONArray obj2Array = JSONArray.fromObject(obj1.get("functionList"));
-		String operation = sendPost(getAllOperationUrl, map);
+		String operation = sendPost(oesPrivilegeDev.getAllOperationUrl(), map);
 		obj = JSONObject.fromObject(operation);
 		objArray = JSONArray.fromObject(obj.get("operationList"));
 		// 将json对象转换为java对象
