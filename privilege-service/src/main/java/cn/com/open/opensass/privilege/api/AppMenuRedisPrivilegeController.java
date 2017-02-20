@@ -40,7 +40,6 @@ public class AppMenuRedisPrivilegeController extends BaseControllerUtil{
 		}
 		PrivilegeAjaxMessage message=privilegeMenuService.getAppMenuRedis(appId);
 		if (message.getCode().equals("1")) {
-			System.err.println(message.getMessage());
 			WebUtils.writeJson(response, message.getMessage());
 		} else {
 			map.put("status", message.getCode());
@@ -60,7 +59,6 @@ public class AppMenuRedisPrivilegeController extends BaseControllerUtil{
 		}
 		PrivilegeAjaxMessage message=privilegeMenuService.delAppMenuRedis(appId);
 		if (message.getCode().equals("1")) {
-			System.err.println(message.getMessage());
 			WebUtils.writeJson(response, message.getMessage());
 		} else {
 			map.put("status", message.getCode());
@@ -80,7 +78,6 @@ public class AppMenuRedisPrivilegeController extends BaseControllerUtil{
 		}
 		PrivilegeAjaxMessage message=privilegeMenuService.updateAppMenuRedis(appId);
 		if (message.getCode().equals("1")) {
-			System.err.println(message.getMessage());
 			WebUtils.writeJson(response, message.getMessage());
 		} else {
 			map.put("status", message.getCode());
