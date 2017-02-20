@@ -4,29 +4,28 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.com.open.pay.platform.manager.dev.OesPrivilegeDev;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGetSignatureService;
 import cn.com.open.pay.platform.manager.tools.DateTools;
-import cn.com.open.pay.platform.manager.tools.LoadPopertiesFile;
 import cn.com.open.pay.platform.manager.tools.StringTool;
 
 @Service("privilegeGetSignatureService")
 public class PrivilegeGetSignatureServiceImpl implements PrivilegeGetSignatureService {
 	final static String SEPARATOR = "&";
-	private Map<String, String> map = LoadPopertiesFile.loadProperties();
-	private static final String ALGORITHM = "HmacSHA1";
-	private static final String ENCODING = "UTF-8";
-
+	@Autowired
+	private OesPrivilegeDev oesPrivilegeDev;
 	@Override
 	public Map<String, Object> getSignature(String appId) {
-		String key = map.get(appId);
+		String key = oesPrivilegeDev.getClientSecret();
 		String signature = "";
 		String timestamp = "";
 		String signatureNonce = "";
 		String appKey = "";
 		if (key != null) {
-			appKey = map.get(key);
+			appKey = oesPrivilegeDev.getClientId();
 			timestamp = DateTools.getSolrDate(new Date());
 			StringBuilder encryptText = new StringBuilder();
 			signatureNonce = StringTool.getRandom(100, 1);
@@ -57,7 +56,7 @@ public class PrivilegeGetSignatureServiceImpl implements PrivilegeGetSignatureSe
 
 	@Override
 	public Map<String, Object> getOauthSignature(String appId, String client_id, String access_token) {
-		String key = map.get(appId);
+		String key = oesPrivilegeDev.getClientSecret();
 		String timestamp = "";
 		String signatureNonce = "";
 		String signature = "";
