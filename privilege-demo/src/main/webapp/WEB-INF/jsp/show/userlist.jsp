@@ -558,14 +558,12 @@
 		//页面预加载
 		$(function(){
 			findUsers();
-			$.post('${pageContext.request.contextPath}/managerUser/findGroup',
-					function (data) {
-						$('#cc').combobox('loadData',data);
-						if (data.length==1) {
-							$('#cc').combobox('select',data[0].groupCode);
-						}
-					});
+			$.post('${pageContext.request.contextPath}/managerUser/findGroup',function (data) {
+				$('#cc').combobox('loadData',data);
+				if (data.length==1) {
+					$('#cc').combobox('select',data[0].groupCode);
+				}
+			});
 		});
-		
 	</script>
 </html>
