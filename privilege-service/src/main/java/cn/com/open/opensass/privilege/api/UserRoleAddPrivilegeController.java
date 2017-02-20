@@ -123,6 +123,12 @@ public class UserRoleAddPrivilegeController extends BaseControllerUtil {
 				paraMandaChkAndReturn(10002, response, "用户添加失败");
 				return;
 			}
+		}else{
+			if (sf) {
+				map.put("status", "1");
+			}else {
+				map.put("status", "0");
+			}
 		}
 
 		if (map.get("status") == "0") {
