@@ -195,6 +195,7 @@
        		<property name="roleModiUrl" value="${privilege-role-modi-uri}"></property>
        		<property name="groupPrivilegeModifyUrl" value="${privilege-group-modify-uri}"></property>
        		<property name="groupPrivilegeQueryUrl" value="${privilege-group-query-uri}"></property>
+       		<property name="logoUrl" value="${logo_url}"></property>
        		
        </bean>
 </beans>
