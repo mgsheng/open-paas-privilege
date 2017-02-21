@@ -315,19 +315,18 @@ public class ManagerUserController extends BaseControllerUtil {
 			// status为1时，该组织机构存在，构建tree
 			if (!("0").equals(jsonObject.get("status"))) {
 
-				JSONObject obj = JSONObject.fromObject(s);// 将json字符串转换为json对象
-				JSONArray menuArray = (JSONArray) obj.get("menuList");
+				JSONArray menuArray = (JSONArray) jsonObject.get("menuList");
 				// 如果menuList不为空则构建tree,否则直接返回无权限状态
 				if (menuArray.size() > 0) {
-					JSONArray resourceArray = (JSONArray) obj.get("resourceList");
+					JSONArray resourceArray = (JSONArray) jsonObject.get("resourceList");
 					// 将json对象转换为java对象
 					List<PrivilegeMenu> menuList = JSONArray.toList(menuArray, PrivilegeMenu.class);
-					String s1 = sendPost(oesPrivilegeDev.getAppResRedisUrl(), map);
-					JSONObject obj1 = new JSONObject().fromObject(s1);// 将json字符串转换为json对象
-					JSONArray functionArray = (JSONArray) obj1.get("functionList");
-					String operation = sendPost(oesPrivilegeDev.getAllOperationUrl(), map);
-					obj = JSONObject.fromObject(operation);
-					JSONArray operationArray = (JSONArray) obj.get("operationList");
+					s = sendPost(oesPrivilegeDev.getAppResRedisUrl(), map);
+					jsonObject = JSONObject.fromObject(s);// 将json字符串转换为json对象
+					JSONArray functionArray = (JSONArray) jsonObject.get("functionList");
+					s = sendPost(oesPrivilegeDev.getAllOperationUrl(), map);
+					jsonObject = JSONObject.fromObject(s);
+					JSONArray operationArray = (JSONArray) jsonObject.get("operationList");
 					// 将json对象转换为java对象
 					List<PrivilegeOperation> operationList = JSONArray.toList(operationArray, PrivilegeOperation.class);
 					List<PrivilegeResource1> resourceList = JSONArray.toList(resourceArray, PrivilegeResource1.class);
