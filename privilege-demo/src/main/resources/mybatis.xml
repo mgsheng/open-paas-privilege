@@ -35,6 +35,7 @@
         <typeAlias alias="PrivilegeGroupResource" type="cn.com.open.pay.platform.manager.privilege.model.PrivilegeGroupResource"/>
     	<typeAlias alias="OesUser" type="cn.com.open.pay.platform.manager.privilege.model.OesUser"/>
         <typeAlias alias="OesGroup" type="cn.com.open.pay.platform.manager.privilege.model.OesGroup"/>
+        <typeAlias alias="OesLatestVisit" type="cn.com.open.pay.platform.manager.privilege.model.OesLatestVisit"/>
     </typeAliases>
     <mappers>
         <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeGroupMapper.xml"/>
@@ -60,6 +61,7 @@
       	<mapper resource="cc/wdcy/infrastructure/mybatis/DictTradePaymentMapper.xml"/>
       	<mapper resource="cc/wdcy/infrastructure/mybatis/OesUserMapper.xml"/>
       	<mapper resource="cc/wdcy/infrastructure/mybatis/OesGroupMapper.xml"/>
+      	<mapper resource="cc/wdcy/infrastructure/mybatis/OesLatestVisitMapper.xml"/>
     </mappers>
 
 </configuration>
