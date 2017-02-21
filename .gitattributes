@@ -185,6 +185,7 @@ privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/myb
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/MerchantOrderOfflineRepositoryMyBatis.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/MerchantOrderRefundRepositoryMyBatis.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/OesGroupRepositoryMyBatis.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/OesLatestVisitRepositoryMyBatis.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/OesUserRepositoryMyBatis.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/PayChannelDictionaryRepositoryMyBatis.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/PayChannelRateRepositoryMyBatis.java -text
