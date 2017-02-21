@@ -1,6 +1,5 @@
 package cn.com.open.pay.platform.manager.privilege.model;
 
-import java.util.Date;
 
 public class OesGroup extends AbstractDomain {
 	/**
@@ -15,7 +14,15 @@ public class OesGroup extends AbstractDomain {
 	private String groupTypeName;
 	private String groupName;
 	private String groupType;
+	private String groupLogo;
 	
+	
+	public String getGroupLogo() {
+		return groupLogo;
+	}
+	public void setGroupLogo(String groupLogo) {
+		this.groupLogo = groupLogo;
+	}
 	public Integer getId() {
 		return id;
 	}
