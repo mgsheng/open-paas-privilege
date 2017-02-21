@@ -7,13 +7,15 @@
 		<result column="group_type_name" property="groupTypeName" jdbcType="VARCHAR" />
 		<result column="group_name" property="groupName" jdbcType="VARCHAR" />
 		<result column="group_type" property="groupType" jdbcType="VARCHAR" />
+		<result column="group_logo" property="groupLogo" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Insert_Column_List">
 	  id,
 	  group_code,
 	  group_type_name,
 	  group_name,
-	  group_type
+	  group_type,
+	  group_logo
 	</sql>
 	
 	<select id="findByPage" resultMap="oesGroupMap" flushCache="true">
