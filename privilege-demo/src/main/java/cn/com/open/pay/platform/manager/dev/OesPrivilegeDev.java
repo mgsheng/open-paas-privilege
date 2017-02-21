@@ -34,8 +34,15 @@ public class OesPrivilegeDev {
 	private String roleModiUrl;
 	private String groupPrivilegeModifyUrl;
 	private String groupPrivilegeQueryUrl;
+	private String logoUrl;
 	
 	
+	public String getLogoUrl() {
+		return logoUrl;
+	}
+	public void setLogoUrl(String logoUrl) {
+		this.logoUrl = logoUrl;
+	}
 	public String getGroupPrivilegeModifyUrl() {
 		return groupPrivilegeModifyUrl;
 	}
