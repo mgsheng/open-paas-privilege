@@ -19,9 +19,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.pay.platform.manager.dev.OesPrivilegeDev;
+import cn.com.open.pay.platform.manager.privilege.model.OesGroup;
+import cn.com.open.pay.platform.manager.privilege.model.OesLatestVisit;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource1;
 import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
+import cn.com.open.pay.platform.manager.privilege.service.OesGroupService;
+import cn.com.open.pay.platform.manager.privilege.service.OesLatestVisitService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGetSignatureService;
 import cn.com.open.pay.platform.manager.redis.impl.RedisClientTemplate;
 import cn.com.open.pay.platform.manager.redis.impl.RedisConstant;
@@ -44,6 +48,10 @@ public class UserLoginController extends BaseControllerUtil {
 	private PrivilegeGetSignatureService privilegeGetSignatureService;
 	@Autowired
 	private RedisClientTemplate redisClientTemplate;
+	@Autowired
+	private OesLatestVisitService oesLatestVisitService;
+	@Autowired
+	private OesGroupService oesGroupService;
 	private static final String AccessTokenPrefix = RedisConstant.ACCESSTOKEN_CACHE;
 
 	/**
@@ -209,7 +217,19 @@ public class UserLoginController extends BaseControllerUtil {
 					// JSONArray
 					List<TreeNode> nodes = convertTreeNodeList(menuList);
 					JSONArray jsonArr = JSONArray.fromObject(buildTree2(nodes, resourceList));
+					List<Map<String, Object>> latestVisitRes=oesLatestVisitService.getUserLastVisitRedis(appUserId, appId);
 					menus.put("menus", jsonArr);
+					menus.put("latestVisit", latestVisitRes);
+					//根据该用户查找用户所在组织机构logo
+					OesGroup group=oesGroupService.findByCode(groupId);
+					String logoUrl=oesPrivilegeDev.getLogoUrl();
+					if (group!=null) {
+						if (group.getGroupLogo()!=null&&!("").equals(group.getGroupLogo())) {
+							logoUrl=group.getGroupLogo();
+							logoUrl.replaceFirst("I", "i");
+						}
+					}
+					model.addAttribute("logo", logoUrl);
 					model.addAttribute("username", userName);
 					model.addAttribute("appId", appId);
 					model.addAttribute("jsessionId", jsessionId);
@@ -412,26 +432,39 @@ public class UserLoginController extends BaseControllerUtil {
 		}
 		return node;
 	}
+	
+	/**
+	 * 保存最近访问菜单
+	 * 
+	 * @param request
+	 * @param response
+	 */
 
-	// 构建菜单tree Json
-	public JSONArray treeMenuList(List<PrivilegeMenu> menuList, List<PrivilegeResource1> resourceList,
-			String parentId) {
-		JSONArray childMenu = new JSONArray();
-		for (PrivilegeMenu menu : menuList) {
-			JSONObject jsonMenu = JSONObject.fromObject(menu);
-			String menuId = menu.getMenuId();
-			String pid = menu.getParentId();
-			if (parentId.equals(pid)) {
-				for (PrivilegeResource1 resource : resourceList) {
-					if (resource.getMenuId().equals(menuId)) {
-						jsonMenu.put("url", resource.getBaseUrl());
-					}
-				}
-				JSONArray childrenNode = treeMenuList(menuList, resourceList, menuId);
-				jsonMenu.put("menus", childrenNode);
-				childMenu.add(jsonMenu);
+	@RequestMapping(value = "saveLatestVisit")
+	public void saveLatestVisit(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> user=(Map<String, Object>) request.getSession().getAttribute("user");
+		String appUserId = (String) user.get("appUserId");
+		String appId = (String) user.get("appId");
+		String menuId = request.getParameter("menuId");
+		String menuName = request.getParameter("menuName");
+		//是否存放标识，如果前5个最近访问中有该菜单则不存放，相反则存放
+		Boolean boo=true;
+		List<OesLatestVisit> oesLatestVisits=oesLatestVisitService.getOesLastVisitByUserId(appUserId, 0, 5);
+		for (OesLatestVisit oesLatestVisit : oesLatestVisits) {
+			if (menuId.equals(oesLatestVisit.getMenuId())) {
+				boo=false;
+				break;
 			}
 		}
-		return childMenu;
+		if (boo) {
+			OesLatestVisit oesLatestVisit=new OesLatestVisit();
+			oesLatestVisit.setMenuId(menuId);
+			oesLatestVisit.setMenuName(menuName);
+			oesLatestVisit.setUserId(appUserId);
+			boo=oesLatestVisitService.saveOesLatestVisit(oesLatestVisit);
+			oesLatestVisitService.updateUserLastVisitRedis(appUserId,appId);
+		}
+		
 	}
+	
 }
