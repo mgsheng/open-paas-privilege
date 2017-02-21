@@ -273,6 +273,7 @@ privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/Pr
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/TreeNode.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/ManagerService.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/OesGroupService.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/OesLatestVisitService.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/OesUserService.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/PrivilegeGetSignatureService.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/PrivilegeGroupResourceService.java -text
