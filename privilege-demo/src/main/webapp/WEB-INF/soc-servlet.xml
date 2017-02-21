@@ -40,6 +40,7 @@
 						<value>/privilegeLog/findPrivilegeLog</value>
 						<value>/manage/getMerchantOrderRefund</value>
 						<value>/user/update</value>
+						<value>/user/saveLatestVisit</value>
 						<value>/managerUser/findGroup</value>
 					</list>
 				</property>
