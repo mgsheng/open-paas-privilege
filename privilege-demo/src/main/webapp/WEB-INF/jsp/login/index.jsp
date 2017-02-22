@@ -53,10 +53,17 @@ function menuClick(obj){
 function addLatestVisitMenu(data) {
 	 var menulist = '<ul>';
 	$.each(data,function(i,n){
-		 menulist += '<li><div style="margin-bottom:-5px"><a onclick="latestClick(this)" ref="'+n.id+'" href="#" rel="' +n.url + '" >'
-		 +'<span class="tree-icon tree-folder" style="background:no-repeat center center url(${pageContext.request.contextPath}/'+n.menuRule+')">&nbsp;</span>'
-		 +'<span class="nav">' + n.name+ '</span></a></div></li> ';
-		});
+		if (n.menuRule!="") {
+			 menulist += '<li><div style="margin-bottom:-5px"><a onclick="latestClick(this)" ref="'+n.id+'" href="#" rel="' +n.url + '" >'
+			 +'<span class="tree-icon tree-folder" style="background:no-repeat center center url(${pageContext.request.contextPath}/'+n.menuRule+')">&nbsp;</span>'
+			 +'<span class="nav">' + n.name+ '</span></a></div></li> ';
+		}else {
+			menulist += '<li><div style="margin-bottom:-5px"><a onclick="latestClick(this)" ref="'+n.id+'" href="#" rel="' +n.url + '" >'
+			 +'<span class="icon icon-mini-add" >&nbsp;</span>'
+			 +'<span class="nav">' + n.name+ '</span></a></div></li> ';
+		}
+		
+	});
 	menulist+='</ul>'
 	$('#nav').accordion('add', {
            title: '最近访问',
@@ -71,11 +78,26 @@ function GetMenuList(data, menulist) {
         menulist += '<ul>';
         $.each(data.children, function(i, sm) {
             if (sm.attributes.baseUrl != null) {
-                menulist += '<li><div style="margin-bottom:-5px"><a ref="'+sm.id+'" href="#" rel="' +sm.attributes.baseUrl + '" ><span class="tree-icon tree-folder" style="background:no-repeat center center url(${pageContext.request.contextPath}/'+sm.attributes.menuRule+')">&nbsp;</span><span class="nav">' + sm.text+ '</span></a></div></li> ';
-            }
-            else {
-            	 menulist += '<li class="close" style="margin-bottom: 15px" >'
-            	 +'<div data-options="fit:true,border:false" style="margin-left:-8px;margin-right:-15px" class="easyui-accordion panel-header accordion-header" onclick="menuClick(this)"><span class="tree-icon tree-folder" style="background:url(${pageContext.request.contextPath}/'+sm.attributes.menuRule+')"></span><span class=" panel-title panel-with-icon">'+ sm.text +'</span></div>';
+                if (sm.attributes.menuRule!="") {
+                	menulist += '<li><div style="margin-bottom:-5px"><a ref="'+sm.id+'" href="#" rel="' +sm.attributes.baseUrl + '" >'
+                	+'<span class="tree-icon tree-folder" style="background:no-repeat center center url(${pageContext.request.contextPath}/'+sm.attributes.menuRule+')">&nbsp;</span>'
+                	+'<span class="nav">' + sm.text+ '</span></a></div></li> ';
+				}else {
+					menulist += '<li><div style="margin-bottom:-5px"><a ref="'+sm.id+'" href="#" rel="' +sm.attributes.baseUrl + '" >'
+					+'<span class="icon icon-mini-add" >&nbsp;</span><span class="nav">' + sm.text+ '</span></a></div></li> ';
+				}
+            }else {
+            	 if (sm.attributes.menuRule!="") {
+            		 menulist += '<li class="close" style="margin-bottom: 15px" >'
+                    	 +'<div  style="margin-left:-8px;margin-right:-15px" class="easyui-accordion panel-header accordion-header" onclick="menuClick(this)">'
+                    	 +'<span class="tree-icon tree-folder" style="background:url(${pageContext.request.contextPath}/'+sm.attributes.menuRule+')"></span>'
+                    	 +'<span class=" panel-title panel-with-icon">'+ sm.text +'</span></div>';
+            	 }else {
+            		 menulist += '<li class="close" style="margin-bottom: 15px" >'
+                    	 +'<div  style="margin-left:-8px;margin-right:-15px" class="easyui-accordion panel-header accordion-header" onclick="menuClick(this)">'
+                    	 +'<span class="panel-icon icon icon-more"></span><span class=" panel-title panel-with-icon">'+ sm.text +'</span></div>';
+				}
+            	
             }
             menulist = GetMenuList(sm, menulist);
         })
@@ -94,10 +116,12 @@ function addNav(data) {
 	                content: menulist1,
 	                iconCls: 'icon icon-more'
 	            });
-	            //导航一级菜单加图标
-	            var childrens=$('#nav').children().last();
-	            var body=childrens.children().eq(0);
-	            body.children(".panel-icon").css('background',"url(${pageContext.request.contextPath}/"+sm.attributes.menuRule+")");
+	            if (sm.attributes.menuRule!="") {
+	            	 //导航一级菜单加图标
+		            var childrens=$('#nav').children().last();
+		            var body=childrens.children().eq(0);
+		            body.children(".panel-icon").css('background',"url(${pageContext.request.contextPath}/"+sm.attributes.menuRule+")");
+				}
 	          }
 	    });
     $('.easyui-accordion li a').click(function(){
