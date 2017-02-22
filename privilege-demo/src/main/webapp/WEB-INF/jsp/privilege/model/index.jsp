@@ -280,6 +280,7 @@
 			}
         });
         var menuIconUrl='${menuIconUrl}';
+        menuIconUrl=menuIconUrl.substring(1); 
         //添加菜单或修改菜单
         function serverLogin() {
             var name = $('#moduleName').val();
@@ -287,7 +288,6 @@
             var moduleUrl= $('#moduleUrl').val();
             var displayOrder= $('#display_order').val();
             var menuRule=$('#icon').combobox('getValue');
-            menuIconUrl=menuIconUrl.substring(1); 
             if(menuRule!=null&&menuRule!=""){
             	  menuRule=menuIconUrl+menuRule;
                 }
