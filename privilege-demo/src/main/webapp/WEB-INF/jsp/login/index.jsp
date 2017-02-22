@@ -23,9 +23,23 @@
 <script src="http://10.100.133.80:8630/ImplyWCookie.aspx?jsessionId=${jsessionId}"></script>
 
 <script type="text/javascript">
+function latestClick(obj) {
+	var aa=$(obj);
+	var tabTitle = aa.children('.nav').text();
+	var url=aa.attr("rel");
+	var string=url.substring(0,1);
+	if(string=="/"){
+		url = '${pageContext.request.contextPath}'+aa.attr("rel")+"?appId=${appId}";
+	}else{
+		url = 'http://'+aa.attr("rel");
+		}
+	var menuid = aa.attr("ref");
+	addTab(tabTitle,url,"");
+	$('.easyui-accordion li div').removeClass("selected");
+	$(this).parent().addClass("selected");
+}
 function menuClick(obj){
 	var menu=$(obj).next();
-	//var boo=$(obj).parent(".close").find('ul').first().css('display');
 	var boo=menu.css('display');
 	if(boo=='none'){
 		$(obj).addClass('accordion-header-selected');
@@ -35,6 +49,21 @@ function menuClick(obj){
 		menu.css('display','none');
 	} 
 }
+//添加最近访问菜单
+function addLatestVisitMenu(data) {
+	 var menulist = '<ul>';
+	$.each(data,function(i,n){
+		 menulist += '<li><div style="margin-bottom:-5px"><a onclick="latestClick(this)" ref="'+n.id+'" href="#" rel="' +n.url + '" >'
+		 +'<span class="tree-icon tree-folder" style="background:no-repeat center center url(${pageContext.request.contextPath}/'+n.menuRule+')">&nbsp;</span>'
+		 +'<span class="nav">' + n.name+ '</span></a></div></li> ';
+		});
+	menulist+='</ul>'
+	$('#nav').accordion('add', {
+           title: '最近访问',
+           content: menulist,
+           iconCls: 'icon '
+     });
+}
 function GetMenuList(data, menulist) {
     if (data.children == null)
         return menulist;
@@ -42,11 +71,11 @@ function GetMenuList(data, menulist) {
         menulist += '<ul>';
         $.each(data.children, function(i, sm) {
             if (sm.attributes.baseUrl != null) {
-                menulist += '<li><div style="margin-bottom:-5px"><a ref="'+sm.id+'" href="#" rel="' +sm.attributes.baseUrl + '" ><span class="icon icon-mini-add" >&nbsp;</span><span class="nav">' + sm.text+ '</span></a></div></li> ';
+                menulist += '<li><div style="margin-bottom:-5px"><a ref="'+sm.id+'" href="#" rel="' +sm.attributes.baseUrl + '" ><span class="tree-icon tree-folder" style="background:no-repeat center center url(${pageContext.request.contextPath}/'+sm.attributes.menuRule+')">&nbsp;</span><span class="nav">' + sm.text+ '</span></a></div></li> ';
             }
             else {
             	 menulist += '<li class="close" style="margin-bottom: 15px" >'
-            	 +'<div data-options="fit:true,border:false" style="margin-left:-8px;margin-right:-15px" class="easyui-accordion panel-header accordion-header" onclick="menuClick(this)"><span class="panel-icon icon icon-more"></span><span class=" panel-title panel-with-icon">'+ sm.text +'</span></div>';
+            	 +'<div data-options="fit:true,border:false" style="margin-left:-8px;margin-right:-15px" class="easyui-accordion panel-header accordion-header" onclick="menuClick(this)"><span class="tree-icon tree-folder" style="background:url(${pageContext.request.contextPath}/'+sm.attributes.menuRule+')"></span><span class=" panel-title panel-with-icon">'+ sm.text +'</span></div>';
             }
             menulist = GetMenuList(sm, menulist);
         })
@@ -54,27 +83,23 @@ function GetMenuList(data, menulist) {
     }
     return menulist;
 }
+//添加导航菜单
 function addNav(data) {
 	 $.each(data, function(i, sm) {
 	        var menulist1 = "";
 	        if(sm.pid=="0"){
 	        	menulist1 = GetMenuList(sm, menulist1);
-	           // menulist1 = "<ul id='tt1' >" + menulist1.substring(4); 
 	            $('#nav').accordion('add', {
 	                title: sm.text,
 	                content: menulist1,
 	                iconCls: 'icon icon-more'
 	            });
+	            //导航一级菜单加图标
+	            var childrens=$('#nav').children().last();
+	            var body=childrens.children().eq(0);
+	            body.children(".panel-icon").css('background',"url(${pageContext.request.contextPath}/"+sm.attributes.menuRule+")");
 	          }
 	    });
-    var nav=$('#nav');
-    var childrens=nav.children();
-    $.each(childrens,function(i,n){
-    		$(n).addClass("easyui-panel");
-    		$(n).attr('data-options','fit:true,border:true');
-    		var body=$(n).children().eq(1);
-    		
-        });
     $('.easyui-accordion li a').click(function(){
 		var tabTitle = $(this).children('.nav').text();
 		var url=$(this).attr("rel");
@@ -90,6 +115,12 @@ function addNav(data) {
 		addTab(tabTitle,url,"");
 		$('.easyui-accordion li div').removeClass("selected");
 		$(this).parent().addClass("selected");
+		$.post('${pageContext.request.contextPath}/user/saveLatestVisit',
+				{
+					menuId:menuid,
+					menuName:tabTitle,
+					
+				},function(data){});
 	}).hover(function(){
 		$(this).parent().addClass("hover");
 	},function(){
@@ -102,18 +133,7 @@ function addNav(data) {
 }
 
 
-	 /* var _menus = {"menus":[
-					{"menuid":"","icon":"icon-sys","menuname":"用户管理",
-							"menus":[
-										   {"menuid":"24","menuname":"用户信息列表","icon":"icon-man","url":"${pageContext.request.contextPath}/managerUser/userList"}							]
-						},{"menuid":"","icon":"icon-sys","menuname":"权限管理",
-							"menus":[{"menuid":"26","menuname":"资源管理","icon":"icon-nav","url":"${pageContext.request.contextPath}/resource/index"},
-									 {"menuid":"27","menuname":"模块管理","icon":"icon-nav","url":"${pageContext.request.contextPath}/module/index"},
-									 {"menuid":"28","menuname":"角色管理","icon":"icon-role","url":"${pageContext.request.contextPath}/managerRole/roleMessage"},
-									 {"menuid":"29","menuname":"公共权限","icon":"icon-set","url":"${pageContext.request.contextPath}/privilegePublic/index"}
-								   ]
-						}
-				]}; */
+	 
         //设置修改密码窗口
         function openPwd() {
             $('#w').window({
@@ -194,7 +214,10 @@ function addNav(data) {
                 	if(data.menus.length<=0){
 						alert("没有相应菜单");
                     }else {
+                        //添加导航菜单
                     	addNav(data.menus);
+                    	//添加最近访问菜单
+                    	addLatestVisitMenu(data.latestVisit);
 					}
             		
             	}
@@ -249,7 +272,7 @@ function addNav(data) {
 			<a href="#" id="loginOut">安全退出</a>
 		</span> 
 		<span style="padding-left:10px; font-size: 16px;  ">
-		<img  src="${pageContext.request.contextPath}/images/open_logo.png"
+		<img  src="${pageContext.request.contextPath}/${logo}"
 			width="140" height="45" align="absmiddle" />
 		</span>
 	</div>
@@ -262,10 +285,13 @@ function addNav(data) {
 	</div>
 	<div region="west" hide="true" split="true" title="导航菜单"
 		style="width:230px;overflow-y:auto;" id="west">
-		<div id="nav" class="easyui-accordion" border="false"  >
+		<div id="nav" class="easyui-accordion" border="false" >
 			<!--  导航内容 -->
 			
 		</div>
+		<div id="lastvisited" class="easyui-accordion" border="false" style="width:220px;">
+			
+		</div> 
 
 	</div>
 	<div id="mainPanle" region="center"
