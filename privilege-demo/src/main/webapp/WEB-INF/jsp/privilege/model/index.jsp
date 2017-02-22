@@ -63,6 +63,13 @@
 						<td><input id="moduleUrl" type="text" name="moduleUrl" class="txt01" />
 						</td>
 					</tr>
+					<tr >
+						<td>图标：</td>
+						<td>
+							<select id="icon"></select><a id="clearIcon" class="easyui-linkbutton" icon="icon-clear" href="javascript:void(0)">清空图标</a> 
+							<div id="sp"></div>
+						</td>
+					</tr>
 					<tr>
 						<td>code：</td>
 						<td><input id="code" type="text" name="code" class="txt01" />
@@ -138,24 +145,26 @@
 	</div>
 </body>
 <script>
-	
+	//清空所选图标
+	$('#clearIcon').click(function(){
+		  $('#icon').combo('setValue', null).combo('setText', null);
+		});
+	//遍历树，显示图标
 	function getRoot(){
 		var node=$('#deptree').tree('getRoots');
 		$.each(node,function(i,n){
-			if($(n.target).children(".tree-icon").hasClass('tree-file')){
-				$(n.target).children(".tree-icon").removeClass('tree-file').addClass("tree-folder");
+			if(n.attributes.menuRule!=""){
+				$(n.target).children(".tree-icon").css("background","url(${pageContext.request.contextPath}/"+n.attributes.menuRule+")");
 			}
-			$(n.target).children(".tree-icon").addClass("tree-folder");
 			var children=$('#deptree').tree('getChildren',n.target);
 			$.each(children,function(i,m){
-				if(m.ismodule=="0"){
-					if($(m.target).children(".tree-icon").hasClass('tree-file')){
-						$(m.target).children(".tree-icon").removeClass('tree-file').addClass("tree-folder");
+				if(m.attributes.menuRule!=""){
+					$(m.target).children(".tree-icon").css("background","url(${pageContext.request.contextPath}/"+m.attributes.menuRule+")");
+				}else{
+						if(m.ismodule=="1"){
+							$(m.target).children(".tree-icon").addClass("icon icon-mini-add");
+						}
 					}
-					//$(m.target).children(".tree-icon").addClass("tree-folder");
-				}else if (m.ismodule=="1") {
-					$(m.target).children(".tree-icon").addClass("icon icon-mini-add");
-				}
 			});
 		});
 	}
@@ -194,6 +203,7 @@
         //关闭窗口
         function closePwd() {
             $('#wmodule').window('close');
+            $('#icon').combo('setValue', null).combo('setText', null);
         }
         function closeFunction() {
             $('#function').window('close');
@@ -275,7 +285,11 @@
             var code = $('#code').val();
             var moduleUrl= $('#moduleUrl').val();
             var displayOrder= $('#display_order').val();
-            
+            var menuRule=$('#icon').combobox('getValue');
+            if(menuRule!=null&&menuRule!=""){
+            	  menuRule="images/icon/"+menuRule;
+                }
+            console.log(menuRule);
             var status= $('#status').combobox('getValue');
             var parentId=$('#parentId').val();
             var menuLevel=$('#menuLevel').val();
@@ -307,15 +321,18 @@
                  	'status':status,
                  	'displayOrder':displayOrder,
                  	'menuLevel':menuLevel,
+                 	'menuRule':menuRule,
                  	'url':moduleUrl,
                  	'menuId':menuId,
                  	'resourceId':resourceId,
                  	'appId':'${appId}'
                  },function(data) {
                 if(data.returnMsg=='1'){
+                    //清除图标组合框的值
+                    $('#icon').combo('setValue', null).combo('setText', null);
                  	msgShow('系统提示', '恭喜，添加成功！', 'info');
                  	$('#wmodule').window('close');
-                 		var menu=$('#deptree').tree('getSelected');
+                 	var menu=$('#deptree').tree('getSelected');
                  	if(data.resourceId==null){
                  		if(parentId=="0"){
                  			var root = $("#deptree").tree('getRoot');
@@ -345,17 +362,20 @@
                          				'status':status,
                          				'dislayOrder':displayOrder,
                          				'menuLevel':parseInt(menuLevel)+1,
-    									'parentId':parentId               				
+    									'parentId':parentId,
+    									'menuRule':menuRule             				
                          			}
                          		}]});
                  			
 						}
-                 		
+                 		//添加图标
                  		var nn = $('#deptree').tree('find', data.menuId);
-                 		if($(nn.target).children(".tree-icon").hasClass('tree-file')){
-            				$(nn.target).children(".tree-icon").removeClass('tree-file').addClass("tree-folder");
-            			}
-             			//$(nn.target).children(".tree-icon").addClass("icon icon-mini-add");
+                 		if(menuRule!=null&&menuRule!=""){
+                     			$(nn.target).children(".tree-icon").css("background","url(${pageContext.request.contextPath}/"+menuRule+")");
+                     	}else {
+                				$(nn.target).children(".tree-icon").removeClass('tree-file').addClass("tree-folder");
+						}
+                 		
                  	}else{//添加资源菜单
                  		$('#deptree').tree('append',{parent: menu.target,
                      		data:[{
@@ -370,40 +390,58 @@
                      				'menuCode':code,
                      				'status':status,
                      				'dislayOrder':displayOrder,
-                     				'menuLevel':parseInt(menuLevel)+1
+                     				'menuLevel':parseInt(menuLevel)+1,
+                     				'menuRule':menuRule   
 
                      			}
                      		}]});
-                 		var nn = $('#deptree').tree('find', data.resourceId);
-                 		$(nn.target).children(".tree-icon").addClass("icon icon-mini-add");
-             			//$(nn.target).children(".tree-icon").removeClass("tree-file").addClass("tree-folder");
+                 		//添加图标
+                 		var nn = $('#deptree').tree('find', data.resourceId);、
+                 		//menuRule不为空显示选择的图标
+                 		if(menuRule!=null&&menuRule!=""){
+                 			$(nn.target).children(".tree-icon").css("background","url(${pageContext.request.contextPath}/"+menuRule+")");
+                 		}else {
+                 			$(nn.target).children(".tree-icon").addClass("icon icon-mini-add");
+						}
                  	}
                  	reset();
                 	$('#wmodule').window('close');
                 }else if(data.returnMsg=='2'){
                  	msgShow('系统提示', '恭喜，修改成功！', 'info');
+                 	$('#icon').combo('setValue', null).combo('setText', null);
                  	close();
                 	reset();
                 	var node = $('#deptree').tree('getSelected');
                 	if(resourceId!==null&&resourceId!=""&&typeof(resourceId)!="undefined"){//资源菜单
+                		//menuRule不为空显示选择的图标
+                		if(menuRule!=null&&menuRule!=""){
+                 			$(node.target).children(".tree-icon").css("background","url(${pageContext.request.contextPath}/"+menuRule+")");
+                 		}else {
+                 			$(node.target).children(".tree-icon").removeAttr("style");
+                 			$(node.target).children(".tree-icon").addClass("icon icon-mini-add");
+    					}
                 		$('#deptree').tree('update',{
                   			target: node.target,
                   			'text':name,
                   			'attributes':{
-                  				'menuId':node.id,
                   				'baseUrl':moduleUrl,
-                  				'menuCode':code,
                   				'status':status,
                   				'menuId':menuId,
-                  				'baseUrl':moduleUrl,
-                  				'parentId':parentId,
                  				'menuCode':code,
                   				'dislayOrder':displayOrder,
                  				'menuLevel':parseInt(menuLevel)+1,
-								'parentId':parentId    
+								'parentId':parentId,  
+								'menuRule':menuRule
                   			}
                   		}); 
                 	}else {
+                    	//menuRule不为空显示选择的图标
+                		if(menuRule!=null&&menuRule!=""){
+                 			$(node.target).children(".tree-icon").css("background","url(${pageContext.request.contextPath}/"+menuRule+")");
+                 		}else {
+                 			$(node.target).children(".tree-icon").css("background","");
+                 			$(node.target).children(".tree-icon").removeClass('tree-file').addClass("tree-folder");
+    					}
                 		$('#deptree').tree('update',{//目录菜单
                   			target: node.target,
                   			'text':name,
@@ -412,7 +450,8 @@
                   				'menuCode':code,
                   				'status':status,
                   				'dislayOrder':displayOrder,
-                 				'menuLevel':parseInt(menuLevel)+1
+                 				'menuLevel':parseInt(menuLevel)+1,
+                 				'menuRule':menuRule
                   			}
                   		}); 
 					}
@@ -490,9 +529,33 @@
 	     		msgShow('系统提示', '请选择父菜单！', 'info');
 	     	}
        });
+	     //点击图片设置组合框的值
+	     function imgClick(obj) {
+       	  	 var v = $(obj).attr('value');
+             var s = $(obj).attr('text');
+             $('#icon').combo('setValue', v).combo('setText', s).combo('hidePanel');
+		}
 	    $(function(){  
+		    
+	    	$('#icon').combo({
+                required:true,
+                editable:false ,
+                width:255 ,
+                panelHeight:300 
+            });
+	    	 $('#sp').appendTo($('#icon').combo('panel'));
+	         //读取所有图标并显示
+	    	 $.post("${pageContext.request.contextPath}/module/getIcon",function(data){
+		    	 	$.each(data.icon,function(i,n){
+		    	 			var img='<span>'
+			                +'<img onclick="imgClick(this)" src="${pageContext.request.contextPath}/images/icon/'+n+'" value="'+n+'" text="'+n+'" style="width: 20px;height: 20px;"></img>'
+			                +'</span>';
+		    	 			$('#sp').append(img);
+			    	 	});
+		    	 });
 		     openPwd();
 		     openFunction();
+		    
             //编辑
             $('#edit').click(function() {
 		     var node = $('#deptree').tree('getSelected');
@@ -508,6 +571,9 @@
 					}else{
 						$('#wmodule').window('open');
 				         updateModel(node);
+				         var value=node.attributes.menuRule;
+				         value=value.substr(value.lastIndexOf("/")+1);
+				         $('#icon').combo('setValue', value).combo('setText', value);
 					}
 		            
 	            }else{
@@ -660,7 +726,9 @@
                  serverLogin();
              });
 
-			$('#btnCancel').click(function(){closePwd();});
+			$('#btnCancel').click(function(){
+				closePwd();
+				});
 			$('#btnCancel1').click(function(){closeFunction();});
 			
 			
