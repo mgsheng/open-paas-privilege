@@ -207,6 +207,7 @@ public class UserLoginController extends BaseControllerUtil {
 					JSONArray resource = jasonObject.getJSONArray("resourceList");
 					List<PrivilegeResource1> resourceList = JSONArray.toList(resource, PrivilegeResource1.class);
 					List<PrivilegeMenu> menuList = JSONArray.toList(menu, PrivilegeMenu.class);
+					System.err.println(JSONArray.fromObject(menuList).toString());
 					// 根据DisplayOrder排序
 					java.util.Collections.sort(menuList, new Comparator<PrivilegeMenu>() {
 						@Override
@@ -405,6 +406,7 @@ public class UserLoginController extends BaseControllerUtil {
 					if ((menuId).equals(res.getMenuId())) {
 						Map<String, Object> resourceMap = new HashMap<String, Object>();
 						resourceMap.put("baseUrl", res.getBaseUrl());
+						resourceMap.put("menuRule", entry.getValue().getAttributes().get("menuRule"));
 						entry.getValue().setAttributes(resourceMap);
 						entry.getValue().setId(res.getResourceId());
 						entry.getValue().setText(res.getResourceName());
@@ -428,6 +430,7 @@ public class UserLoginController extends BaseControllerUtil {
 			node.setPid(String.valueOf(privilegeMenu.getParentId()));
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("displayOrder", privilegeMenu.getDisplayOrder());
+			map.put("menuRule", privilegeMenu.getMenuRule());
 			node.setAttributes(map);
 		}
 		return node;
