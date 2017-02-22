@@ -42,6 +42,7 @@
 						<value>/user/update</value>
 						<value>/user/saveLatestVisit</value>
 						<value>/managerUser/findGroup</value>
+						<value>/module/getIcon</value>
 					</list>
 				</property>
 			</bean>
