@@ -35,8 +35,15 @@ public class OesPrivilegeDev {
 	private String groupPrivilegeModifyUrl;
 	private String groupPrivilegeQueryUrl;
 	private String logoUrl;
+	private String menuIconUrl;
 	
 	
+	public String getMenuIconUrl() {
+		return menuIconUrl;
+	}
+	public void setMenuIconUrl(String menuIconUrl) {
+		this.menuIconUrl = menuIconUrl;
+	}
 	public String getLogoUrl() {
 		return logoUrl;
 	}
