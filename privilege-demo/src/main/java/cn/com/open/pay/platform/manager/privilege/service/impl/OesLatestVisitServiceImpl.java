@@ -27,7 +27,7 @@ public class OesLatestVisitServiceImpl extends BaseControllerUtil implements Oes
 	@Autowired
 	private RedisClientTemplate redisClientTemplate;
 	private static final String UserLastVisitPrefix = RedisConstant.USER_LATEST_VISIT;
-	
+	private static final String SIGN = RedisConstant.SIGN;
 	@Override
 	public Boolean saveOesLatestVisit(OesLatestVisit oesLatestVisit) {
 		try{
@@ -46,7 +46,7 @@ public class OesLatestVisitServiceImpl extends BaseControllerUtil implements Oes
 	@Override
 	public List<Map<String, Object>> getUserLastVisitRedis(String userId,String appId) {
 		//获取用户最近导航菜单缓存，若没有查询数据库，
-		String json=redisClientTemplate.getString(UserLastVisitPrefix+userId);
+		String json=redisClientTemplate.getString(UserLastVisitPrefix+appId+SIGN+userId);
 		if (null != json && json.length() > 0) {
 			JSONObject object=JSONObject.fromObject(json);
 			List<Map<String, Object>> menuList=(List<Map<String, Object>>) object.get("menuList");
@@ -83,7 +83,7 @@ public class OesLatestVisitServiceImpl extends BaseControllerUtil implements Oes
 			}
 			parameter.clear();
 			parameter.put("menuList", latesVisitRes);
-			redisClientTemplate.setString(UserLastVisitPrefix+userId, JSONObject.fromObject(parameter).toString());
+			redisClientTemplate.setString(UserLastVisitPrefix+appId+SIGN+userId, JSONObject.fromObject(parameter).toString());
 			return latesVisitRes;
 		}
 	}
