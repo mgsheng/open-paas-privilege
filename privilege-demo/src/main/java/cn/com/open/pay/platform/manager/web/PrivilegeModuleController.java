@@ -1,5 +1,6 @@
 package cn.com.open.pay.platform.manager.web;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -216,7 +217,13 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	}
 
 	
-
+	/**
+	 * 获取所有操作名称
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "getAllOperation")
 	public void getAllOperation(HttpServletRequest request, HttpServletResponse response) {
 		log.info("-------------------------getAllOperation      start------------------------------------");
@@ -224,11 +231,32 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		String reslut = sendPost(oesPrivilegeDev.getAllOperationUrl(), map);
 		JSONObject jsonObject = JSONObject.fromObject(reslut);
 		JSONArray jsonArr = (JSONArray) jsonObject.get("operationList");
-		String str = jsonArr.toString();
 		WebUtils.writeJson(response, jsonArr);
 		return;
 	}
-
+	/**
+	 * 获取所有图标
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "getIcon")
+	public void getIcon(HttpServletRequest request, HttpServletResponse response)  {
+		log.info("-------------------------getIcon      start------------------------------------");
+		String path=request.getRealPath("/images/icon");
+		File file=new File(path);
+		File[] fileList= file.listFiles();
+		List<String> fileName=new ArrayList<String>();
+		for (File file2 : fileList) {
+			fileName.add(file2.getName());
+		}
+		//返回所有图片的名称
+		Map<String, Object> map=new HashMap<String, Object>();
+		map.put("icon", fileName);
+		WebUtils.writeJsonToMap(response, map);
+		return;
+	}
 
 	/**
 	 * 修改模块
@@ -271,6 +299,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 			String displayOrder = request.getParameter("displayOrder");
 			String url = request.getParameter("url");
 			String menuLevel = request.getParameter("menuLevel");
+			String menuRule = request.getParameter("menuRule");
 			String menuName = request.getParameter("name");
 			String menuCode = request.getParameter("code");
 			String resourceId = request.getParameter("resourceId");
@@ -288,6 +317,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 			map.put("menuName", menuName);
 			map.put("menuCode", menuCode);
 			map.put("parentId", parentId);
+			map.put("menuRule", menuRule);
 			map.put("status", status);
 			map.put("dislayOrder", displayOrder);
 			map.put("menuLevel", Integer.parseInt(menuLevel) + 1);
@@ -391,6 +421,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 				e.printStackTrace();
 			}
 			String parentId = request.getParameter("parentId");
+			String menuRule = request.getParameter("menuRule");
 			String status = request.getParameter("status");
 			String displayOrder = request.getParameter("displayOrder");
 			String url = request.getParameter("url");
@@ -399,6 +430,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 			map.put("menuName", menuName);
 			map.put("menuCode", menuCode);
 			map.put("parentId", parentId);
+			map.put("menuRule", menuRule);
 			map.put("status", status);
 			map.put("dislayOrder", displayOrder);
 			map.put("menuLevel", Integer.parseInt(menuLevel) + 1);
