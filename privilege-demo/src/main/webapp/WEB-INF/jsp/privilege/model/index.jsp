@@ -396,7 +396,7 @@
                      			}
                      		}]});
                  		//添加图标
-                 		var nn = $('#deptree').tree('find', data.resourceId);、
+                 		var nn = $('#deptree').tree('find', data.resourceId);
                  		//menuRule不为空显示选择的图标
                  		if(menuRule!=null&&menuRule!=""){
                  			$(nn.target).children(".tree-icon").css("background","url(${pageContext.request.contextPath}/"+menuRule+")");
