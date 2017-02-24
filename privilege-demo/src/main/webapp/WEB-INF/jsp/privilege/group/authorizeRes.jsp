@@ -42,6 +42,11 @@
 				method:'get',animate:true,checkbox:true,lines:true,cascadeCheck:true"></ul>
 		</div>
 	</div>
+	<div id='loading' style='position:absolute;left:0;width:100%;height:100%;top:0;background:#E0ECFF;opacity:0.8;filter:alpha(opacity=80);'>
+			<div style='position:absolute;  cursor1:wait;left:50%;top:200px;width:auto;height:16px;padding:12px 5px 10px 30px;border:2px solid #ccc;color:#000;'> 
+ 				正在加载，请等待...
+			</div>
+	</div>
 </body>
 <script>
 	var initialResIds="";//用于存放修改界面中选中的resource
@@ -68,15 +73,18 @@
 			});
 		});
 	}
-	//加载菜单树
-	$('#tt').tree({ 
- 	  url: '${pageContext.request.contextPath}/oesGroup/tree?appId=${appId}', 
-      onLoadSuccess:function(node,data){
-    	 //getRoot();
-    	 //勾选用户用户有的资源
-    	 selected();
-      }
-    });
+	 $(function(){ 
+		 $('#loading').show();  
+		//加载菜单树
+		  $.get('${pageContext.request.contextPath}/oesGroup/tree?appId=${appId}',
+					function (data) {
+			  			$('#tt').tree({data: data});
+			  			selected();
+			  			$('#loading').hide();  
+					}
+				  );
+	 });
+	
 	//取消选中
 	function cancelAuthorizeFun() {
 		 $("#tt").tree("reload");
