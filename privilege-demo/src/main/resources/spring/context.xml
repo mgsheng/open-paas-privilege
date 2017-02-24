@@ -197,5 +197,6 @@
        		<property name="groupPrivilegeQueryUrl" value="${privilege-group-query-uri}"></property>
        		<property name="logoUrl" value="${logo_url}"></property>
        		<property name="menuIconUrl" value="${menu_icon_url}"></property>
+       		<property name="userCenterRegUrl" value="${usercenter-reg-uri}"></property>
        </bean>
 </beans>
