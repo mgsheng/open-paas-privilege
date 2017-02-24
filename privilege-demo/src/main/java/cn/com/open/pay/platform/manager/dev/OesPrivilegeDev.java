@@ -39,6 +39,12 @@ public class OesPrivilegeDev {
 	private String userCenterRegUrl;
 	
 	
+	public String getUserCenterRegUrl() {
+		return userCenterRegUrl;
+	}
+	public void setUserCenterRegUrl(String userCenterRegUrl) {
+		this.userCenterRegUrl = userCenterRegUrl;
+	}
 	public String getMenuIconUrl() {
 		return menuIconUrl;
 	}
