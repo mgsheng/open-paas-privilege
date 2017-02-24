@@ -26,8 +26,7 @@
 		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" id="delete2" ></a>
 	</div>
 	<div class="easyui-panel" style="padding:5px;height: 95%;overflow-x:scroll;">
-		  <ul id="deptree"  style="height: 100%"class="easyui-tree" 
-			 data-options="method:'get',url:'${pageContext.request.contextPath}/module/tree?appId=${appId}'"> 
+		  <ul id="deptree"  style="height: 100%"class="easyui-tree" > 
 	 </ul>
 	</div>
 	</div>
@@ -143,6 +142,11 @@
 			</div>
 		</div>
 	</div>
+	<div id='loading' style='position:absolute;left:0;width:100%;height:100%;top:0;background:#E0ECFF;opacity:0.8;filter:alpha(opacity=80);'>
+			<div style='position:absolute;  cursor1:wait;left:50%;top:200px;width:auto;height:16px;padding:12px 5px 10px 30px;border:2px solid #ccc;color:#000;'> 
+ 				正在加载，请等待...
+			</div>
+	</div> 
 </body>
 <script>
 	//清空所选图标
@@ -168,11 +172,7 @@
 			});
 		});
 	}
-	$('#deptree').tree({
-		onLoadSuccess:function(node, data){
-			getRoot();
-		}
-	}); 
+	
 	   //设置=窗口
         function openPwd() {
             $('#wmodule').window({
@@ -537,7 +537,25 @@
              $('#icon').combo('setValue', v).combo('setText', s).combo('hidePanel');
 		}
 	    $(function(){  
-		    
+	        $('#loading').show();  
+	    	$.ajax({type:'GET',
+				url:'${pageContext.request.contextPath}/module/tree?appId=${appId}',
+				success:function(data) {
+						if(data.status=="0"){
+							msgShow('系统提示', '该应用无菜单！', 'info');
+						}else {
+							var json=data.tree;
+							if (json.length>0) {
+								$('#deptree').tree({data: json});
+								getRoot();
+								$('#loading').hide();  
+							}else {
+								msgShow('系统提示', '该应用无菜单！', 'info');
+							}
+							
+						}
+					}
+			});
 	    	$('#icon').combo({
                 required:true,
                 editable:false ,
@@ -554,33 +572,11 @@
 		    	 			$('#sp').append(img);
 			    	 	});
 		    	 });
+	    	 
 		     openPwd();
 		     openFunction();
 		    
-            //编辑
-            $('#edit').click(function() {
-		     var node = $('#deptree').tree('getSelected');
-		     if (node){
-					if(node.ismodule=="2"){
-						$('#function').window('open');
-						$('#operName').combobox({
-							url:'${pageContext.request.contextPath}/module/getAllOperation',
-							valueField:'id',
-							textField:'name'
-						});
-						updataFunction(node);
-					}else{
-						$('#wmodule').window('open');
-				         updateModel(node);
-				         var value=node.attributes.menuRule;
-				         value=value.substr(value.lastIndexOf("/")+1);
-				         $('#icon').combo('setValue', value).combo('setText', value);
-					}
-		            
-	            }else{
-	           		 msgShow('系统提示', '请选择需要添加的节点！', 'info');
-	            }  
-            });
+            
             //删除
           $('#delete').click(function() {
     			if(node){
@@ -722,19 +718,40 @@
   	   			});
 	   		}
       });
-            
-             $('#btnEp').click(function() {
-                 serverLogin();
-             });
-
-			$('#btnCancel').click(function(){
-				closePwd();
-				});
-			$('#btnCancel1').click(function(){closeFunction();});
-			
-			
+  		
 });
-	    
+	    $('#btnEp').click(function() {
+            serverLogin();
+        });
+
+		$('#btnCancel').click(function(){
+			closePwd();
+			});
+		$('#btnCancel1').click(function(){closeFunction();});
+	 	 //编辑
+        $('#edit').click(function() {
+	     var node = $('#deptree').tree('getSelected');
+	     if (node){
+				if(node.ismodule=="2"){
+					$('#function').window('open');
+					$('#operName').combobox({
+						url:'${pageContext.request.contextPath}/module/getAllOperation',
+						valueField:'id',
+						textField:'name'
+					});
+					updataFunction(node);
+				}else{
+					$('#wmodule').window('open');
+			         updateModel(node);
+			         var value=node.attributes.menuRule;
+			         value=value.substr(value.lastIndexOf("/")+1);
+			         $('#icon').combo('setValue', value).combo('setText', value);
+				}
+	            
+            }else{
+           		 msgShow('系统提示', '请选择需要添加的节点！', 'info');
+            }  
+        });
 		    //清空
 			function reset(){
 				jQuery('#parentName').val('');
