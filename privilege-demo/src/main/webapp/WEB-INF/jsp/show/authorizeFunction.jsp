@@ -43,6 +43,11 @@
 			
 		</div>
 	</div>
+	<div id='loading' style='position:absolute;left:0;width:100%;height:100%;top:0;background:#E0ECFF;opacity:0.8;filter:alpha(opacity=80);'>
+			<div style='position:absolute;  cursor1:wait;left:50%;top:200px;width:auto;height:16px;padding:12px 5px 10px 30px;border:2px solid #ccc;color:#000;'> 
+ 				正在加载，请等待...
+			</div>
+	</div>
 </body>
 <script>
 //修改tree 图标样式
@@ -67,6 +72,7 @@ function getRoot(){
 }
 	//页面预加载
 	$(function(){
+		$('#loading').show();
 		$.ajax({type:'GET',
 			url:'${pageContext.request.contextPath}/managerUser/tree?appId=${appId}&groupId=${groupId}',
 			success:function(data) {
@@ -78,6 +84,7 @@ function getRoot(){
 							$('#tt').tree({data: json});
 							getRoot();
 							selected();
+							$('#loading').hide();
 						}else {
 							msgShow('系统提示', '该组织机构无权限！', 'info');
 						}
