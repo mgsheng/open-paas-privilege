@@ -36,6 +36,7 @@ public class OesPrivilegeDev {
 	private String groupPrivilegeQueryUrl;
 	private String logoUrl;
 	private String menuIconUrl;
+	private String userCenterRegUrl;
 	
 	
 	public String getMenuIconUrl() {
