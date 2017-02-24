@@ -69,38 +69,51 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	public void getModelTree(HttpServletRequest request, HttpServletResponse response) {
 		log.info("-------------------------tree      start------------------------------------");
 		String appId = request.getParameter("appId");
+		Map<String, Object> map = new HashMap<String, Object>();
+		JSONArray jsonArr=null;
 		if (request.getParameter("id") != null) {
-			JSONArray jsonArr = new JSONArray();
-			WebUtils.writeJson(response, jsonArr);
+			jsonArr = new JSONArray();
+			map.put("status", "1");
+			map.put("tree", jsonArr);
+			WebUtils.writeJsonToMap(response, map);
 			return;
 		}
-		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("appId", appId);
+		//获取应用菜单缓存
 		String reslut = sendPost(oesPrivilegeDev.getAppMenuRedisUrl(), map);
-		JSONObject obj = JSONObject.fromObject(reslut);// 将json字符串转换为json对象
-		JSONArray objArray = (JSONArray) obj.get("menuList");
-		List<PrivilegeMenu> menuList = JSONArray.toList(objArray, PrivilegeMenu.class);
-		String s1 = sendPost(oesPrivilegeDev.getAppResRedisUrl(), map);
-		JSONObject obj1 = new JSONObject().fromObject(s1);// 将json字符串转换为json对象
-		JSONArray obj1Array = (JSONArray) obj1.get("resourceList");
-		JSONArray obj2Array = (JSONArray) obj1.get("functionList");
-		String operation = sendPost(oesPrivilegeDev.getAllOperationUrl(), map);
-		obj = JSONObject.fromObject(operation);
-		objArray = (JSONArray) obj.get("operationList");
-		// 将json对象转换为java对象
-		List<PrivilegeOperation> operationList = JSONArray.toList(objArray, PrivilegeOperation.class);
-		List<PrivilegeResource1> resourceList = JSONArray.toList(obj1Array, PrivilegeResource1.class);
-		List<PrivilegeFunction> functionList = JSONArray.toList(obj2Array, PrivilegeFunction.class);
-		//根据菜单的displayOrder排序，由小到大
-		java.util.Collections.sort(menuList, new Comparator<PrivilegeMenu>() {
-            @Override
-            public int compare(PrivilegeMenu menu1, PrivilegeMenu menu2) {
-                return menu1.getDisplayOrder()-menu2.getDisplayOrder();
-            }
-        });
-		List<TreeNode> nodes = convertTreeNodeList(menuList);
-		JSONArray jsonArr = JSONArray.fromObject(buildTree2(nodes, resourceList, functionList, operationList));
-		WebUtils.writeJson(response, jsonArr);
+		if (reslut!= null && !("").equals(reslut)) {
+			JSONObject obj = JSONObject.fromObject(reslut);
+			JSONArray menuArray = (JSONArray) obj.get("menuList");
+			if (menuArray.size()>0) {
+				List<PrivilegeMenu> menuList = JSONArray.toList(menuArray, PrivilegeMenu.class);
+				reslut = sendPost(oesPrivilegeDev.getAppResRedisUrl(), map);
+				obj = JSONObject.fromObject(reslut);// 将json字符串转换为json对象
+				JSONArray resourceArray = (JSONArray) obj.get("resourceList");
+				JSONArray functionArray = (JSONArray) obj.get("functionList");
+				reslut = sendPost(oesPrivilegeDev.getAllOperationUrl(), map);
+				obj = JSONObject.fromObject(reslut);
+				JSONArray operationArray = (JSONArray) obj.get("operationList");
+				// 将json对象转换为java对象
+				List<PrivilegeOperation> operationList = JSONArray.toList(operationArray, PrivilegeOperation.class);
+				List<PrivilegeResource1> resourceList = JSONArray.toList(resourceArray, PrivilegeResource1.class);
+				List<PrivilegeFunction> functionList = JSONArray.toList(functionArray, PrivilegeFunction.class);
+				//根据菜单的displayOrder排序，由小到大
+				java.util.Collections.sort(menuList, new Comparator<PrivilegeMenu>() {
+		            @Override
+		            public int compare(PrivilegeMenu menu1, PrivilegeMenu menu2) {
+		                return menu1.getDisplayOrder()-menu2.getDisplayOrder();
+		            }
+		        });
+				List<TreeNode> nodes = convertTreeNodeList(menuList);
+				jsonArr = JSONArray.fromObject(buildTree2(nodes, resourceList, functionList, operationList));
+				map.put("status", "1");
+				map.put("tree", jsonArr);
+			}else {
+				map.put("status", "0");
+				map.put("tree", new JSONArray());
+			}
+		}
+		WebUtils.writeJsonToMap(response, map);
 	}
 
 	private List<TreeNode> convertTreeNodeList(List<PrivilegeMenu> modules) {
