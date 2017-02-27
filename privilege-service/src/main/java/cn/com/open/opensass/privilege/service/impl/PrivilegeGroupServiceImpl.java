@@ -83,11 +83,11 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 	public PrivilegeAjaxMessage findGroupPrivilege(String groupId, String appId) {
 		PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
 		List<PrivilegeGroupResource> group =privilegeGroupResourceService.findByGroupIdAndAppId(groupId, appId); 
-		if (group.size()==0) {
+		/*if (group.size()==0) {
 			ajaxMessage.setCode("0");
 			ajaxMessage.setMessage("GroupResource Is Null");
 			return ajaxMessage;
-		}
+		}*/
 
 		String PRIVILEGESERVICE_GROUPCACHE_APPID_GROUPID = groupCachePrefix + appId + SIGN + groupId;
 
