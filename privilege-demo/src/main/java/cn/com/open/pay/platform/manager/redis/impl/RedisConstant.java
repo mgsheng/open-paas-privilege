@@ -15,6 +15,9 @@ public class RedisConstant {
 	//用户最后访问菜单缓存key
 	public static final String USER_LATEST_VISIT="userLastVisit_";
 	
+	//用户常用菜单缓存key
+	public static final String USER_FREQUENTLY_MENU="userFrequentlyUsedMenu_";
+	
 	/*间隔符*/
 	 public static final String SIGN="_";
 	
