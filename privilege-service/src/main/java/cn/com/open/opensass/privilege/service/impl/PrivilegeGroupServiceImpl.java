@@ -14,12 +14,9 @@ import org.springframework.stereotype.Service;
 
 import cn.com.open.opensass.privilege.dao.cache.RedisDao;
 import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeGroupRepository;
-import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeMenuRepository;
-import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeResourceRepository;
 import cn.com.open.opensass.privilege.model.PrivilegeGroup;
 import cn.com.open.opensass.privilege.model.PrivilegeGroupResource;
 import cn.com.open.opensass.privilege.model.PrivilegeMenu;
-import cn.com.open.opensass.privilege.model.PrivilegeResource;
 import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import cn.com.open.opensass.privilege.service.PrivilegeGroupResourceService;
@@ -28,7 +25,6 @@ import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
 import cn.com.open.opensass.privilege.service.PrivilegeResourceService;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
-import cn.com.open.opensass.privilege.vo.PrivilegeResourceVo;
 import net.sf.json.JSONObject;
 
 /**
@@ -87,11 +83,11 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 	public PrivilegeAjaxMessage findGroupPrivilege(String groupId, String appId) {
 		PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
 		List<PrivilegeGroupResource> group =privilegeGroupResourceService.findByGroupIdAndAppId(groupId, appId); 
-		/*if (group.size()==0) {
+		if (group.size()==0) {
 			ajaxMessage.setCode("0");
 			ajaxMessage.setMessage("GroupResource Is Null");
 			return ajaxMessage;
-		}*/
+		}
 
 		String PRIVILEGESERVICE_GROUPCACHE_APPID_GROUPID = groupCachePrefix + appId + SIGN + groupId;
 
