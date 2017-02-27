@@ -288,6 +288,7 @@ privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/PrivilegeRoleDetailsService.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/PrivilegeRoleService.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/impl/ManagerServiceImpl.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/impl/OesFrequentlyUsedMenuServiceImpl.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/impl/OesGroupServiceImpl.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/impl/OesLatestVisitServiceImpl.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/service/impl/OesUserServiceImpl.java -text
