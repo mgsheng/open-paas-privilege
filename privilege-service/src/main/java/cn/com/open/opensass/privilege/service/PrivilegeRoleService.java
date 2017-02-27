@@ -39,7 +39,7 @@ public interface PrivilegeRoleService {
 
 	List<PrivilegeRole> getRoleListByUserIdAndAppId(String appUserId, String appId);
 
-	List<PrivilegeRole> getRoleListByAppIdAndGroupId(String appId, String groupId,int start, int limit);
+	List<PrivilegeRole> getRoleListByAppIdAndGroupId(String appId, String groupId,Integer roleType,int start, int limit);
 
-	int getRoleCountByAppIdAndGroupId(String appId, String groupId);
+	int getRoleCountByAppIdAndGroupId(String appId, String groupId,Integer roleType);
 }
