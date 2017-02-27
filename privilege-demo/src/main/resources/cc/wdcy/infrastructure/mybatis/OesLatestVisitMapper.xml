@@ -24,7 +24,10 @@
         (#{id},#{userId},#{menuName},#{menuId},#{createTime})
     </insert>
     <select id="getOesLastVisitByUserId" resultMap="OesLatestVisitMap" flushCache="true">
-    	SELECT * FROM oes_latest_visit WHERE user_id=#{userId} ORDER BY create_time DESC LIMIT #{startRow},#{pageSize}
+    	SELECT t.* FROM  oes_latest_visit t WHERE NOT EXISTS 
+ 		(SELECT 1 FROM (SELECT menu_id,create_time FROM oes_latest_visit  WHERE user_id=#{userId}) s 
+ 		WHERE t.menu_id=s.menu_id AND t.create_time &lt; s.create_time) AND t.user_id=#{userId}
+ 		ORDER BY t.create_time DESC LIMIT #{startRow},#{pageSize}
     </select>
 	
 </mapper>
