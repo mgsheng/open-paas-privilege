@@ -64,6 +64,7 @@ public class OesLatestVisitServiceImpl extends BaseControllerUtil implements Oes
 			List<Map<String, Object>> latesVisitRes=new ArrayList<Map<String, Object>>();
 			for (OesLatestVisit oesLatestVisit : userLatestVisits) {
 				for(Map<String, Object> resource:resList){
+					//获取资源url
 					if (oesLatestVisit.getMenuId().equals((String)resource.get("resourceId"))) {
 						Map<String, Object> map=new HashMap<String, Object>();
 						map.put("id", resource.get("resourceId"));
@@ -90,7 +91,7 @@ public class OesLatestVisitServiceImpl extends BaseControllerUtil implements Oes
 
 	@Override
 	public Boolean updateUserLastVisitRedis(String userId,String appId) {
-		redisClientTemplate.del(UserLastVisitPrefix+userId);
+		redisClientTemplate.del(UserLastVisitPrefix+appId+SIGN+userId);
 		getUserLastVisitRedis(userId,appId);
 		return true;
 	}
