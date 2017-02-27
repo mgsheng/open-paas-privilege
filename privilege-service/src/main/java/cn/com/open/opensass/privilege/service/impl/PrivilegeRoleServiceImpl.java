@@ -166,13 +166,13 @@ public class PrivilegeRoleServiceImpl implements PrivilegeRoleService {
 	}
 
 	@Override
-	public List<PrivilegeRole> getRoleListByAppIdAndGroupId(String appId, String groupId,int start, int limit) {
-		return privilegeRoleRepository.getRoleListByAppIdAndGroupId(appId, groupId,start,limit);
+	public List<PrivilegeRole> getRoleListByAppIdAndGroupId(String appId, String groupId,Integer roleType,int start, int limit) {
+		return privilegeRoleRepository.getRoleListByAppIdAndGroupId(appId, groupId,roleType,start,limit);
 	}
 
 	@Override
-	public int getRoleCountByAppIdAndGroupId(String appId, String groupId) {
-		return privilegeRoleRepository.getRoleCountByAppIdAndGroupId(appId, groupId);
+	public int getRoleCountByAppIdAndGroupId(String appId, String groupId,Integer roleType) {
+		return privilegeRoleRepository.getRoleCountByAppIdAndGroupId(appId, groupId,roleType);
 	}
 
 }
