@@ -256,6 +256,7 @@ privilege-demo/src/main/java/cn/com/open/pay/platform/manager/paychannel/service
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/AbstractDomain.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/Common.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/Manager.java -text
+privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/OesFrequentlyUsedMenu.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/OesGroup.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/OesLatestVisit.java -text
 privilege-demo/src/main/java/cn/com/open/pay/platform/manager/privilege/model/OesUser.java -text
