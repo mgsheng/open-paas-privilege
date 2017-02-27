@@ -366,6 +366,7 @@ privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantInfoMap
 privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantOrderInfoMapper.xml -text
 privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantOrderOfflineMapper.xml -text
 privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantOrderRefundMapper.xml -text
+privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/OesFrequentlyUsedMenuMapper.xml -text
 privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/OesGroupMapper.xml -text
 privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/OesLatestVisitMapper.xml -text
 privilege-demo/src/main/resources/cc/wdcy/infrastructure/mybatis/OesUserMapper.xml -text

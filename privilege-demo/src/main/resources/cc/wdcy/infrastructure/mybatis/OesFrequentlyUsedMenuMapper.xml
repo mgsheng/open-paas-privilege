@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.pay.platform.manager.infrastructure.mybatis.OesFrequentlyUsedMenuRepositoryMyBatis">
+	<resultMap type="OesFrequentlyUsedMenu" id="OesFrequentlyUsedMenuMap">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="VARCHAR" />
+		<result column="menu_id" property="menuId" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Insert_Column_List">
+	  id,
+	  user_id,
+	  menu_id,
+	  create_time
+	</sql>
+	
+	
+	<insert id="saveOesFrequentlyUsedMenu" parameterType="OesFrequentlyUsedMenu" flushCache="true">
+        insert into oes_frequently_used_menu
+        (id,user_id,menu_id,create_time)
+        values
+        (#{id},#{userId},#{menuId},#{createTime})
+    </insert>
+    <select id="getOesFrequentlyUsedMenuByUserId" resultMap="OesFrequentlyUsedMenuMap" flushCache="true">
+    	select * from oes_frequently_used_menu where user_id=#{userId}
+    </select>
+	<update id="updateOesFrequentlyUsedMenuByUserId" parameterType="OesFrequentlyUsedMenu" flushCache="true">
+		update oes_frequently_used_menu set menu_id = #{menuId} where user_id=#{userId}
+	</update>
+</mapper>
