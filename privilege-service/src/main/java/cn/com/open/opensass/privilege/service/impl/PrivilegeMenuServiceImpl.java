@@ -8,6 +8,7 @@ import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ import cn.com.open.opensass.privilege.model.PrivilegeMenu;
 import cn.com.open.opensass.privilege.model.PrivilegeRole;
 import cn.com.open.opensass.privilege.model.PrivilegeRoleResource;
 import cn.com.open.opensass.privilege.model.PrivilegeUser;
+import cn.com.open.opensass.privilege.service.PrivilegeGroupService;
 import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleResourceService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
@@ -46,6 +48,8 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 	private PrivilegeUserService privilegeUserService;
 	@Autowired
 	private PrivilegeRoleResourceService privilegeRoleResourceService;
+	@Autowired
+	private PrivilegeGroupService privilegeGroupService;
 	
 	@Override
 	public Boolean savePrivilegeMenu(PrivilegeMenu privilegeMenu) {
@@ -107,15 +111,31 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 		List<PrivilegeRole> roles = privilegeRoleService.getRoleListByUserIdAndAppId(appUserId, appId);
 		for (PrivilegeRole role : roles) {
 			if(role.getRoleType()!=null){
-				if (role.getRoleType() == 2) {//若角色为系统管理员  则把app拥有的所有菜单放入缓存
-					PrivilegeAjaxMessage message = getAppMenuRedis(appId);
-					if ("1".equals(message.getCode())) {
-						String redisJson = message.getMessage();
-						System.err.println("rediskey=" + prefix + appId + SIGN + appUserId);
-						redisClientTemplate.setString(prefix + appId + SIGN + appUserId, redisJson);
+				if (role.getRoleType() == 2) {//若角色为系统管理员  
+					if (role.getGroupId()!=null&&!role.getGroupId().isEmpty()) {//若该管理员为组织机构管理员
+						//把该组织机构拥有的菜单放入缓存
+						PrivilegeAjaxMessage message = privilegeGroupService.findGroupPrivilege(role.getGroupId(), appId);
+						Map<String, Object> map=new HashMap<String, Object>();
+						if (message.getCode().equals("1")) {
+							JSONObject object=JSONObject.fromObject(message.getMessage());
+							JSONArray array=object.getJSONArray("menuList");
+							map.put("menuList", array);
+							redisClientTemplate.setString(prefix + appId + SIGN + appUserId, JSONObject.fromObject(map).toString());
+						}else {
+							map.put("menuList", new JSONArray());
+							redisClientTemplate.setString(prefix + appId + SIGN + appUserId, JSONObject.fromObject(map).toString());
+						}
+						message.setMessage(JSONObject.fromObject(map).toString());
+						return message;
+					}else{
+						PrivilegeAjaxMessage message = getAppMenuRedis(appId);
+						if ("1".equals(message.getCode())) {
+							String redisJson = message.getMessage();
+							System.err.println("rediskey=" + prefix + appId + SIGN + appUserId);
+							redisClientTemplate.setString(prefix + appId + SIGN + appUserId, redisJson);
+						}
+						return message;
 					}
-					return message;
-
 				}
 			}
 			
@@ -137,8 +157,6 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 					FunIds.add(roleResource.getPrivilegeFunId());
 				}
 			}
-//			List<String> FunIds = privilegeRoleResourceService.findUserResourcesFunId(user.getAppId(),
-//					user.getAppUserId());
 			
 			//根据user表中functionId resourceId 查询菜单
 			String functionIds = user.getPrivilegeFunId();
