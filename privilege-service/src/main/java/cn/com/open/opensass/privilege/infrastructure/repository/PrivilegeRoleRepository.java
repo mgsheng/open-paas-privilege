@@ -34,7 +34,7 @@ public interface PrivilegeRoleRepository extends Repository {
 
 	List<PrivilegeRole> getRoleListByUserIdAndAppId(@Param("appUserId") String appUserId, @Param("appId") String appId);
 
-	List<PrivilegeRole> getRoleListByAppIdAndGroupId(@Param("appId") String appId, @Param("groupId") String groupId,@Param("start") int start,@Param("limit") int limit);
+	List<PrivilegeRole> getRoleListByAppIdAndGroupId(@Param("appId") String appId, @Param("groupId") String groupId,@Param("roleType") Integer roleType,@Param("start") int start,@Param("limit") int limit);
 
-	int getRoleCountByAppIdAndGroupId(@Param("appId") String appId, @Param("groupId") String groupId);
+	int getRoleCountByAppIdAndGroupId(@Param("appId") String appId, @Param("groupId") String groupId,@Param("roleType") Integer roleType);
 }
