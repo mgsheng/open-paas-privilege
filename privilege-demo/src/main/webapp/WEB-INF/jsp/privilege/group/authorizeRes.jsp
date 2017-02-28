@@ -145,7 +145,7 @@
 		$('#roleName').val('');
 	});
 	//创建组织机构管理员角色确定按钮
-	$('btnEnter').click(function() {
+	$('#btnEnter').click(function() {
 		var roleName=$('#roleName').val();
 		if ($('#roleId').val() != '') {
             msgShow('系统提示', '该组织机构已经存在管理员角色！', 'warning');
