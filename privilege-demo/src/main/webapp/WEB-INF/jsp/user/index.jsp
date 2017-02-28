@@ -62,7 +62,7 @@
       
      //确认添加常用菜单
 	$('#ok').click(function() {
-		//资源池菜单id
+		//资源菜单id
 		var resId=[];
 		var select=$('#deptree').tree('getChecked', 'checked');
 		$.each(select, function(i, n) {
@@ -83,6 +83,7 @@
 				}	
 		});
     });
+    //加载tree
 	function getTree() {
 		$('#loading').show();  
 		$.ajax({type:'GET',
