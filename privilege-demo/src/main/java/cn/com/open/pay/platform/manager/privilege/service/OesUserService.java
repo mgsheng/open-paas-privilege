@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
+import cn.com.open.pay.platform.manager.privilege.model.OesUser;
+
 
 public interface OesUserService {
 	/**
@@ -21,5 +23,16 @@ public interface OesUserService {
 	 * @return
 	 */
 	int getUserCount(String groupId,String userName);
-	
+	/**
+	 * 保存用户
+	 * @param oesUser
+	 * @return
+	 */
+	Boolean saveUser(OesUser oesUser);
+	/**
+	 * 删除用户
+	 * @param Id
+	 * @return
+	 */
+	Boolean deleteUser(Integer Id);
 }
