@@ -42,7 +42,7 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 	private PrivilegeRoleService privilegeRoleService;
 	@Autowired
 	private PrivilegeGroupService privilegeGroupService;
-	@Autowired 
+	@Autowired
 	private PrivilegeMenuService privilegeMenuService;
 
 	@Override
@@ -60,31 +60,25 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 		String urlJedis = redisDao.getUrlRedis(prifix, appId, appUserId);
 		log.info("getDataPrivilege接口读取redis数据：" + urlJedis);
 		if (null == urlJedis || urlJedis.length() <= 0) {
-			Boolean isManger = false;
-			int Type=1;// 角色类型，1-普通用户，2-系统管理员，3-组织机构管理员
+			int Type = 1;// 角色类型，1-普通用户，2-系统管理员，3-组织机构管理员
 			List<PrivilegeRole> roles = privilegeRoleService.getRoleListByUserIdAndAppId(appUserId, appId);
 			for (PrivilegeRole role : roles) {
 				if (role.getRoleType() != null) {
 					if (role.getRoleType() == 2) {
 						if (role.getGroupId() != null && !role.getGroupId().isEmpty()) {
 							Type = 3;
-						} else {// 角色组织机构id为空，为系统管理员，直接返回认证成功
+						} else {// 角色组织机构id为空，为系统管理员
 							Type = 2;
 						}
-						isManger = true;
 						break;
 					}
 				}
 			}
 			PrivilegeUrl url = null;
-			if (isManger) {
-				if (Type==3) {
-					url = getGroupPrivilegeUrl(appId, privilegeUser.getGroupId());
-				}else {
-					url = getAllPrivilegeUrl(appId);
-				}
+			if (Type == 2) {
+				url = getAllPrivilegeUrl(appId);
 			} else {
-				url = getPrivilegeUrl(appId, appUserId, privilegeUser);
+				url = getPrivilegeUrl(appId, appUserId, privilegeUser, Type);
 			}
 
 			/* 写入redis */
@@ -156,60 +150,42 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 		ajaxMessage.setMessage(exist ? "TRUE" : "FALSE");
 		return ajaxMessage;
 	}
+
 	@Override
-	public PrivilegeUrl getGroupPrivilegeUrl(String appId,String groupId){
-		PrivilegeAjaxMessage message=privilegeGroupService.findGroupPrivilege(groupId, appId);
-		//应用资源缓存
-		PrivilegeAjaxMessage appAjaxMessage=privilegeResourceService.getAppResRedis(appId);
-		JSONObject appObject= JSONObject.fromObject(appAjaxMessage.getMessage());
-		//应用功能缓存
-		List<Map<String, Object>> functionList=(List<Map<String, Object>>) appObject.get("functionList");
+	public PrivilegeUrl getGroupPrivilegeUrl(String appId, String groupId) {
+		PrivilegeAjaxMessage message = privilegeGroupService.findGroupPrivilege(groupId, appId);
+		// 应用资源缓存
+		PrivilegeAjaxMessage appAjaxMessage = privilegeResourceService.getAppResRedis(appId);
+		JSONObject appObject = JSONObject.fromObject(appAjaxMessage.getMessage());
+		// 应用功能缓存
+		List<Map<String, Object>> functionList = (List<Map<String, Object>>) appObject.get("functionList");
 		/* 排重处理 */
 		Set<String> setUrl = new HashSet<String>();
-		if (message.getCode().equals("1")) {//获取该组织机构缓存，得到该组织机构资源，功能url
+		if (message.getCode().equals("1")) {// 获取该组织机构缓存，得到该组织机构资源，功能url
 			JSONObject JsonObject = JSONObject.fromObject(message.getMessage());
 			List<Map<String, Object>> resourceList = (List<Map<String, Object>>) JsonObject.get("resourceList");
 			for (Map<String, Object> resource : resourceList) {
-				if (resource.get("baseUrl")!=null&&!("").equals(resource.get("baseUrl"))) {
-					setUrl.add((String)resource.get("baseUrl"));
+				if (resource.get("baseUrl") != null && !("").equals(resource.get("baseUrl"))) {
+					setUrl.add((String) resource.get("baseUrl"));
 				}
 				for (Map<String, Object> function : functionList) {
 					if (function.get("resourceId").equals(resource.get("resourceId"))) {
-						if (function.get("optUrl")!=null&&!("").equals(function.get("optUrl"))) {
-							setUrl.add((String)function.get("optUrl"));
+						if (function.get("optUrl") != null && !("").equals(function.get("optUrl"))) {
+							setUrl.add((String) function.get("optUrl"));
 						}
 					}
 				}
 			}
 		}
-		//获取公共菜单，遍历获取公共权限url
-		List<PrivilegeMenuVo> menuVos=privilegeMenuService.findMenuByResourceType(0);
-		//应用资源缓存
-		List<Map<String, Object>> resourceList = (List<Map<String, Object>>) appObject.get("resourceList");
-		for (PrivilegeMenuVo menuVo : menuVos) {
-			for (Map<String, Object> resource : resourceList) {
-				if (menuVo.getMenuId().equals(resource.get("menuId"))) {
-					if (resource.get("baseUrl")!=null&&!("").equals(resource.get("baseUrl"))) {
-						setUrl.add((String)resource.get("baseUrl"));
-					}
-				}
-				for (Map<String, Object> function : functionList) {
-					if (function.get("resourceId").equals(resource.get("resourceId"))) {
-						if (function.get("optUrl")!=null&&!("").equals(function.get("optUrl"))) {
-							setUrl.add((String)function.get("optUrl"));
-						}
-					}
-				}
-			}
-		}
-		PrivilegeUrl privilegeUrl=new PrivilegeUrl();
-		Map<String,Object> url = new HashMap<String,Object>();
+		PrivilegeUrl privilegeUrl = new PrivilegeUrl();
+		Map<String, Object> url = new HashMap<String, Object>();
 		url.put(jsonKeyName, setUrl);
 		privilegeUrl.setPrivilegeUrl(JSONObject.fromObject(url).toString());
 		return privilegeUrl;
 	}
+
 	@Override
-	public PrivilegeUrl getPrivilegeUrl(String appId, String appUserId, PrivilegeUser privilegeUser) {
+	public PrivilegeUrl getPrivilegeUrl(String appId, String appUserId, PrivilegeUser privilegeUser, int Type) {
 
 		/* 排重处理 */
 		Set<String> setUrl = new HashSet<String>();
@@ -227,18 +203,20 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 		List<PrivilegeRoleResource> rivilegeRoleResources = privilegeRoleResourceService.findUserRoleResources(appId,
 				appUserId);
 		for (PrivilegeRoleResource roleResource : rivilegeRoleResources) {
-			if (roleResource!=null) {
-				if (roleResource.getResourceId()!=null&&!("").equals(roleResource.getResourceId())) {
-					PrivilegeResource privilegeResource = privilegeResourceService.findByResourceId(roleResource.getResourceId(), appId);
+			if (roleResource != null) {
+				if (roleResource.getResourceId() != null && !("").equals(roleResource.getResourceId())) {
+					PrivilegeResource privilegeResource = privilegeResourceService
+							.findByResourceId(roleResource.getResourceId(), appId);
 					if (null != privilegeResource && null != privilegeResource.getBaseUrl()
 							&& privilegeResource.getBaseUrl().length() > 0) {
 						setUrl.add(privilegeResource.getBaseUrl());
 					}
 				}
 				if (roleResource.getPrivilegeFunId() == null || ("").equals(roleResource.getPrivilegeFunId())) {
-					List<Map<String, Object>> functions = privilegeFunctionService.getFunctionByRId(roleResource.getResourceId(),appId);
+					List<Map<String, Object>> functions = privilegeFunctionService
+							.getFunctionByRId(roleResource.getResourceId(), appId);
 					for (Map<String, Object> map : functions) {
-						if(map.get("optUrl")!=null&&!("").equals(map.get("optUrl"))){
+						if (map.get("optUrl") != null && !("").equals(map.get("optUrl"))) {
 							setUrl.add((String) map.get("optUrl"));
 						}
 					}
@@ -247,20 +225,20 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 					functionIdList.add(roleResource.getPrivilegeFunId());
 				}
 			}
-			
+
 		}
-		
+
 		if (null != functionIdList && functionIdList.size() > 0) {
 			for (String functionId : functionIdList) {
 				String[] functionIds = functionId.split(",");
 				for (String fid : functionIds) {
 					if (null != fid && fid.length() > 0) {
 						// 通过 roleResource表 functionId 查找资源
-						PrivilegeResource resource = privilegeResourceService.getResourceListByFunId(fid,appId);
+						PrivilegeResource resource = privilegeResourceService.getResourceListByFunId(fid, appId);
 						if (null != resource && null != resource.getBaseUrl()) {
 							setUrl.add(resource.getBaseUrl());
 						}
-						PrivilegeFunction privilegeFunction = privilegeFunctionService.findByFunctionId(fid,appId);
+						PrivilegeFunction privilegeFunction = privilegeFunctionService.findByFunctionId(fid, appId);
 						if (null != privilegeFunction && null != privilegeFunction.getOptUrl()
 								&& privilegeFunction.getOptUrl().length() > 0) {
 							setUrl.add(privilegeFunction.getOptUrl());
@@ -287,12 +265,12 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 			String[] functionIds = privilegeUser.getPrivilegeFunId().split(",");
 			for (String functionId : functionIds) {
 				if (null != functionId && functionId.length() > 0) {
-					PrivilegeResource resource = privilegeResourceService.getResourceListByFunId(functionId,appId);
+					PrivilegeResource resource = privilegeResourceService.getResourceListByFunId(functionId, appId);
 					if (null != resource && null != resource.getBaseUrl()) {
 						setUrl.add(resource.getBaseUrl());
 					}
 
-					PrivilegeFunction privilegeFunction = privilegeFunctionService.findByFunctionId(functionId,appId);
+					PrivilegeFunction privilegeFunction = privilegeFunctionService.findByFunctionId(functionId, appId);
 					if (null != privilegeFunction && null != privilegeFunction.getOptUrl()
 							&& privilegeFunction.getOptUrl().length() > 0) {
 						setUrl.add(privilegeFunction.getOptUrl());
@@ -300,10 +278,33 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 				}
 			}
 		}
-		/* 角色资源获取链接 */
-
+		// 如果用户角色为组织机构管理员，把组织机构权限加入用户权限中
+		if (Type == 3) {
+			PrivilegeAjaxMessage message = privilegeGroupService.findGroupPrivilege(privilegeUser.getGroupId(), appId);
+			// 应用资源缓存
+			PrivilegeAjaxMessage appAjaxMessage = privilegeResourceService.getAppResRedis(appId);
+			JSONObject appObject = JSONObject.fromObject(appAjaxMessage.getMessage());
+			// 应用功能缓存
+			List<Map<String, Object>> functionList = (List<Map<String, Object>>) appObject.get("functionList");
+			if (message.getCode().equals("1")) {// 获取该组织机构缓存，得到该组织机构资源，功能url
+				JSONObject JsonObject = JSONObject.fromObject(message.getMessage());
+				List<Map<String, Object>> resourceList = (List<Map<String, Object>>) JsonObject.get("resourceList");
+				for (Map<String, Object> resource : resourceList) {
+					if (resource.get("baseUrl") != null && !("").equals(resource.get("baseUrl"))) {
+						setUrl.add((String) resource.get("baseUrl"));
+					}
+					for (Map<String, Object> function : functionList) {
+						if (function.get("resourceId").equals(resource.get("resourceId"))) {
+							if (function.get("optUrl") != null && !("").equals(function.get("optUrl"))) {
+								setUrl.add((String) function.get("optUrl"));
+							}
+						}
+					}
+				}
+			}
+		}
 		PrivilegeUrl privilegeUrl = new PrivilegeUrl();
-		Map<String,Object> b = new HashMap<String,Object>();
+		Map<String, Object> b = new HashMap<String, Object>();
 		b.put(jsonKeyName, setUrl);
 		String data = JSONObject.fromObject(b).toString();
 		privilegeUrl.setPrivilegeUrl(data);
@@ -313,7 +314,7 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 	@Override
 	public PrivilegeUrl getAllPrivilegeUrl(String appId) {
 
-		Set<String> setUrl =  new HashSet<String>();
+		Set<String> setUrl = new HashSet<String>();
 		/* 资源 */
 		ArrayList<String> urlList = (ArrayList<String>) privilegeResourceService.findAppResources(appId);
 		if (null != urlList && urlList.size() > 0) {
