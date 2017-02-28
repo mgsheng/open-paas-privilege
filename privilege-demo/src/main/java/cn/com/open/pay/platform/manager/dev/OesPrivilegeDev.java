@@ -37,8 +37,29 @@ public class OesPrivilegeDev {
 	private String logoUrl;
 	private String menuIconUrl;
 	private String userCenterRegUrl;
+	private String verifyUserPrivilegeUrl;
+	private String userCenterVerifyUrl;
+	private String delUserPrivilegeUrl;
 	
 	
+	public String getDelUserPrivilegeUrl() {
+		return delUserPrivilegeUrl;
+	}
+	public void setDelUserPrivilegeUrl(String delUserPrivilegeUrl) {
+		this.delUserPrivilegeUrl = delUserPrivilegeUrl;
+	}
+	public String getUserCenterVerifyUrl() {
+		return userCenterVerifyUrl;
+	}
+	public void setUserCenterVerifyUrl(String userCenterVerifyUrl) {
+		this.userCenterVerifyUrl = userCenterVerifyUrl;
+	}
+	public String getVerifyUserPrivilegeUrl() {
+		return verifyUserPrivilegeUrl;
+	}
+	public void setVerifyUserPrivilegeUrl(String verifyUserPrivilegeUrl) {
+		this.verifyUserPrivilegeUrl = verifyUserPrivilegeUrl;
+	}
 	public String getUserCenterRegUrl() {
 		return userCenterRegUrl;
 	}
