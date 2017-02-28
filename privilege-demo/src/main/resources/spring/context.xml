@@ -198,5 +198,8 @@
        		<property name="logoUrl" value="${logo_url}"></property>
        		<property name="menuIconUrl" value="${menu_icon_url}"></property>
        		<property name="userCenterRegUrl" value="${usercenter-reg-uri}"></property>
+       		<property name="verifyUserPrivilegeUrl" value="${verify-user-privilege-uri}"></property>
+       		<property name="userCenterVerifyUrl" value="${usercenter-verify-uri}"></property>
+       		<property name="delUserPrivilegeUrl" value="${del-privilege-user-uri}"></property>
        </bean>
 </beans>
