@@ -106,15 +106,13 @@ public class VerifyUserPrivilegeController extends BaseControllerUtil {
 						}
 						break;
 					}
-					
+
 				}
 			}
 			PrivilegeUrl url = null;
-			if (Type == 1) {
+			if (Type != 2) {
 				// 获取用户url
-				url = privilegeUrlService.getPrivilegeUrl(appId, appUserId, privilegeUser);
-			} else if (Type == 3) {
-				url = privilegeUrlService.getGroupPrivilegeUrl(appId, privilegeUser.getGroupId());
+				url = privilegeUrlService.getPrivilegeUrl(appId, appUserId, privilegeUser, Type);
 			}
 
 			String json = url.getPrivilegeUrl();
