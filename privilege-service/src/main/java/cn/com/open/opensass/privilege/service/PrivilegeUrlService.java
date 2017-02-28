@@ -62,7 +62,7 @@ public interface PrivilegeUrlService {
 	 * @param privilegeUser传入类，获取相关信息
 	 * @return
 	 */
-	PrivilegeUrl getPrivilegeUrl(String appId, String appUserId, PrivilegeUser privilegeUser);
+	PrivilegeUrl getPrivilegeUrl(String appId, String appUserId, PrivilegeUser privilegeUser ,int Type);
 	
 	PrivilegeUrl getAllPrivilegeUrl(String appId);
 	/**
