@@ -109,9 +109,10 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 			map.put("resourceId", user.getResourceId());
 
 		}
-
+		//用户资源缓存
 		PrivilegeAjaxMessage roleMessage = privilegeUserRedisService.getRedisUserRole(privilegeUserVo.getAppId(),
 				privilegeUserVo.getAppUserId());
+		//用户菜单缓存
 		PrivilegeAjaxMessage menuMessage = privilegeMenuService.getMenuRedis(privilegeUserVo.getAppId(),
 				privilegeUserVo.getAppUserId());
 		Boolean boo = false;// 存放是否有管理员角色标志 true-有，false-没有
@@ -121,7 +122,6 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 
 		List<PrivilegeRole> roleList = privilegeRoleService.getRoleListByUserIdAndAppId(user.getAppUserId(),
 				user.getAppId());
-		List resourceList = new ArrayList<PrivilegeResource>();
 		for (PrivilegeRole role : roleList) {
 			if (role.getRoleType() != null) {
 				if (role.getRoleType() == 2) {// 若角色为系统管理员 则把app拥有的所有资源放入缓存
