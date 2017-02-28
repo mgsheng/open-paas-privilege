@@ -206,9 +206,9 @@ public class ManagerUserController extends BaseControllerUtil {
 	public void authorizeRole(HttpServletRequest request, HttpServletResponse response)
 			throws UnsupportedEncodingException {
 		log.info("-------------------------authorizeRole        start------------------------------------");
-		String appUserId = request.getParameter("id");//用户id
-		String addRoleId = request.getParameter("addRoleId");//添加的角色id
-		String delRoleId = request.getParameter("delRoleId");//删除的角色id
+		String appUserId = request.getParameter("id");// 用户id
+		String addRoleId = request.getParameter("addRoleId");// 添加的角色id
+		String delRoleId = request.getParameter("delRoleId");// 删除的角色id
 		String appId = request.getParameter("appId");
 		String deptId = null;
 		String groupId = null;
@@ -511,13 +511,14 @@ public class ManagerUserController extends BaseControllerUtil {
 		log.info("-------------------------role        start------------------------------------");
 		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
 		String groupId = null;
-		int Type=(int) user.get("Type");
+		// 用户角色类型，1-普通用户，2-管理员，3-组织机构管理员
+		int Type = (int) user.get("Type");
 		if (user != null) {
 			if (Type == 1 || Type == 3) {
 				groupId = user.get("groupId").equals("null") ? null : (String) user.get("groupId");
 			}
 		}
-		String id = request.getParameter("id");
+		String id = request.getParameter("id");// 用户appUserId
 		id = (id == null ? null : new String(id.getBytes("iso-8859-1"), "utf-8"));
 		String appId = request.getParameter("appId");
 		// 查找当前用户角色
@@ -544,7 +545,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		// 每页显示条数
 		int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10" : rows);
 		int startRow = (currentPage - 1) * pageSize;
-		// appRole
+		// 查询应用的角色 或者组织机构的角色
 		Map<String, Object> SignatureMap = new HashMap<String, Object>();
 		SignatureMap.put("appId", appId);
 		SignatureMap.put("groupId", groupId);
@@ -582,7 +583,6 @@ public class ManagerUserController extends BaseControllerUtil {
 		return;
 	}
 
-	
 	/**
 	 * 修改用户信息
 	 * 
@@ -683,18 +683,18 @@ public class ManagerUserController extends BaseControllerUtil {
 
 	@RequestMapping("findUserList")
 	public void findUserList(HttpServletRequest request, HttpServletResponse response) {
-		String groupId=request.getParameter("groupId");
+		String groupId = request.getParameter("groupId");
 		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
 		if (("").equals(groupId)) {
 			if (user != null) {
 				// 用户角色类型，1-普通用户，2-管理员，3-组织机构管理员
-				int Type=(int) user.get("Type");
+				int Type = (int) user.get("Type");
 				if (Type == 1 || Type == 3) {
 					groupId = user.get("groupId").equals("null") ? null : (String) user.get("groupId");
 				}
 			}
 		}
-		
+
 		String userName = request.getParameter("userName");
 		// 当前第几页
 		String page = request.getParameter("page");
@@ -725,15 +725,15 @@ public class ManagerUserController extends BaseControllerUtil {
 		log.info("-------------------------findGroup         start------------------------------------");
 		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
 		String groupId = user.get("groupId").equals("null") ? null : (String) user.get("groupId");
-		int Type=(int) user.get("Type");
+		int Type = (int) user.get("Type");
 		List<OesGroup> groupList = null;
 		// 用户角色类型，1-普通用户，2-管理员，3-组织机构管理员
-		//如果当前用户为管理员，显示所有组织结构，否则显示当前用户所在的组织机构
+		// 如果当前用户为管理员，显示所有组织结构，否则显示当前用户所在的组织机构
 		if (Type == 1 || Type == 3) {
 			groupList = new ArrayList<OesGroup>();
 			OesGroup group = oesGroupService.findByCode(groupId);
 			groupList.add(group);
-		}else {
+		} else {
 			groupList = oesGroupService.findAll();
 		}
 
