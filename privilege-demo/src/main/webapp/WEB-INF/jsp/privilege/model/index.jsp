@@ -536,8 +536,8 @@
              var s = $(obj).attr('text');
              $('#icon').combo('setValue', v).combo('setText', s).combo('hidePanel');
 		}
-	    $(function(){  
-	        $('#loading').show();  
+		function getTree() {
+			$('#loading').show();  
 	    	$.ajax({type:'GET',
 				url:'${pageContext.request.contextPath}/module/tree?appId=${appId}',
 				success:function(data) {
@@ -548,14 +548,17 @@
 							if (json.length>0) {
 								$('#deptree').tree({data: json});
 								getRoot();
-								$('#loading').hide();  
 							}else {
 								msgShow('系统提示', '该应用无菜单！', 'info');
 							}
 							
 						}
+						$('#loading').hide();  
 					}
 			});
+		}
+	    $(function(){  
+	    	getTree();
 	    	$('#icon').combo({
                 required:true,
                 editable:false ,
@@ -829,9 +832,7 @@
 
 			}
 			function reload(){
-			    $('#deptree').tree({
-                	url:'${pageContext.request.contextPath}/module/tree?appId=${appId}'
-             	});
+				getTree();
 			} 
 			
 	
