@@ -67,7 +67,6 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 	private RedisClientTemplate redisClient;
 	@Autowired
 	private PrivilegeGroupService privilegeGroupService;
-	
 
 	/**
 	 * 用户角色权限获取接口
@@ -108,29 +107,28 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 			map.put("groupId", user.getGroupId());
 			map.put("privilegeFunId", user.getPrivilegeFunId());
 			map.put("resourceId", user.getResourceId());
-			
+
 		}
-		
-	
-		PrivilegeAjaxMessage roleMessage=privilegeUserRedisService.getRedisUserRole(privilegeUserVo.getAppId(),
+
+		PrivilegeAjaxMessage roleMessage = privilegeUserRedisService.getRedisUserRole(privilegeUserVo.getAppId(),
 				privilegeUserVo.getAppUserId());
-		PrivilegeAjaxMessage menuMessage=privilegeMenuService.getMenuRedis(privilegeUserVo.getAppId(),
+		PrivilegeAjaxMessage menuMessage = privilegeMenuService.getMenuRedis(privilegeUserVo.getAppId(),
 				privilegeUserVo.getAppUserId());
 		Boolean boo = false;// 存放是否有管理员角色标志 true-有，false-没有
-		int Type=1;//角色类型标识，1-普通用户，2-管理员（应用资源级别），3-组织机构管理员（组织机构资源）
+		int Type = 1;// 角色类型标识，1-普通用户，2-管理员（应用资源级别），3-组织机构管理员（组织机构资源）
 		String privilegeResourceIds = user.getResourceId();
 		String privilegeFunctionIds = user.getPrivilegeFunId();
-		
+
 		List<PrivilegeRole> roleList = privilegeRoleService.getRoleListByUserIdAndAppId(user.getAppUserId(),
 				user.getAppId());
 		List resourceList = new ArrayList<PrivilegeResource>();
 		for (PrivilegeRole role : roleList) {
 			if (role.getRoleType() != null) {
 				if (role.getRoleType() == 2) {// 若角色为系统管理员 则把app拥有的所有资源放入缓存
-					if (role.getGroupId()!=null&&!role.getGroupId().isEmpty()) {
-						Type=3;
-					}else{
-						Type=2;
+					if (role.getGroupId() != null && !role.getGroupId().isEmpty()) {
+						Type = 3;
+					} else {
+						Type = 2;
 					}
 					boo = true;
 					break;
@@ -141,107 +139,96 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 		map.put("Type", Type);
 		// redis中没有roleMap，从数据库中查询并存入redis
 		Map<String, Object> roleMap = new HashMap<String, Object>();
-		if (roleMessage.getCode().equals("0")) {//code为0该用户不存在
+		if (roleMessage.getCode().equals("0")) {// code为0该用户不存在
 			map.put("status", "0");
 			writeErrorJson(response, map);
 			return;
-		}else{
+		} else {
 			JSONObject obj1 = JSONObject.fromObject(roleMessage.getMessage());// 将json字符串转换为json对象
 			JSONArray objArray = (JSONArray) obj1.get("roleList");
 			roleMap.put("roleList", objArray);
-			if (boo) {
-				if (Type==2) {
-					//如果为管理员 返回应用所有资源
-					PrivilegeAjaxMessage message=privilegeResourceService.getAppResRedis(user.getAppId());
-					obj1=JSONObject.fromObject(message.getMessage());
-					objArray=(JSONArray) obj1.get("resourceList");
-					List<PrivilegeResourceVo> resources = JSONArray.toList(objArray, PrivilegeResourceVo.class);
-					//公共菜单
-					List<PrivilegeMenuVo> menuVos=privilegeMenuService.findMenuByResourceType(0);
-					//去重处理
-					Set<PrivilegeResourceVo>  privilegeResourceVos=new HashSet<PrivilegeResourceVo>();
-					//遍历应用资源，获取公共资源
-					for (PrivilegeMenuVo privilegeMenuVo : menuVos) {
-						if (privilegeMenuVo!=null) {
-							PrivilegeResourceVo privilegeResourceVo=privilegeResourceService.getResourceListByMenuId(privilegeMenuVo.getMenuId());
-							if (privilegeResourceVo!=null) {
-								privilegeResourceVos.add(privilegeResourceVo);
-							}
+			// 如果为管理员 返回应用所有资源
+			if (Type == 2) {
+				PrivilegeAjaxMessage message = privilegeResourceService.getAppResRedis(user.getAppId());
+				obj1 = JSONObject.fromObject(message.getMessage());
+				objArray = (JSONArray) obj1.get("resourceList");
+				List<PrivilegeResourceVo> resources = JSONArray.toList(objArray, PrivilegeResourceVo.class);
+				// 公共菜单
+				List<PrivilegeMenuVo> menuVos = privilegeMenuService.findMenuByResourceType(0);
+				// 去重处理
+				Set<PrivilegeResourceVo> privilegeResourceVos = new HashSet<PrivilegeResourceVo>();
+				// 遍历应用资源，获取公共资源
+				for (PrivilegeMenuVo privilegeMenuVo : menuVos) {
+					if (privilegeMenuVo != null) {
+						PrivilegeResourceVo privilegeResourceVo = privilegeResourceService
+								.getResourceListByMenuId(privilegeMenuVo.getMenuId());
+						if (privilegeResourceVo != null) {
+							privilegeResourceVos.add(privilegeResourceVo);
 						}
 					}
-					privilegeResourceVos.addAll(resources);
-					objArray=JSONArray.fromObject(privilegeResourceVos);
-				}else{//如果为组织机构管理员，返回该组织机构资源缓存
-					PrivilegeAjaxMessage message=privilegeGroupService.findGroupPrivilege(user.getGroupId(), user.getAppId());
-					//去重处理
-					Set<PrivilegeResourceVo>  privilegeResourceVos=new HashSet<PrivilegeResourceVo>();
-					if (message.getCode().equals("1")) {
-						obj1=JSONObject.fromObject(message.getMessage());
-						objArray=(JSONArray) obj1.get("resourceList");
-						List<PrivilegeResourceVo> resources = JSONArray.toList(objArray, PrivilegeResourceVo.class);
-						privilegeResourceVos.addAll(resources);
-					}
-					objArray=JSONArray.fromObject(privilegeResourceVos);
 				}
-				
-			}else {
-				objArray=(JSONArray) obj1.get("resourceList");
+				privilegeResourceVos.addAll(resources);
+				objArray = JSONArray.fromObject(privilegeResourceVos);
+			} else {
+				objArray = (JSONArray) obj1.get("resourceList");
 			}
 			roleMap.put("resourceList", objArray);
-			objArray=(JSONArray) obj1.get("functionList");
+			objArray = (JSONArray) obj1.get("functionList");
 			roleMap.put("functionList", objArray);
 			map.putAll(roleMap);
 		}
 
 		// redis中没有menuMap，从数据库中查询并存入redis
-		Map<String, Object>	menuMap = new HashMap<String, Object>();
+		Map<String, Object> menuMap = new HashMap<String, Object>();
 		if (menuMessage.getCode().equals("0")) {
 			List<PrivilegeMenu> privilegeMenuList = new ArrayList<PrivilegeMenu>();
 			if (boo) {// 有管理员角色获取所有应用下菜单
-				JSONObject obj1=new JSONObject();
+				JSONObject obj1 = new JSONObject();
 				JSONArray objArray = new JSONArray();
-				if (Type==2) {
-					//如果为管理员 返回应用所有菜单
-					PrivilegeAjaxMessage message=privilegeMenuService.getAppMenuRedis(user.getAppId());
-					obj1=JSONObject.fromObject(message.getMessage());
-					JSONArray menuArray=obj1.getJSONArray("menuList");
-					List<PrivilegeMenuVo> menuVos=privilegeMenuService.findMenuByResourceType(0);
+				if (Type == 2) {
+					// 如果为管理员 返回应用所有菜单
+					PrivilegeAjaxMessage message = privilegeMenuService.getAppMenuRedis(user.getAppId());
+					obj1 = JSONObject.fromObject(message.getMessage());
+					JSONArray menuArray = obj1.getJSONArray("menuList");
+					List<PrivilegeMenuVo> menuVos = privilegeMenuService.findMenuByResourceType(0);
 					List<PrivilegeMenuVo> menuList = JSONArray.toList(menuArray, PrivilegeMenuVo.class);
-					Set<PrivilegeMenuVo> set=new HashSet<PrivilegeMenuVo>();
+					Set<PrivilegeMenuVo> set = new HashSet<PrivilegeMenuVo>();
 					set.addAll(menuVos);
 					set.addAll(menuList);
-					objArray=JSONArray.fromObject(set);
-				}else {
-					PrivilegeAjaxMessage message=privilegeGroupService.findGroupPrivilege(user.getGroupId(), user.getAppId());
-					Set<PrivilegeMenuVo> menuSet=new HashSet<PrivilegeMenuVo>();
+					objArray = JSONArray.fromObject(set);
+				} else {
+					PrivilegeAjaxMessage message = privilegeGroupService.findGroupPrivilege(user.getGroupId(),
+							user.getAppId());
+					Set<PrivilegeMenuVo> menuSet = new HashSet<PrivilegeMenuVo>();
 					if (message.getCode().equals("1")) {
-						obj1=JSONObject.fromObject(message.getMessage());
-						JSONArray menuArray=obj1.getJSONArray("menuList");
+						obj1 = JSONObject.fromObject(message.getMessage());
+						JSONArray menuArray = obj1.getJSONArray("menuList");
 						List<PrivilegeMenuVo> menuList = JSONArray.toList(menuArray, PrivilegeMenuVo.class);
 						menuSet.addAll(menuList);
 					}
-					objArray=JSONArray.fromObject(menuSet);
+					objArray = JSONArray.fromObject(menuSet);
 				}
 				menuMap.put("menuList", objArray);
 			} else {// 无管理员角色获取相应权限菜单
 				privilegeMenuList = privilegeMenuService.getMenuListByUserId(user.getAppUserId(), user.getAppId());
 				// 根据roleResource表中functionId无resourceId 查询菜单
-				List<String> FuncIds=privilegeRoleResourceService.findfindUserResourcesFunIdByResIsNull(user.getAppId(),user.getAppUserId());
-				if (FuncIds != null&&FuncIds.size()>0) {
-					String [] funcIds = StringTool.listToString(FuncIds).split(",");
-					List<PrivilegeMenu> menus = privilegeMenuService.getMenuListByFunctionId(funcIds,user.getAppId());
+				List<String> FuncIds = privilegeRoleResourceService
+						.findfindUserResourcesFunIdByResIsNull(user.getAppId(), user.getAppUserId());
+				if (FuncIds != null && FuncIds.size() > 0) {
+					String[] funcIds = StringTool.listToString(FuncIds).split(",");
+					List<PrivilegeMenu> menus = privilegeMenuService.getMenuListByFunctionId(funcIds, user.getAppId());
 					privilegeMenuList.addAll(menus);
 				}
 				// 根据user表中functionId resourceId 查询菜单
 				if (privilegeFunctionIds != null && !("").equals(privilegeFunctionIds)) {
 					String[] funIds = privilegeFunctionIds.split(",");
-					List<PrivilegeMenu> menus = privilegeMenuService.getMenuListByFunctionId(funIds,user.getAppId());
+					List<PrivilegeMenu> menus = privilegeMenuService.getMenuListByFunctionId(funIds, user.getAppId());
 					privilegeMenuList.addAll(menus);
 				}
 				if (privilegeResourceIds != null && !("").equals(privilegeResourceIds)) {
 					String[] resIds = privilegeResourceIds.split(",");
 					for (String id : resIds) {
-						List<PrivilegeMenu> menus = privilegeMenuService.getMenuListByResourceId(id,user.getAppId());
+						List<PrivilegeMenu> menus = privilegeMenuService.getMenuListByResourceId(id, user.getAppId());
 						privilegeMenuList.addAll(menus);
 					}
 				}
@@ -251,42 +238,28 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 				menuMap.put("menuList", privilegeMenuListData);
 			}
 			map.putAll(menuMap);
-		}else{
+		} else {
 			JSONObject obj1 = JSONObject.fromObject(menuMessage.getMessage());// 将json字符串转换为json对象
 			JSONArray objArray = null;
-			if (boo) {
-				//去重处理
-				Set<PrivilegeMenuVo> menuSet=new HashSet<PrivilegeMenuVo>();
-				if (Type==2) {
-					//如果为管理员 返回应用所有菜单
-					PrivilegeAjaxMessage message=privilegeMenuService.getAppMenuRedis(user.getAppId());
-					obj1=JSONObject.fromObject(message.getMessage());
-					JSONArray menuArray=obj1.getJSONArray("menuList");
-					List<PrivilegeMenuVo> menuList = JSONArray.toList(menuArray, PrivilegeMenuVo.class);
-					//公共的菜单
-					List<PrivilegeMenuVo> menuVos=privilegeMenuService.findMenuByResourceType(0);
-					menuSet.addAll(menuVos);
-					menuSet.addAll(menuList);
-					objArray=JSONArray.fromObject(menuSet);
-				}else {//如果为组织机构管理员 返回该组织机构的所有菜单
-					PrivilegeAjaxMessage message=privilegeGroupService.findGroupPrivilege(user.getGroupId(), user.getAppId());
-					if (message.getCode().equals("1")) {
-						obj1=JSONObject.fromObject(message.getMessage());
-						JSONArray menuArray=obj1.getJSONArray("menuList");
-						List<PrivilegeMenuVo> menuList = JSONArray.toList(menuArray, PrivilegeMenuVo.class);
-						menuSet.addAll(menuList);
-					}
-					objArray=JSONArray.fromObject(menuSet);
-				}
-			}else {
-				objArray=(JSONArray) obj1.get("menuList");
+			if (Type == 2) {
+				// 去重处理
+				Set<PrivilegeMenuVo> menuSet = new HashSet<PrivilegeMenuVo>();
+				// 如果为管理员 返回应用所有菜单
+				PrivilegeAjaxMessage message = privilegeMenuService.getAppMenuRedis(user.getAppId());
+				obj1 = JSONObject.fromObject(message.getMessage());
+				JSONArray menuArray = obj1.getJSONArray("menuList");
+				List<PrivilegeMenuVo> menuList = JSONArray.toList(menuArray, PrivilegeMenuVo.class);
+				// 公共的菜单
+				List<PrivilegeMenuVo> menuVos = privilegeMenuService.findMenuByResourceType(0);
+				menuSet.addAll(menuVos);
+				menuSet.addAll(menuList);
+				objArray = JSONArray.fromObject(menuSet);
+			} else {
+				objArray = (JSONArray) obj1.get("menuList");
 			}
 			menuMap.put("menuList", objArray);
 			map.putAll(menuMap);
 		}
-
-		
-		
 
 		if (map.get("status") == "0") {
 			writeErrorJson(response, map);
