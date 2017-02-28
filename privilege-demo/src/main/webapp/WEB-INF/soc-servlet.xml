@@ -43,6 +43,9 @@
 						<value>/user/saveLatestVisit</value>
 						<value>/managerUser/findGroup</value>
 						<value>/module/getIcon</value>
+						<value>/user/index</value>
+						<value>/user/saveMenu</value>
+						<value>/user/getFrequentlyMenu</value>
 					</list>
 				</property>
 			</bean>
