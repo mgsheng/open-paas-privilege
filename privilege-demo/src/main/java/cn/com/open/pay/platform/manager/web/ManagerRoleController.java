@@ -2,6 +2,7 @@ package cn.com.open.pay.platform.manager.web;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -52,7 +53,6 @@ public class ManagerRoleController extends BaseControllerUtil {
 	private PrivilegeResourceService privilegeResourceService;
 	@Autowired
 	private PrivilegeGetSignatureService privilegeGetSignatureService;
-	
 
 	/**
 	 * 跳转到查询角色的页面
@@ -73,8 +73,9 @@ public class ManagerRoleController extends BaseControllerUtil {
 		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
 		String groupId = null;
 		if (user != null) {
-			Boolean isManager = (Boolean) user.get("isManager");
-			if (!isManager) {
+			// 用户角色类型，1-普通用户，2-管理员，3-组织机构管理员
+			int Type=(int) user.get("Type");
+			if (Type == 1 || Type == 3) {
 				groupId = user.get("groupId").equals("null") ? null : (String) user.get("groupId");
 			}
 		}
@@ -98,12 +99,17 @@ public class ManagerRoleController extends BaseControllerUtil {
 		JSONObject job = JSONObject.fromObject(s);
 		SignatureMap.clear();
 		List<Map<String, Object>> roles = JSONArray.fromObject(job.get("roleList"));
-		if (roles.size()>0) {
+		if (roles.size() > 0) {
 			for (Map<String, Object> m : roles) {
 				if ((Integer) (m.get("status")) == 0) {
 					m.put("status", "有效");
 				} else {
 					m.put("status", "无效");
+				}
+				if ((Integer) (m.get("roleType")) == 1) {
+					m.put("roleType", "普通角色");
+				} else {
+					m.put("roleType", "管理员");
 				}
 			}
 		}
@@ -128,11 +134,17 @@ public class ManagerRoleController extends BaseControllerUtil {
 		String roleName = request.getParameter("roleName");
 		roleName = java.net.URLEncoder.encode(roleName, "UTF-8");
 		String deptName = request.getParameter("deptName");
-		deptName = java.net.URLEncoder.encode(deptName, "UTF-8");
+		if (deptName!=null) {
+			deptName = java.net.URLEncoder.encode(deptName, "UTF-8");
+		}
 		String groupName = request.getParameter("groupName");
+		String roleType = request.getParameter("roleType");
+		String groupId = request.getParameter("groupId");
 		groupName = java.net.URLEncoder.encode(groupName, "UTF-8");
 		String remark = request.getParameter("remark");
-		remark = java.net.URLEncoder.encode(remark, "UTF-8");
+		if (remark!=null) {
+			remark = java.net.URLEncoder.encode(remark, "UTF-8");
+		}
 		String status = request.getParameter("status");
 		String treeNodeIds = request.getParameter("temp");
 		String resourceIds = "";
@@ -185,12 +197,12 @@ public class ManagerRoleController extends BaseControllerUtil {
 		map.put("status", status);
 		map.put("rolePrivilege", resourceIds);
 		map.put("privilegeFunId", functionIds);
-		map.put("groupId", "");
+		map.put("groupId", groupId);
 		map.put("groupName", groupName);
 		map.put("deptId", "");
 		map.put("deptName", deptName);
 		map.put("roleLevel", "");
-		map.put("roleType", "");
+		map.put("roleType", roleType);
 		map.put("parentRoleId", "");
 		map.put("remark", remark);
 		map.put("createUser", "");
@@ -217,6 +229,7 @@ public class ManagerRoleController extends BaseControllerUtil {
 		String appId = request.getParameter("appId");
 		String privilegeRoleId = request.getParameter("privilegeRoleId");
 		String roleName = request.getParameter("roleName");
+		String roleType = request.getParameter("roleType");
 		roleName = java.net.URLEncoder.encode(roleName, "UTF-8");
 		String deptName = request.getParameter("deptName");
 		if (deptName != null) {
@@ -247,7 +260,7 @@ public class ManagerRoleController extends BaseControllerUtil {
 		map.put("deptId", "");
 		map.put("deptName", deptName);
 		map.put("roleLevel", "");
-		map.put("roleType", "");
+		map.put("roleType", roleType);
 		map.put("parentRoleId", "");
 		map.put("remark", remark);
 		map.put("createUser", "");
@@ -405,29 +418,58 @@ public class ManagerRoleController extends BaseControllerUtil {
 
 	@RequestMapping(value = "tree")
 	public void getModelTree(HttpServletRequest request, HttpServletResponse response) {
+		String groupId = request.getParameter("groupId");
 		String appId = request.getParameter("appId");
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
 		map.put("appId", appId);
-		String s = sendPost(oesPrivilegeDev.getAppMenuRedisUrl(), map);
-		JSONObject obj = JSONObject.fromObject(s);// 将json字符串转换为json对象
-		JSONArray objArray = JSONArray.fromObject(obj.get("menuList"));
-		// 将json对象转换为java对象
-		List<PrivilegeMenu> menuList = JSONArray.toList(objArray, PrivilegeMenu.class);
-		String s1 = sendPost(oesPrivilegeDev.getAppResRedisUrl(), map);
-		JSONObject obj1 = new JSONObject().fromObject(s1);// 将json字符串转换为json对象
-		JSONArray obj1Array = JSONArray.fromObject(obj1.get("resourceList"));
-		JSONArray obj2Array = JSONArray.fromObject(obj1.get("functionList"));
-		String operation = sendPost(oesPrivilegeDev.getAllOperationUrl(), map);
-		obj = JSONObject.fromObject(operation);
-		objArray = JSONArray.fromObject(obj.get("operationList"));
-		// 将json对象转换为java对象
-		List<PrivilegeOperation> operationList = JSONArray.toList(objArray, PrivilegeOperation.class);
-		List<PrivilegeResource1> resourceList = JSONArray.toList(obj1Array, PrivilegeResource1.class);
-		List<PrivilegeFunction> functionList = JSONArray.toList(obj2Array, PrivilegeFunction.class);
-
-		List<TreeNode> nodes = convertTreeNodeList(menuList);
-		JSONArray jsonArr = JSONArray.fromObject(buildTree2(nodes, resourceList, functionList, operationList));
-		WebUtils.writeJson(response, jsonArr);
+		map.put("groupId", groupId);
+		JSONArray jsonArr = null;
+		//获取组织机构缓存
+		String s = sendPost(oesPrivilegeDev.getGroupCacheUrl(), map);
+		if (s!=null&&!("").equals(s)) {
+			JSONObject jsonObject = JSONObject.fromObject(s);
+			// status为1时，该组织机构存在，构建tree
+			if (!("0").equals(jsonObject.get("status"))) {
+				JSONArray menuArray = (JSONArray) jsonObject.get("menuList");
+				// 如果menuList不为空则构建tree,否则直接返回无权限状态
+				if (menuArray.size() > 0) {
+					JSONArray resourceArray = (JSONArray) jsonObject.get("resourceList");
+					// 将json对象转换为java对象
+					List<PrivilegeMenu> menuList = JSONArray.toList(menuArray, PrivilegeMenu.class);
+					s = sendPost(oesPrivilegeDev.getAppResRedisUrl(), map);
+					jsonObject = JSONObject.fromObject(s);// 将json字符串转换为json对象
+					JSONArray functionArray = (JSONArray) jsonObject.get("functionList");
+					s = sendPost(oesPrivilegeDev.getAllOperationUrl(), map);
+					jsonObject = JSONObject.fromObject(s);
+					JSONArray operationArray = (JSONArray) jsonObject.get("operationList");
+					// 将json对象转换为java对象
+					List<PrivilegeOperation> operationList = JSONArray.toList(operationArray, PrivilegeOperation.class);
+					List<PrivilegeResource1> resourceList = JSONArray.toList(resourceArray, PrivilegeResource1.class);
+					List<PrivilegeFunction> functionList = JSONArray.toList(functionArray, PrivilegeFunction.class);
+					// 根据DisplayOrder排序
+					java.util.Collections.sort(menuList, new Comparator<PrivilegeMenu>() {
+						@Override
+						public int compare(PrivilegeMenu o1, PrivilegeMenu o2) {
+							return o1.getDisplayOrder() - o2.getDisplayOrder();
+						}
+					});
+					List<TreeNode> nodes = convertTreeNodeList(menuList);
+					jsonArr = JSONArray.fromObject(buildTree2(nodes, resourceList, functionList, operationList));
+					map.put("status", "1");
+					map.put("tree", jsonArr);
+				} else {
+					map.put("status", "0");
+					map.put("tree", new JSONArray());
+				}
+				WebUtils.writeJsonToMap(response, map);
+			}else {
+				jsonArr = new JSONArray();
+				map.put("status", "0");
+				map.put("tree", jsonArr);
+				WebUtils.writeJsonToMap(response, map);
+			}
+		}
+		
 	}
 
 	private List<TreeNode> convertTreeNodeList(List<PrivilegeMenu> modules) {
