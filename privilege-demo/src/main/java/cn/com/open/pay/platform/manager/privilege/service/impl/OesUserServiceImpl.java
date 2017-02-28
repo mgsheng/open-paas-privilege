@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.com.open.pay.platform.manager.infrastructure.repository.OesUserRepository;
+import cn.com.open.pay.platform.manager.privilege.model.OesUser;
 import cn.com.open.pay.platform.manager.privilege.service.OesUserService;
 @Service("oesUserService")
 public class OesUserServiceImpl implements OesUserService {
@@ -21,6 +22,26 @@ public class OesUserServiceImpl implements OesUserService {
 	@Override
 	public int getUserCount(String groupId,String userName) {
 		return oesUserRepository.getUserCount(groupId,userName);
+	}
+
+	@Override
+	public Boolean saveUser(OesUser oesUser) {
+		try {
+			oesUserRepository.saveUser(oesUser);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	@Override
+	public Boolean deleteUser(Integer Id) {
+		try {
+			oesUserRepository.deleteUser(Id);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 	
 
