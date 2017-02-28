@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import cn.com.open.pay.platform.manager.dev.OesPrivilegeDev;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGetSignatureService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import net.sf.json.JSONObject;
@@ -19,8 +20,9 @@ import net.sf.json.JSONObject;
 public class VerifyUserPrivilegeInterceptor extends BaseControllerUtil implements HandlerInterceptor {
 	@Autowired
 	private PrivilegeGetSignatureService privilegeGetSignatureService;
-	@Value("#{properties['verify-user-privilege-uri']}")
-	private String VerifyUserPrivilegeUri;
+	@Autowired
+	private OesPrivilegeDev oesPrivilegeDev;
+	
 	//不拦截uri
 	private List<String> uncheckUrls;
 
@@ -73,7 +75,7 @@ public class VerifyUserPrivilegeInterceptor extends BaseControllerUtil implement
 				map.put("appId", user.get("appId"));
 				map.put("appUserId", user.get("appUserId"));
 				map.put("optUrl", url);
-				String reult = sendPost(VerifyUserPrivilegeUri, map);
+				String reult = sendPost(oesPrivilegeDev.getVerifyUserPrivilegeUrl(), map);
 				JSONObject object = JSONObject.fromObject(reult);
 				if (object.get("status").equals("1")) {
 					return true;
