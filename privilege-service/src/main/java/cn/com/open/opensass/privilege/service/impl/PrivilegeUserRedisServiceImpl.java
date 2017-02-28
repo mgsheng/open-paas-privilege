@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-
 import cn.com.open.opensass.privilege.dao.cache.RedisDao;
 import cn.com.open.opensass.privilege.model.PrivilegeRole;
 import cn.com.open.opensass.privilege.model.PrivilegeRoleResource;
@@ -84,7 +83,6 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 		roleMap.put("roleList", roles);
 		List<PrivilegeRole> roleList = privilegeRoleService.getRoleListByUserIdAndAppId(appUserId, appId);
 		List resourceList = null;
-		Boolean boo = false;
 		int Type = 1;// 角色类型，1-普通用户，2-系统管理员，3-组织机构管理员
 		for (PrivilegeRole role : roleList) {
 			if (role.getRoleType() != null) {
@@ -94,7 +92,6 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 					} else {
 						Type = 2;
 					}
-					boo = true;
 					break;
 				}
 			}
@@ -103,7 +100,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 		List<String> resourceIds = new ArrayList<String>();
 		// resourceList
 		Set resourceSet = new HashSet();
-		if (!boo) {
+		if (Type != 2) {
 			// roleResource 中functionId
 			List<String> FunIds = privilegeRoleResourceService.findUserResourcesFunId(appId, appUserId);
 			// 加入 user表中functionIds
@@ -156,60 +153,34 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 			}
 			resourceSet.addAll(resourceList);
 			roleMap.put("resourceList", resourceSet);
-		} else {
-			PrivilegeAjaxMessage message =null;
-			JSONObject obj=null;
-			JSONArray objArray=null;
-			if (Type == 2) {//如果为管理员，返回应用资源缓存
-				message= privilegeResourceService.getAppResRedis(appId);
-				obj = JSONObject.fromObject(message.getMessage());// 将json字符串转换为json对象
-				objArray = JSONArray.fromObject(obj.get("resourceList"));
-				roleMap.put("resourceList", objArray);
-			} else {//如果为机构管理员，返回该组织机构的资源
-				message = privilegeGroupService.findGroupPrivilege(privilegeUser.getGroupId(),
+			if (Type == 3) {
+				// 如果为机构管理员，返回该组织机构的资源
+				PrivilegeAjaxMessage message = privilegeGroupService.findGroupPrivilege(privilegeUser.getGroupId(),
 						appId);
 				if (!("0").equals(message.getCode())) {
-					obj = JSONObject.fromObject(message.getMessage());// 将json字符串转换为json对象
-					objArray = JSONArray.fromObject(obj.get("resourceList"));
+					JSONObject obj = JSONObject.fromObject(message.getMessage());// 将json字符串转换为json对象
+					JSONArray objArray = JSONArray.fromObject(obj.get("resourceList"));
 					roleMap.put("resourceList", objArray);
-				}else {
+				} else {
 					roleMap.put("resourceList", new JSONArray());
 				}
-				
+
 			}
+		} else {
+			// 如果为管理员，返回应用资源缓存
+			PrivilegeAjaxMessage message = privilegeResourceService.getAppResRedis(appId);
+			JSONObject obj = JSONObject.fromObject(message.getMessage());// 将json字符串转换为json对象
+			JSONArray objArray = JSONArray.fromObject(obj.get("resourceList"));
+			roleMap.put("resourceList", objArray);
 
 		}
 		/* functionList 判断是否为管理员， */
-		if (boo) {
-			PrivilegeAjaxMessage message= privilegeResourceService.getAppResRedis(appId);
+		// 如果为管理员，返回应用功能缓存
+		if (Type == 2) {
+			PrivilegeAjaxMessage message = privilegeResourceService.getAppResRedis(appId);
 			JSONObject obj1 = JSONObject.fromObject(message.getMessage());// 将json字符串转换为json对象
 			JSONArray objArray = JSONArray.fromObject(obj1.get("functionList"));
-			if (Type == 2) {//如果为管理员，返回应用功能缓存
-				roleMap.put("functionList", objArray);
-			} else {//如果为机构管理员，返回该组织机构功能
-				message = privilegeGroupService.findGroupPrivilege(privilegeUser.getGroupId(),
-						appId);
-				if (!("0").equals(message.getCode())) {
-					//该应用拥有的功能
-					List<Map<String, Object>> functionList=(List<Map<String, Object>>) obj1.get("functionList");
-					JSONObject  object= JSONObject.fromObject(message.getMessage());// 将json字符串转换为json对象
-					//该组织机构拥有的资源
-					List<Map<String, Object>> resources=(List<Map<String, Object>>) object.get("resourceList");
-					List<Map<String, Object>> functions=new ArrayList<Map<String,Object>>();
-					//遍历选出该组织机构拥有的功能
-					for (Map<String, Object> resource : resources) {
-						for (Map<String, Object> function : functionList) {
-							if (function.get("resourceId").equals(resource.get("resourceId"))) {
-								functions.add(function);
-							}
-						}
-					}
-					roleMap.put("functionList", functions);
-				}else {
-					roleMap.put("functionList", new JSONArray());
-				}
-			}
-
+			roleMap.put("functionList", objArray);
 		} else {
 			// functionList
 			List<String> FunIds = new ArrayList<String>();
@@ -227,7 +198,6 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 				}
 			}
 
-			
 			// 加入 user表中functionIds
 			if (privilegeFunctionIds != null && !("").equals(privilegeFunctionIds)) {
 				FunIds.add(privilegeFunctionIds);
@@ -250,7 +220,32 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 			}
 			Set<Map<String, Object>> functionSet = new HashSet<Map<String, Object>>();
 			functionSet.addAll(privilegeFunctions);
-			roleMap.put("functionList", functionSet);
+			// 如果为机构管理员，返回该组织机构功能
+			if (Type == 3) {
+				// 该应用的资源的缓存
+				PrivilegeAjaxMessage appMessage = privilegeResourceService.getAppResRedis(appId);
+				JSONObject obj = JSONObject.fromObject(appMessage.getMessage());// 将json字符串转换为json对象
+				// 该组织机构的缓存
+				PrivilegeAjaxMessage message = privilegeGroupService.findGroupPrivilege(privilegeUser.getGroupId(),
+						appId);
+				if (!("0").equals(message.getCode())) {
+					// 该应用拥有的功能
+					List<Map<String, Object>> functionList = (List<Map<String, Object>>) obj.get("functionList");
+					JSONObject object = JSONObject.fromObject(message.getMessage());// 将json字符串转换为json对象
+					// 该组织机构拥有的资源
+					List<Map<String, Object>> resources = (List<Map<String, Object>>) object.get("resourceList");
+					List<Map<String, Object>> functions = new ArrayList<Map<String, Object>>();
+					// 遍历选出该组织机构拥有的功能
+					for (Map<String, Object> resource : resources) {
+						for (Map<String, Object> function : functionList) {
+							if (function.get("resourceId").equals(resource.get("resourceId"))) {
+								functions.add(function);
+							}
+						}
+					}
+					functionSet.addAll(functions);
+				}
+			}
 		}
 
 		// 放入缓存
