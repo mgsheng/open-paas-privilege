@@ -156,9 +156,11 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 					obj1=JSONObject.fromObject(message.getMessage());
 					objArray=(JSONArray) obj1.get("resourceList");
 					List<PrivilegeResourceVo> resources = JSONArray.toList(objArray, PrivilegeResourceVo.class);
+					//公共菜单
 					List<PrivilegeMenuVo> menuVos=privilegeMenuService.findMenuByResourceType(0);
 					//去重处理
 					Set<PrivilegeResourceVo>  privilegeResourceVos=new HashSet<PrivilegeResourceVo>();
+					//遍历应用资源，获取公共资源
 					for (PrivilegeMenuVo privilegeMenuVo : menuVos) {
 						if (privilegeMenuVo!=null) {
 							PrivilegeResourceVo privilegeResourceVo=privilegeResourceService.getResourceListByMenuId(privilegeMenuVo.getMenuId());
@@ -178,16 +180,6 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 						objArray=(JSONArray) obj1.get("resourceList");
 						List<PrivilegeResourceVo> resources = JSONArray.toList(objArray, PrivilegeResourceVo.class);
 						privilegeResourceVos.addAll(resources);
-					}
-					//获取公共资源菜单
-					List<PrivilegeMenuVo> menuVos=privilegeMenuService.findMenuByResourceType(0);
-					for (PrivilegeMenuVo privilegeMenuVo : menuVos) {
-						if (privilegeMenuVo!=null) {
-							PrivilegeResourceVo privilegeResourceVo=privilegeResourceService.getResourceListByMenuId(privilegeMenuVo.getMenuId());
-							if (privilegeResourceVo!=null) {
-								privilegeResourceVos.add(privilegeResourceVo);
-							}
-						}
 					}
 					objArray=JSONArray.fromObject(privilegeResourceVos);
 				}
@@ -228,8 +220,6 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 						List<PrivilegeMenuVo> menuList = JSONArray.toList(menuArray, PrivilegeMenuVo.class);
 						menuSet.addAll(menuList);
 					}
-					List<PrivilegeMenuVo> menuVos=privilegeMenuService.findMenuByResourceType(0);
-					menuSet.addAll(menuVos);
 					objArray=JSONArray.fromObject(menuSet);
 				}
 				menuMap.put("menuList", objArray);
@@ -265,16 +255,17 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 			JSONObject obj1 = JSONObject.fromObject(menuMessage.getMessage());// 将json字符串转换为json对象
 			JSONArray objArray = null;
 			if (boo) {
+				//去重处理
 				Set<PrivilegeMenuVo> menuSet=new HashSet<PrivilegeMenuVo>();
-				//公共的菜单
-				List<PrivilegeMenuVo> menuVos=privilegeMenuService.findMenuByResourceType(0);
-				menuSet.addAll(menuVos);
 				if (Type==2) {
 					//如果为管理员 返回应用所有菜单
 					PrivilegeAjaxMessage message=privilegeMenuService.getAppMenuRedis(user.getAppId());
 					obj1=JSONObject.fromObject(message.getMessage());
 					JSONArray menuArray=obj1.getJSONArray("menuList");
 					List<PrivilegeMenuVo> menuList = JSONArray.toList(menuArray, PrivilegeMenuVo.class);
+					//公共的菜单
+					List<PrivilegeMenuVo> menuVos=privilegeMenuService.findMenuByResourceType(0);
+					menuSet.addAll(menuVos);
 					menuSet.addAll(menuList);
 					objArray=JSONArray.fromObject(menuSet);
 				}else {//如果为组织机构管理员 返回该组织机构的所有菜单
