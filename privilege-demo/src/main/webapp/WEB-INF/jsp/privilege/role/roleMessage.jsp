@@ -23,7 +23,9 @@
 				<th data-options="field:'deptName',width:150">部门名称</th>
 				<th data-options="field:'groupName',width:150">机构名称</th>
 				<th data-options="field:'remark',width:100">备注</th>
+				<th data-options="field:'roleType',width:100,align:'right'">类型</th>
 				<th data-options="field:'status',width:100,align:'right'">状态</th>
+				<th data-options="field:'groupId',width:100,align:'right'" hidden="true" >groupId</th>
 			</tr>
 		</thead>
 	</table>
@@ -50,15 +52,25 @@
 						</td>
 					</tr>
 					<tr style="height: 40px">
-						<td>机构名称：</td>
-						<td><input id="groupName" type="text" class="txt01" value=""/>
-						</td>
 						<td>状态：</td>
 						<td>
 			                <select  id="status" name="status" id="status" style="width:100%">
 								<option value="0">有效</option>
 								<option value="1">无效</option>
 							</select> 
+						</td>
+						<td>类型：</td>
+						<td>
+			                <select  id="roleType" name="roleType"  style="width:100%">
+								<option value="1">普通角色</option>
+								<option value="2">管理员</option>
+							</select> 
+						</td>
+					</tr>
+					<tr style="height: 40px">
+						<td>组织机构：</td>
+						<td colspan="3">
+							<input id="cc" class="easyui-combobox"  data-options="valueField:'groupCode',textField:'groupName'"  style="width:280px;height:24px;padding:5px;">
 						</td>
 					</tr>
 					<tr style="height: 40px">
@@ -71,7 +83,7 @@
 			
 			<div class="easyui-panel" style="padding:5px;height: 65%;widows:300px;margin-top:5px;overflow-y:scroll;">
 				  <ul id="deptree1"  style="height: 100%;width: 200px" class="easyui-tree" 
-					 data-options="method:'get'"> 
+					 data-options="method:'get',lines:true,animate: true,checkbox:true"> 
 			 	  </ul>
 			</div>
 			</div>
@@ -87,7 +99,7 @@
 </body>
 
 	<script>
-
+	var group;//存放组织机构下拉框数据
 	var initialResIds='';//用于存放修改界面中选中的resource
 	var initialFunIds='';//用于存放修改界面中选中的function
 	var checkedResIds='';//存放选中的resource
@@ -95,9 +107,44 @@
 	var addIds='';//存放修改时添加的权限Id
 	var delIds='';//存放修改时删除的权限Id
 	var checkIds='';//存放添加时的选中Id
-
+	var roleId='';
 	$(document).ready(function(){
+		$.post('${pageContext.request.contextPath}/managerUser/findGroup',function (data) {
+			$('#cc').combobox('loadData',data);
+			var groupId=data[0].groupCode;
+			//$('#cc').combobox('select',data[0].groupCode);
+		});
+		
 		loadData();
+		//选择组织机构时更新树
+		$('#cc').combobox({
+			onSelect: function(record){
+				group=record;
+				var groupId =record.groupCode;
+				if(groupId.length>0){
+					$.ajax({type:'GET',
+						url:'${pageContext.request.contextPath}/managerRole/tree?appId=${appId}&groupId='+groupId,
+						success:function(data) {
+								if(data.status=="0"){
+									msgShow('系统提示', '该组织机构无权限！', 'info');
+									$('#deptree1').tree({data: []});
+								}else {
+									var json=data.tree;
+									if (json.length>0) {
+										$('#deptree1').tree({data: json});
+										if (roleId.length>0) {
+											selected(roleId);
+										}
+									}else {
+										msgShow('系统提示', '该组织机构无权限！', 'info');
+									}
+									
+								}
+							}
+					});
+				}
+			}
+		});
 		var p = $('#dg').datagrid('getPager'); 
 	    $(p).pagination({ 
 	        pageSize: 15,//每页显示的记录条数，默认为10 
@@ -116,7 +163,6 @@
 			document.getElementById("id").value=""; 
 		    document.getElementById("roleName").value=""; 
 		    document.getElementById("deptName").value=""; 
-		    document.getElementById("groupName").value=""; 
 		    document.getElementById("remark").value=""; 
 		    $("#status").get(0).selectedIndex = 0;//index为索引值
 		   	clearChoose();
@@ -127,6 +173,33 @@
 	    });
 		$('#btnCancel').click(function(){closePwd();});
 	});
+
+	function selected(roleId) {
+		$.ajax({
+		    url:"${pageContext.request.contextPath}/managerRole/QueryRoleDetails?appId=${appId}&id="+id, 
+			success: function(data) {
+				var node;
+				$(data.nodeList).each(function(){
+	            	if(this.funcId!=null && this.funcId!=""){
+	            		node=$('#deptree1').tree('find',this.funcId);
+	            		if(node!=null){
+		            		$('#deptree1').tree('check', node.target);
+		            		expand(node);//展开相应菜单
+	            		}
+	            		initialFunIds+=this.funcId.replace('f','')+",";
+	            	}else{
+	            		node=$('#deptree1').tree('find',this.resourceId);
+	            		if(node!=null){
+		            		$('#deptree1').tree('check', node.target);
+		            		expand(node);//展开相应菜单
+	            		}
+	            		initialResIds+=this.resourceId.replace('r','')+",";
+	            	}
+				});
+			}
+	   });
+	}
+	
 	//清空树选中节点并收起
 	function clearChoose(){  
 	    $('#deptree1').tree('collapseAll');
@@ -161,12 +234,6 @@
            resizable:false
        });
        var id = $('#id').val();
-       $('#deptree1').tree({ 
-      	 lines:true,//显示虚线效果 
-      	 animate: true,
-      	  checkbox:true,
-            url: '${pageContext.request.contextPath}/managerRole/tree?appId=${appId}',  
-        });
     }
     //关闭登录窗口
     function closePwd() {
@@ -213,7 +280,9 @@
             var roleName = $('#roleName').val();
             var status= $('#status').val();
             var deptName=$('#deptName').val();
-            var groupName=$('#groupName').val();
+            var groupId=group.groupCode;
+            var groupName=group.groupName;
+            var roleType= $('#roleType').val();
             var remark=$('#remark').val();
             if (roleName == '') {
                 msgShow('系统提示', '请输入名称！', 'warning');
@@ -222,11 +291,9 @@
             var url;
             if(privilegeRoleId==null || privilegeRoleId==""){
                 url='${pageContext.request.contextPath}/managerRole/addRole';
-            	//url='${pageContext.request.contextPath}/managerRole/addRole?appId='+appId+'&roleName='+roleName+'&status='+status+'&temp='+checkIds+'&deptName='+deptName+'&groupName='+groupName+'&remark='+remark;
             }else{
             	getIds();
             	url='${pageContext.request.contextPath}/managerRole/updateRole';
-            	//url='${pageContext.request.contextPath}/managerRole/updateRole?appId='+appId+'&roleName='+roleName+'&status='+status+'&addIds='+addIds+'&delIds='+delIds+'&privilegeRoleId='+privilegeRoleId+'&deptName='+deptName+'&groupName='+groupName+'&remark='+remark;
             }
             $.post(url,{
             	appId:appId,
@@ -234,8 +301,10 @@
             	status:status,
             	temp:checkIds,
             	deptName:deptName,
+            	groupId:groupId,
             	groupName:groupName,
             	remark:remark,
+            	roleType:roleType,
             	addIds:addIds,
             	delIds:delIds,
             	privilegeRoleId:privilegeRoleId
@@ -374,17 +443,29 @@
    			$.messager.confirm('系统提示', '是否确定修改本条数据?', function(r){
    				if (r){
    					   var id=row.privilegeRoleId;
+					   roleId=id;
    					   var name=row.roleName;
    					   var status=row.status;
+   					   var roleType=row.roleType;
    					   var deptName=row.deptName;
    					   var groupName=row.groupName;
+   					   var groupId=row.groupId;
    					   var remark=row.remark;
+   					   $('#cc').combobox('select',groupId);
    					   document.getElementById("id").value=id; 
    					   document.getElementById("roleName").value=name; 
    					   document.getElementById("deptName").value=deptName; 
-   					   document.getElementById("groupName").value=groupName; 
    					   document.getElementById("remark").value=remark; 
-   					   $("#status").get(0).selectedIndex = status;//index为索引值
+   					   if (roleType=='管理员') {
+   						 	$("#roleType").val("2");
+						}else {
+							$("#roleType").val("1");
+						}
+					   if (status=='有效') {
+						    $("#status").val('0');
+						}else {
+							$("#status").val('1');
+						}
    					   clearChoose();
    					   $.ajax({
    						    url:"${pageContext.request.contextPath}/managerRole/QueryRoleDetails?appId=${appId}&id="+id, 
