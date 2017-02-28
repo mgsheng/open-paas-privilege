@@ -422,6 +422,7 @@ privilege-demo/src/main/webapp/WEB-INF/jsp/show/authorizeRole.jsp -text
 privilege-demo/src/main/webapp/WEB-INF/jsp/show/userlist.jsp -text
 privilege-demo/src/main/webapp/WEB-INF/jsp/stats/chart.jsp -text
 privilege-demo/src/main/webapp/WEB-INF/jsp/stats/index.jsp -text
+privilege-demo/src/main/webapp/WEB-INF/jsp/user/index.jsp -text
 privilege-demo/src/main/webapp/WEB-INF/jsp/usercenter/accountRunningMessage.jsp -text
 privilege-demo/src/main/webapp/WEB-INF/jsp/usercenter/merchantMessage.jsp -text
 privilege-demo/src/main/webapp/WEB-INF/jsp/usercenter/merchantOrderOffline.jsp -text
