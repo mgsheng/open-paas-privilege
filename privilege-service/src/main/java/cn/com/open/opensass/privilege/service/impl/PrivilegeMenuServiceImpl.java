@@ -107,26 +107,14 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 			ajaxMessage.setMessage("User Is Null");
 			return ajaxMessage;
 		}
+		int Type=1; // 角色类型，1-普通用户，2-系统管理员，3-组织机构管理员
 		//判断用户角色是否是系统管理员  
 		List<PrivilegeRole> roles = privilegeRoleService.getRoleListByUserIdAndAppId(appUserId, appId);
 		for (PrivilegeRole role : roles) {
 			if(role.getRoleType()!=null){
 				if (role.getRoleType() == 2) {//若角色为系统管理员  
 					if (role.getGroupId()!=null&&!role.getGroupId().isEmpty()) {//若该管理员为组织机构管理员
-						//把该组织机构拥有的菜单放入缓存
-						PrivilegeAjaxMessage message = privilegeGroupService.findGroupPrivilege(role.getGroupId(), appId);
-						Map<String, Object> map=new HashMap<String, Object>();
-						if (message.getCode().equals("1")) {
-							JSONObject object=JSONObject.fromObject(message.getMessage());
-							JSONArray array=object.getJSONArray("menuList");
-							map.put("menuList", array);
-							redisClientTemplate.setString(prefix + appId + SIGN + appUserId, JSONObject.fromObject(map).toString());
-						}else {
-							map.put("menuList", new JSONArray());
-							redisClientTemplate.setString(prefix + appId + SIGN + appUserId, JSONObject.fromObject(map).toString());
-						}
-						message.setMessage(JSONObject.fromObject(map).toString());
-						return message;
+						Type =3;
 					}else{
 						PrivilegeAjaxMessage message = getAppMenuRedis(appId);
 						if ("1".equals(message.getCode())) {
@@ -143,7 +131,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 		String menuJedis = redisDao.getUrlRedis(prefix, appId, appUserId);
 		if (null == menuJedis || menuJedis.length() <= 0)
 
-		{
+		{	
 			List<PrivilegeMenu> privilegeMenuList = getMenuListByUserId(appUserId, appId);
 			//通过查找RoleResource  查找相应的菜单
 			List<String> FunIds=new ArrayList<String>();
@@ -189,6 +177,17 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 
 			Set<PrivilegeMenuVo> privilegeMenuListData = getAllMenuByUserId(privilegeMenuList,
 					privilegeMenuListReturn); /* 缓存中是否存在 */
+			
+			if (Type == 3) {//如果用户角色为组织机构管理员
+				//把该组织机构拥有的菜单放入缓存
+				PrivilegeAjaxMessage message = privilegeGroupService.findGroupPrivilege(user.getGroupId(), appId);
+				if (message.getCode().equals("1")) {
+					JSONObject object=JSONObject.fromObject(message.getMessage());
+					JSONArray array=object.getJSONArray("menuList");
+					List<PrivilegeMenuVo> groupMenuList=JSONArray.toList(array, PrivilegeMenuVo.class);
+					privilegeMenuListData.addAll(groupMenuList);
+				}
+			}
 			if (privilegeMenuListData.size() <= 0) {
 				ajaxMessage.setCode("0");
 				ajaxMessage.setMessage("MENU-IS-NULL");
