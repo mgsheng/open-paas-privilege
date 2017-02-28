@@ -31,6 +31,11 @@
 				</table>
 			</div>
 		</div>
+		<div id='loading' style='position:absolute;left:0;width:100%;height:100%;top:0;background:#E0ECFF;opacity:0.8;filter:alpha(opacity=80);'>
+			<div style='position:absolute;  cursor1:wait;left:50%;top:200px;width:auto;height:16px;padding:12px 5px 10px 30px;border:2px solid #ccc;color:#000;'> 
+ 				正在加载，请等待...
+			</div>
+		</div>
 	</body>
 	<script>
 		//取消勾选的ids
@@ -39,6 +44,7 @@
 		var onCheckRoleIds=[];
 		//加载授权角色
 		$(function(){
+			 	$('#loading').hide();
 				$('#AuthorizeRole').datagrid({
 					url: '${pageContext.request.contextPath}/managerUser/role?id=${id}&appId=${appId}',
 					type:'post',
@@ -89,20 +95,20 @@
 							} 
 					},
 					onUncheck: function(rowIndex,rowData){
-						unCheckRoleIds.push(rowData.id);
+						unCheckRoleIds.push(rowData.privilegeRoleId);
 						$.each(onCheckRoleIds,function(i){
-								if(rowData.id==onCheckRoleIds[i]){
+								if(rowData.privilegeRoleId==onCheckRoleIds[i]){
 									onCheckRoleIds.splice(i,1); 
-									}
-							});
+								}
+							}); 
 			    	},
 			    	onCheck: function(rowIndex,rowData){
-			    		onCheckRoleIds.push(rowData.id);
+			    	 	onCheckRoleIds.push(rowData.privilegeRoleId);
 			    		$.each(unCheckRoleIds,function(i){
-							if(rowData.id==unCheckRoleIds[i]){
+							if(rowData.privilegeRoleId==unCheckRoleIds[i]){
 								unCheckRoleIds.splice(i,1); 
-								}
-						});
+							}
+						}); 
 			    	}               
 				});
 		    
@@ -123,6 +129,7 @@
 		});
 		//授权角色修改确认
 		function submitAuthorizeRole(){
+			 $('#loading').show();
 			 unCheckRoleIds.join(",");
 			 if(unCheckRoleIds==""){
 				 unCheckRoleIds = null;
@@ -131,10 +138,11 @@
 			 if(onCheckRoleIds==""){
 				 onCheckRoleIds = null;
 				}
-			 var url='${pageContext.request.contextPath}/managerUser/authorizeRole?id=${id}&role='+onCheckRoleIds+'&roleId='+unCheckRoleIds+'&userName=${userName}&appId=${appId}';
+			 var url='${pageContext.request.contextPath}/managerUser/authorizeRole?id=${id}&addRoleId='+onCheckRoleIds+'&delRoleId='+unCheckRoleIds+'&userName=${userName}&appId=${appId}';
             $.post(url, function(data) {
             	unCheckRoleIds=[];
                 onCheckRoleIds=[];
+                $('#loading').hide();
                 if(data.result==true){
                  	msgShow('系统提示', '恭喜，授权角色成功！', 'info');
                  	//刷新
