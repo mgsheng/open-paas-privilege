@@ -3,12 +3,12 @@ package cn.com.open.pay.platform.manager.web;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +30,7 @@ import cn.com.open.pay.platform.manager.log.service.PrivilegeLogService;
 import cn.com.open.pay.platform.manager.login.model.User;
 import cn.com.open.pay.platform.manager.login.service.UserService;
 import cn.com.open.pay.platform.manager.privilege.model.OesGroup;
+import cn.com.open.pay.platform.manager.privilege.model.OesUser;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeFunction;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
@@ -42,6 +43,9 @@ import cn.com.open.pay.platform.manager.privilege.service.OesUserService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGetSignatureService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeResourceService;
+import cn.com.open.pay.platform.manager.redis.impl.RedisClientTemplate;
+import cn.com.open.pay.platform.manager.redis.impl.RedisConstant;
+import cn.com.open.pay.platform.manager.tools.AESUtils;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
 
@@ -65,6 +69,9 @@ public class ManagerUserController extends BaseControllerUtil {
 	private OesPrivilegeDev oesPrivilegeDev;
 	@Autowired
 	private OesGroupService oesGroupService;
+	@Autowired
+	private RedisClientTemplate redisClientTemplate;
+	private static final String AccessTokenPrefix = RedisConstant.ACCESSTOKEN_CACHE;
 
 	/**
 	 * 跳转到用户信息列表的页面
@@ -593,43 +600,9 @@ public class ManagerUserController extends BaseControllerUtil {
 	public void updateUserByID(HttpServletRequest request, HttpServletResponse response)
 			throws UnsupportedEncodingException {
 		log.info("-------------------------updateUserByID        start------------------------------------");
-		String realname = new String(request.getParameter("realname").getBytes("iso-8859-1"), "utf-8");
-		String nickname = new String(request.getParameter("nickname").getBytes("iso-8859-1"), "utf-8");
-		String deptName = new String(request.getParameter("updateDeptName").getBytes("iso-8859-1"), "utf-8");
-		String deptID = new String(request.getParameter("updateDeptID").getBytes("iso-8859-1"), "utf-8");
-		Integer id = Integer.valueOf(new String(request.getParameter("id").getBytes("iso-8859-1"), "utf-8"));
-
-		// 将请求参数封装到User对象中
-		User user = new User();
-		user.setId(id);
-		user.setRealName(realname);
-		user.setNickName(nickname);
-		user.setDeptName(deptName);
-		user.setDeptID(Integer.valueOf(deptID));
-
-		boolean result = userService.updateUser(user);
-
-		// 添加日志
-		PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(55);
-		PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
-		String towLevels = privilegeModule.getName();
-		String oneLevels = privilegeModule1.getName();
-		User user1 = (User) request.getSession().getAttribute("user");
-		String operator = user1.getUsername(); // 操作人
-		String operatorId = user1.getId() + ""; // 操作人Id
-		PrivilegeResource privilegeResource = privilegeResourceService.findByCode("update");
-		if (result = true) {
-			privilegeLogService.addPrivilegeLog(operator, privilegeResource.getName(), oneLevels, towLevels,
-					privilegeResource.getId() + "", operator + "修改" + realname + "用户成功", operatorId);
-		} else {
-			privilegeLogService.addPrivilegeLog(operator, privilegeResource.getName(), oneLevels, towLevels,
-					privilegeResource.getId() + "", operator + "修改" + realname + "用户失败", operatorId);
-		}
-
-		// result = true表示该用户修改成功
-		JSONObject jsonobj = new JSONObject();
-		jsonobj.put("result", result);
-		WebUtils.writeJson(response, jsonobj);
+		String appId = request.getParameter("appId");
+		String appUserId = request.getParameter("appUserId");
+		String Id = request.getParameter("Id");
 		return;
 	}
 
@@ -642,30 +615,24 @@ public class ManagerUserController extends BaseControllerUtil {
 	@RequestMapping("removeUserByID")
 	public void removeUser(HttpServletRequest request, HttpServletResponse response)
 			throws UnsupportedEncodingException {
+		String appId = request.getParameter("appId");
+		String appUserId = request.getParameter("appUserId");
 		Integer id = Integer.valueOf(new String(request.getParameter("id").getBytes("iso-8859-1"), "utf-8"));
-		boolean result = userService.removeUserByID(id);
-		// 添加日志
-		PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(55);
-		PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
-		String towLevels = privilegeModule.getName();
-		String oneLevels = privilegeModule1.getName();
-		User user = (User) request.getSession().getAttribute("user");
-		String operator = user.getUsername(); // 操作人
-		String operatorId = user.getId() + ""; // 操作人Id
-		PrivilegeResource privilegeResource = privilegeResourceService.findByCode("delete");
-		if (result = true) {
-			privilegeLogService.addPrivilegeLog(operator, privilegeResource.getName(), oneLevels, towLevels,
-					privilegeResource.getId() + "", operator + "成功删除用户", operatorId);
+		//删除oes_user表中用户
+		Boolean boo = oesUserService.deleteUser(id);
+		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
+		map.put("appUserId", appUserId);
+		map.put("appId", appId);
+		if (boo) {
+			//删除权限库中用户
+			String result = sendPost(oesPrivilegeDev.getDelUserPrivilegeUrl(), map);
+			WebUtils.writeJson(response, result);
 		} else {
-			privilegeLogService.addPrivilegeLog(operator, privilegeResource.getName(), oneLevels, towLevels,
-					privilegeResource.getId() + "", operator + "用户删除失败", operatorId);
+			map.clear();
+			map.put("errMsg", "失败");
+			WebUtils.writeJsonToMap(response, map);
+			return;
 		}
-
-		// result = true表示该用户删除成功
-		JSONObject jsonobj = new JSONObject();
-		jsonobj.put("result", result);
-		WebUtils.writeJson(response, jsonobj);
-		return;
 	}
 
 	/**
@@ -745,69 +712,120 @@ public class ManagerUserController extends BaseControllerUtil {
 	/**
 	 * 实现添加用户的操作
 	 * 
-	 * @param user_name
+	 * @param appUserName
 	 *            用户名
-	 * @param nickname
-	 *            昵称
-	 * @param realname
-	 *            真实姓名
-	 * @param sha_password
-	 *            MD5加密密码
+	 * @param appId
+	 *            应用Id
+	 * @param groupId
+	 *            组织机构Id
+	 * @param passWord
+	 *            密码
+	 * @param passWord
+	 *            密码
 	 */
 	@ResponseBody
 	@RequestMapping("addUser")
 	public void addUser(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
 		log.info("-------------------------addUser         start------------------------------------");
-		request.setCharacterEncoding("utf-8");
-		String user_name = request.getParameter("user_name");
-		String real_name = request.getParameter("real_name");
-		String nickname = request.getParameter("nickname");
-		String sha_password = request.getParameter("sha_password");
-		String deptName = request.getParameter("addDeptName");
-		String deptID = request.getParameter("deptID");
-		// log.info("user_name："+user_name+"；real_name:"+real_name+"；nickname:"+nickname+"；sha_password:"+sha_password+";deptName:"+deptName);
-		JSONObject jsonObjArr = new JSONObject();
-		// 判断数据库是否已经存在该用户
-		boolean result = false;
-		User user_db = userService.findByUsername(user_name);
-		if (user_db != null) {
-			// result = false表示该用户已被注册
-			jsonObjArr.put("result", result);
-			WebUtils.writeJson(response, jsonObjArr);
+		OesUser oesUser = new OesUser();
+		String appId = request.getParameter("appId");
+		String groupId = request.getParameter("groupId");
+		String appUserName = request.getParameter("appUserName");
+		oesUser.setGroupId(groupId);
+		oesUser.setUserName(appUserName);
+		appUserName = java.net.URLEncoder.encode(appUserName, "UTF-8");
+		String passWord = request.getParameter("passWord");
+		try {// 密码AES加密
+			passWord = AESUtils.encrypt(passWord, oesPrivilegeDev.getClientSecret());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// 从缓存中获取token
+		String access_token = (String) redisClientTemplate.getObject(oesPrivilegeDev.getAppId() + AccessTokenPrefix);
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		// 若缓存中没有token 获取token
+		if (access_token == null) {
+			parameters.put("client_id", oesPrivilegeDev.getClientId());
+			parameters.put("client_secret", oesPrivilegeDev.getClientSecret());
+			parameters.put("scope", "read,write");
+			parameters.put("grant_type", oesPrivilegeDev.getGrantType());
+			String result = sendPost(oesPrivilegeDev.getOauthTokenUrl(), parameters);
+			if (result != null && !("").equals(result)) {
+				String aString = result.substring(0, 1);
+				if (aString.equals("{")) {
+					JSONObject object = JSONObject.fromObject(result);
+					access_token = (String) object.get("access_token");
+					if (access_token != null && !("").equals(access_token)) {
+						redisClientTemplate.setObjectByTime(oesPrivilegeDev.getAppId() + AccessTokenPrefix,
+								access_token, 43190);
+					}
+				}
+			}
+		}
+		//验证用户是否存在
+		parameters=privilegeGetSignatureService.getOauthSignature(oesPrivilegeDev.getAppId(), oesPrivilegeDev.getClientId(), access_token);
+		parameters.put("access_token", access_token);
+		parameters.put("account", appUserName);
+		parameters.put("client_id", oesPrivilegeDev.getClientId());
+		parameters.put("accountType", "1");
+		String result=sendPost(oesPrivilegeDev.getUserCenterVerifyUrl(), parameters);
+		if (result != null && !("").equals(result)) {
+			String aString = result.substring(0, 1);
+			if (aString.equals("{")) {
+				JSONObject object = JSONObject.fromObject(result);
+				if ("0".equals(object.get("status"))) {
+					WebUtils.writeJson(response, result);
+					return;
+				}
+			}
+		}
+		parameters.put("grant_type", oesPrivilegeDev.getGrantType());
+		parameters.put("scope", "read,write");
+		parameters.put("username", appUserName);
+		parameters.put("client_id", oesPrivilegeDev.getClientId());
+		parameters.put("isValidate", 1);
+		parameters.put("password", passWord);
+		String appUserId = UUID.randomUUID().toString().replaceAll("-", "");
+		oesUser.setUserId(appUserId);
+		parameters.put("source_id", appUserId);
+		Boolean boo = false;// 是否注册成功标识
+		result = sendPost(oesPrivilegeDev.getUserCenterRegUrl(), parameters);
+		if (result != null && !("").equals(result)) {
+			String aString = result.substring(0, 1);
+			if (aString.equals("{")) {
+				JSONObject object = JSONObject.fromObject(result);
+				if ("1".equals(object.get("status"))) {
+					boo = true;
+				} else {
+					WebUtils.writeJson(response, result);
+					return;
+				}
+			}
+		}
+		if (boo) {// 用户中心注册成功后，添加权限用户
+			parameters = privilegeGetSignatureService.getSignature(appId);
+			parameters.put("appId", appId);
+			parameters.put("appUserId", appUserId);
+			parameters.put("appUserName", appUserName);
+			parameters.put("groupId", groupId);
+			result = sendPost(oesPrivilegeDev.getAddPrivilegeUserUrl(), parameters);
+			JSONObject object = JSONObject.fromObject(result);
+			if (("1").equals(object.getString("status"))) {
+				boo = oesUserService.saveUser(oesUser);
+				parameters.clear();
+				if (boo) {
+					parameters.put("status", "1");
+				} else {
+					parameters.put("status", "0");
+					parameters.put("errMsg", "保存失败");
+				}
+			} else {
+				parameters.put("status", "0");
+				parameters.put("errMsg", "保存失败");
+			}
+			WebUtils.writeJsonToMap(response, parameters);
 			return;
 		}
-
-		User user = new User();
-		user.setUsername(user_name);
-		user.setRealName(real_name);
-		user.setNickName(nickname);
-		user.setDeptName(deptName);
-		user.setDeptID(Integer.valueOf(deptID));
-		user.setCreateTime(new Date().getTime());
-		// MD5加密
-		user.setPlanPassword(sha_password);
-		result = userService.addUser(user);
-
-		// 添加日志
-		PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(55);
-		PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
-		String towLevels = privilegeModule.getName();
-		String oneLevels = privilegeModule1.getName();
-		User user1 = (User) request.getSession().getAttribute("user");
-		String operator = user1.getUsername(); // 操作人
-		String operatorId = user1.getId() + ""; // 操作人Id
-		PrivilegeResource privilegeResource = privilegeResourceService.findByCode("add");
-		if (result = true) {
-			privilegeLogService.addPrivilegeLog(operator, privilegeResource.getName(), oneLevels, towLevels,
-					privilegeResource.getId() + "", operator + "添加" + user_name + "用户成功", operatorId);
-		} else {
-			privilegeLogService.addPrivilegeLog(operator, privilegeResource.getName(), oneLevels, towLevels,
-					privilegeResource.getId() + "", operator + "添加" + user_name + "用户失败", operatorId);
-		}
-
-		// result = true 表示添加用户成功
-		jsonObjArr.put("result", result);
-		WebUtils.writeJson(response, jsonObjArr);
-		return;
 	}
+
 }
