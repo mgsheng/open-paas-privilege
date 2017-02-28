@@ -206,9 +206,9 @@ public class ManagerUserController extends BaseControllerUtil {
 	public void authorizeRole(HttpServletRequest request, HttpServletResponse response)
 			throws UnsupportedEncodingException {
 		log.info("-------------------------authorizeRole        start------------------------------------");
-		String appUserId = request.getParameter("id");
-		String role = request.getParameter("role");
-		String roleId = request.getParameter("roleId");
+		String appUserId = request.getParameter("id");//用户id
+		String addRoleId = request.getParameter("addRoleId");//添加的角色id
+		String delRoleId = request.getParameter("delRoleId");//删除的角色id
 		String appId = request.getParameter("appId");
 		String deptId = null;
 		String groupId = null;
@@ -238,13 +238,13 @@ public class ManagerUserController extends BaseControllerUtil {
 			boo = false;
 		}
 
-		if (role != null && boo) {
+		if (addRoleId != null && boo) {
 			// 添加勾选的角色
 			Map<String, Object> signature = privilegeGetSignatureService.getSignature(appId);
 			signature.put("appId", appId);
 			signature.put("appUserId", appUserId);
 			signature.put("method", "0");
-			signature.put("privilegeRoleId", role);
+			signature.put("privilegeRoleId", addRoleId);
 			signature.put("deptId", deptId);
 			signature.put("groupId", groupId);
 			signature.put("privilegeFunId", privilegeFunId);
@@ -262,12 +262,12 @@ public class ManagerUserController extends BaseControllerUtil {
 			}
 		}
 		// 删除取消勾选的角色
-		if (roleId != null && boo) {
+		if (delRoleId != null && boo) {
 			Map<String, Object> signature = privilegeGetSignatureService.getSignature(appId);
 			signature.put("appId", appId);
 			signature.put("appUserId", appUserId);
 			signature.put("method", "1");
-			signature.put("privilegeRoleId", roleId);
+			signature.put("privilegeRoleId", delRoleId);
 			signature.put("deptId", deptId);
 			signature.put("groupId", groupId);
 			signature.put("privilegeFunId", privilegeFunId);
@@ -284,7 +284,7 @@ public class ManagerUserController extends BaseControllerUtil {
 				boo = false;
 			}
 		}
-		System.out.println("****************id:" + appUserId + "****************role:" + role);
+		System.out.println("****************id:" + appUserId + "****************role:" + addRoleId);
 		// result = true表示该用户授权角色成功
 		jsonobj.put("result", boo);
 		WebUtils.writeJson(response, jsonobj);
@@ -511,9 +511,9 @@ public class ManagerUserController extends BaseControllerUtil {
 		log.info("-------------------------role        start------------------------------------");
 		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
 		String groupId = null;
+		int Type=(int) user.get("Type");
 		if (user != null) {
-			Boolean isManager = (Boolean) user.get("isManager");
-			if (!isManager) {
+			if (Type == 1 || Type == 3) {
 				groupId = user.get("groupId").equals("null") ? null : (String) user.get("groupId");
 			}
 		}
@@ -687,8 +687,9 @@ public class ManagerUserController extends BaseControllerUtil {
 		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
 		if (("").equals(groupId)) {
 			if (user != null) {
-				Boolean isManager = (Boolean) user.get("isManager");
-				if (!isManager) {
+				// 用户角色类型，1-普通用户，2-管理员，3-组织机构管理员
+				int Type=(int) user.get("Type");
+				if (Type == 1 || Type == 3) {
 					groupId = user.get("groupId").equals("null") ? null : (String) user.get("groupId");
 				}
 			}
@@ -724,15 +725,16 @@ public class ManagerUserController extends BaseControllerUtil {
 		log.info("-------------------------findGroup         start------------------------------------");
 		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
 		String groupId = user.get("groupId").equals("null") ? null : (String) user.get("groupId");
-		Boolean isManager = (Boolean) user.get("isManager");
+		int Type=(int) user.get("Type");
 		List<OesGroup> groupList = null;
+		// 用户角色类型，1-普通用户，2-管理员，3-组织机构管理员
 		//如果当前用户为管理员，显示所有组织结构，否则显示当前用户所在的组织机构
-		if (isManager) {
-			groupList = oesGroupService.findAll();
-		} else {
+		if (Type == 1 || Type == 3) {
 			groupList = new ArrayList<OesGroup>();
 			OesGroup group = oesGroupService.findByCode(groupId);
 			groupList.add(group);
+		}else {
+			groupList = oesGroupService.findAll();
 		}
 
 		JSONArray jsonArr = JSONArray.fromObject(groupList);
