@@ -35,6 +35,14 @@ function latestClick(obj) {
 		}
 	var menuid = aa.attr("ref");
 	addTab(tabTitle,url,"");
+	if (menuid!="") {
+		$.post('${pageContext.request.contextPath}/user/saveLatestVisit',
+				{
+					menuId:menuid,
+					menuName:tabTitle,
+					
+				},function(data){});
+	}
 	$('.easyui-accordion li div').removeClass("selected");
 	$(this).parent().addClass("selected");
 }
@@ -49,10 +57,11 @@ function menuClick(obj){
 		menu.css('display','none');
 	} 
 }
-//添加最近访问菜单
-function addLatestVisitMenu(data) {
-	 var menulist = '<ul>';
-	$.each(data,function(i,n){
+//添加菜单
+function addMenu(data) {
+	//添加最近访问菜单
+	var menulist = '<ul>';
+	$.each(data.latestVisit,function(i,n){
 		if (n.menuRule!="") {
 			 menulist += '<li><div style="margin-bottom:-5px"><a onclick="latestClick(this)" ref="'+n.id+'" href="#" rel="' +n.url + '" >'
 			 +'<span class="tree-icon tree-folder" style="background:no-repeat center center url(${pageContext.request.contextPath}/'+n.menuRule+')">&nbsp;</span>'
@@ -70,6 +79,27 @@ function addLatestVisitMenu(data) {
            content: menulist,
            iconCls: 'icon '
      });
+	//添加常用菜单
+	menulist = '<ul>';
+	$.each(data.frequentlyUsedMenu,function(i,n){
+			if (n.menuRule!="") {
+				 menulist += '<li><div style="margin-bottom:-5px"><a onclick="latestClick(this)" ref="'+n.id+'" href="#" rel="' +n.url + '" >'
+				 +'<span class="tree-icon tree-folder" style="background:no-repeat center center url(${pageContext.request.contextPath}/'+n.menuRule+')">&nbsp;</span>'
+				 +'<span class="nav">' + n.name+ '</span></a></div></li> ';
+			}else {
+				menulist += '<li><div style="margin-bottom:-5px"><a onclick="latestClick(this)" ref="'+n.id+'" href="#" rel="' +n.url + '" >'
+				 +'<span class="icon icon-mini-add" >&nbsp;</span>'
+				 +'<span class="nav">' + n.name+ '</span></a></div></li> ';
+			}
+			
+	});
+	menulist+='</ul>'
+	$('#nav').accordion('add', {
+	          title: '常用菜单',
+	          content: menulist,
+	          iconCls: 'icon '
+	});
+    
 }
 function GetMenuList(data, menulist) {
     if (data.children == null)
@@ -124,7 +154,7 @@ function addNav(data) {
 				}
 	          }
 	    });
-    $('.easyui-accordion li a').click(function(){
+    $('.accordion-body li a').click(function(){
 		var tabTitle = $(this).children('.nav').text();
 		var url=$(this).attr("rel");
 		var string=url.substring(0,1);
@@ -135,7 +165,6 @@ function addNav(data) {
 			}
 		var menuid = $(this).attr("ref");
 		//var icon = getIcon(menuid,icon);
-
 		addTab(tabTitle,url,"");
 		$('.easyui-accordion li div').removeClass("selected");
 		$(this).parent().addClass("selected");
@@ -240,8 +269,16 @@ function addNav(data) {
                     }else {
                         //添加导航菜单
                     	addNav(data.menus);
-                    	//添加最近访问菜单
-                    	addLatestVisitMenu(data.latestVisit);
+                    	//添加菜单
+                    	addMenu(data);
+                    	menulist = '<ul><li><div style="margin-bottom:-5px"><a onclick="latestClick(this)" ref="" href="#" rel="/user/index" >'
+			 			+'<span class="icon icon-mini-add" >&nbsp;</span>'
+			 			+'<span class="nav">常用菜单管理</span></a></div></li></ul>';
+                    	$('#nav').accordion('add', {
+                            title: '个人管理',
+                            content: menulist,
+                            iconCls: 'icon '
+                      });
 					}
             		
             	}
