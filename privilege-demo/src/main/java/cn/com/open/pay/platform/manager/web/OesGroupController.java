@@ -25,12 +25,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.pay.platform.manager.dev.OesPrivilegeDev;
 import cn.com.open.pay.platform.manager.privilege.model.OesGroup;
+import cn.com.open.pay.platform.manager.privilege.model.OesUser;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeFunction;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeOperation;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource1;
 import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
 import cn.com.open.pay.platform.manager.privilege.service.OesGroupService;
+import cn.com.open.pay.platform.manager.privilege.service.OesUserService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGetSignatureService;
 import cn.com.open.pay.platform.manager.redis.impl.RedisClientTemplate;
 import cn.com.open.pay.platform.manager.redis.impl.RedisConstant;
@@ -53,6 +55,8 @@ public class OesGroupController extends BaseControllerUtil{
 	private PrivilegeGetSignatureService privilegeGetSignatureService;	
 	@Autowired
 	private OesPrivilegeDev oesPrivilegeDev;
+	@Autowired
+	private OesUserService oesUserService;
 	@Autowired
 	private RedisClientTemplate redisClientTemplate;
 	private static final String AccessTokenPrefix = RedisConstant.ACCESSTOKEN_CACHE;
@@ -292,10 +296,13 @@ public class OesGroupController extends BaseControllerUtil{
 	 */
 	@RequestMapping(value = "addGroupAdministrator")
 	public void CreateGroupAdministrator(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+		OesUser oesUser=new OesUser();
 		String appId=request.getParameter("appId");
 		String groupId=request.getParameter("groupId");
 		String roleId=request.getParameter("roleId");
 		String appUserName=request.getParameter("appUserName");
+		oesUser.setGroupId(groupId);
+		oesUser.setUserName(appUserName);
 		appUserName = java.net.URLEncoder.encode(appUserName, "UTF-8");
 		String passWord=request.getParameter("passWord");
 		try {
@@ -332,6 +339,7 @@ public class OesGroupController extends BaseControllerUtil{
 		parameters.put("isValidate", 1);
 		parameters.put("password", passWord);
 		String appUserId=UUID.randomUUID().toString().replaceAll("-", "");
+		oesUser.setUserId(appUserId);
 		parameters.put("source_id", appUserId);
 		Boolean boo=false;//是否注册成功标识
 		String result = sendPost(oesPrivilegeDev.getUserCenterRegUrl(), parameters);
@@ -355,7 +363,22 @@ public class OesGroupController extends BaseControllerUtil{
 			parameters.put("groupId", groupId);
 			parameters.put("privilegeRoleId", roleId);
 			result=sendPost(oesPrivilegeDev.getAddPrivilegeUserUrl(), parameters);
-			WebUtils.writeJson(response, result);
+			JSONObject object = JSONObject.fromObject(result);
+			if (("1").equals(object.getString("status"))) {
+				boo =oesUserService.saveUser(oesUser);
+				parameters.clear();
+				if (boo) {
+					parameters.put("status", "1");
+				}else {
+					parameters.put("status", "0");
+					parameters.put("errMsg", "保存失败");
+				}
+			}else {
+				parameters.put("status", "0");
+				parameters.put("errMsg", "保存失败");
+			}
+			WebUtils.writeJsonToMap(response, parameters);
+			return;
 		}
 	}
 	
