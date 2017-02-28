@@ -92,26 +92,9 @@
 		<div region="center" border="false" style="background: #fff; border: 1px solid #ccc;">
 			<table cellpadding="10px" id="tb"  style="border: 0px;margin:10px 10px" >
 				<tr>
-					<td>用&nbsp;户&nbsp;名：</td>
-					<td><input id="userName" type="text" class="txt01" name="username" class="easyui-textbox" readonly/>
-					</td>
-				</tr>
-				<tr>
-					<td>真实姓名：</td>
-					<td><input id="realname" type="text" class="txt01" name="realname" class="easyui-textbox" />
-					</td>
-				</tr>
-				<tr>
-					<td>昵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：</td>
-					<td><input id="nickname" type="text" class="txt01" name="nickname" class="easyui-textbox" />
-					</td>
-				</tr>
-				<tr>
-					<td>部门名称：</td>
+					<td>组织机构：</td>
 					<td>
-						<select class="easyui-combobox" data-options="editable:false"  id="deptName" name="deptName" 
-							style="width:100%;height:35px;padding:5px;">
-						</select>
+						<input id="UserGroup" class="easyui-combobox" name="dept" data-options="valueField:'groupCode',textField:'groupName'"  style="width:280px;height:24px;padding:5px;">
 					</td>
 				</tr>
 			</table>
@@ -132,26 +115,8 @@
 						用&nbsp;&nbsp;户&nbsp;&nbsp;名:
 					</td>
 					<td style="width:80%;">	
-						<input id="uname" class="easyui-textbox" missingMessage="由2-20位字母、数字、下划线组成" name="username" 
+						<input id="uname" class="easyui-textbox" missingMessage="由6-18位字母、数字、下划线组成" name="username" 
 							type="text" style="width:100%;height:35px;padding:5px;" required=true>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						真实姓名：
-					</td>
-					<td style="width:80%;">	
-						<input id="rname" class="easyui-textbox" missingMessage="由2-20位汉字、字母、数字、下划线组成" name="realname" 
-							type="text"  style="width:100%;height:35px;padding:5px;" required=true>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						昵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
-					</td>
-					<td style="width:80%;">	
-						<input id="nname" class="easyui-textbox" missingMessage="由2-20位字母、数字、下划线、汉字组成" name="nickname" 
-							type="text"  style="width:100%;height:35px;padding:5px;" required=true>
 					</td>
 				</tr>
 				<tr>
@@ -174,20 +139,17 @@
 				</tr>
 				<tr>
 					<td style="margin-bottom:20px">
-						部门名称：
+						组织机构：
 					</td>
 					<td style="width:80%;">	
-						<select class="easyui-combobox" data-options="editable:false,prompt:'请选择部门'" id="addDeptName" name="addDeptName" 
-							style="width:100%;height:35px;padding:5px;">
-						</select>
+						<input id="group" class="easyui-combobox" name="dept" data-options="valueField:'groupCode',textField:'groupName'"  style="width:280px;height:24px;padding:5px;">
 					</td>
 				</tr>
 			</table>
 		</form>
 		<div style="text-align:center;padding:5px 0">
 			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitAddForm()" style="width:80px;margin:10px 15px">提交</a>
-			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearAddForm()" style="width:80px;margin:10px 15px">清空</a>
-			<a href="${pageContext.request.contextPath}/managerUser/userList" class="easyui-linkbutton" style="width:80px;margin:10px 15px">取消</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="closeAddWin()" style="width:80px;margin:10px 15px">取消</a>
 		</div>
 	</div>
 	</body>
@@ -270,7 +232,8 @@
                 modal: true,
                 shadow: true,
                 closed: true,
-                resizable:false
+                resizable:false,
+                closable:false
             });
 		}
 		
@@ -279,11 +242,6 @@
 		function openAddWin(){
 			clearAddForm();
 			$('#addWin').window('open');
-			$('#addDeptName').combobox({
-				url:'${pageContext.request.contextPath}/managerUser/findAllDepts',
-				valueField:'id',
-				textField:'text'
-			});
 		}
 		
 		//关闭添加用户窗口
@@ -300,12 +258,13 @@
         function win() {
             $('#upda').window({
                 title: '用户信息',
-                width: 350,
+                width: 500,
                 modal: true,
                 shadow: true,
                 closed: true,
                 height: 300,
-                resizable:false
+                resizable:false,
+                closable:false
             });
         }
         
@@ -331,25 +290,8 @@
 			clearTable();
 			var row = $('#dg').datagrid('getSelected');
 			if (row){
-				var user_name = row.username;
-				var real_name = row.realName;
-				var nick_name = row.nickName;
-				var dept_Name = row.deptName;
-				var dept_ID = row.deptID;
-				$('#userName').val(user_name);
-				$('#realname').val(real_name);
-				$('#nickname').val(nick_name);
-				
 				openWin();
-				$('#deptName').combobox({
-					url:'${pageContext.request.contextPath}/managerUser/findAllDepts',
-					valueField:'id',
-					textField:'text',
-					onLoadSuccess:function(){
-						$('#deptName').combobox('setValue',dept_ID);
-						$('#deptName').combobox('setText',dept_Name);
-				}
-			});
+				$('#UserGroup').combobox('select',row.groupId);
 			}else{
             	msgShow('系统提示', '请选择修改用户！', 'info');
             }
@@ -370,15 +312,17 @@
 			if (row){
 				$.messager.confirm('系统提示', '是否确定删除?', function(r){
 					if (r){
-						   var id=row.id;
-						   var url='${pageContext.request.contextPath}/managerUser/removeUserByID?id='+id;
+						   var id = row.Id;
+						   var appUserId = row.userId;
+						   var url='${pageContext.request.contextPath}/managerUser/removeUserByID?appId=${appId}&id='+id+'&appUserId='+appUserId;
 				            $.post(url, function(data) {
-				                if(data.result==true){
+				                if(data.status=='1'){
 				                 	msgShow('系统提示', '恭喜，删除成功！', 'info');
+				                 	findUsers();
 				                }else{
 				                  	msgShow('系统提示', '删除失败！', 'error');
 				                }
-				            });
+				            },"json");
 				            //刷新
 				            findUsers();
 					}
@@ -394,7 +338,6 @@
 	            url: url, queryParams:{ name:name}, method: "post"
 	          }); 
 		}
-		
 		// 查询用户方法
 		function findUsers(){
 			//用户名
@@ -432,30 +375,37 @@
 		        } 
 		    }); 
 		}
+       
         
         // 提交修改后的用户信息
          function updateUser() {
 		 	var row = $('#dg').datagrid('getSelected');
-			var id=row.id;
-            var $realname = $('#realname').val().trim();
-            var $nickname = $('#nickname').val().trim();
-            var $deptID = $('#deptName').combobox('getValue');
-            var $deptName = $('#deptName').combobox('getText');
-           	// alert($deptName);
-            if ($realname == '') {
-                msgShow('系统提示', '请输入真实姓名！', 'warning');
+			var Id=row.Id;
+			var appUserId=row.userId;
+            var groupId = $('#UserGroup').combobox('getValue');
+            if (groupId == '') {
+                msgShow('系统提示', '请选择组织机构！', 'warning');
                 return false;
             }
-            if ($nickname == '') {
-                msgShow('系统提示', '请输入昵称！', 'warning');
-                return false;
-            }
-             if ($deptName == '') {
-                msgShow('系统提示', '请选择部门！', 'warning');
-                return false;
-            }
-            var url=encodeURI('${pageContext.request.contextPath}/managerUser/updateUser?realname='+$realname+
-            		'&nickname='+$nickname+'&updateDeptName='+$deptName+'&updateDeptID='+$deptID+'&id='+id);
+            	$.ajax({
+    				type:"post",
+    				url:"${pageContext.request.contextPath}/managerUser/updateUser",
+    				data:{"appId":'${appId}',"groupId":groupId,"appUserId":appUserId,"Id":Id},
+    				dataType:"json",
+    				success:function (data){
+    					if (data.status=='1') {
+                			msgShow('系统提示', '添加成功！', 'warning');
+                			closeAddWin();
+                			findUsers();
+                			$('#ff').clear();
+    					}else {
+    						msgShow('系统提示', '添加不成功！'+data.errMsg, 'warning');
+    					}
+    				},
+    				error:function(){
+    					$.messager.alert("系统提示","用户添加异常，请刷新页面!","error");
+    				}
+    			});
             $.post(url, function(data) {
                 if(data.result==true){
 	                 msgShow('系统提示', '修改成功！', 'info');
@@ -470,34 +420,18 @@
         
         //前端校验
 		function check(){
-			var regex_username = /^[a-zA-Z0-9_]{2,20}$/;
-			var regex_realname=/^[\u4E00-\u9FA5A-Za-z0-9_]{2,20}$/;
-			var regex_nickname= /^[\u4E00-\u9FA5A-Za-z0-9_]{2,20}$/;
+			var regex_username = /^[a-zA-Z0-9_]{6,18}$/;
 			var regex_password= /^(\w){6,20}$/;
 			var username = $.trim($('#uname').val()) ;
-			var realname = $.trim($('#rname').val());
-			var nickname = $.trim($('#nname').val()) ;
 			var password = $.trim($('#pwd').val()) ;
 			var confirm_pass = $.trim($('#confirm_pwd').val()) ;
-			var addDeptName = $('#addDeptName').combobox('getText');
+			var groupId = $('#group').combobox('getValue');
 			if(username == "" || username == null || username == undefined || regex_username.test(username) != true){
 					$.messager.alert("系统提示","用户名不能为空或格式不正确，请重新填写！","error");	
 					return false;
 			}
-			if(realname == "" || realname == null || realname == undefined || regex_realname.test(realname) != true){
-					$.messager.alert("系统提示","真实姓名不能为空或格式不正确，请重新填写！","error");		
-					return false;
-			}
-			if(nickname == "" || nickname == null || nickname == undefined || regex_nickname.test(nickname) != true){
-					$.messager.alert("系统提示","昵称不能为空或格式不正确，请重新填写！","error");		
-					return false;
-			}
 			if(password == "" || password == null || password == undefined || regex_password.test(password) != true){
 					$.messager.alert("系统提示","密码不能为空或格式不正确，请重新填写！","error");			
-					return false;
-			}
-			if(addDeptName == "" || addDeptName == null || addDeptName == undefined){
-					$.messager.alert("系统提示","请选择部门！","error");			
 					return false;
 			}
 			if(confirm_pass =="" || confirm_pass == null || confirm_pass == undefined || regex_password.test(confirm_pass) != true){
@@ -508,17 +442,18 @@
 				$.messager.alert("系统提示","密码输入不一致，请重新输入！","error");
 				return false;
 			}
+			if(groupId == ''){
+				$.messager.alert("系统提示","请选择组织机构！","error");
+				return false;
+			}
 			return true;
 		}
 		
 		// 提交（用户信息）
 		function submitAddForm(){
-			var username = $.trim($('#uname').val()) ;
-			var realname = $.trim($('#rname').val());
-			var nickname = $.trim($('#nname').val()) ;
-			var password = $.trim($('#pwd').val()) ;
-			var addDeptName = $('#addDeptName').combobox('getText');
-			var deptID = $('#addDeptName').combobox('getValue');
+			var userName = $.trim($('#uname').val()) ;
+			var passWord = $.trim($('#pwd').val()) ;
+			var groupId = $('#group').combobox('getValue');
 			$('#ff').form('submit',{
 				onSubmit:function(){
 					return $(this).form('enableValidation').form('validate');
@@ -533,20 +468,16 @@
 			$.ajax({
 				type:"post",
 				url:"${pageContext.request.contextPath}/managerUser/addUser",
-				data:{"user_name":username,"real_name":realname,"nickname":nickname,"sha_password":password,"addDeptName":addDeptName,"deptID":deptID},
+				data:{"appId":'${appId}',"appUserName":userName,"passWord":passWord,"groupId":groupId},
 				dataType:"json",
 				success:function (data){
-					if(data.result == true){
-						$.messager.alert("系统提示","恭喜，添加用户成功!","info");
-						closeAddWin();
-						var url = "${pageContext.request.contextPath}/managerUser/userList";
-						window.location.reload();
-					}else if(data.result == false){
-						clearAddForm();
-						$.messager.alert("系统提示","该用户名已被注册，请重新填写用户名!","error");	
-					}else{
-						clearAddForm();
-						$.messager.alert("系统提示","添加用户失败，请重新添加!","error");
+					if (data.status=='1') {
+            			msgShow('系统提示', '添加成功！', 'warning');
+            			closeAddWin();
+            			findUsers();
+            			$('#ff').clear();
+					}else {
+						msgShow('系统提示', '添加不成功！'+data.errMsg, 'warning');
 					}
 				},
 				error:function(){
@@ -559,8 +490,9 @@
 		$(function(){
 			findUsers();
 			$.post('${pageContext.request.contextPath}/managerUser/findGroup',function (data) {
-				$('#cc').combobox('loadData',data);
+				$('.easyui-combobox').combobox('loadData',data);
 				if (data.length==1) {
+					$('#group').combobox('select',data[0].groupCode);
 					$('#cc').combobox('select',data[0].groupCode);
 				}
 			});
