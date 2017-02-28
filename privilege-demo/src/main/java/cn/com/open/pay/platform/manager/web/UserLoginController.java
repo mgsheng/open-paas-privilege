@@ -57,6 +57,7 @@ public class UserLoginController extends BaseControllerUtil {
 	private static final String AccessTokenPrefix = RedisConstant.ACCESSTOKEN_CACHE;
 	@Autowired
 	private OesFrequentlyUsedMenuService oesFrequentlyUsedMenuService;
+
 	/**
 	 * 登录验证
 	 * 
@@ -229,7 +230,8 @@ public class UserLoginController extends BaseControllerUtil {
 					JSONArray jsonArr = JSONArray.fromObject(buildTree2(nodes, resourceList));
 					List<Map<String, Object>> latestVisitRes = oesLatestVisitService.getUserLastVisitRedis(appUserId,
 							appId);
-					List<Map<String, Object>> frequentlyUsedRes =oesFrequentlyUsedMenuService.getUserFrequentlyMenuRedis(appUserId, appId);
+					List<Map<String, Object>> frequentlyUsedRes = oesFrequentlyUsedMenuService
+							.getUserFrequentlyMenuRedis(appUserId, appId);
 					menus.put("frequentlyUsedMenu", frequentlyUsedRes);
 					menus.put("menus", jsonArr);
 					menus.put("latestVisit", latestVisitRes);
@@ -474,8 +476,10 @@ public class UserLoginController extends BaseControllerUtil {
 		oesLatestVisitService.updateUserLastVisitRedis(appUserId, appId);
 
 	}
+
 	/**
 	 * 用户菜单tree
+	 * 
 	 * @param request
 	 * @param response
 	 */
@@ -485,7 +489,7 @@ public class UserLoginController extends BaseControllerUtil {
 		String appId = request.getParameter("appId");
 		String appUserId = request.getParameter("appUserId");
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
-		JSONArray jsonArr=null;
+		JSONArray jsonArr = null;
 		if (request.getParameter("id") != null) {
 			jsonArr = new JSONArray();
 			map.put("status", "1");
@@ -495,36 +499,38 @@ public class UserLoginController extends BaseControllerUtil {
 		}
 		map.put("appId", appId);
 		map.put("appUserId", appUserId);
-		//获取应用菜单缓存
+		// 获取应用菜单缓存
 		String reslut = sendPost(oesPrivilegeDev.getUserPrivilegeUrl(), map);
-		if (reslut!= null && !("").equals(reslut)) {
+		if (reslut != null && !("").equals(reslut)) {
 			JSONObject obj = JSONObject.fromObject(reslut);
 			JSONArray menuArray = (JSONArray) obj.get("menuList");
-			if (menuArray.size()>0) {
+			if (menuArray.size() > 0) {
 				List<PrivilegeMenu> menuList = JSONArray.toList(menuArray, PrivilegeMenu.class);
 				JSONArray resourceArray = (JSONArray) obj.get("resourceList");
 				// 将json对象转换为java对象
 				List<PrivilegeResource1> resourceList = JSONArray.toList(resourceArray, PrivilegeResource1.class);
-				//根据菜单的displayOrder排序，由小到大
+				// 根据菜单的displayOrder排序，由小到大
 				java.util.Collections.sort(menuList, new Comparator<PrivilegeMenu>() {
-		            @Override
-		            public int compare(PrivilegeMenu menu1, PrivilegeMenu menu2) {
-		                return menu1.getDisplayOrder()-menu2.getDisplayOrder();
-		            }
-		        });
+					@Override
+					public int compare(PrivilegeMenu menu1, PrivilegeMenu menu2) {
+						return menu1.getDisplayOrder() - menu2.getDisplayOrder();
+					}
+				});
 				List<TreeNode> nodes = convertTreeNodeList(menuList);
 				jsonArr = JSONArray.fromObject(buildTree2(nodes, resourceList));
 				map.put("status", "1");
 				map.put("tree", jsonArr);
-			}else {
+			} else {
 				map.put("status", "0");
 				map.put("tree", new JSONArray());
 			}
 		}
 		WebUtils.writeJsonToMap(response, map);
 	}
+
 	/**
 	 * 跳转常用菜单管理
+	 * 
 	 * @param request
 	 * @param model
 	 * @param bool
@@ -534,12 +540,13 @@ public class UserLoginController extends BaseControllerUtil {
 	public String stats(HttpServletRequest request, HttpServletResponse response, Model model) {
 		log.info("-------------------------index      start------------------------------------");
 		String appId = request.getParameter("appId");
-		Map<String, Object> user=(Map<String, Object>) request.getSession().getAttribute("user");
+		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
 		String appUserId = (String) user.get("appUserId");
 		model.addAttribute("appId", appId);
 		model.addAttribute("appUserId", appUserId);
 		return "user/index";
 	}
+
 	/**
 	 * 保存常用菜单
 	 * 
@@ -551,27 +558,29 @@ public class UserLoginController extends BaseControllerUtil {
 		String appUserId = request.getParameter("appUserId");
 		String appId = request.getParameter("appId");
 		String resId = request.getParameter("resId");
-		//是否有常用访问菜单
-		OesFrequentlyUsedMenu  oesFrequentlyUsedMenu=oesFrequentlyUsedMenuService.getOesFrequentlyUsedMenuByUserId(appUserId);
-		Boolean boo=false;
-		//如果没有，保存  如果有 更新
-		if (oesFrequentlyUsedMenu!=null) {
+		// 是否有常用访问菜单
+		OesFrequentlyUsedMenu oesFrequentlyUsedMenu = oesFrequentlyUsedMenuService
+				.getOesFrequentlyUsedMenuByUserId(appUserId);
+		Boolean boo = false;
+		// 如果没有，保存 如果有 更新
+		if (oesFrequentlyUsedMenu != null) {
 			oesFrequentlyUsedMenu.setMenuId(resId);
-			boo=oesFrequentlyUsedMenuService.updateOesFrequentlyUsedMenuByUserId(oesFrequentlyUsedMenu);
-		}else {
-			oesFrequentlyUsedMenu=new OesFrequentlyUsedMenu();
+			boo = oesFrequentlyUsedMenuService.updateOesFrequentlyUsedMenuByUserId(oesFrequentlyUsedMenu);
+		} else {
+			oesFrequentlyUsedMenu = new OesFrequentlyUsedMenu();
 			oesFrequentlyUsedMenu.setMenuId(resId);
 			oesFrequentlyUsedMenu.setUserId(appUserId);
-			boo=oesFrequentlyUsedMenuService.saveOesFrequentlyUsedMenu(oesFrequentlyUsedMenu);
+			boo = oesFrequentlyUsedMenuService.saveOesFrequentlyUsedMenu(oesFrequentlyUsedMenu);
 		}
-		//更新常用访问菜单缓存
+		// 更新常用访问菜单缓存
 		if (boo) {
 			oesFrequentlyUsedMenuService.updateUserFrequentlyMenuRedis(appUserId, appId);
 		}
-		Map<String, Object> map=new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("status", boo);
 		WebUtils.writeJsonToMap(response, map);
 	}
+
 	/**
 	 * 查询用户常用菜单
 	 * 
@@ -581,12 +590,13 @@ public class UserLoginController extends BaseControllerUtil {
 	@RequestMapping(value = "getFrequentlyMenu")
 	public void getFrequentlyMenu(HttpServletRequest request, HttpServletResponse response) {
 		String appUserId = request.getParameter("appUserId");
-		OesFrequentlyUsedMenu  oesFrequentlyUsedMenu=oesFrequentlyUsedMenuService.getOesFrequentlyUsedMenuByUserId(appUserId);
-		Map<String, Object> map=new HashMap<String, Object>();
-		if (oesFrequentlyUsedMenu!=null) {
-			String[] menuIds=oesFrequentlyUsedMenu.getMenuId().split(",");
+		OesFrequentlyUsedMenu oesFrequentlyUsedMenu = oesFrequentlyUsedMenuService
+				.getOesFrequentlyUsedMenuByUserId(appUserId);
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (oesFrequentlyUsedMenu != null) {
+			String[] menuIds = oesFrequentlyUsedMenu.getMenuId().split(",");
 			map.put("resourceId", menuIds);
-		}else {
+		} else {
 			map.put("resourceId", null);
 		}
 		WebUtils.writeJsonToMap(response, map);
