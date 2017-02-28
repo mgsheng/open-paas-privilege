@@ -99,7 +99,7 @@
 </body>
 
 	<script>
-	var group;//存放组织机构下拉框数据
+	var group;//存放组织机构选择的下拉框数据
 	var initialResIds='';//用于存放修改界面中选中的resource
 	var initialFunIds='';//用于存放修改界面中选中的function
 	var checkedResIds='';//存放选中的resource
@@ -108,11 +108,11 @@
 	var delIds='';//存放修改时删除的权限Id
 	var checkIds='';//存放添加时的选中Id
 	var roleId='';
+	var groupList='';//存放下拉框组织机构所有数据
 	$(document).ready(function(){
 		$.post('${pageContext.request.contextPath}/managerUser/findGroup',function (data) {
 			$('#cc').combobox('loadData',data);
-			var groupId=data[0].groupCode;
-			//$('#cc').combobox('select',data[0].groupCode);
+			groupList=data;
 		});
 		
 		loadData();
@@ -159,6 +159,10 @@
 	    });
 		openPwd();
 		$('#add').click(function() {
+			//如果下拉框只有一条数据（即该用户不是系统管理员），选择
+			if (groupList.length==1) {
+				$('#cc').combobox('select',groupList[0].groupCode);
+			}
 		   	document.getElementById("roleName").value=""; 
 			document.getElementById("id").value=""; 
 		    document.getElementById("roleName").value=""; 
