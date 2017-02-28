@@ -70,8 +70,7 @@ function getRoot(){
 		});
 	});
 }
-	//页面预加载
-	$(function(){
+	function getTree() {
 		$('#loading').show();
 		$.ajax({type:'GET',
 			url:'${pageContext.request.contextPath}/managerUser/tree?appId=${appId}&groupId=${groupId}',
@@ -84,19 +83,23 @@ function getRoot(){
 							$('#tt').tree({data: json});
 							getRoot();
 							selected();
-							$('#loading').hide();
 						}else {
 							msgShow('系统提示', '该组织机构无权限！', 'info');
 						}
 						
 					}
+					$('#loading').hide();
 				}
 		});
+	}
+	//页面预加载
+	$(function(){
+		getTree();
 	});
  
 	   //取消选中
 	function cancelAuthorizeRole() {
-		 $("#tt").tree("reload");
+		getTree();
 	}
 	//勾选用户拥有的功能
 	function selected(){
@@ -135,6 +138,7 @@ function getRoot(){
 	
 	//授权确认
 	function submitAuthorizeFun(){
+		$('#loading').show();
 		var resId=[];
 		var funId=[];
 		var select=$('#tt').tree('getChecked', 'checked');
@@ -144,20 +148,18 @@ function getRoot(){
 			}else if(n.ismodule==1){
 				resId.push(n.id);
 			}
-			console.log(n.text);
 		});
 		resId.join(",");
 		funId.join(",");
 		 var url='${pageContext.request.contextPath}/managerUser/authorizeFun?id=${id}&resource='+resId+'&function='+funId+'&userName=${userName}&appId=${appId}';
          $.post(url, function(data) {
+        	 $('#loading').hide();
              if(data.result==true){
               	msgShow('系统提示', '恭喜，授权功能成功！', 'info');
-              	//刷新
-              	//selected();
              }else{
                	msgShow('系统提示', '授权功能失败！', 'error');
                	//刷新
-               	$('#tt').tree('reload');
+               	getTree();
              }
          }); 
 	}
