@@ -582,37 +582,37 @@ public class ManagerUserController extends BaseControllerUtil {
 		String appUserId = request.getParameter("appUserId");
 		String Id = request.getParameter("Id");
 		String groupId = request.getParameter("groupId");
-		//更新oes_user
-		OesUser oesUser=new OesUser();
+		// 更新oes_user
+		OesUser oesUser = new OesUser();
 		oesUser.id(Integer.parseInt(Id));
 		oesUser.setGroupId(groupId);
-		Boolean boo=oesUserService.updateUser(oesUser);
-		Map<String, Object> map=privilegeGetSignatureService.getSignature(appId);
+		Boolean boo = oesUserService.updateUser(oesUser);
+		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
 		map.put("appId", appId);
 		map.put("appUserId", appUserId);
 		if (boo) {
-			//先查询该用户的信息
-			String result=sendPost(oesPrivilegeDev.getUserPrivilegeUrl(), map);
-			JSONObject object=JSONObject.fromObject(result);
+			// 先查询该用户的信息
+			String result = sendPost(oesPrivilegeDev.getUserPrivilegeUrl(), map);
+			JSONObject object = JSONObject.fromObject(result);
 			if ("1".equals(object.get("status"))) {
-				String privilegeFunId=(String) (object.get("privilegeFunId").equals("null") ? ""
+				String privilegeFunId = (String) (object.get("privilegeFunId").equals("null") ? ""
 						: object.get("privilegeFunId"));
-				String resourceId=(String) (object.get("resourceId").equals("null") ? "" : object.get("resourceId"));
-				String deptId=(String) (object.get("deptId").equals("null") ? "" : object.get("deptId"));
+				String resourceId = (String) (object.get("resourceId").equals("null") ? "" : object.get("resourceId"));
+				String deptId = (String) (object.get("deptId").equals("null") ? "" : object.get("deptId"));
 				map.put("privilegeFunId", privilegeFunId);
 				map.put("resourceId", resourceId);
 				map.put("deptId", deptId);
 				map.put("groupId", groupId);
 				map.put("method", "1");
-				//更新用户
+				// 更新用户
 				result = sendPost(oesPrivilegeDev.getModitUserPrivilegeUrl(), map);
-				object=JSONObject.fromObject(result);
+				object = JSONObject.fromObject(result);
 				if ("1".equals(object.get("status"))) {
 					map.clear();
 					map.put("status", "1");
 				}
 			}
-		}else {
+		} else {
 			map.put("status", "0");
 		}
 		WebUtils.writeJsonToMap(response, map);
@@ -631,15 +631,16 @@ public class ManagerUserController extends BaseControllerUtil {
 		String appId = request.getParameter("appId");
 		String appUserId = request.getParameter("appUserId");
 		Integer id = Integer.valueOf(new String(request.getParameter("id").getBytes("iso-8859-1"), "utf-8"));
-		//删除oes_user表中用户
+		// 删除oes_user表中用户
 		Boolean boo = oesUserService.deleteUser(id);
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
 		map.put("appUserId", appUserId);
 		map.put("appId", appId);
 		if (boo) {
-			//删除权限库中用户
+			// 删除权限库中用户
 			String result = sendPost(oesPrivilegeDev.getDelUserPrivilegeUrl(), map);
-			WebUtils.writeJson(response, result);
+			JSONObject object = JSONObject.fromObject(result);
+			WebUtils.writeJson(response, object);
 		} else {
 			map.clear();
 			map.put("errMsg", "失败");
@@ -775,19 +776,20 @@ public class ManagerUserController extends BaseControllerUtil {
 				}
 			}
 		}
-		//验证用户是否存在
-		parameters=privilegeGetSignatureService.getOauthSignature(oesPrivilegeDev.getAppId(), oesPrivilegeDev.getClientId(), access_token);
+		// 验证用户是否存在
+		parameters = privilegeGetSignatureService.getOauthSignature(oesPrivilegeDev.getAppId(),
+				oesPrivilegeDev.getClientId(), access_token);
 		parameters.put("access_token", access_token);
 		parameters.put("account", appUserName);
 		parameters.put("client_id", oesPrivilegeDev.getClientId());
 		parameters.put("accountType", "1");
-		String result=sendPost(oesPrivilegeDev.getUserCenterVerifyUrl(), parameters);
+		String result = sendPost(oesPrivilegeDev.getUserCenterVerifyUrl(), parameters);
 		if (result != null && !("").equals(result)) {
 			String aString = result.substring(0, 1);
 			if (aString.equals("{")) {
 				JSONObject object = JSONObject.fromObject(result);
 				if ("0".equals(object.get("status"))) {
-					WebUtils.writeJson(response, result);
+					WebUtils.writeJson(response, object);
 					return;
 				}
 			}
@@ -810,7 +812,7 @@ public class ManagerUserController extends BaseControllerUtil {
 				if ("1".equals(object.get("status"))) {
 					boo = true;
 				} else {
-					WebUtils.writeJson(response, result);
+					WebUtils.writeJson(response, object);
 					return;
 				}
 			}
