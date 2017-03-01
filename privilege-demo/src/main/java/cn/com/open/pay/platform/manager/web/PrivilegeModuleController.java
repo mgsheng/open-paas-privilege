@@ -279,8 +279,8 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = "detail")
-	public void detail(HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping(value = "updateModule")
+	public void updateModule(HttpServletRequest request, HttpServletResponse response) {
 		log.info("-------------------------detail       start------------------------------------");
 		String appId = request.getParameter("appId");
 		String optUrl = request.getParameter("optUrl");
@@ -502,7 +502,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	 * @return
 	 */
 	@RequestMapping(value = "deleteModuel")
-	public void findModuel(HttpServletRequest request, HttpServletResponse response) {
+	public void deleteModuel(HttpServletRequest request, HttpServletResponse response) {
 		log.info("-------------------------delModuel   start------------------------------------");
 		String resourceId = request.getParameter("resourceId");
 		String appId = request.getParameter("appId");
