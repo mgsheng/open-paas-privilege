@@ -315,15 +315,16 @@
 						   var id = row.Id;
 						   var appUserId = row.userId;
 						   var url='${pageContext.request.contextPath}/managerUser/removeUserByID?appId=${appId}&id='+id+'&appUserId='+appUserId;
-				            $.post(url, function(data) {
-				                if(data.status=='1'){
-				                 	msgShow('系统提示', '恭喜，删除成功！', 'info');
-				                }else{
-				                  	msgShow('系统提示', '删除失败！', 'error');
-				                }
-				            },"json");
-				            //刷新
-				            findUsers();
+						   $.post(url,
+			                    	function(data){
+			                        	if (data.status=='1') {
+				                			msgShow('系统提示', '删除成功！', 'warning');
+				                			findUsers();
+				    					}else if (data.status=='0'){
+				    						msgShow('系统提示', '删除不成功！', 'warning');
+				    						findUsers();
+				    					}
+			                 });
 					}
 			   });
 			}else{
@@ -386,25 +387,17 @@
                 msgShow('系统提示', '请选择组织机构！', 'warning');
                 return false;
             }
-            $.ajax({
-    				type:"post",
-    				url:"${pageContext.request.contextPath}/managerUser/updateUser",
-    				data:{"appId":'${appId}',"groupId":groupId,"appUserId":appUserId,"Id":Id},
-    				dataType:"json",
-    				success:function (data){
-    					if (data.status=='1') {
+            $.post("${pageContext.request.contextPath}/managerUser/updateUser",
+            		{"appId":'${appId}',"groupId":groupId,"appUserId":appUserId,"Id":Id},
+                 	function(data){
+            			if (data.status=='1') {
                 			msgShow('系统提示', '修改成功！', 'warning');
                 			closeWin();
                 			findUsers();
-    					}else {
+    					}else if (data.status=='0'){
     						msgShow('系统提示', '修改不成功！', 'warning');
     					}
-    				},
-    				error:function(){
-    					$.messager.alert("系统提示","用户修改异常，请刷新页面!","error");
-    				}
-    		});
-           
+              });
         }
         
         //前端校验
@@ -454,25 +447,18 @@
 			if(!check_result){
 				return;
 			}
-			$.ajax({
-				type:"post",
-				url:"${pageContext.request.contextPath}/managerUser/addUser",
-				data:{"appId":'${appId}',"appUserName":userName,"passWord":passWord,"groupId":groupId},
-				dataType:"json",
-				success:function (data){
-					if (data.status=='1') {
-            			msgShow('系统提示', '添加成功！', 'warning');
-            			closeAddWin();
-            			findUsers();
-            			$('#ff').clear();
-					}else {
-						msgShow('系统提示', '添加不成功！'+data.errMsg, 'warning');
-					}
-				},
-				error:function(){
-					$.messager.alert("系统提示","用户添加异常，请刷新页面!","error");
-				}
-			});
+			$.post("${pageContext.request.contextPath}/managerUser/addUser",
+					{"appId":'${appId}',"appUserName":userName,"passWord":passWord,"groupId":groupId},
+                 	function(data){
+                     	if (data.status=='1') {
+                			msgShow('系统提示', '添加成功！', 'warning');
+                			closeAddWin();
+                			findUsers();
+                			$('#ff').clear();
+    					}else if (data.status=='0') {
+    						msgShow('系统提示', '添加不成功！'+data.errMsg, 'warning');
+    					}
+              });
 		}
 		
 		//页面预加载
