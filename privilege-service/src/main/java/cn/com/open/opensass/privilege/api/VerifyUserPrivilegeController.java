@@ -37,14 +37,10 @@ import net.sf.json.JSONObject;
 @RequestMapping("/userRole/")
 public class VerifyUserPrivilegeController extends BaseControllerUtil {
 	private static final Logger log = LoggerFactory.getLogger(VerifyUserPrivilegeController.class);
-	private static final String prifix = RedisConstant.USERPRIVILEGES_CACHE;
-	private static final String jsonKeyName = "urlList";
 	@Autowired
 	private AppService appService;
 	@Autowired
 	private RedisClientTemplate redisClient;
-	@Autowired
-	private RedisDao redisDao;
 	@Autowired
 	private PrivilegeUrlService privilegeUrlService;
 	@Autowired
