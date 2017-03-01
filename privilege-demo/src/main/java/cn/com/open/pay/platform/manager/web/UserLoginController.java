@@ -90,7 +90,7 @@ public class UserLoginController extends BaseControllerUtil {
 					access_token = (String) object.get("access_token");
 					if (access_token != null && !("").equals(access_token)) {
 						redisClientTemplate.setObjectByTime(oesPrivilegeDev.getAppId() + AccessTokenPrefix,
-								access_token, 43190);
+								access_token, 40000);
 					}
 				}
 			}
@@ -308,7 +308,7 @@ public class UserLoginController extends BaseControllerUtil {
 					access_token = (String) object.get("access_token");
 					if (access_token != null && !("").equals(access_token)) {
 						redisClientTemplate.setObjectByTime(oesPrivilegeDev.getAppId() + AccessTokenPrefix,
-								access_token, 43190);
+								access_token, 40000);
 					}
 				}
 			}
