@@ -87,43 +87,39 @@ public class VerifyUserPrivilegeController extends BaseControllerUtil {
 			writeErrorJson(response, map);
 			return;
 		}
-		// 先通过用户url缓存认证权限 如果认证失败查询数据库认证权限
-		states = redisDao.existUrlRedis(prifix, jsonKeyName, optUrl, appId, appUserId);
-		if (!states) {
-			int Type = 1;// 角色类型，1-普通用户，2-系统管理员，3-组织机构管理员
-			// 判断是否是管理员
-			List<PrivilegeRole> roles = privilegeRoleService.getRoleListByUserIdAndAppId(appUserId, appId);
-			for (PrivilegeRole role : roles) {
-				if (role.getRoleType() != null) {
-					if (role.getRoleType() == 2) {
-						// 角色组织机构id不为空，为组织机构管理员
-						if (role.getGroupId() != null && !role.getGroupId().isEmpty()) {
-							Type = 3;
-						} else {// 角色组织机构id为空，为系统管理员，直接返回认证成功
-							map.put("status", "1");
-							writeErrorJson(response, map);
-							return;
-						}
-						break;
+
+		int Type = 1;// 角色类型，1-普通用户，2-系统管理员，3-组织机构管理员
+		// 判断是否是管理员
+		List<PrivilegeRole> roles = privilegeRoleService.getRoleListByUserIdAndAppId(appUserId, appId);
+		for (PrivilegeRole role : roles) {
+			if (role.getRoleType() != null) {
+				if (role.getRoleType() == 2) {
+					// 角色组织机构id不为空，为组织机构管理员
+					if (role.getGroupId() != null && !role.getGroupId().isEmpty()) {
+						Type = 3;
+					} else {// 角色组织机构id为空，为系统管理员，直接返回认证成功
+						map.put("status", "1");
+						writeErrorJson(response, map);
+						return;
 					}
-
+					break;
 				}
-			}
-			PrivilegeUrl url = null;
-			if (Type != 2) {
-				// 获取用户url
-				url = privilegeUrlService.getPrivilegeUrl(appId, appUserId, privilegeUser, Type);
-			}
 
-			String json = url.getPrivilegeUrl();
-			JSONObject object = JSONObject.fromObject(json);
-			List<String> urlList = (List<String>) object.get("urlList");
-			for (String s : urlList) {
-				if (s.indexOf(optUrl) > -1) {
-					states = true;
-					// 更新用户url缓存
-					privilegeUrlService.updateRedisUrl(appId, appUserId);
-				}
+			}
+		}
+		PrivilegeUrl url = null;
+		if (Type != 2) {
+			// 获取用户url
+			url = privilegeUrlService.getPrivilegeUrl(appId, appUserId, privilegeUser, Type);
+		}
+		String json = url.getPrivilegeUrl();
+		JSONObject object = JSONObject.fromObject(json);
+		List<String> urlList = (List<String>) object.get("urlList");
+		for (String s : urlList) {
+			if (s.indexOf(optUrl) > -1) {
+				states = true;
+				// 更新用户url缓存
+				privilegeUrlService.updateRedisUrl(appId, appUserId);
 			}
 		}
 		if (states) {
