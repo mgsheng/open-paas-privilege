@@ -20,7 +20,7 @@
         create_time
     </sql>
     <select id="findByFunctionId" resultMap="privilegeFunctionMap" flushCache="true">
-    	SELECT pr.* FROM privilege_function pf ,privilege_resource pr WHERE pf.id=#{functionId} 
+    	SELECT pf.* FROM privilege_function pf ,privilege_resource pr WHERE pf.id=#{functionId} 
     	AND pf.resource_id=pr.resource_id AND pr.app_id=#{appId}
     </select>
     <select id="findAppFunction" resultType="java.lang.String" flushCache="true">
