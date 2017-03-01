@@ -263,13 +263,14 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 		/* 链接资源 */
 		if (null != privilegeUser.getPrivilegeFunId() && privilegeUser.getPrivilegeFunId().length() > 0) {
 			String[] functionIds = privilegeUser.getPrivilegeFunId().split(",");
+			List<Map<String, Object>> resourceList=privilegeResourceService.getResourceListByFunIds(functionIds, appId);
+			for (Map<String, Object> map : resourceList) {
+				if (map.get("baseUrl")!=null&&!("").equals(map.get("baseUrl"))) {
+					setUrl.add((String)map.get("baseUrl"));
+				}
+			}
 			for (String functionId : functionIds) {
 				if (null != functionId && functionId.length() > 0) {
-					PrivilegeResource resource = privilegeResourceService.getResourceListByFunId(functionId, appId);
-					if (null != resource && null != resource.getBaseUrl()) {
-						setUrl.add(resource.getBaseUrl());
-					}
-
 					PrivilegeFunction privilegeFunction = privilegeFunctionService.findByFunctionId(functionId, appId);
 					if (null != privilegeFunction && null != privilegeFunction.getOptUrl()
 							&& privilegeFunction.getOptUrl().length() > 0) {
