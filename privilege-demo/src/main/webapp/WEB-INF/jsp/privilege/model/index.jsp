@@ -162,7 +162,7 @@
 			}
 			var children=$('#deptree').tree('getChildren',n.target);
 			$.each(children,function(i,m){
-				if(m.attributes.menuRule!=""){
+				if(m.attributes.menuRule!= "" && m.ismodule!=2){
 					$(m.target).children(".tree-icon").css("background","url(${pageContext.request.contextPath}/"+m.attributes.menuRule+")");
 				}else{
 						if(m.ismodule=="1"){
