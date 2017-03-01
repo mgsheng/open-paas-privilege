@@ -102,7 +102,6 @@
 		<div region="south" border="false" style="text-align:center; height: 50px; line-height: 50px;">
 			<a id="btnEp" class="easyui-linkbutton" icon="icon-ok" href="javascript:void(0)" onclick="updateUser()" style="margin:8px"> 确定</a>
 			<a id="btnCancel" class="easyui-linkbutton" onclick="closeWin()" icon="icon-cancel" href="javascript:void(0)" style="margin:8px">取消</a>
-			<a id="btnClear" href="javascript:void(0)" onclick="clearTable()" class="easyui-linkbutton" icon="icon-clear" style="margin:8px">清空</a>
 		</div>
 	</div>
 	<!-- 添加用户窗口 -->
@@ -318,7 +317,6 @@
 				            $.post(url, function(data) {
 				                if(data.status=='1'){
 				                 	msgShow('系统提示', '恭喜，删除成功！', 'info');
-				                 	findUsers();
 				                }else{
 				                  	msgShow('系统提示', '删除失败！', 'error');
 				                }
@@ -387,35 +385,25 @@
                 msgShow('系统提示', '请选择组织机构！', 'warning');
                 return false;
             }
-            	$.ajax({
+            $.ajax({
     				type:"post",
     				url:"${pageContext.request.contextPath}/managerUser/updateUser",
     				data:{"appId":'${appId}',"groupId":groupId,"appUserId":appUserId,"Id":Id},
     				dataType:"json",
     				success:function (data){
     					if (data.status=='1') {
-                			msgShow('系统提示', '添加成功！', 'warning');
-                			closeAddWin();
+                			msgShow('系统提示', '修改成功！', 'warning');
+                			closeWin();
                 			findUsers();
-                			$('#ff').clear();
     					}else {
-    						msgShow('系统提示', '添加不成功！'+data.errMsg, 'warning');
+    						msgShow('系统提示', '修改不成功！', 'warning');
     					}
     				},
     				error:function(){
-    					$.messager.alert("系统提示","用户添加异常，请刷新页面!","error");
+    					$.messager.alert("系统提示","用户修改异常，请刷新页面!","error");
     				}
-    			});
-            $.post(url, function(data) {
-                if(data.result==true){
-	                 msgShow('系统提示', '修改成功！', 'info');
-	                 closeWin();
-	                 findUsers();
-                }else{
-	                 msgShow('系统提示', '修改失败！', 'info');
-	                 closeWin();
-                }
-            });
+    		});
+           
         }
         
         //前端校验
