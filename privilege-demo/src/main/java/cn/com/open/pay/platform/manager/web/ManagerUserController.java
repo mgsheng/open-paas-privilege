@@ -26,23 +26,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.com.open.pay.platform.manager.dev.OesPrivilegeDev;
-import cn.com.open.pay.platform.manager.log.service.PrivilegeLogService;
-import cn.com.open.pay.platform.manager.login.model.User;
-import cn.com.open.pay.platform.manager.login.service.UserService;
 import cn.com.open.pay.platform.manager.privilege.model.OesGroup;
 import cn.com.open.pay.platform.manager.privilege.model.OesUser;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeFunction;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
-import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeOperation;
-import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource1;
 import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
 import cn.com.open.pay.platform.manager.privilege.service.OesGroupService;
 import cn.com.open.pay.platform.manager.privilege.service.OesUserService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGetSignatureService;
-import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
-import cn.com.open.pay.platform.manager.privilege.service.PrivilegeResourceService;
 import cn.com.open.pay.platform.manager.redis.impl.RedisClientTemplate;
 import cn.com.open.pay.platform.manager.redis.impl.RedisConstant;
 import cn.com.open.pay.platform.manager.tools.AESUtils;
@@ -54,15 +47,7 @@ import cn.com.open.pay.platform.manager.tools.WebUtils;
 public class ManagerUserController extends BaseControllerUtil {
 	private static final Logger log = LoggerFactory.getLogger(ManagerUserController.class);
 	@Autowired
-	private UserService userService;
-	@Autowired
 	private OesUserService oesUserService;
-	@Autowired
-	private PrivilegeLogService privilegeLogService;
-	@Autowired
-	private PrivilegeModuleService privilegeModuleService;
-	@Autowired
-	private PrivilegeResourceService privilegeResourceService;
 	@Autowired
 	private PrivilegeGetSignatureService privilegeGetSignatureService;
 	@Autowired
@@ -85,11 +70,13 @@ public class ManagerUserController extends BaseControllerUtil {
 		String id = request.getParameter("id");
 		String appId = request.getParameter("appId");
 		String userName = request.getParameter("userName");
+		String groupId = request.getParameter("groupId");
 		id = (id == null ? null : new String(id.getBytes("iso-8859-1"), "utf-8"));
 		userName = (userName == null ? null : new String(userName.getBytes("iso-8859-1"), "utf-8"));
 		model.addAttribute("id", id);
 		model.addAttribute("userName", userName);
 		model.addAttribute("appId", appId);
+		model.addAttribute("groupId", groupId);
 		return "show/authorizeRole";
 	}
 
@@ -501,7 +488,6 @@ public class ManagerUserController extends BaseControllerUtil {
 		Map<String, Object> aMap = new HashMap<String, Object>();
 		aMap.put("resourceIds", resourceIds);
 		aMap.put("functionIds", functionIds);
-		System.err.println(JSONObject.fromObject(aMap).toString());
 		WebUtils.writeJson(response, JSONObject.fromObject(aMap));
 		return;
 	}
@@ -517,22 +503,14 @@ public class ManagerUserController extends BaseControllerUtil {
 	public void role(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
 		log.info("-------------------------role        start------------------------------------");
 		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
-		String groupId = null;
-		// 用户角色类型，1-普通用户，2-管理员，3-组织机构管理员
-		int Type = (int) user.get("Type");
-		if (user != null) {
-			if (Type == 1 || Type == 3) {
-				groupId = user.get("groupId").equals("null") ? null : (String) user.get("groupId");
-			}
-		}
-		String id = request.getParameter("id");// 用户appUserId
+		String groupId = request.getParameter("groupId").trim();// 该用户所属组织机构id
+		String id = request.getParameter("id").trim();// 用户appUserId
 		id = (id == null ? null : new String(id.getBytes("iso-8859-1"), "utf-8"));
-		String appId = request.getParameter("appId");
+		String appId = request.getParameter("appId").trim();
 		// 查找当前用户角色
 		Map<String, Object> Signature = privilegeGetSignatureService.getSignature(appId);
 		Signature.put("appId", appId);
 		Signature.put("appUserId", id);
-
 		String reslut = sendPost(oesPrivilegeDev.getUserPrivilegeUrl(), Signature);
 		List<Map<String, Object>> userRoleList = null;
 		if (reslut != null && !("").equals(reslut)) {
