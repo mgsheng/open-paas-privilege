@@ -155,11 +155,11 @@
 	<script>
 		
 		//添加tab页面
-		function addPanel(userName,userId){
+		function addPanel(userName,userId,groupId){
 			if ($('#tt').tabs('exists', userName+'-授权角色')){
 			 	$('#tt').tabs('select', userName+'-授权角色');
 			} else {
-				 var url = '${pageContext.request.contextPath}/managerUser/toRole?id='+userId+'&userName='+userName+'&appId='+${appId};
+				 var url = '${pageContext.request.contextPath}/managerUser/toRole?id='+userId+'&userName='+userName+'&appId=+${appId}&groupId='+groupId;
 			 	 var content = '<iframe scrolling="auto" frameborder="0" src="'+url+'" style="width:100%;height:100%;"></iframe>';
 				 $('#tt').tabs('add',{
 					 title:userName+'-授权角色',
@@ -215,8 +215,9 @@
 				$.messager.confirm('系统提示', '是否确定授权?', function(r){
 					if(r){
 						var userId = row.userId;
+						var groupId = row.groupId;
 						var userName=row.userName;
-						addPanel(userName,userId);
+						addPanel(userName,userId,groupId);
 					}
 				});
 			}else{
