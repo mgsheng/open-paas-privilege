@@ -111,8 +111,6 @@ public class UserRoleAddPrivilegeController extends BaseControllerUtil {
 						privilegeUserVo.getAppUserId());
 				privilegeMenuService.updateMenuRedis(privilegeUserVo.getAppId(),
 						privilegeUserVo.getAppUserId());
-				privilegeUrlService.updateRedisUrl(privilegeUserVo.getAppId(),
-						privilegeUserVo.getAppUserId());
 				if (message.getCode().equals("1")) {
 					map.put("status", "1");
 				} else {
