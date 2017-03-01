@@ -135,8 +135,6 @@ public class UserRoleModifyPrivilegeController extends BaseControllerUtil{
         		//更新缓存
     			PrivilegeAjaxMessage message=privilegeUserRedisService.updateUserRoleRedis(privilegeUserVo.getAppId(), privilegeUserVo.getAppUserId());
     			privilegeMenuService.updateMenuRedis(privilegeUserVo.getAppId(), privilegeUserVo.getAppUserId());
-    			privilegeUrlService.updateRedisUrl(privilegeUserVo.getAppId(),
-    					privilegeUserVo.getAppUserId());
     			if (message.getCode().equals("1")) {
     				map.put("status","1");
     			} else {
