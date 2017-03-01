@@ -155,7 +155,7 @@
         	msgShow('系统提示', '请填写角色名称！', 'warning');
             return false;
 		}
-		$.post('${pageContext.request.contextPath}/managerRole/addRole',
+		$.post('${pageContext.request.contextPath}/oesGroup/addRole',
 				{
 					appId:'${appId}',
 					roleName:roleName,
@@ -308,10 +308,7 @@
 					var node=$("#tt").tree('find',"r"+m);
 					if(node!=null){
 						if(node.ismodule=="1"){
-							var nn=$("#tt").tree('getChildren',node.target);
-							if(nn.length<=0){
 								$("#tt").tree('check',node.target);
-							}
 						}
 						initialResIds+=node.id.replace('r','')+",";
 					}
