@@ -221,7 +221,7 @@
         	var optId = $('#operName').combobox('getValue');
         	var optName=$('#operName').combobox('getText');
         	if(functionId!=""){
-        		$.post('${pageContext.request.contextPath}/module/detail',
+        		$.post('${pageContext.request.contextPath}/module/updateModule',
                     	{'functionId':functionId,'optUrl':optUrl,'operationId':optId,'appId':'${appId}'},
                     	function(data){
                     		if(data.returnMsg=='2'){
@@ -313,7 +313,7 @@
 		    if(menuId==""){
 				url='${pageContext.request.contextPath}/module/addModuel';
 		    }else{
-				url='${pageContext.request.contextPath}/module/detail';
+				url='${pageContext.request.contextPath}/module/updateModule';
 		    }
              $.post(url, {
                  	'name':name,
