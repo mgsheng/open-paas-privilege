@@ -32,13 +32,7 @@
 						<value>/managerUser/authorizeRole</value>
 						<value>/managerUser/function</value>
 						<value>/managerUser/authorizeFun</value>
-						<value>/resource/findModuel</value>
 						<value>/managerUser/findUserList</value>
-						<value>/payment/findPayment</value>
-						<value>/paychannel/findMerchantNames</value>
-						<value>/payment/getPayment</value>
-						<value>/privilegeLog/findPrivilegeLog</value>
-						<value>/manage/getMerchantOrderRefund</value>
 						<value>/user/update</value>
 						<value>/user/saveLatestVisit</value>
 						<value>/managerUser/findGroup</value>
@@ -46,6 +40,12 @@
 						<value>/user/index</value>
 						<value>/user/saveMenu</value>
 						<value>/user/getFrequentlyMenu</value>
+						<value>/oesGroup/getGroupList</value>
+						<value>/oesGroup/findGroup</value>
+						<value>/oesGroup/addRole</value>
+						<value>/oesGroup/addGroupAdministrator</value>
+						<value>/oesGroup/getRes</value>
+						<value>/oesGroup/authorizeRes</value>
 					</list>
 				</property>
 			</bean>
