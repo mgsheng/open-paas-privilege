@@ -43,6 +43,16 @@ public class OesUserServiceImpl implements OesUserService {
 			return false;
 		}
 	}
+
+	@Override
+	public Boolean updateUser(OesUser oesUser) {
+		try {
+			oesUserRepository.updateUser(oesUser);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
 	
 
 }
