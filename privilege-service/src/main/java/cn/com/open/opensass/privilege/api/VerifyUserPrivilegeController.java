@@ -15,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.opensass.privilege.dao.PrivilegeUrl;
-import cn.com.open.opensass.privilege.dao.cache.RedisDao;
 import cn.com.open.opensass.privilege.model.App;
 import cn.com.open.opensass.privilege.model.PrivilegeRole;
 import cn.com.open.opensass.privilege.model.PrivilegeUser;
@@ -114,8 +113,6 @@ public class VerifyUserPrivilegeController extends BaseControllerUtil {
 		for (String s : urlList) {
 			if (s.indexOf(optUrl) > -1) {
 				states = true;
-				// 更新用户url缓存
-				privilegeUrlService.updateRedisUrl(appId, appUserId);
 			}
 		}
 		if (states) {
