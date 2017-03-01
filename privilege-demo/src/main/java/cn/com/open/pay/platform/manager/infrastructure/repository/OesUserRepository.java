@@ -18,5 +18,5 @@ public interface OesUserRepository extends Repository {
 	int getUserCount(@Param("groupId")String groupId,@Param("userName") String userName);
 	void saveUser(OesUser oesUser);
 	void deleteUser(@Param("Id")Integer Id); 
-	
+	void updateUser(OesUser oesUser);
 }
