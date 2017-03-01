@@ -35,4 +35,5 @@ public interface OesUserService {
 	 * @return
 	 */
 	Boolean deleteUser(Integer Id);
+	Boolean updateUser(OesUser oesUser);
 }
