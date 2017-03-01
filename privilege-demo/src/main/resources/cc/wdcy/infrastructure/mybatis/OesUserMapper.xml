@@ -43,5 +43,7 @@
 	<delete id="deleteUser" flushCache="true">
 		delete from oes_user where Id=#{Id}
 	</delete>
-	
+	<update id="updateUser" parameterType="OesUser" >
+		update oes_user set group_id = #{groupId} where Id=#{id}
+	</update>
 </mapper>
