@@ -326,7 +326,7 @@ public class OesGroupController extends BaseControllerUtil{
 					JSONObject object = JSONObject.fromObject(result);
 					access_token = (String) object.get("access_token");
 					if (access_token != null && !("").equals(access_token)) {
-						redisClientTemplate.setObjectByTime(oesPrivilegeDev.getAppId() + AccessTokenPrefix, access_token, 43190);
+						redisClientTemplate.setObjectByTime(oesPrivilegeDev.getAppId() + AccessTokenPrefix, access_token, 40000);
 					}
 				}
 			}
