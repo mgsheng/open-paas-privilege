@@ -177,7 +177,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 
 			Set<PrivilegeMenuVo> privilegeMenuListData = getAllMenuByUserId(privilegeMenuList,
 					privilegeMenuListReturn); /* 缓存中是否存在 */
-			
+			/*
 			if (Type == 3) {//如果用户角色为组织机构管理员
 				//把该组织机构拥有的菜单放入缓存
 				PrivilegeAjaxMessage message = privilegeGroupService.findGroupPrivilege(user.getGroupId(), appId);
@@ -187,7 +187,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 					List<PrivilegeMenuVo> groupMenuList=JSONArray.toList(array, PrivilegeMenuVo.class);
 					privilegeMenuListData.addAll(groupMenuList);
 				}
-			}
+			}*/
 			if (privilegeMenuListData.size() <= 0) {
 				ajaxMessage.setCode("0");
 				ajaxMessage.setMessage("MENU-IS-NULL");
