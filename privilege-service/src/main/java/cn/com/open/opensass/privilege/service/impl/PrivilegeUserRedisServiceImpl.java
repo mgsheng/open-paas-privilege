@@ -152,7 +152,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 				}
 			}
 			resourceSet.addAll(resourceList);
-			if (Type == 3) {
+			/*if (Type == 3) {
 				// 如果为机构管理员，返回该组织机构的资源
 				PrivilegeAjaxMessage message = privilegeGroupService.findGroupPrivilege(privilegeUser.getGroupId(),
 						appId);
@@ -162,7 +162,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 					List<PrivilegeResourceVo> PrivilegeResourceVo=JSONArray.toList(objArray, PrivilegeResourceVo.class);
 					resourceSet.addAll(PrivilegeResourceVo);
 				} 
-			}
+			}*/
 			roleMap.put("resourceList", resourceSet);
 		} else {
 			// 如果为管理员，返回应用资源缓存
