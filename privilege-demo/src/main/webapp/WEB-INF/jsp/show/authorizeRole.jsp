@@ -46,7 +46,7 @@
 		$(function(){
 			 	$('#loading').hide();
 				$('#AuthorizeRole').datagrid({
-					url: '${pageContext.request.contextPath}/managerUser/role?id=${id}&appId=${appId}',
+					url: '${pageContext.request.contextPath}/managerUser/role?id=${id}&appId=${appId}&groupId=${groupId}',
 					type:'post',
 					collapsible:true,
 					rownumbers:true,
