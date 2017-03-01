@@ -85,8 +85,6 @@ public class UserRoleDelPrivilegeController extends BaseControllerUtil{
 			PrivilegeAjaxMessage message=privilegeUserRedisService.delUserRoleRedis(privilegeUserVo.getAppId(), privilegeUserVo.getAppUserId());
 			privilegeMenuService.delMenuRedis(privilegeUserVo.getAppId(),
 					privilegeUserVo.getAppUserId());
-			privilegeUrlService.deleteRedisUrl(privilegeUserVo.getAppId(),
-					privilegeUserVo.getAppUserId());
 			if (message.getCode().equals("1")) {
 				map.put("status","1");
 			} else {
