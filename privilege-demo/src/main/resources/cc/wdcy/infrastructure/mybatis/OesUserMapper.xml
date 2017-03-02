@@ -13,6 +13,16 @@
 		user_name,
 		user_id
 	</sql>
+	<select id="findByPage" resultMap="userMap">
+		SELECT * from oes_user where 1=1
+		<if test="groupId != null and groupId !='' " >
+        	and group_id=#{groupId}
+     	</if>
+     	<if test="userName != null and userName !='' " >
+        	and ou.user_name=#{userName}
+     	</if>
+		limit #{start},#{limit}
+	</select>
 	<select id="getUserListByPage" resultType="java.util.HashMap" flushCache="true">
 		SELECT og.group_name as groupName,ou.Id as Id,ou.group_id as groupId,ou.user_name as userName,
 		ou.user_id as userId FROM oes_user ou,oes_group og 
