@@ -45,7 +45,8 @@ import cn.com.open.pay.platform.manager.tools.WebUtils;
 @Controller
 @RequestMapping("/managerUser/")
 public class ManagerUserController extends BaseControllerUtil {
-	private static final Logger log = LoggerFactory.getLogger(ManagerUserController.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(ManagerUserController.class);
 	@Autowired
 	private OesUserService oesUserService;
 	@Autowired
@@ -64,15 +65,18 @@ public class ManagerUserController extends BaseControllerUtil {
 	 * @return 返回的是 jsp文件名路径及文件名
 	 */
 	@RequestMapping(value = "toRole")
-	public String toRole(HttpServletRequest request, HttpServletResponse response, Model model)
+	public String toRole(HttpServletRequest request,
+			HttpServletResponse response, Model model)
 			throws UnsupportedEncodingException {
 		log.info("-------------------------toRole       start------------------------------------");
 		String id = request.getParameter("id");
 		String appId = request.getParameter("appId");
 		String userName = request.getParameter("userName");
 		String groupId = request.getParameter("groupId");
-		id = (id == null ? null : new String(id.getBytes("iso-8859-1"), "utf-8"));
-		userName = (userName == null ? null : new String(userName.getBytes("iso-8859-1"), "utf-8"));
+		id = (id == null ? null
+				: new String(id.getBytes("iso-8859-1"), "utf-8"));
+		userName = (userName == null ? null : new String(
+				userName.getBytes("iso-8859-1"), "utf-8"));
 		model.addAttribute("id", id);
 		model.addAttribute("userName", userName);
 		model.addAttribute("appId", appId);
@@ -86,15 +90,18 @@ public class ManagerUserController extends BaseControllerUtil {
 	 * @return 返回的是 jsp文件名路径及文件名
 	 */
 	@RequestMapping(value = "toFunction")
-	public String toFunction(HttpServletRequest request, HttpServletResponse response, Model model)
+	public String toFunction(HttpServletRequest request,
+			HttpServletResponse response, Model model)
 			throws UnsupportedEncodingException {
 		log.info("-------------------------toFunction       start------------------------------------");
 		String id = request.getParameter("id");
 		String appId = request.getParameter("appId");
 		String userName = request.getParameter("userName");
 		String groupId = request.getParameter("groupId");
-		id = (id == null ? null : new String(id.getBytes("iso-8859-1"), "utf-8"));
-		userName = (userName == null ? null : new String(userName.getBytes("iso-8859-1"), "utf-8"));
+		id = (id == null ? null
+				: new String(id.getBytes("iso-8859-1"), "utf-8"));
+		userName = (userName == null ? null : new String(
+				userName.getBytes("iso-8859-1"), "utf-8"));
 		model.addAttribute("id", id);
 		model.addAttribute("userName", userName);
 		model.addAttribute("appId", appId);
@@ -110,8 +117,8 @@ public class ManagerUserController extends BaseControllerUtil {
 	 * @throws UnsupportedEncodingException
 	 */
 	@RequestMapping("authorizeFun")
-	public void authorizeFunction(HttpServletRequest request, HttpServletResponse response)
-			throws UnsupportedEncodingException {
+	public void authorizeFunction(HttpServletRequest request,
+			HttpServletResponse response) throws UnsupportedEncodingException {
 		log.info("-------------------------authorizeFun start------------------------------------");
 		String id = request.getParameter("id");
 		String function = request.getParameter("function");
@@ -120,10 +127,12 @@ public class ManagerUserController extends BaseControllerUtil {
 		String appId = request.getParameter("appId");
 		Boolean boo = false;
 		JSONObject jsonobj = new JSONObject();
-		Map<String, Object> Signature = privilegeGetSignatureService.getSignature(appId);
+		Map<String, Object> Signature = privilegeGetSignatureService
+				.getSignature(appId);
 		Signature.put("appId", appId);
 		Signature.put("appUserId", id);
-		String reslut = sendPost(oesPrivilegeDev.getUserPrivilegeUrl(), Signature);
+		String reslut = sendPost(oesPrivilegeDev.getUserPrivilegeUrl(),
+				Signature);
 		if (reslut != null && !("").equals(reslut)) {
 			JSONObject jsonObject = JSONObject.fromObject(reslut);
 			if (!("0").equals(jsonObject.get("status"))) {
@@ -131,14 +140,17 @@ public class ManagerUserController extends BaseControllerUtil {
 			} else {
 				boo = false;
 				// 如果用户不存在 添加用户
-				if (("10002").equals(String.valueOf(jsonObject.get("error_code")))) {
-					Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
+				if (("10002").equals(String.valueOf(jsonObject
+						.get("error_code")))) {
+					Map<String, Object> map = privilegeGetSignatureService
+							.getSignature(appId);
 					map.put("appId", appId);
 					map.put("appUserId", id);
 					map.put("resourceId", resource);
 					map.put("privilegeFunId", function);
 					map.put("appUserName", userName);
-					reslut = sendPost(oesPrivilegeDev.getAddPrivilegeUserUrl(), map);
+					reslut = sendPost(oesPrivilegeDev.getAddPrivilegeUserUrl(),
+							map);
 					if (reslut != null && !("").equals(reslut)) {
 						jsonObject = JSONObject.fromObject(reslut);
 						if (!("0").equals(jsonObject.get("status"))) {
@@ -163,13 +175,15 @@ public class ManagerUserController extends BaseControllerUtil {
 		}
 		// 更新资源与功能
 		if (boo) {
-			Map<String, Object> signature = privilegeGetSignatureService.getSignature(appId);
+			Map<String, Object> signature = privilegeGetSignatureService
+					.getSignature(appId);
 			signature.put("appId", appId);
 			signature.put("appUserId", id);
 			signature.put("method", "1");
 			signature.put("resourceId", resource);
 			signature.put("privilegeFunId", function);
-			reslut = sendPost(oesPrivilegeDev.getModitUserPrivilegeUrl(), signature);
+			reslut = sendPost(oesPrivilegeDev.getModitUserPrivilegeUrl(),
+					signature);
 			if (reslut != null && !("").equals(reslut)) {
 				JSONObject jsonObject = JSONObject.fromObject(reslut);
 				if (!("0").equals(jsonObject.get("status"))) {
@@ -197,8 +211,8 @@ public class ManagerUserController extends BaseControllerUtil {
 	 * @throws UnsupportedEncodingException
 	 */
 	@RequestMapping("authorizeRole")
-	public void authorizeRole(HttpServletRequest request, HttpServletResponse response)
-			throws UnsupportedEncodingException {
+	public void authorizeRole(HttpServletRequest request,
+			HttpServletResponse response) throws UnsupportedEncodingException {
 		log.info("-------------------------authorizeRole        start------------------------------------");
 		String appUserId = request.getParameter("id");// 用户id
 		String addRoleId = request.getParameter("addRoleId");// 添加的角色id
@@ -210,19 +224,24 @@ public class ManagerUserController extends BaseControllerUtil {
 		String resourceId = null;
 		Boolean boo = false;
 		JSONObject jsonobj = new JSONObject();
-		Map<String, Object> Signature = privilegeGetSignatureService.getSignature(appId);
+		Map<String, Object> Signature = privilegeGetSignatureService
+				.getSignature(appId);
 		Signature.put("appId", appId);
 		Signature.put("appUserId", appUserId);
 		// 查询当前用户权限
-		String reslut = sendPost(oesPrivilegeDev.getUserPrivilegeUrl(), Signature);
+		String reslut = sendPost(oesPrivilegeDev.getUserPrivilegeUrl(),
+				Signature);
 		if (reslut != null && !("").equals(reslut)) {
 			JSONObject jsonObject = JSONObject.fromObject(reslut);
 			if (!("0").equals(jsonObject.get("status"))) {
-				deptId = (String) (jsonObject.get("deptId").equals("null") ? "" : jsonObject.get("deptId"));
-				groupId = (String) (jsonObject.get("groupId").equals("null") ? "" : jsonObject.get("groupId"));
-				privilegeFunId = (String) (jsonObject.get("privilegeFunId").equals("null") ? ""
-						: jsonObject.get("privilegeFunId"));
-				resourceId = (String) (jsonObject.get("resourceId").equals("null") ? "" : jsonObject.get("resourceId"));
+				deptId = (String) (jsonObject.get("deptId").equals("null") ? ""
+						: jsonObject.get("deptId"));
+				groupId = (String) (jsonObject.get("groupId").equals("null") ? ""
+						: jsonObject.get("groupId"));
+				privilegeFunId = (String) (jsonObject.get("privilegeFunId")
+						.equals("null") ? "" : jsonObject.get("privilegeFunId"));
+				resourceId = (String) (jsonObject.get("resourceId").equals(
+						"null") ? "" : jsonObject.get("resourceId"));
 				boo = true;
 			} else {
 				boo = false;
@@ -234,7 +253,8 @@ public class ManagerUserController extends BaseControllerUtil {
 
 		if (addRoleId != null && boo) {
 			// 添加勾选的角色
-			Map<String, Object> signature = privilegeGetSignatureService.getSignature(appId);
+			Map<String, Object> signature = privilegeGetSignatureService
+					.getSignature(appId);
 			signature.put("appId", appId);
 			signature.put("appUserId", appUserId);
 			signature.put("method", "0");
@@ -243,7 +263,8 @@ public class ManagerUserController extends BaseControllerUtil {
 			signature.put("groupId", groupId);
 			signature.put("privilegeFunId", privilegeFunId);
 			signature.put("resourceId", resourceId);
-			reslut = sendPost(oesPrivilegeDev.getModitUserPrivilegeUrl(), signature);
+			reslut = sendPost(oesPrivilegeDev.getModitUserPrivilegeUrl(),
+					signature);
 			if (reslut != null && !("").equals(reslut)) {
 				JSONObject jsonObject = JSONObject.fromObject(reslut);
 				if (!("0").equals(jsonObject.get("status"))) {
@@ -257,7 +278,8 @@ public class ManagerUserController extends BaseControllerUtil {
 		}
 		// 删除取消勾选的角色
 		if (delRoleId != null && boo) {
-			Map<String, Object> signature = privilegeGetSignatureService.getSignature(appId);
+			Map<String, Object> signature = privilegeGetSignatureService
+					.getSignature(appId);
 			signature.put("appId", appId);
 			signature.put("appUserId", appUserId);
 			signature.put("method", "1");
@@ -266,7 +288,8 @@ public class ManagerUserController extends BaseControllerUtil {
 			signature.put("groupId", groupId);
 			signature.put("privilegeFunId", privilegeFunId);
 			signature.put("resourceId", resourceId);
-			reslut = sendPost(oesPrivilegeDev.getModitUserPrivilegeUrl(), signature);
+			reslut = sendPost(oesPrivilegeDev.getModitUserPrivilegeUrl(),
+					signature);
 			if (reslut != null && !("").equals(reslut)) {
 				JSONObject jsonObject = JSONObject.fromObject(reslut);
 				if (!("0").equals(jsonObject.get("status"))) {
@@ -278,7 +301,8 @@ public class ManagerUserController extends BaseControllerUtil {
 				boo = false;
 			}
 		}
-		System.out.println("****************id:" + appUserId + "****************role:" + addRoleId);
+		System.out.println("****************id:" + appUserId
+				+ "****************role:" + addRoleId);
 		// result = true表示该用户授权角色成功
 		jsonobj.put("result", boo);
 		WebUtils.writeJson(response, jsonobj);
@@ -286,7 +310,8 @@ public class ManagerUserController extends BaseControllerUtil {
 	}
 
 	@RequestMapping(value = "tree")
-	public void getModelTree(HttpServletRequest request, HttpServletResponse response) {
+	public void getModelTree(HttpServletRequest request,
+			HttpServletResponse response) {
 		log.info("-------------------------tree       start------------------------------------");
 		JSONArray jsonArr = null;
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -312,28 +337,39 @@ public class ManagerUserController extends BaseControllerUtil {
 				JSONArray menuArray = (JSONArray) jsonObject.get("menuList");
 				// 如果menuList不为空则构建tree,否则直接返回无权限状态
 				if (menuArray.size() > 0) {
-					JSONArray resourceArray = (JSONArray) jsonObject.get("resourceList");
+					JSONArray resourceArray = (JSONArray) jsonObject
+							.get("resourceList");
 					// 将json对象转换为java对象
-					List<PrivilegeMenu> menuList = JSONArray.toList(menuArray, PrivilegeMenu.class);
+					List<PrivilegeMenu> menuList = JSONArray.toList(menuArray,
+							PrivilegeMenu.class);
 					s = sendPost(oesPrivilegeDev.getAppResRedisUrl(), map);
 					jsonObject = JSONObject.fromObject(s);// 将json字符串转换为json对象
-					JSONArray functionArray = (JSONArray) jsonObject.get("functionList");
+					JSONArray functionArray = (JSONArray) jsonObject
+							.get("functionList");
 					s = sendPost(oesPrivilegeDev.getAllOperationUrl(), map);
 					jsonObject = JSONObject.fromObject(s);
-					JSONArray operationArray = (JSONArray) jsonObject.get("operationList");
+					JSONArray operationArray = (JSONArray) jsonObject
+							.get("operationList");
 					// 将json对象转换为java对象
-					List<PrivilegeOperation> operationList = JSONArray.toList(operationArray, PrivilegeOperation.class);
-					List<PrivilegeResource1> resourceList = JSONArray.toList(resourceArray, PrivilegeResource1.class);
-					List<PrivilegeFunction> functionList = JSONArray.toList(functionArray, PrivilegeFunction.class);
+					List<PrivilegeOperation> operationList = JSONArray.toList(
+							operationArray, PrivilegeOperation.class);
+					List<PrivilegeResource1> resourceList = JSONArray.toList(
+							resourceArray, PrivilegeResource1.class);
+					List<PrivilegeFunction> functionList = JSONArray.toList(
+							functionArray, PrivilegeFunction.class);
 					// 根据DisplayOrder排序
-					java.util.Collections.sort(menuList, new Comparator<PrivilegeMenu>() {
-						@Override
-						public int compare(PrivilegeMenu o1, PrivilegeMenu o2) {
-							return o1.getDisplayOrder() - o2.getDisplayOrder();
-						}
-					});
+					java.util.Collections.sort(menuList,
+							new Comparator<PrivilegeMenu>() {
+								@Override
+								public int compare(PrivilegeMenu o1,
+										PrivilegeMenu o2) {
+									return o1.getDisplayOrder()
+											- o2.getDisplayOrder();
+								}
+							});
 					List<TreeNode> nodes = convertTreeNodeList(menuList);
-					jsonArr = JSONArray.fromObject(buildTree(nodes, resourceList, functionList, operationList));
+					jsonArr = JSONArray.fromObject(buildTree(nodes,
+							resourceList, functionList, operationList));
 					map.put("status", "1");
 					map.put("tree", jsonArr);
 				} else {
@@ -357,8 +393,10 @@ public class ManagerUserController extends BaseControllerUtil {
 	 * @param treeNodes
 	 * @return
 	 */
-	protected List<TreeNode> buildTree(List<TreeNode> treeNodes, List<PrivilegeResource1> resourceList,
-			List<PrivilegeFunction> functionList, List<PrivilegeOperation> operationList) {
+	protected List<TreeNode> buildTree(List<TreeNode> treeNodes,
+			List<PrivilegeResource1> resourceList,
+			List<PrivilegeFunction> functionList,
+			List<PrivilegeOperation> operationList) {
 		List<TreeNode> results = new ArrayList<TreeNode>();
 		Map<String, TreeNode> aidMap = new LinkedHashMap<String, TreeNode>();
 		for (TreeNode node : treeNodes) {
@@ -387,12 +425,14 @@ public class ManagerUserController extends BaseControllerUtil {
 						List<TreeNode> treeNodeList1 = new ArrayList<TreeNode>();
 						for (PrivilegeFunction func : functionList) {
 							TreeNode treeNode1 = new TreeNode();
-							if ((res.getResourceId()).equals(func.getResourceId())) {
+							if ((res.getResourceId()).equals(func
+									.getResourceId())) {
 								treeNode1.setId(func.getFunctionId());
 								treeNode1.setIsmodule("2");
 
 								for (PrivilegeOperation operation : operationList) {
-									if (func.getOptId().equals(operation.getId())) {
+									if (func.getOptId().equals(
+											operation.getId())) {
 										treeNode1.setText(operation.getName());
 									}
 								}
@@ -455,25 +495,30 @@ public class ManagerUserController extends BaseControllerUtil {
 	 * @throws UnsupportedEncodingException
 	 */
 	@RequestMapping("function")
-	public void function(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+	public void function(HttpServletRequest request,
+			HttpServletResponse response) throws UnsupportedEncodingException {
 		log.info("-------------------------function start------------------------------------");
 		String id = request.getParameter("id");
 		String appId = request.getParameter("appId");
-		id = (id == null ? null : new String(id.getBytes("iso-8859-1"), "utf-8"));
-		Map<String, Object> Signature = privilegeGetSignatureService.getSignature(appId);
+		id = (id == null ? null
+				: new String(id.getBytes("iso-8859-1"), "utf-8"));
+		Map<String, Object> Signature = privilegeGetSignatureService
+				.getSignature(appId);
 		Signature.put("appId", appId);
 		Signature.put("appUserId", id);
-		String reslut = sendPost(oesPrivilegeDev.getUserPrivilegeUrl(), Signature);
+		String reslut = sendPost(oesPrivilegeDev.getUserPrivilegeUrl(),
+				Signature);
 		String[] functionIds = null;
 		String[] resourceIds = null;
 		if (reslut != null && !("").equals(reslut)) {
 			JSONObject jsonObject = JSONObject.fromObject(reslut);
 			if (!("0").equals(jsonObject.get("status"))) {
 				// 用户表中 资源 与功能
-				String privilegeResId = (String) (jsonObject.get("resourceId").equals("null") ? ""
-						: jsonObject.get("resourceId"));
-				String privilegeFunId = (String) (jsonObject.get("privilegeFunId").equals("null") ? ""
-						: jsonObject.get("privilegeFunId"));
+				String privilegeResId = (String) (jsonObject.get("resourceId")
+						.equals("null") ? "" : jsonObject.get("resourceId"));
+				String privilegeFunId = (String) (jsonObject.get(
+						"privilegeFunId").equals("null") ? "" : jsonObject
+						.get("privilegeFunId"));
 				if (!("").equals(privilegeFunId)) {
 					functionIds = privilegeFunId.split(",");
 				}
@@ -500,23 +545,29 @@ public class ManagerUserController extends BaseControllerUtil {
 	 * @throws UnsupportedEncodingException
 	 */
 	@RequestMapping("role")
-	public void role(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+	public void role(HttpServletRequest request, HttpServletResponse response)
+			throws UnsupportedEncodingException {
 		log.info("-------------------------role        start------------------------------------");
-		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
+		Map<String, Object> user = (Map<String, Object>) request.getSession()
+				.getAttribute("user");
 		String groupId = request.getParameter("groupId").trim();// 该用户所属组织机构id
 		String id = request.getParameter("id").trim();// 用户appUserId
-		id = (id == null ? null : new String(id.getBytes("iso-8859-1"), "utf-8"));
+		id = (id == null ? null
+				: new String(id.getBytes("iso-8859-1"), "utf-8"));
 		String appId = request.getParameter("appId").trim();
 		// 查找当前用户角色
-		Map<String, Object> Signature = privilegeGetSignatureService.getSignature(appId);
+		Map<String, Object> Signature = privilegeGetSignatureService
+				.getSignature(appId);
 		Signature.put("appId", appId);
 		Signature.put("appUserId", id);
-		String reslut = sendPost(oesPrivilegeDev.getUserPrivilegeUrl(), Signature);
+		String reslut = sendPost(oesPrivilegeDev.getUserPrivilegeUrl(),
+				Signature);
 		List<Map<String, Object>> userRoleList = null;
 		if (reslut != null && !("").equals(reslut)) {
 			JSONObject jsonObject = JSONObject.fromObject(reslut);
 			if (!("0").equals(jsonObject.get("status"))) {
-				userRoleList = (List<Map<String, Object>>) jsonObject.get("roleList");
+				userRoleList = (List<Map<String, Object>>) jsonObject
+						.get("roleList");
 			} else {
 				System.err.println("该用户没有角色");
 			}
@@ -526,9 +577,11 @@ public class ManagerUserController extends BaseControllerUtil {
 		// 每页显示的记录数
 		String rows = request.getParameter("rows");
 		// 当前页
-		int currentPage = Integer.parseInt((page == null || page == "0") ? "1" : page);
+		int currentPage = Integer.parseInt((page == null || page == "0") ? "1"
+				: page);
 		// 每页显示条数
-		int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10" : rows);
+		int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10"
+				: rows);
 		int startRow = (currentPage - 1) * pageSize;
 		// 查询应用的角色 或者组织机构的角色
 		Map<String, Object> SignatureMap = new HashMap<String, Object>();
@@ -542,7 +595,8 @@ public class ManagerUserController extends BaseControllerUtil {
 		if (reslut != null && !("").equals(reslut)) {
 			JSONObject jsonObject = JSONObject.fromObject(reslut);
 			if (!("0").equals(jsonObject.get("status"))) {
-				RoleList = (List<Map<String, Object>>) jsonObject.get("roleList");
+				RoleList = (List<Map<String, Object>>) jsonObject
+						.get("roleList");
 				count = jsonObject.getInt("total");
 			} else {
 				System.err.println("该app没有角色");
@@ -575,8 +629,8 @@ public class ManagerUserController extends BaseControllerUtil {
 	 * @param response
 	 */
 	@RequestMapping("updateUser")
-	public void updateUserByID(HttpServletRequest request, HttpServletResponse response)
-			throws UnsupportedEncodingException {
+	public void updateUserByID(HttpServletRequest request,
+			HttpServletResponse response) throws UnsupportedEncodingException {
 		log.info("-------------------------updateUserByID        start------------------------------------");
 		String appId = request.getParameter("appId");
 		String appUserId = request.getParameter("appUserId");
@@ -587,7 +641,8 @@ public class ManagerUserController extends BaseControllerUtil {
 		oesUser.id(Integer.parseInt(Id));
 		oesUser.setGroupId(groupId);
 		Boolean boo = oesUserService.updateUser(oesUser);
-		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
+		Map<String, Object> map = privilegeGetSignatureService
+				.getSignature(appId);
 		map.put("appId", appId);
 		map.put("appUserId", appUserId);
 		if (boo) {
@@ -595,17 +650,20 @@ public class ManagerUserController extends BaseControllerUtil {
 			String result = sendPost(oesPrivilegeDev.getUserPrivilegeUrl(), map);
 			JSONObject object = JSONObject.fromObject(result);
 			if ("1".equals(object.get("status"))) {
-				String privilegeFunId = (String) (object.get("privilegeFunId").equals("null") ? ""
-						: object.get("privilegeFunId"));
-				String resourceId = (String) (object.get("resourceId").equals("null") ? "" : object.get("resourceId"));
-				String deptId = (String) (object.get("deptId").equals("null") ? "" : object.get("deptId"));
+				String privilegeFunId = (String) (object.get("privilegeFunId")
+						.equals("null") ? "" : object.get("privilegeFunId"));
+				String resourceId = (String) (object.get("resourceId").equals(
+						"null") ? "" : object.get("resourceId"));
+				String deptId = (String) (object.get("deptId").equals("null") ? ""
+						: object.get("deptId"));
 				map.put("privilegeFunId", privilegeFunId);
 				map.put("resourceId", resourceId);
 				map.put("deptId", deptId);
 				map.put("groupId", groupId);
 				map.put("method", "1");
 				// 更新用户
-				result = sendPost(oesPrivilegeDev.getModitUserPrivilegeUrl(), map);
+				result = sendPost(oesPrivilegeDev.getModitUserPrivilegeUrl(),
+						map);
 				object = JSONObject.fromObject(result);
 				if ("1".equals(object.get("status"))) {
 					map.clear();
@@ -626,19 +684,22 @@ public class ManagerUserController extends BaseControllerUtil {
 	 * @param response
 	 */
 	@RequestMapping("removeUserByID")
-	public void removeUser(HttpServletRequest request, HttpServletResponse response)
-			throws UnsupportedEncodingException {
+	public void removeUser(HttpServletRequest request,
+			HttpServletResponse response) throws UnsupportedEncodingException {
 		String appId = request.getParameter("appId");
 		String appUserId = request.getParameter("appUserId");
-		Integer id = Integer.valueOf(new String(request.getParameter("id").getBytes("iso-8859-1"), "utf-8"));
+		Integer id = Integer.valueOf(new String(request.getParameter("id")
+				.getBytes("iso-8859-1"), "utf-8"));
 		// 删除oes_user表中用户
 		Boolean boo = oesUserService.deleteUser(id);
-		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
+		Map<String, Object> map = privilegeGetSignatureService
+				.getSignature(appId);
 		map.put("appUserId", appUserId);
 		map.put("appId", appId);
 		if (boo) {
 			// 删除权限库中用户
-			String result = sendPost(oesPrivilegeDev.getDelUserPrivilegeUrl(), map);
+			String result = sendPost(oesPrivilegeDev.getDelUserPrivilegeUrl(),
+					map);
 			JSONObject object = JSONObject.fromObject(result);
 			WebUtils.writeJson(response, object);
 		} else {
@@ -655,15 +716,21 @@ public class ManagerUserController extends BaseControllerUtil {
 	 * @return 返回的是 jsp文件名路径及文件名
 	 */
 	@RequestMapping(value = "userList")
-	public String userList(HttpServletRequest request, HttpServletResponse response, Model model) {
+	public String userList(HttpServletRequest request,
+			HttpServletResponse response, Model model) {
 		log.info("-------------------------userlist       start------------------------------------");
 		String appId = request.getParameter("appId");
 		model.addAttribute("appId", appId);
 		return "show/userlist";
 	}
-
+	/**
+	 *  查找用户
+	 * 
+	 * @return 返回的json
+	 */
 	@RequestMapping("findUserList")
-	public void findUserList(HttpServletRequest request, HttpServletResponse response) {
+	public void findUserList(HttpServletRequest request,
+			HttpServletResponse response) {
 		String groupId = request.getParameter("groupId");
 		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
 		if (("").equals(groupId)) {
@@ -671,7 +738,8 @@ public class ManagerUserController extends BaseControllerUtil {
 				// 用户角色类型，1-普通用户，2-管理员，3-组织机构管理员
 				int Type = (int) user.get("Type");
 				if (Type == 1 || Type == 3) {
-					groupId = user.get("groupId").equals("null") ? null : (String) user.get("groupId");
+					groupId = user.get("groupId").equals("null") ? null
+							: (String) user.get("groupId");
 				}
 			}
 		}
@@ -682,12 +750,30 @@ public class ManagerUserController extends BaseControllerUtil {
 		// 每页显示的记录数
 		String rows = request.getParameter("rows");
 		// 当前页
-		int currentPage = Integer.parseInt((page == null || page == "0") ? "1" : page);
+		int currentPage = Integer.parseInt((page == null || page == "0") ? "1"
+				: page);
 		// 每页显示条数
-		int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10" : rows);
+		int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10"
+				: rows);
 		// 每页的开始记录 第一页为1 第二页为number +1
 		int startRow = (currentPage - 1) * pageSize;
-		List<Map<String, Object>> oesUserList = oesUserService.getUserListByPage(groupId, startRow, pageSize, userName);
+		List<OesUser> oesUsers = oesUserService.findByPage(groupId, startRow,
+				pageSize, userName);
+		List<OesGroup> oesGroups = oesGroupService.findAll();
+		List<Map<String, Object>> oesUserList = new ArrayList<Map<String, Object>>();
+		for (OesUser oesUser : oesUsers) {
+			for (OesGroup oesGroup : oesGroups) {
+				if (oesUser.getGroupId().equals(oesGroup.getGroupCode())) {
+					Map<String, Object> userMap = new HashMap<String, Object>();
+					userMap.put("Id", oesUser.id());
+					userMap.put("groupName", oesGroup.getGroupName());
+					userMap.put("groupId", oesGroup.getGroupCode());
+					userMap.put("userId", oesUser.getUserId());
+					userMap.put("userName", oesUser.getUserName());
+					oesUserList.add(userMap);
+				}
+			}
+		}
 		int count = oesUserService.getUserCount(groupId, userName);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("rows", oesUserList);
@@ -702,10 +788,12 @@ public class ManagerUserController extends BaseControllerUtil {
 	 * @return 返回到前端json数据
 	 */
 	@RequestMapping(value = "findGroup")
-	public void findGroup(HttpServletRequest request, HttpServletResponse response, Model model) {
+	public void findGroup(HttpServletRequest request,
+			HttpServletResponse response, Model model) {
 		log.info("-------------------------findGroup         start------------------------------------");
 		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
-		String groupId = user.get("groupId").equals("null") ? null : (String) user.get("groupId");
+		String groupId = user.get("groupId").equals("null") ? null
+				: (String) user.get("groupId");
 		int Type = (int) user.get("Type");
 		List<OesGroup> groupList = null;
 		// 用户角色类型，1-普通用户，2-管理员，3-组织机构管理员
@@ -739,7 +827,8 @@ public class ManagerUserController extends BaseControllerUtil {
 	 */
 	@ResponseBody
 	@RequestMapping("addUser")
-	public void addUser(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+	public void addUser(HttpServletRequest request, HttpServletResponse response)
+			throws UnsupportedEncodingException {
 		log.info("-------------------------addUser         start------------------------------------");
 		OesUser oesUser = new OesUser();
 		String appId = request.getParameter("appId");
@@ -750,12 +839,14 @@ public class ManagerUserController extends BaseControllerUtil {
 		appUserName = java.net.URLEncoder.encode(appUserName, "UTF-8");
 		String passWord = request.getParameter("passWord");
 		try {// 密码AES加密
-			passWord = AESUtils.encrypt(passWord, oesPrivilegeDev.getClientSecret());
+			passWord = AESUtils.encrypt(passWord,
+					oesPrivilegeDev.getClientSecret());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		// 从缓存中获取token
-		String access_token = (String) redisClientTemplate.getObject(oesPrivilegeDev.getAppId() + AccessTokenPrefix);
+		String access_token = (String) redisClientTemplate
+				.getObject(oesPrivilegeDev.getAppId() + AccessTokenPrefix);
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		// 若缓存中没有token 获取token
 		if (access_token == null) {
@@ -763,27 +854,31 @@ public class ManagerUserController extends BaseControllerUtil {
 			parameters.put("client_secret", oesPrivilegeDev.getClientSecret());
 			parameters.put("scope", "read,write");
 			parameters.put("grant_type", oesPrivilegeDev.getGrantType());
-			String result = sendPost(oesPrivilegeDev.getOauthTokenUrl(), parameters);
+			String result = sendPost(oesPrivilegeDev.getOauthTokenUrl(),
+					parameters);
 			if (result != null && !("").equals(result)) {
 				String aString = result.substring(0, 1);
 				if (aString.equals("{")) {
 					JSONObject object = JSONObject.fromObject(result);
 					access_token = (String) object.get("access_token");
 					if (access_token != null && !("").equals(access_token)) {
-						redisClientTemplate.setObjectByTime(oesPrivilegeDev.getAppId() + AccessTokenPrefix,
+						redisClientTemplate.setObjectByTime(
+								oesPrivilegeDev.getAppId() + AccessTokenPrefix,
 								access_token, 40000);
 					}
 				}
 			}
 		}
 		// 验证用户是否存在
-		parameters = privilegeGetSignatureService.getOauthSignature(oesPrivilegeDev.getAppId(),
-				oesPrivilegeDev.getClientId(), access_token);
+		parameters = privilegeGetSignatureService.getOauthSignature(
+				oesPrivilegeDev.getAppId(), oesPrivilegeDev.getClientId(),
+				access_token);
 		parameters.put("access_token", access_token);
 		parameters.put("account", appUserName);
 		parameters.put("client_id", oesPrivilegeDev.getClientId());
 		parameters.put("accountType", "1");
-		String result = sendPost(oesPrivilegeDev.getUserCenterVerifyUrl(), parameters);
+		String result = sendPost(oesPrivilegeDev.getUserCenterVerifyUrl(),
+				parameters);
 		if (result != null && !("").equals(result)) {
 			String aString = result.substring(0, 1);
 			if (aString.equals("{")) {
@@ -823,7 +918,8 @@ public class ManagerUserController extends BaseControllerUtil {
 			parameters.put("appUserId", appUserId);
 			parameters.put("appUserName", appUserName);
 			parameters.put("groupId", groupId);
-			result = sendPost(oesPrivilegeDev.getAddPrivilegeUserUrl(), parameters);
+			result = sendPost(oesPrivilegeDev.getAddPrivilegeUserUrl(),
+					parameters);
 			JSONObject object = JSONObject.fromObject(result);
 			if (("1").equals(object.getString("status"))) {
 				boo = oesUserService.saveUser(oesUser);
@@ -842,5 +938,4 @@ public class ManagerUserController extends BaseControllerUtil {
 			return;
 		}
 	}
-
 }
