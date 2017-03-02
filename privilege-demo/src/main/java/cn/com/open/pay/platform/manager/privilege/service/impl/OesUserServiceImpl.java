@@ -53,6 +53,12 @@ public class OesUserServiceImpl implements OesUserService {
 			return false;
 		}
 	}
+
+	@Override
+	public List<OesUser> findByPage(String groupId, int start, int limit,
+			String userName) {
+		return oesUserRepository.findByPage(groupId, start, limit, userName);
+	}
 	
 
 }
