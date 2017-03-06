@@ -217,7 +217,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		String appUserId = request.getParameter("id");// 用户id
 		String addRoleId = request.getParameter("addRoleId");// 添加的角色id
 		String delRoleId = request.getParameter("delRoleId");// 删除的角色id
-		String appId = request.getParameter("appId");
+		String appId = request.getParameter("appId").trim();
 		String deptId = null;
 		String groupId = null;
 		String privilegeFunId = null;
@@ -277,7 +277,7 @@ public class ManagerUserController extends BaseControllerUtil {
 			}
 		}
 		// 删除取消勾选的角色
-		if (delRoleId != null && boo) {
+		if (delRoleId != null && !("null").equals(delRoleId) && boo) {
 			Map<String, Object> signature = privilegeGetSignatureService
 					.getSignature(appId);
 			signature.put("appId", appId);
