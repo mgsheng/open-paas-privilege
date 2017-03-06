@@ -19,7 +19,7 @@
         	and group_id=#{groupId}
      	</if>
      	<if test="userName != null and userName !='' " >
-        	and ou.user_name=#{userName}
+        	and user_name=#{userName}
      	</if>
 		limit #{start},#{limit}
 	</select>
