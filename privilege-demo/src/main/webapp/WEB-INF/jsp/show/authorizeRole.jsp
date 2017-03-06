@@ -147,12 +147,12 @@
                  	msgShow('系统提示', '恭喜，授权角色成功！', 'info');
                  	//刷新
                  	var url='${pageContext.request.contextPath}/managerUser/role?id=${id}&userName=${userName}&appId=${appId}';
-                 	reload(url,name);
+                 	reload();
                 }else{
                   	msgShow('系统提示', '授权角色失败！', 'error');
                   	//刷新
                  	var url='${pageContext.request.contextPath}/managerUser/role?id=${id}&userName=${userName}&appId=${appId}';
-                 	reload(url,name);
+                 	reload();
                 }
                 
             });
@@ -171,9 +171,9 @@
 		}
 		
 		//列表重新加载
-		function reload(url,name){
+		function reload(){
 			$('#AuthorizeRole').datagrid('reload',{
-	            url: url, queryParams:{ name:name}, method: "post"
+	            url: '${pageContext.request.contextPath}/managerUser/role?id=${id}&appId=${appId}&groupId=${groupId}', method: "post"
 	          }); 
 		}
 		
