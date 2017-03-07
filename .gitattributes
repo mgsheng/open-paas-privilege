@@ -1132,7 +1132,3 @@ privilege-service/src/main/webapp/WEB-INF/web.xml -text
 privilege-service/src/main/webapp/index.jsp -text
 privilege-service/src/test/java/cn/com/open/test/GroupTest.java -text
 privilege-service/src/test/java/cn/com/open/test/RedisTest.java -text
-privilege-service/target/classes/disconf.properties -text
-privilege-service/target/classes/log4j.properties -text
-privilege-service/target/classes/logging.properties -text
-privilege-service/target/classes/mybatis.xml -text
