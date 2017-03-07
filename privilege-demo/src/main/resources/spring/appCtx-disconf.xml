@@ -27,7 +27,6 @@
 		class="com.baidu.disconf.client.addons.properties.ReloadablePropertiesFactoryBean">
 		<property name="locations">
 			<list>
-				<value>pay-platform-manager.properties</value>
 				<value>oes-privilege-manager.properties</value>
 				</list>
 		</property>
