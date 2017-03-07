@@ -1136,7 +1136,3 @@ privilege-service/target/classes/disconf.properties -text
 privilege-service/target/classes/log4j.properties -text
 privilege-service/target/classes/logging.properties -text
 privilege-service/target/classes/mybatis.xml -text
-privilege-service/target/classes/spring/appCtx-disconf.xml -text
-privilege-service/target/classes/spring/context.xml -text
-privilege-service/target/classes/spring/job.xml -text
-privilege-service/target/classes/spring/transaction.xml -text
