@@ -3,6 +3,7 @@ package cn.com.open.pay.platform.manager.web;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -231,7 +232,7 @@ public class UserLoginController extends BaseControllerUtil {
 					//获取最近访问菜单
 					List<Map<String, Object>> latestVisitRes = oesLatestVisitService.getUserLastVisitRedis(appUserId,
 							appId);
-					List<Map<String, Object>> latestVisitResource=new ArrayList<Map<String, Object>>();
+					Set<Map<String, Object>> latestVisitResource=new HashSet<Map<String, Object>>();
 					//去除没有权限的最近访问菜单
 					for (Map<String, Object> res : latestVisitRes) {
 						for (PrivilegeResource1 resource1 : resourceList) {
@@ -241,7 +242,7 @@ public class UserLoginController extends BaseControllerUtil {
 						}
 					}
 					//获取常用菜单
-					List<Map<String, Object>> frequentlyUsedResource=new ArrayList<Map<String, Object>>();
+					Set<Map<String, Object>>  frequentlyUsedResource=new HashSet<Map<String, Object>>();
 					//去除没有权限的常用菜单
 					List<Map<String, Object>> frequentlyUsedRes = oesFrequentlyUsedMenuService
 							.getUserFrequentlyMenuRedis(appUserId, appId);
