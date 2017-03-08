@@ -202,7 +202,6 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 		if (null != jsonString && jsonString.length() > 0) {
 			ajaxMessage.setCode("1");
 			ajaxMessage.setMessage(jsonString);
-			System.err.println("缓存");
 			return ajaxMessage;
 		}
 		Map<String, Object> redisMap = new HashMap<String, Object>();
