@@ -18,12 +18,12 @@
 <body>
 	<div class="easyui-panel" title="模块管理" style="width:100%;max-width:100%;padding:20px 30px;height:540px;">
 	<div style="padding:2px 5px; text-align: right;">
-		<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" id="reload" onclick="reload()">reload</a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="addRoot">AddRoot</a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="addMenu">AddMenu</a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="add">AddResFun</a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" id="edit"></a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" id="delete2" ></a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" id="reload" onclick="reload()">刷新</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="addRoot">添加根菜单</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="addMenu">添加菜单</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="add">添加资源</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" id="edit">修改</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" id="delete2" >删除</a>
 	</div>
 	<div class="easyui-panel" style="padding:5px;height: 95%;overflow-x:scroll;">
 		  <ul id="deptree"  style="height: 100%"class="easyui-tree" > 
