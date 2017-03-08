@@ -18,7 +18,7 @@
 <body>
 	<div class="easyui-panel" title="用户常用菜单管理" style="width:100%;max-width:100%;padding:20px 30px;height:540px;">
 		<div style="padding:2px 5px; text-align: right;">
-			<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" id="reload" onclick="reload()">reload</a>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" id="reload" onclick="reload()">刷新</a>
 			<a href="#" class="easyui-linkbutton" iconCls="icon-ok" plain="true" id="ok">确认</a>
 		</div>
 		<div class="easyui-panel" style="padding:5px;height: 95%;overflow-x:scroll;">
