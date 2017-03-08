@@ -592,7 +592,6 @@ public class BaseControllerUtil {
                 result += line;  
                 
             }  
-            System.out.println(result);
         } catch (Exception e) {  
             e.printStackTrace();  
         } finally {  
