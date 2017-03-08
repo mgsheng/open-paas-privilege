@@ -168,7 +168,6 @@ public class ManagerUserController extends BaseControllerUtil {
 						boo = false;
 					}
 				}
-				System.err.println("该用户没有角色");
 			}
 		} else {
 			boo = false;
@@ -187,11 +186,9 @@ public class ManagerUserController extends BaseControllerUtil {
 			if (reslut != null && !("").equals(reslut)) {
 				JSONObject jsonObject = JSONObject.fromObject(reslut);
 				if (!("0").equals(jsonObject.get("status"))) {
-					System.err.println("修改成功");
 					boo = true;
 				} else {
 					boo = false;
-					System.err.println("修改失败");
 				}
 			} else {
 				boo = false;
@@ -245,7 +242,6 @@ public class ManagerUserController extends BaseControllerUtil {
 				boo = true;
 			} else {
 				boo = false;
-				System.err.println("该用户没有角色");
 			}
 		} else {
 			boo = false;
@@ -301,8 +297,7 @@ public class ManagerUserController extends BaseControllerUtil {
 				boo = false;
 			}
 		}
-		System.out.println("****************id:" + appUserId
-				+ "****************role:" + addRoleId);
+	
 		// result = true表示该用户授权角色成功
 		jsonobj.put("result", boo);
 		WebUtils.writeJson(response, jsonobj);
@@ -526,7 +521,6 @@ public class ManagerUserController extends BaseControllerUtil {
 					resourceIds = privilegeResId.split(",");
 				}
 			} else {
-				System.err.println("该用户没有功能");
 			}
 		}
 
@@ -566,10 +560,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		if (reslut != null && !("").equals(reslut)) {
 			JSONObject jsonObject = JSONObject.fromObject(reslut);
 			if (!("0").equals(jsonObject.get("status"))) {
-				userRoleList = (List<Map<String, Object>>) jsonObject
-						.get("roleList");
-			} else {
-				System.err.println("该用户没有角色");
+				userRoleList = (List<Map<String, Object>>) jsonObject.get("roleList");
 			}
 		}
 		// 当前第几页
@@ -595,11 +586,8 @@ public class ManagerUserController extends BaseControllerUtil {
 		if (reslut != null && !("").equals(reslut)) {
 			JSONObject jsonObject = JSONObject.fromObject(reslut);
 			if (!("0").equals(jsonObject.get("status"))) {
-				RoleList = (List<Map<String, Object>>) jsonObject
-						.get("roleList");
+				RoleList = (List<Map<String, Object>>) jsonObject.get("roleList");
 				count = jsonObject.getInt("total");
-			} else {
-				System.err.println("该app没有角色");
 			}
 		}
 		JSONObject jsonObjArr = new JSONObject();
