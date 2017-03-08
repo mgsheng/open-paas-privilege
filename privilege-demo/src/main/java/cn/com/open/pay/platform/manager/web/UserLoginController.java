@@ -241,7 +241,8 @@ public class UserLoginController extends BaseControllerUtil {
 					if (group != null) {
 						if (group.getGroupLogo() != null && !("").equals(group.getGroupLogo())) {
 							logoUrl = group.getGroupLogo();
-							logoUrl.replaceFirst("I", "i");
+							
+							logoUrl=logoUrl.replaceFirst("I", "i");
 						}
 					}
 					model.addAttribute("logo", logoUrl);
