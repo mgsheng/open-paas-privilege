@@ -228,13 +228,33 @@ public class UserLoginController extends BaseControllerUtil {
 					// JSONArray
 					List<TreeNode> nodes = convertTreeNodeList(menuList);
 					JSONArray jsonArr = JSONArray.fromObject(buildTree2(nodes, resourceList));
+					//获取最近访问菜单
 					List<Map<String, Object>> latestVisitRes = oesLatestVisitService.getUserLastVisitRedis(appUserId,
 							appId);
+					List<Map<String, Object>> latestVisitResource=new ArrayList<Map<String, Object>>();
+					//去除没有权限的最近访问菜单
+					for (Map<String, Object> res : latestVisitRes) {
+						for (PrivilegeResource1 resource1 : resourceList) {
+							if (resource1.getResourceId().equals(res.get("id"))) {
+								latestVisitResource.add(res);
+							}
+						}
+					}
+					//获取常用菜单
+					List<Map<String, Object>> frequentlyUsedResource=new ArrayList<Map<String, Object>>();
+					//去除没有权限的常用菜单
 					List<Map<String, Object>> frequentlyUsedRes = oesFrequentlyUsedMenuService
 							.getUserFrequentlyMenuRedis(appUserId, appId);
-					menus.put("frequentlyUsedMenu", frequentlyUsedRes);
+					for (Map<String, Object> res : frequentlyUsedRes) {
+						for (PrivilegeResource1 resource1 : resourceList) {
+							if (resource1.getResourceId().equals(res.get("id"))) {
+								frequentlyUsedResource.add(res);
+							}
+						}
+					}
+					menus.put("latestVisit", latestVisitResource);
+					menus.put("frequentlyUsedMenu", frequentlyUsedResource);
 					menus.put("menus", jsonArr);
-					menus.put("latestVisit", latestVisitRes);
 					// 根据该用户查找用户所在组织机构logo
 					OesGroup group = oesGroupService.findByCode(groupId);
 					String logoUrl = oesPrivilegeDev.getLogoUrl();
