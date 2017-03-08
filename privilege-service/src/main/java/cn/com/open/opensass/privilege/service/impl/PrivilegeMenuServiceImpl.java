@@ -119,7 +119,6 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 						PrivilegeAjaxMessage message = getAppMenuRedis(appId);
 						if ("1".equals(message.getCode())) {
 							String redisJson = message.getMessage();
-							System.err.println("rediskey=" + prefix + appId + SIGN + appUserId);
 							redisClientTemplate.setString(prefix + appId + SIGN + appUserId, redisJson);
 						}
 						return message;
@@ -324,7 +323,6 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 		if (null != jsonString && jsonString.length() > 0) {
 			ajaxMessage.setCode("1");
 			ajaxMessage.setMessage(jsonString);
-			System.err.println("缓存");
 			return ajaxMessage;
 		}
 
