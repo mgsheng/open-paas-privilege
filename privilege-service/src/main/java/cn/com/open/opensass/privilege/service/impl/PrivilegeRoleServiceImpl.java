@@ -103,7 +103,6 @@ public class PrivilegeRoleServiceImpl implements PrivilegeRoleService {
 		if (null != jsonString && jsonString.length() > 0) {
 			ajaxMessage.setCode("1");
 			ajaxMessage.setMessage(jsonString);
-			System.err.println("缓存");
 			return ajaxMessage;
 		}
 		log.info("从数据库获取数据");
