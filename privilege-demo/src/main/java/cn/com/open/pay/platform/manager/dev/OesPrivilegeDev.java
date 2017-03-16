@@ -40,8 +40,36 @@ public class OesPrivilegeDev {
 	private String verifyUserPrivilegeUrl;
 	private String userCenterVerifyUrl;
 	private String delUserPrivilegeUrl;
+	private String findOesUserUrl;
+	private String delOesUserUrl;
+	private String updateOesUserUrl;
+	private String addOesUserUrl;
 	
 	
+	public String getFindOesUserUrl() {
+		return findOesUserUrl;
+	}
+	public void setFindOesUserUrl(String findOesUserUrl) {
+		this.findOesUserUrl = findOesUserUrl;
+	}
+	public String getDelOesUserUrl() {
+		return delOesUserUrl;
+	}
+	public void setDelOesUserUrl(String delOesUserUrl) {
+		this.delOesUserUrl = delOesUserUrl;
+	}
+	public String getUpdateOesUserUrl() {
+		return updateOesUserUrl;
+	}
+	public void setUpdateOesUserUrl(String updateOesUserUrl) {
+		this.updateOesUserUrl = updateOesUserUrl;
+	}
+	public String getAddOesUserUrl() {
+		return addOesUserUrl;
+	}
+	public void setAddOesUserUrl(String addOesUserUrl) {
+		this.addOesUserUrl = addOesUserUrl;
+	}
 	public String getDelUserPrivilegeUrl() {
 		return delUserPrivilegeUrl;
 	}
