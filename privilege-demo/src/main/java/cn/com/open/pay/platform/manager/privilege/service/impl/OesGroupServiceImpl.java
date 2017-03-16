@@ -58,6 +58,16 @@ public class OesGroupServiceImpl implements OesGroupService {
 		int count=oesGroupRepository.findCount(groupName,groupCode);
 		return count;
 	}
+
+	@Override
+	public OesGroup findByTypeNameAndCode(String typeName, String groupCode) {
+		return oesGroupRepository.findByTypeNameAndCode(typeName, groupCode);
+	}
+
+	@Override
+	public List<OesGroup> findByTypeName(String typeName) {
+		return oesGroupRepository.findByTypeName(typeName);
+	}
 		
 
 }
