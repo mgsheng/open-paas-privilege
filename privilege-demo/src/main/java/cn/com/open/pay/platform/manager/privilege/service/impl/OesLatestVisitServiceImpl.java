@@ -1,6 +1,5 @@
 package cn.com.open.pay.platform.manager.privilege.service.impl;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +12,7 @@ import cn.com.open.pay.platform.manager.dev.OesPrivilegeDev;
 import cn.com.open.pay.platform.manager.infrastructure.repository.OesLatestVisitRepository;
 import cn.com.open.pay.platform.manager.privilege.model.OesLatestVisit;
 import cn.com.open.pay.platform.manager.privilege.service.OesLatestVisitService;
+import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGetSignatureService;
 import cn.com.open.pay.platform.manager.redis.impl.RedisClientTemplate;
 import cn.com.open.pay.platform.manager.redis.impl.RedisConstant;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
@@ -25,15 +25,18 @@ public class OesLatestVisitServiceImpl extends BaseControllerUtil implements Oes
 	@Autowired
 	private OesPrivilegeDev oesPrivilegeDev;
 	@Autowired
+	private PrivilegeGetSignatureService privilegeGetSignatureService;
+	@Autowired
 	private RedisClientTemplate redisClientTemplate;
 	private static final String UserLastVisitPrefix = RedisConstant.USER_LATEST_VISIT;
 	private static final String SIGN = RedisConstant.SIGN;
+
 	@Override
 	public Boolean saveOesLatestVisit(OesLatestVisit oesLatestVisit) {
-		try{
+		try {
 			oesLatestVisitRepository.saveOesLatestVisit(oesLatestVisit);
 			return true;
-		}catch(Exception e){
+		} catch (Exception e) {
 			return false;
 		}
 	}
@@ -44,33 +47,34 @@ public class OesLatestVisitServiceImpl extends BaseControllerUtil implements Oes
 	}
 
 	@Override
-	public List<Map<String, Object>> getUserLastVisitRedis(String userId,String appId) {
-		//获取用户最近导航菜单缓存，若没有查询数据库，
-		String json=redisClientTemplate.getString(UserLastVisitPrefix+appId+SIGN+userId);
+	public List<Map<String, Object>> getUserLastVisitRedis(String userId, String appId) {
+		// 获取用户最近导航菜单缓存，若没有查询数据库，
+		String json = redisClientTemplate.getString(UserLastVisitPrefix + appId + SIGN + userId);
 		if (null != json && json.length() > 0) {
-			JSONObject object=JSONObject.fromObject(json);
-			List<Map<String, Object>> menuList=(List<Map<String, Object>>) object.get("menuList");
+			JSONObject object = JSONObject.fromObject(json);
+			List<Map<String, Object>> menuList = (List<Map<String, Object>>) object.get("menuList");
 			return menuList;
-		}else {
-			Map<String, Object> parameter=new HashMap<String, Object>();
+		} else {
+			Map<String, Object> parameter = privilegeGetSignatureService.getSignature(appId);
 			parameter.put("appId", appId);
-			String appRes=sendPost(oesPrivilegeDev.getAppResRedisUrl(), parameter);
-			json=sendPost(oesPrivilegeDev.getAppMenuRedisUrl(), parameter);
-			JSONObject object=JSONObject.fromObject(appRes);
-			List<Map<String, Object>> resList=(List<Map<String, Object>>) object.get("resourceList");
-			object=JSONObject.fromObject(json);
-			List<Map<String, Object>> menuList=(List<Map<String, Object>>) object.get("menuList");
-			List<OesLatestVisit> userLatestVisits=getOesLastVisitByUserId(userId, 0, 5);
-			List<Map<String, Object>> latesVisitRes=new ArrayList<Map<String, Object>>();
+			parameter.put("appUserId", userId);
+			// 获取用户菜单与资源
+			String userPrivilege = sendPost(oesPrivilegeDev.getUserPrivilegeUrl(), parameter);
+			JSONObject object = JSONObject.fromObject(userPrivilege);
+			List<Map<String, Object>> resList = (List<Map<String, Object>>) object.get("resourceList");
+			List<Map<String, Object>> menuList = (List<Map<String, Object>>) object.get("menuList");
+			//获取最近访问的菜单
+			List<OesLatestVisit> userLatestVisits = getOesLastVisitByUserId(userId, 0, 5);
+			List<Map<String, Object>> latesVisitRes = new ArrayList<Map<String, Object>>();
 			for (OesLatestVisit oesLatestVisit : userLatestVisits) {
-				for(Map<String, Object> resource:resList){
-					//获取资源url
-					if (oesLatestVisit.getMenuId().equals((String)resource.get("resourceId"))) {
-						Map<String, Object> map=new HashMap<String, Object>();
+				for (Map<String, Object> resource : resList) {
+					// 获取资源url
+					if (oesLatestVisit.getMenuId().equals((String) resource.get("resourceId"))) {
+						Map<String, Object> map = new HashMap<String, Object>();
 						map.put("id", resource.get("resourceId"));
 						map.put("url", resource.get("baseUrl"));
 						map.put("name", resource.get("resourceName"));
-						//获取菜单图标
+						// 获取菜单图标
 						for (Map<String, Object> menu : menuList) {
 							if (resource.get("menuId").equals(menu.get("menuId"))) {
 								map.put("menuRule", menu.get("menuRule"));
@@ -80,20 +84,21 @@ public class OesLatestVisitServiceImpl extends BaseControllerUtil implements Oes
 						latesVisitRes.add(map);
 					}
 				}
-				
+
 			}
 			parameter.clear();
 			parameter.put("menuList", latesVisitRes);
-			redisClientTemplate.setString(UserLastVisitPrefix+appId+SIGN+userId, JSONObject.fromObject(parameter).toString());
+			redisClientTemplate.setString(UserLastVisitPrefix + appId + SIGN + userId,
+					JSONObject.fromObject(parameter).toString());
 			return latesVisitRes;
 		}
 	}
 
 	@Override
-	public Boolean updateUserLastVisitRedis(String userId,String appId) {
-		redisClientTemplate.del(UserLastVisitPrefix+appId+SIGN+userId);
-		getUserLastVisitRedis(userId,appId);
+	public Boolean updateUserLastVisitRedis(String userId, String appId) {
+		redisClientTemplate.del(UserLastVisitPrefix + appId + SIGN + userId);
+		getUserLastVisitRedis(userId, appId);
 		return true;
 	}
-   
+
 }
