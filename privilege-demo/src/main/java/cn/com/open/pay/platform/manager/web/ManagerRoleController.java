@@ -25,6 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.pay.platform.manager.dev.OesPrivilegeDev;
+import cn.com.open.pay.platform.manager.privilege.model.OesGroup;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeFunction;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeOperation;
@@ -32,7 +33,9 @@ import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource1;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRoleDetails;
 import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
+import cn.com.open.pay.platform.manager.privilege.service.OesGroupService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGetSignatureService;
+import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGroupService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeResourceService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeRoleDetailsService;
@@ -53,7 +56,8 @@ public class ManagerRoleController extends BaseControllerUtil {
 	private PrivilegeResourceService privilegeResourceService;
 	@Autowired
 	private PrivilegeGetSignatureService privilegeGetSignatureService;
-
+	@Autowired
+	private OesGroupService oesGroupService;
 	/**
 	 * 跳转到查询角色的页面
 	 * 
@@ -744,5 +748,33 @@ public class ManagerRoleController extends BaseControllerUtil {
 		aidMap = null;
 
 		return results;
+	}
+	/**
+	 * 查询组织机构
+	 * 
+	 * @return 返回到前端json数据
+	 */
+	@RequestMapping(value = "findGroup")
+	public void findGroup(HttpServletRequest request,
+			HttpServletResponse response, Model model) {
+		log.info("-------------------------findGroup         start------------------------------------");
+		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
+		String groupId = user.get("groupId").equals("null") ? null
+				: (String) user.get("groupId");
+		int Type = (int) user.get("Type");
+		List<OesGroup> groupList = null;
+		// 用户角色类型，1-普通用户，2-管理员，3-组织机构管理员
+		// 如果当前用户为管理员，显示所有组织结构，否则显示当前用户所在的组织机构
+		if (Type == 1 || Type == 3) {
+			groupList = new ArrayList<OesGroup>();
+			OesGroup group = oesGroupService.findByCode(groupId);
+			groupList.add(group);
+		} else {
+			groupList = oesGroupService.findAll();
+		}
+
+		JSONArray jsonArr = JSONArray.fromObject(groupList);
+		WebUtils.writeJson(response, jsonArr);
+		return;
 	}
 }
