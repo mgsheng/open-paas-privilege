@@ -57,7 +57,12 @@
 	<select id="findByCode" resultMap="oesGroupMap" flushCache="true">
 		select * from oes_group where group_code=#{groupCode}
 	</select>
-	
+	<select id="findByTypeNameAndCode" resultMap="oesGroupMap" flushCache="true">
+		select * from oes_group where group_code=#{groupCode} and group_type_name=#{typeName}
+	</select>
+	<select id="findByTypeName" resultMap="oesGroupMap" flushCache="true">
+		select * from oes_group where  group_type_name=#{typeName}
+	</select>
 	<insert id="saveGroup" parameterType="OesGroup" flushCache="true">
         insert into oes_group
         (group_Code,group_name,group_type_name,group_type)
