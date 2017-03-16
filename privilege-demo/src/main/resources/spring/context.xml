@@ -201,5 +201,9 @@
        		<property name="verifyUserPrivilegeUrl" value="${verify-user-privilege-uri}"></property>
        		<property name="userCenterVerifyUrl" value="${usercenter-verify-uri}"></property>
        		<property name="delUserPrivilegeUrl" value="${del-privilege-user-uri}"></property>
+       		<property name="findOesUserUrl" value="${get-oes-user-uri}"></property>
+       		<property name="delOesUserUrl" value="${delete-oes-user-uri}"></property>
+       		<property name="updateOesUserUrl" value="${update-oes-user-uri}"></property>
+       		<property name="addOesUserUrl" value="${add-oes-user-uri}"></property>
        </bean>
 </beans>
