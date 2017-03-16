@@ -3,7 +3,6 @@ package cn.com.open.pay.platform.manager.web;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,31 +70,12 @@ public class UserLoginController extends BaseControllerUtil {
 	public void verify(HttpServletRequest request, HttpServletResponse response, String username, String password) {
 		log.info("-----------------------loginVerify start----------------");
 		// 从缓存获取token
-		String access_token = (String) redisClientTemplate.getObject(oesPrivilegeDev.getAppId() + AccessTokenPrefix);
+		String access_token = privilegeGetSignatureService.getToken();
 		// 是否用户密码验证成功 true为登陆成功
 		Boolean flag = false;
 		// 错误信息
 		String errorCode = null;
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		// 若缓存中没有token 获取token
-		if (access_token == null) {
-			parameters.put("client_id", oesPrivilegeDev.getClientId());
-			parameters.put("client_secret", oesPrivilegeDev.getClientSecret());
-			parameters.put("scope", "read,write");
-			parameters.put("grant_type", oesPrivilegeDev.getGrantType());
-			String result = sendPost(oesPrivilegeDev.getOauthTokenUrl(), parameters);
-			if (result != null && !("").equals(result)) {
-				String aString = result.substring(0, 1);
-				if (aString.equals("{")) {
-					JSONObject object = JSONObject.fromObject(result);
-					access_token = (String) object.get("access_token");
-					if (access_token != null && !("").equals(access_token)) {
-						redisClientTemplate.setObjectByTime(oesPrivilegeDev.getAppId() + AccessTokenPrefix,
-								access_token, 40000);
-					}
-				}
-			}
-		}
 		String userName = request.getParameter("username").trim();
 		String passWord = request.getParameter("password").trim();
 		String appId = request.getParameter("appId") == null || request.getParameter("appId") == ("")
@@ -215,6 +195,7 @@ public class UserLoginController extends BaseControllerUtil {
 					user.put("groupId", groupId);
 					user.put("Type", Type);
 					user.put("isManager", isManager);
+					user.put("privilege", jsonObject);
 					JSONArray menu = jsonObject.getJSONArray("menuList");
 					JSONArray resource = jsonObject.getJSONArray("resourceList");
 					List<PrivilegeResource1> resourceList = JSONArray.toList(resource, PrivilegeResource1.class);
@@ -228,33 +209,7 @@ public class UserLoginController extends BaseControllerUtil {
 					});
 					// JSONArray
 					List<TreeNode> nodes = convertTreeNodeList(menuList);
-					JSONArray jsonArr = JSONArray.fromObject(buildTree2(nodes, resourceList));
-					//获取最近访问菜单
-					List<Map<String, Object>> latestVisitRes = oesLatestVisitService.getUserLastVisitRedis(appUserId,
-							appId);
-					Set<Map<String, Object>> latestVisitResource=new HashSet<Map<String, Object>>();
-					//去除没有权限的最近访问菜单
-					for (Map<String, Object> res : latestVisitRes) {
-						for (PrivilegeResource1 resource1 : resourceList) {
-							if (resource1.getResourceId().equals(res.get("id"))) {
-								latestVisitResource.add(res);
-							}
-						}
-					}
-					//获取常用菜单
-					Set<Map<String, Object>>  frequentlyUsedResource=new HashSet<Map<String, Object>>();
-					//去除没有权限的常用菜单
-					List<Map<String, Object>> frequentlyUsedRes = oesFrequentlyUsedMenuService
-							.getUserFrequentlyMenuRedis(appUserId, appId);
-					for (Map<String, Object> res : frequentlyUsedRes) {
-						for (PrivilegeResource1 resource1 : resourceList) {
-							if (resource1.getResourceId().equals(res.get("id"))) {
-								frequentlyUsedResource.add(res);
-							}
-						}
-					}
-					menus.put("latestVisit", latestVisitResource);
-					menus.put("frequentlyUsedMenu", frequentlyUsedResource);
+					JSONArray jsonArr = JSONArray.fromObject(buildTree(nodes));
 					menus.put("menus", jsonArr);
 					// 根据该用户查找用户所在组织机构logo
 					OesGroup group = oesGroupService.findByCode(groupId);
@@ -314,27 +269,7 @@ public class UserLoginController extends BaseControllerUtil {
 			}
 		}
 		// 从缓存获取token
-		String access_token = (String) redisClientTemplate.getObject(oesPrivilegeDev.getAppId() + AccessTokenPrefix);
-		// 若缓存中没有token 获取token
-		if (access_token == null) {
-			parameters.put("client_id", oesPrivilegeDev.getClientId());
-			parameters.put("client_secret", oesPrivilegeDev.getClientSecret());
-			parameters.put("scope", "read,write");
-			parameters.put("grant_type", oesPrivilegeDev.getGrantType());
-			String result = sendPost(oesPrivilegeDev.getOauthTokenUrl(), parameters);
-			if (result != null && !("").equals(result)) {
-				String aString = result.substring(0, 1);
-				if (aString.equals("{")) {
-					JSONObject object = JSONObject.fromObject(result);
-					access_token = (String) object.get("access_token");
-					if (access_token != null && !("").equals(access_token)) {
-						redisClientTemplate.setObjectByTime(oesPrivilegeDev.getAppId() + AccessTokenPrefix,
-								access_token, 40000);
-					}
-				}
-			}
-			parameters.clear();
-		}
+		String access_token = privilegeGetSignatureService.getToken();
 		String oldPass = request.getParameter("oldpass");
 		String userName = request.getParameter("userName");
 		// 密码AES加密
@@ -548,7 +483,51 @@ public class UserLoginController extends BaseControllerUtil {
 		}
 		WebUtils.writeJsonToMap(response, map);
 	}
-
+	protected List<TreeNode> buildTree(List<TreeNode> treeNodes){
+		List<TreeNode> results = new ArrayList<TreeNode>();
+		for (TreeNode treeNode : treeNodes) {
+			if (treeNode.getPid().equals("0")) {
+				for (TreeNode childrenTreeNode : treeNodes) {
+					if (treeNode.getId().equals(childrenTreeNode.getPid())) {
+						List<TreeNode> children = treeNode.getChildren();
+						if (children==null) {
+							children=new ArrayList<TreeNode>();
+							treeNode.setChildren(children);
+						}
+						children.add(childrenTreeNode);
+					}
+				}
+				results.add(treeNode);
+			}
+			
+		}
+		return results;
+	}
+	/**
+	 * 跳转首页
+	 * @param request
+	 * @param model
+	 * @param bool
+	 * @return
+	 */
+	@RequestMapping(value = "getHomePage")
+	public String getHomePage(HttpServletRequest request, HttpServletResponse response, Model model) {
+		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
+		String appUserId = (String) user.get("appUserId");
+		String appId = (String) user.get("appId");
+		//获取最近访问菜单
+		List<Map<String, Object>> latestVisitRes = oesLatestVisitService.getUserLastVisitRedis(appUserId,
+			appId);
+		//获取常用菜单
+		List<Map<String, Object>> frequentlyUsedRes = oesFrequentlyUsedMenuService
+				.getUserFrequentlyMenuRedis(appUserId, appId);
+		Map<String, Object> menu = new HashMap<String, Object>();
+		menu.put("latestVisit", latestVisitRes);
+		menu.put("frequentlyUsedMenu", frequentlyUsedRes);
+		model.addAttribute("menus", JSONObject.fromObject(menu));
+		model.addAttribute("appId", appId);
+		return "login/homePage";
+	}
 	/**
 	 * 跳转常用菜单管理
 	 * 
@@ -567,7 +546,72 @@ public class UserLoginController extends BaseControllerUtil {
 		model.addAttribute("appUserId", appUserId);
 		return "user/index";
 	}
-
+	/**
+	 * 获取子菜单
+	 * 
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping(value = "getMenu")
+	public String getMenu(HttpServletRequest request, HttpServletResponse response,Model model) {
+		String menuId=request.getParameter("menuId").trim();
+		Map<String, Object> user=(Map<String, Object>) request.getSession().getAttribute("user");
+		JSONObject object=(JSONObject) user.get("privilege");
+		List<PrivilegeResource1> resourceList=JSONArray.toList(object.getJSONArray("resourceList"), PrivilegeResource1.class);
+		List<PrivilegeMenu> menuList=JSONArray.toList(object.getJSONArray("menuList"),PrivilegeMenu.class);
+		//根据菜单的dislayOrder排序
+		java.util.Collections.sort(menuList, new Comparator<PrivilegeMenu>() {
+			@Override
+			public int compare(PrivilegeMenu o1, PrivilegeMenu o2) {
+				return o1.getDisplayOrder() - o2.getDisplayOrder();
+			}
+		});
+		Map<String, PrivilegeResource1> aidMap = new LinkedHashMap<String, PrivilegeResource1>();
+		for (PrivilegeResource1 resource1 : resourceList) {
+			aidMap.put(resource1.getMenuId(), resource1);
+		}
+		List<TreeNode> treeNodes=convertTreeNodeList(menuList);
+		List<TreeNode> result=new ArrayList<TreeNode>();
+		//查找子菜单
+		for (TreeNode node : treeNodes) {
+			if (menuId.equals(node.getPid())) {
+				for (TreeNode treeNode : treeNodes) {
+					if (node.getId().equals(treeNode.getPid())) {
+						List<TreeNode> children = node.getChildren();
+						if (children==null) {
+							children=new ArrayList<TreeNode>();
+							node.setChildren(children);
+						}
+						PrivilegeResource1 res= aidMap.get(treeNode.getId());
+						if (res!=null) {
+							treeNode.setId(res.getResourceId());
+							Map<String, Object> map=new HashMap<String,Object>();
+							map.put("baseUrl", res.getBaseUrl());
+							map.put("menuRule", treeNode.getAttributes().get("menuRule"));
+							treeNode.setAttributes(map);
+							children.add(treeNode);
+						}
+					}
+				}
+				if (node.getChildren()==null||node.getChildren().size()==0) {
+					PrivilegeResource1 res= aidMap.get(node.getId());
+					if (res!=null) {
+						node.setId(res.getResourceId());
+						Map<String, Object> map=new HashMap<String,Object>();
+						map.put("menuRule", node.getAttributes().get("menuRule"));
+						map.put("baseUrl", res.getBaseUrl());
+						node.setAttributes(map);
+					}
+				}
+				result.add(node);
+			}
+		}
+		Map<String, Object> map=new HashMap<String,Object>();
+		map.put("menus", JSONArray.fromObject(result));
+		model.addAttribute("menu", JSONObject.fromObject(map));
+		model.addAttribute("appId", user.get("appId"));
+		return "login/menu";
+	}
 	/**
 	 * 保存常用菜单
 	 * 
