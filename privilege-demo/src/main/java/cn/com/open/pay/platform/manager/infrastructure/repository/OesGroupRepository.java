@@ -28,4 +28,8 @@ public interface OesGroupRepository extends Repository {
 			@Param("pageSize")int pageSize);
 
 	int findCount(@Param("groupName")String groupName, @Param("groupCode")String groupCode);
+	
+	OesGroup findByTypeNameAndCode(@Param("typeName")String typeName, @Param("groupCode")String groupCode);
+	
+	List<OesGroup> findByTypeName(@Param("typeName")String typeName);
 }
