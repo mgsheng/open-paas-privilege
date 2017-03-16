@@ -9,14 +9,22 @@ import org.springframework.stereotype.Service;
 
 import cn.com.open.pay.platform.manager.dev.OesPrivilegeDev;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGetSignatureService;
+import cn.com.open.pay.platform.manager.redis.impl.RedisClientTemplate;
+import cn.com.open.pay.platform.manager.redis.impl.RedisConstant;
+import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.DateTools;
 import cn.com.open.pay.platform.manager.tools.StringTool;
+import net.sf.json.JSONObject;
 
 @Service("privilegeGetSignatureService")
-public class PrivilegeGetSignatureServiceImpl implements PrivilegeGetSignatureService {
+public class PrivilegeGetSignatureServiceImpl extends BaseControllerUtil implements PrivilegeGetSignatureService {
 	final static String SEPARATOR = "&";
+	private static final String AccessTokenPrefix = RedisConstant.ACCESSTOKEN_CACHE;
 	@Autowired
 	private OesPrivilegeDev oesPrivilegeDev;
+	@Autowired
+	private RedisClientTemplate redisClientTemplate;
+
 	@Override
 	public Map<String, Object> getSignature(String appId) {
 		String key = oesPrivilegeDev.getClientSecret();
@@ -78,7 +86,7 @@ public class PrivilegeGetSignatureServiceImpl implements PrivilegeGetSignatureSe
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
+
 		}
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		returnMap.put("signature", signature);
@@ -87,6 +95,33 @@ public class PrivilegeGetSignatureServiceImpl implements PrivilegeGetSignatureSe
 		returnMap.put("client_id", key);
 		returnMap.put("access_token", access_token);
 		return returnMap;
+	}
+
+	@Override
+	public String getToken() {
+		// 从缓存获取token
+		String access_token = (String) redisClientTemplate.getObject(oesPrivilegeDev.getAppId() + AccessTokenPrefix);
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		// 若缓存中没有token 获取token
+		if (access_token == null) {
+			parameters.put("client_id", oesPrivilegeDev.getClientId());
+			parameters.put("client_secret", oesPrivilegeDev.getClientSecret());
+			parameters.put("scope", "read,write");
+			parameters.put("grant_type", oesPrivilegeDev.getGrantType());
+			String result = sendPost(oesPrivilegeDev.getOauthTokenUrl(), parameters);
+			if (result != null && !("").equals(result)) {
+				String aString = result.substring(0, 1);
+				if (aString.equals("{")) {
+					JSONObject object = JSONObject.fromObject(result);
+					access_token = (String) object.get("access_token");
+					if (access_token != null && !("").equals(access_token)) {
+						redisClientTemplate.setObjectByTime(oesPrivilegeDev.getAppId() + AccessTokenPrefix,
+								access_token, 40000);
+					}
+				}
+			}
+		}
+		return access_token;
 	}
 
 }
