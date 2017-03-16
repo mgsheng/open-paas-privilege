@@ -110,7 +110,7 @@
 	var roleId='';
 	var groupList='';//存放下拉框组织机构所有数据
 	$(document).ready(function(){
-		$.post('${pageContext.request.contextPath}/managerUser/findGroup',function (data) {
+		$.post('${pageContext.request.contextPath}/managerRole/findGroup',function (data) {
 			$('#cc').combobox('loadData',data);
 			groupList=data;
 		});
