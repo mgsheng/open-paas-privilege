@@ -406,6 +406,7 @@ privilege-demo/src/main/webapp/WEB-INF/jsp/department/irrigationDitch.jsp -text
 privilege-demo/src/main/webapp/WEB-INF/jsp/index.jsp -text
 privilege-demo/src/main/webapp/WEB-INF/jsp/login/homePage.jsp -text
 privilege-demo/src/main/webapp/WEB-INF/jsp/login/index.jsp -text
+privilege-demo/src/main/webapp/WEB-INF/jsp/login/menu.jsp -text
 privilege-demo/src/main/webapp/WEB-INF/jsp/loginOut/index.jsp -text
 privilege-demo/src/main/webapp/WEB-INF/jsp/paychannel/channelRate.jsp -text
 privilege-demo/src/main/webapp/WEB-INF/jsp/paychannel/channelRevenue.jsp -text
