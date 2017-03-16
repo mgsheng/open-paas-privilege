@@ -22,6 +22,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONObject;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 
@@ -532,6 +543,89 @@ public class BaseControllerUtil {
    	    } 
    	    return ip; 
    	}   
+    
+    
+    /** 
+     * 发送Put请求 
+     *  
+     * @param url 
+     *            目的地址 
+     * @param json 
+     *            请求参数，JSONObject类型。 
+     * @return 远程响应结果 
+     */  
+    public static String sendDelete(String url) {  
+    	DefaultHttpClient client = new DefaultHttpClient();
+		HttpDelete delete = new HttpDelete(url);
+		delete.setHeader("Content-Type","text/html");
+		HttpResponse res;
+		String result = null;
+		try {
+			res = client.execute(delete);
+			if (res.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+				result = EntityUtils.toString(res.getEntity());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+    }
+    /** 
+     * 发送Put请求 
+     *  
+     * @param url 
+     *            目的地址 
+     * @param json 
+     *            请求参数，JSONObject类型。 
+     * @return 远程响应结果 
+     */  
+    public static String sendPutByJson(String url, JSONObject json) {  
+    	DefaultHttpClient client = new DefaultHttpClient();
+		HttpPut put = new HttpPut(url);
+		JSONObject response = null;
+		String result = null;
+		try {
+			StringEntity entity = new StringEntity(json.toString(), HTTP.UTF_8);
+			entity.setContentEncoding("HTTP.UTF_8");  
+			entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json")); //发送json数据需要设置contentType
+			put.setEntity(entity);
+			HttpResponse res = client.execute(put);
+			if(res.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
+				result = EntityUtils.toString(res.getEntity());// 返回json格式：
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		return result;
+    }
+    /** 
+     * 发送POST请求 
+     *  
+     * @param url 
+     *            目的地址 
+     * @param json 
+     *            请求参数，JSONObject类型。 
+     * @return 远程响应结果 
+     */  
+    public static String sendPostByJson(String url, JSONObject json) {  
+    	DefaultHttpClient client = new DefaultHttpClient();
+		HttpPost post = new HttpPost(url);
+		JSONObject response = null;
+		String result = null;
+		try {
+			StringEntity entity = new StringEntity(json.toString(), HTTP.UTF_8);
+			entity.setContentEncoding("HTTP.UTF_8");  
+			entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json")); //发送json数据需要设置contentType
+			post.setEntity(entity);
+			HttpResponse res = client.execute(post);
+			if(res.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
+				result = EntityUtils.toString(res.getEntity());// 返回json格式：
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		return result;
+    }
     /** 
      * 发送POST请求 
      *  
@@ -554,8 +648,7 @@ public class BaseControllerUtil {
 			Map.Entry entry = (Map.Entry)it.next();
 			String k = (String)entry.getKey();
 			Object v = entry.getValue();
-			if(null != v && !"".equals(v) 
-					&& !"sign".equals(k) && !"key".equals(k)) {
+			if(null != v && !"".equals(v) && !"sign".equals(k) && !"key".equals(k)) {
 				sb.append(k + "=" + v + "&");
 			}
 		  }
