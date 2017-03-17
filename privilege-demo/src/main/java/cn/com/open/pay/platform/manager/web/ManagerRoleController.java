@@ -35,7 +35,6 @@ import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRoleDetails;
 import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
 import cn.com.open.pay.platform.manager.privilege.service.OesGroupService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGetSignatureService;
-import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGroupService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeResourceService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeRoleDetailsService;
@@ -58,6 +57,7 @@ public class ManagerRoleController extends BaseControllerUtil {
 	private PrivilegeGetSignatureService privilegeGetSignatureService;
 	@Autowired
 	private OesGroupService oesGroupService;
+
 	/**
 	 * 跳转到查询角色的页面
 	 * 
@@ -76,12 +76,10 @@ public class ManagerRoleController extends BaseControllerUtil {
 		log.info("-------------------------showSearch         start------------------------------------");
 		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
 		String groupId = null;
-		if (user != null) {
-			// 用户角色类型，1-普通用户，2-管理员，3-组织机构管理员
-			int Type=(int) user.get("Type");
-			if (Type == 1 || Type == 3) {
-				groupId = user.get("groupId").equals("null") ? null : (String) user.get("groupId");
-			}
+		// 用户角色类型，1-普通用户，2-管理员，3-组织机构管理员
+		int Type = (int) user.get("Type");
+		if (Type == 1 || Type == 3) {
+			groupId = user.get("groupId").equals("null") ? null : (String) user.get("groupId");
 		}
 		String appId = request.getParameter("appId");
 		// 当前第几页
@@ -138,7 +136,7 @@ public class ManagerRoleController extends BaseControllerUtil {
 		String roleName = request.getParameter("roleName");
 		roleName = java.net.URLEncoder.encode(roleName, "UTF-8");
 		String deptName = request.getParameter("deptName");
-		if (deptName!=null) {
+		if (deptName != null) {
 			deptName = java.net.URLEncoder.encode(deptName, "UTF-8");
 		}
 		String groupName = request.getParameter("groupName");
@@ -146,7 +144,7 @@ public class ManagerRoleController extends BaseControllerUtil {
 		String groupId = request.getParameter("groupId");
 		groupName = java.net.URLEncoder.encode(groupName, "UTF-8");
 		String remark = request.getParameter("remark");
-		if (remark!=null) {
+		if (remark != null) {
 			remark = java.net.URLEncoder.encode(remark, "UTF-8");
 		}
 		String status = request.getParameter("status");
@@ -428,9 +426,9 @@ public class ManagerRoleController extends BaseControllerUtil {
 		map.put("appId", appId);
 		map.put("groupId", groupId);
 		JSONArray jsonArr = null;
-		//获取组织机构缓存
+		// 获取组织机构缓存
 		String s = sendPost(oesPrivilegeDev.getGroupCacheUrl(), map);
-		if (s!=null&&!("").equals(s)) {
+		if (s != null && !("").equals(s)) {
 			JSONObject jsonObject = JSONObject.fromObject(s);
 			// status为1时，该组织机构存在，构建tree
 			if (!("0").equals(jsonObject.get("status"))) {
@@ -466,14 +464,14 @@ public class ManagerRoleController extends BaseControllerUtil {
 					map.put("tree", new JSONArray());
 				}
 				WebUtils.writeJsonToMap(response, map);
-			}else {
+			} else {
 				jsonArr = new JSONArray();
 				map.put("status", "0");
 				map.put("tree", jsonArr);
 				WebUtils.writeJsonToMap(response, map);
 			}
 		}
-		
+
 	}
 
 	private List<TreeNode> convertTreeNodeList(List<PrivilegeMenu> modules) {
@@ -749,18 +747,17 @@ public class ManagerRoleController extends BaseControllerUtil {
 
 		return results;
 	}
+
 	/**
 	 * 查询组织机构
 	 * 
 	 * @return 返回到前端json数据
 	 */
 	@RequestMapping(value = "findGroup")
-	public void findGroup(HttpServletRequest request,
-			HttpServletResponse response, Model model) {
+	public void findGroup(HttpServletRequest request, HttpServletResponse response, Model model) {
 		log.info("-------------------------findGroup         start------------------------------------");
 		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
-		String groupId = user.get("groupId").equals("null") ? null
-				: (String) user.get("groupId");
+		String groupId = user.get("groupId").equals("null") ? null : (String) user.get("groupId");
 		int Type = (int) user.get("Type");
 		List<OesGroup> groupList = null;
 		// 用户角色类型，1-普通用户，2-管理员，3-组织机构管理员
