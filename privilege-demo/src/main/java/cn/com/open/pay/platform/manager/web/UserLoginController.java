@@ -29,8 +29,6 @@ import cn.com.open.pay.platform.manager.privilege.service.OesFrequentlyUsedMenuS
 import cn.com.open.pay.platform.manager.privilege.service.OesGroupService;
 import cn.com.open.pay.platform.manager.privilege.service.OesLatestVisitService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGetSignatureService;
-import cn.com.open.pay.platform.manager.redis.impl.RedisClientTemplate;
-import cn.com.open.pay.platform.manager.redis.impl.RedisConstant;
 import cn.com.open.pay.platform.manager.tools.AESUtils;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
@@ -49,12 +47,9 @@ public class UserLoginController extends BaseControllerUtil {
 	@Autowired
 	private PrivilegeGetSignatureService privilegeGetSignatureService;
 	@Autowired
-	private RedisClientTemplate redisClientTemplate;
-	@Autowired
 	private OesLatestVisitService oesLatestVisitService;
 	@Autowired
 	private OesGroupService oesGroupService;
-	private static final String AccessTokenPrefix = RedisConstant.ACCESSTOKEN_CACHE;
 	@Autowired
 	private OesFrequentlyUsedMenuService oesFrequentlyUsedMenuService;
 
@@ -526,6 +521,7 @@ public class UserLoginController extends BaseControllerUtil {
 		menu.put("frequentlyUsedMenu", frequentlyUsedRes);
 		model.addAttribute("menus", JSONObject.fromObject(menu));
 		model.addAttribute("appId", appId);
+		model.addAttribute("appUserId", appUserId);
 		return "login/homePage";
 	}
 	/**
