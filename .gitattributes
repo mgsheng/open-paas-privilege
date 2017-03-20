@@ -418,6 +418,7 @@ privilege-demo/src/main/webapp/WEB-INF/jsp/privilege/model/index.jsp -text
 privilege-demo/src/main/webapp/WEB-INF/jsp/privilege/privilegePublic/index.jsp -text
 privilege-demo/src/main/webapp/WEB-INF/jsp/privilege/resource/index.jsp -text
 privilege-demo/src/main/webapp/WEB-INF/jsp/privilege/role/roleMessage.jsp -text
+privilege-demo/src/main/webapp/WEB-INF/jsp/show/DcenterUserList.jsp -text
 privilege-demo/src/main/webapp/WEB-INF/jsp/show/authorizeFunction.jsp -text
 privilege-demo/src/main/webapp/WEB-INF/jsp/show/authorizeRole.jsp -text
 privilege-demo/src/main/webapp/WEB-INF/jsp/show/userlist.jsp -text
