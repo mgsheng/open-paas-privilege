@@ -205,14 +205,11 @@ public class OesGroupController extends BaseControllerUtil {
 				if (!("").equals(privilegeResId)) {
 					resourceIds = privilegeResId.split(",");
 				}
-			} else {
-				System.err.println("该机构没有资源");
-			}
+			} 
 		}
 
 		Map<String, Object> aMap = new HashMap<String, Object>();
 		aMap.put("resourceIds", resourceIds);
-		System.err.println(JSONObject.fromObject(aMap).toString());
 		WebUtils.writeJson(response, JSONObject.fromObject(aMap));
 		return;
 	}
