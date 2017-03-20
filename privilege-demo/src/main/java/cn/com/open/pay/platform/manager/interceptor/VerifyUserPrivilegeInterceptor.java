@@ -87,6 +87,7 @@ public class VerifyUserPrivilegeInterceptor extends BaseControllerUtil implement
 						response.setContentType("application/x-javascript;charset=utf-8");
 						builder.append("alert('您不具备该操作权限！');");
 					} else {
+						response.setContentType("text/html;charset=utf-8");
 						builder.append("<script type=\"text/javascript\">");
 						builder.append("alert('您不具备该操作权限！');");
 						builder.append("</script>");
