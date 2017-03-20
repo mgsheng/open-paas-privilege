@@ -604,7 +604,7 @@ public class ManagerUserController extends BaseControllerUtil {
 
 		// 基础特有参数
 		String KZROLEID = request.getParameter("KZROLEID");// 孔子学院角色ID
-		String ISSUPERADMIN = "0";// 是否是超级管理员
+		String ISSUPERADMIN = request.getParameter("ISSUPERADMIN");// 是否是超级管理员
 		String KZID = request.getParameter("KZID"); // 孔子学院ID
 		String STAFFID = request.getParameter("STAFFID");// 职员ID
 		String ORGANIZATIONTYPECODE = request.getParameter("ORGANIZATIONTYPECODE"); // 组织机构类型ID
@@ -613,14 +613,17 @@ public class ManagerUserController extends BaseControllerUtil {
 		String ACTIVESTATUS = request.getParameter("ACTIVESTATUS");// 教材帐号状态
 		String ISEDITPURCHASEPRICE = request.getParameter("ISEDITPURCHASEPRICE");// 是否有采购价格修改权限(0否1是)
 		String StudyType = request.getParameter("StudyType");// 教材帐号状态
+		String ORGANIZATIONID = request.getParameter("ORGANIZATIONID");//组织机构Id
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("LOGINNAME", appUserName);
 		jsonObject.put("PASSWORD", passWord);
 		jsonObject.put("NAME", Name);
 		jsonObject.put("SEX", SEX);
-		jsonObject.put("IDCARD", IDCARD);
-		jsonObject.put("ADDRESS", ADDRESS == null ? "" : ADDRESS);
-		jsonObject.put("POSTCODE", POSTCODE == null ? "" : POSTCODE);
+		if (!"4".equals(type)) {
+			jsonObject.put("IDCARD", IDCARD);
+			jsonObject.put("ADDRESS", ADDRESS == null ? "" : ADDRESS);
+			jsonObject.put("POSTCODE", POSTCODE == null ? "" : POSTCODE);
+		}
 		jsonObject.put("PHONENO", PHONENO);
 		jsonObject.put("MOBILEPHONE", MOBILEPHONE);
 		jsonObject.put("FAX", FAX == null ? "" : FAX);
@@ -647,7 +650,11 @@ public class ManagerUserController extends BaseControllerUtil {
 			jsonObject.put("ISEDITPURCHASEPRICE", ISEDITPURCHASEPRICE == null ? "1" : ISEDITPURCHASEPRICE);
 			jsonObject.put("StudyType", StudyType == null ? "" : StudyType);
 		}
-		jsonObject.put(groupCodeName, groupId);// 相应组织编号
+		if (type.equals("4")) {//如果为基础用户
+			jsonObject.put(groupCodeName, ORGANIZATIONID == null ? "" : ORGANIZATIONID);// 相应组织编号
+		} else {
+			jsonObject.put(groupCodeName, groupId);// 相应组织编号
+		}
 		Boolean boo = false;// 是否修改成功
 		Map<String, Object> map = new HashMap<String, Object>();
 		String result = sendPutByJson(oesPrivilegeDev.getUpdateOesUserUrl() + "?type=" + type, jsonObject);
@@ -841,7 +848,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		// 每页显示条数
 		int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10" : rows);
 		//url 参数
-		String parameter = "type=" + type + "&loginName=" + userName + "&orgCode=" + groupId + "&page="+page +
+		String parameter = "type=" + type + "&loginName=" + userName + "&orgCode=" + groupId + "&page="+currentPage +
 				"&page_size=" +pageSize ;
 		String result = sendGet(oesPrivilegeDev.getFindOesUserUrl(), parameter);
 		JSONObject object = JSONObject.fromObject(result);
@@ -992,7 +999,7 @@ public class ManagerUserController extends BaseControllerUtil {
 
 		// 基础特有参数
 		String KZROLEID = request.getParameter("KZROLEID");// 孔子学院角色ID
-		String ISSUPERADMIN = "0";// 是否是超级管理员
+		String ISSUPERADMIN = request.getParameter("ISSUPERADMIN");// 是否是超级管理员
 		String KZID = request.getParameter("KZID"); // 孔子学院ID
 		String STAFFID = request.getParameter("STAFFID");// 职员ID
 		String ORGANIZATIONTYPECODE = request.getParameter("ORGANIZATIONTYPECODE"); // 组织机构类型ID
@@ -1001,7 +1008,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		String ACTIVESTATUS = request.getParameter("ACTIVESTATUS");// 教材帐号状态
 		String ISEDITPURCHASEPRICE = request.getParameter("ISEDITPURCHASEPRICE");// 是否有采购价格修改权限(0否1是)
 		String StudyType = request.getParameter("StudyType");// 教材帐号状态
-
+		String ORGANIZATIONID = request.getParameter("ORGANIZATIONID");
 		appUserName = java.net.URLEncoder.encode(appUserName, "UTF-8");
 		String passWord = request.getParameter("passWord");
 		try {// 密码AES加密
@@ -1038,9 +1045,11 @@ public class ManagerUserController extends BaseControllerUtil {
 		jsonObject.put("PASSWORD", passWord);
 		jsonObject.put("NAME", Name);
 		jsonObject.put("SEX", SEX);
-		jsonObject.put("IDCARD", IDCARD);
-		jsonObject.put("ADDRESS", ADDRESS == null ? "" : ADDRESS);
-		jsonObject.put("POSTCODE", POSTCODE == null ? "" : POSTCODE);
+		if (!"4".equals(type)) {
+			jsonObject.put("IDCARD", IDCARD);
+			jsonObject.put("ADDRESS", ADDRESS == null ? "" : ADDRESS);
+			jsonObject.put("POSTCODE", POSTCODE == null ? "" : POSTCODE);
+		}
 		jsonObject.put("PHONENO", PHONENO);
 		jsonObject.put("MOBILEPHONE", MOBILEPHONE);
 		jsonObject.put("FAX", FAX == null ? "" : FAX);
@@ -1056,7 +1065,6 @@ public class ManagerUserController extends BaseControllerUtil {
 		if ("4".equals(type)) {// 如果为基础用户
 			jsonObject.put("DEPARTMENT", DEPARTMENT == null ? "" : DEPARTMENT);
 			jsonObject.put("ROLEID", "");
-			jsonObject.put("DEPARTMENT", DEPARTMENT == null ? "" : DEPARTMENT);
 			jsonObject.put("ISSUPERADMIN", ISSUPERADMIN == null ? "0" : ISSUPERADMIN);
 			jsonObject.put("KZROLEID", KZROLEID == null ? "" : KZROLEID);
 			jsonObject.put("KZID", KZID == null ? "" : KZID);
@@ -1070,7 +1078,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		}
 		
 		if (type.equals("4")) {
-			jsonObject.put(groupCodeName, "");// 相应组织编号
+			jsonObject.put(groupCodeName, ORGANIZATIONID == null ? "" : ORGANIZATIONID);// 相应组织编号
 		}else {
 			jsonObject.put(groupCodeName, groupId);// 相应组织编号
 		}
