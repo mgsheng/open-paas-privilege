@@ -212,7 +212,7 @@ public class UserLoginController extends BaseControllerUtil {
 					if (group != null) {
 						if (group.getGroupLogo() != null && !("").equals(group.getGroupLogo())) {
 							logoUrl = group.getGroupLogo();
-							logoUrl=logoUrl.replaceFirst("I", "i");
+							logoUrl = logoUrl.replaceFirst("I", "i");
 						}
 					}
 					model.addAttribute("logo", logoUrl);
@@ -377,7 +377,6 @@ public class UserLoginController extends BaseControllerUtil {
 						resourceMap.put("baseUrl", res.getBaseUrl());
 						resourceMap.put("menuRule", entry.getValue().getAttributes().get("menuRule"));
 						entry.getValue().setAttributes(resourceMap);
-						entry.getValue().setId(res.getResourceId());
 						entry.getValue().setText(res.getResourceName());
 						entry.getValue().setIsmodule("1");
 					}
@@ -478,15 +477,22 @@ public class UserLoginController extends BaseControllerUtil {
 		}
 		WebUtils.writeJsonToMap(response, map);
 	}
-	protected List<TreeNode> buildTree(List<TreeNode> treeNodes){
+
+	/**
+	 * 构建菜单tree (1,2级菜单)
+	 * 
+	 * @param treeNodes
+	 * @return
+	 */
+	protected List<TreeNode> buildTree(List<TreeNode> treeNodes) {
 		List<TreeNode> results = new ArrayList<TreeNode>();
 		for (TreeNode treeNode : treeNodes) {
 			if (treeNode.getPid().equals("0")) {
 				for (TreeNode childrenTreeNode : treeNodes) {
 					if (treeNode.getId().equals(childrenTreeNode.getPid())) {
 						List<TreeNode> children = treeNode.getChildren();
-						if (children==null) {
-							children=new ArrayList<TreeNode>();
+						if (children == null) {
+							children = new ArrayList<TreeNode>();
 							treeNode.setChildren(children);
 						}
 						children.add(childrenTreeNode);
@@ -494,12 +500,14 @@ public class UserLoginController extends BaseControllerUtil {
 				}
 				results.add(treeNode);
 			}
-			
+
 		}
 		return results;
 	}
+
 	/**
 	 * 跳转首页
+	 * 
 	 * @param request
 	 * @param model
 	 * @param bool
@@ -510,12 +518,11 @@ public class UserLoginController extends BaseControllerUtil {
 		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
 		String appUserId = (String) user.get("appUserId");
 		String appId = (String) user.get("appId");
-		//获取最近访问菜单
-		List<Map<String, Object>> latestVisitRes = oesLatestVisitService.getUserLastVisitRedis(appUserId,
-			appId);
-		//获取常用菜单
-		List<Map<String, Object>> frequentlyUsedRes = oesFrequentlyUsedMenuService
-				.getUserFrequentlyMenuRedis(appUserId, appId);
+		// 获取最近访问菜单
+		List<Map<String, Object>> latestVisitRes = oesLatestVisitService.getUserLastVisitRedis(appUserId, appId);
+		// 获取常用菜单
+		List<Map<String, Object>> frequentlyUsedRes = oesFrequentlyUsedMenuService.getUserFrequentlyMenuRedis(appUserId,
+				appId);
 		Map<String, Object> menu = new HashMap<String, Object>();
 		menu.put("latestVisit", latestVisitRes);
 		menu.put("frequentlyUsedMenu", frequentlyUsedRes);
@@ -524,6 +531,7 @@ public class UserLoginController extends BaseControllerUtil {
 		model.addAttribute("appUserId", appUserId);
 		return "login/homePage";
 	}
+
 	/**
 	 * 跳转常用菜单管理
 	 * 
@@ -542,6 +550,7 @@ public class UserLoginController extends BaseControllerUtil {
 		model.addAttribute("appUserId", appUserId);
 		return "user/index";
 	}
+
 	/**
 	 * 获取子菜单
 	 * 
@@ -549,13 +558,14 @@ public class UserLoginController extends BaseControllerUtil {
 	 * @param response
 	 */
 	@RequestMapping(value = "getMenu")
-	public String getMenu(HttpServletRequest request, HttpServletResponse response,Model model) {
-		String menuId=request.getParameter("menuId").trim();
-		Map<String, Object> user=(Map<String, Object>) request.getSession().getAttribute("user");
-		JSONObject object=(JSONObject) user.get("privilege");
-		List<PrivilegeResource1> resourceList=JSONArray.toList(object.getJSONArray("resourceList"), PrivilegeResource1.class);
-		List<PrivilegeMenu> menuList=JSONArray.toList(object.getJSONArray("menuList"),PrivilegeMenu.class);
-		//根据菜单的dislayOrder排序
+	public String getMenu(HttpServletRequest request, HttpServletResponse response, Model model) {
+		String menuId = request.getParameter("menuId").trim();
+		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
+		JSONObject object = (JSONObject) user.get("privilege");
+		List<PrivilegeResource1> resourceList = JSONArray.toList(object.getJSONArray("resourceList"),
+				PrivilegeResource1.class);
+		List<PrivilegeMenu> menuList = JSONArray.toList(object.getJSONArray("menuList"), PrivilegeMenu.class);
+		// 根据菜单的dislayOrder排序
 		java.util.Collections.sort(menuList, new Comparator<PrivilegeMenu>() {
 			@Override
 			public int compare(PrivilegeMenu o1, PrivilegeMenu o2) {
@@ -566,22 +576,21 @@ public class UserLoginController extends BaseControllerUtil {
 		for (PrivilegeResource1 resource1 : resourceList) {
 			aidMap.put(resource1.getMenuId(), resource1);
 		}
-		List<TreeNode> treeNodes=convertTreeNodeList(menuList);
-		List<TreeNode> result=new ArrayList<TreeNode>();
-		//查找子菜单
+		List<TreeNode> treeNodes = convertTreeNodeList(menuList);
+		List<TreeNode> result = new ArrayList<TreeNode>();
+		// 查找子菜单
 		for (TreeNode node : treeNodes) {
 			if (menuId.equals(node.getPid())) {
 				for (TreeNode treeNode : treeNodes) {
 					if (node.getId().equals(treeNode.getPid())) {
 						List<TreeNode> children = node.getChildren();
-						if (children==null) {
-							children=new ArrayList<TreeNode>();
+						if (children == null) {
+							children = new ArrayList<TreeNode>();
 							node.setChildren(children);
 						}
-						PrivilegeResource1 res= aidMap.get(treeNode.getId());
-						if (res!=null) {
-							treeNode.setId(res.getResourceId());
-							Map<String, Object> map=new HashMap<String,Object>();
+						PrivilegeResource1 res = aidMap.get(treeNode.getId());
+						if (res != null) {
+							Map<String, Object> map = new HashMap<String, Object>();
 							map.put("baseUrl", res.getBaseUrl());
 							map.put("menuRule", treeNode.getAttributes().get("menuRule"));
 							treeNode.setAttributes(map);
@@ -589,11 +598,10 @@ public class UserLoginController extends BaseControllerUtil {
 						}
 					}
 				}
-				if (node.getChildren()==null||node.getChildren().size()==0) {
-					PrivilegeResource1 res= aidMap.get(node.getId());
-					if (res!=null) {
-						node.setId(res.getResourceId());
-						Map<String, Object> map=new HashMap<String,Object>();
+				if (node.getChildren() == null || node.getChildren().size() == 0) {
+					PrivilegeResource1 res = aidMap.get(node.getId());
+					if (res != null) {
+						Map<String, Object> map = new HashMap<String, Object>();
 						map.put("menuRule", node.getAttributes().get("menuRule"));
 						map.put("baseUrl", res.getBaseUrl());
 						node.setAttributes(map);
@@ -602,12 +610,13 @@ public class UserLoginController extends BaseControllerUtil {
 				result.add(node);
 			}
 		}
-		Map<String, Object> map=new HashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("menus", JSONArray.fromObject(result));
 		model.addAttribute("menu", JSONObject.fromObject(map));
 		model.addAttribute("appId", user.get("appId"));
 		return "login/menu";
 	}
+
 	/**
 	 * 保存常用菜单
 	 * 
