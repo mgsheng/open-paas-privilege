@@ -628,7 +628,7 @@
 				                			msgShow('系统提示', '删除成功！', 'warning');
 				                			findUsers();
 				    					}else if (data.status=='0'){
-				    						msgShow('系统提示', '删除不成功！', 'warning');
+				    						msgShow('系统提示', '删除不成功！'+data.errMsg, 'warning');
 				    						findUsers();
 				    					}
 			                 });
