@@ -4,7 +4,6 @@
 <head id="Head1">
 <meta charset="UTF-8">
 	<script src="${pageContext.request.contextPath}/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
-	
 	<link href="${pageContext.request.contextPath}/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
     <link href="${pageContext.request.contextPath}/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
     <link href="${pageContext.request.contextPath}/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
@@ -18,46 +17,53 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/global/css/iconFont/demo.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/global/css/iconFont/iconfont.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/pages/css/system_management.min.css"/>
-	
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/dataList.css">
+	<script src="${pageContext.request.contextPath}/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/highcharts/highcharts.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/highcharts/modules/exporting.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
 <script type="text/javascript">
-//点击折叠菜单
-function menuClick(obj) {
-	var menu=$(obj).parent().next();
-	var boo=menu.css('display');
-	if(boo=='none'){
-		menu.css('display','block');
-	}else{
-		menu.css('display','none');
-	} 
-}
-function latestClick(obj) {
-	var aa=$(obj);
-	var tabTitle = aa.children('.name').text();
-	var url=aa.attr("href");
-	var string=url.substring(0,1);
-	if(string=="/"){
-		url = '${pageContext.request.contextPath}'+aa.attr("rel")+"?appId=${appId}";
-	}else{
-		url = 'http://'+aa.attr("rel");
+	//点击折叠菜单
+	function menuClick(obj) {
+		var menu=$(obj).parent().next();
+		var boo=menu.css('display');
+		if(boo=='none'){
+			menu.css('display','block');
+		} else {
+			menu.css('display','none');
+		} 
+	}
+	function latestClick(obj) {
+		var aa=$(obj);
+		var tabTitle = aa.children('.name').text();
+		var url=aa.attr("href");
+		var string=url.substring(0,1);
+		if (string=="/") {
+			url = '${pageContext.request.contextPath}'+aa.attr("rel")+"?appId=${appId}";
+		} else {
+			url = 'http://'+aa.attr("rel");
 		}
-	var menuid = aa.attr("id");
-	if (menuid!="") {
-		$.post('${pageContext.request.contextPath}/user/saveLatestVisit',
+		var menuid = aa.attr("id");
+		if (menuid!="") {
+			$.post('${pageContext.request.contextPath}/user/saveLatestVisit',
 				{
-					menuId:menuid,
-					menuName:tabTitle,
+					menuId : menuid,
+					menuName : tabTitle,
 					
 				},function(data){});
-	}
+		}
 	 
-}
+	}
 
-//添加菜单
-function addMenu(data) {
-	var menu = '';
-	var url = '';
-	//添加最近访问菜单
-	 $.each(data.latestVisit, function(i, n) {
+	//添加菜单
+	function addMenu(data) {
+		var menu = '';
+		var url = '';
+		//添加最近访问菜单
+	 	$.each(data.latestVisit, function(i, n) {
 			url = n.url;
 			var string=url.substring(0,1);
 			if(string=="/"){
@@ -67,11 +73,11 @@ function addMenu(data) {
 			}
 			menu +=	'<li><a href="'+url+'" title="'+n.name+'" id="'+n.id+'" onclick="latestClick(this)" close="true" class="nav-link iframeify">'+
             		'<div class="bg_bor"> <i class="icon iconfont icon-iconfont-LearningCenter"></i></div>'+
-            		'<div class="name">'+n.name+'</div></a></li>';
- 	});
-	$('#latestVisit').append(menu);
-	menu = '';
-	$.each(data.frequentlyUsedMenu, function(i, n) {	
+            		'<div class="name" style="text-align:center">'+n.name+'</div></a></li>';
+ 		});
+		$('#latestVisit').append(menu);
+		menu = '';
+		$.each(data.frequentlyUsedMenu, function(i, n) {	
 			url = n.url;
 			var string=url.substring(0,1);
 			if(string=="/"){
@@ -81,17 +87,111 @@ function addMenu(data) {
 			}
 			menu +=	'<li><a href="'+url+'" title="'+n.name+'" id="'+n.id+'" onclick="latestClick(this)" close="true" class="nav-link iframeify">'+
             		'<div class="bg_bor"> <i class="icon iconfont icon-iconfont-LearningCenter"></i></div>'+
-            		'<div class="name">'+n.name+'</div></a></li>';
-	});	
-	$('#frequentlyUsedMenu').append(menu);
-}
-
-        $(function() {
-        		var data=${menus};
-                //添加最近访问和常用菜单
-                addMenu(data);
-       });
+            		'<div class="name" style="text-align:center">'+n.name+'</div></a></li>';
+		});	
+		$('#frequentlyUsedMenu').append(menu);
+	}
 		
+        $(function() {
+        	closeWin();
+        	var data=${menus};
+            //添加最近访问和常用菜单
+            addMenu(data);
+            getTree();
+       });
+        //获取树菜单
+    	function getTree() {
+    		$.ajax({type:'GET',
+    			url:'${pageContext.request.contextPath}/user/tree',
+    			data:{
+    				appId:'${appId}',
+    				appUserId:'${appUserId}'
+    				},
+    			success:function(data) {
+    					if(data.status=="0"){
+    						msgShow('系统提示', '您没有菜单！', 'info');
+    					}else {
+    						var json=data.tree;
+    						if (json.length>0) {
+    							$('#deptree').tree({data: json});
+    							selected();
+    						}
+    					}
+    				}	
+    		});
+    	}
+        function Win() {
+            $('#w').window({
+                title: '角色添加',
+                width: 550,
+                modal: true,
+                shadow: true,
+                closed: true,
+                height: 500,
+                resizable:false
+            });
+         }
+      	//打开窗口
+        function openWin() {
+           $('#w').window('open');
+        }
+         //关闭窗口
+        function closeWin() {
+            $('#w').window('close');
+         }
+      //弹出信息窗口 title:标题 msgString:提示信息 msgType:信息类型 [error,info,question,warning]
+    	function msgShow(title, msgString, msgType) {
+    		$.messager.alert(title, msgString, msgType);
+    	}
+        function cancel() {
+        	closeWin();
+        	getTree();
+		}
+          
+         //确认添加常用菜单
+    	function btnEnt() {
+    		//资源菜单id
+    		var resId=[];
+    		var select=$('#deptree').tree('getChecked', 'checked');
+    		$.each(select, function(i, n) {
+    			if(n.ismodule==1){
+    				resId.push(n.id);
+    			}
+    		});
+    		resId.join(",");
+    		$.messager.confirm('系统提示', '您确定修改么?', function(r) {
+                if (r) {
+                	$.ajax(
+                			{type:'POST',
+                			url:'${pageContext.request.contextPath}/user/saveMenu?appId=${appId}&appUserId=${appUserId}&resId='+resId,
+                			success:function(data) {
+                					if(data.status=="0"){
+                						msgShow('系统提示', '设置失败！', 'info');
+                						closeWin();
+                					}else {
+                						msgShow('系统提示', '设置成功！', 'info');
+                					}
+                				}	
+                		});
+                }
+            });
+    		
+        }
+    	//勾选用户常用菜单
+    	function selected(){
+    		$.post('${pageContext.request.contextPath}/user/getFrequentlyMenu?appUserId=${appUserId}',function(data){
+    				if(data.resourceId!=null){
+    					$.each(data.resourceId,function(i,m){
+    						var node=$("#deptree").tree('find',m);
+    						if(node!=null){
+    							if(node.ismodule=="1"){
+    								$("#deptree").tree('check',node.target);
+    							}
+    						}
+    					});
+    				}
+    			},"json");
+    	}
     </script>
 </head>
 <body   class="page-content-white" >
@@ -132,13 +232,43 @@ function addMenu(data) {
              </div>
              <div class="portlet-body">
                  <ul class="icon_lists clear" id="frequentlyUsedMenu">
-                 
+                 	 <li>
+                         <a href="javascript:;"  onclick="openWin();">
+                             <div class="bg_bor">
+                                  <i class="icon fa fa-plus-square"></i>
+                                    </div>
+                             <div class="name" style="text-align: center;">添加常用菜单</div>
+                         </a>
+                     </li>
                  </ul>
              </div>
    		 </div>
 	</div>
 
-
+	<div id="w" class="easyui-window" title="常用菜单管理" collapsible="false" hidden="hidden"
+		minimizable="false" maximizable="false" icon="icon-save"
+		style="width: 500px; height: 500px; padding: 5px;
+        background: #fafafa;">
+		<div class="easyui-layout" fit="true">
+			<div border="false"
+				style="padding: 10px; background: #fff; border: 1px solid #ccc;">
+				<div class="easyui-panel" style="padding:5px;height: 400px;widows:300px;margin-top:5px;overflow-y:scroll;">
+				  <ul id="deptree"  style="height: 100%;width: 200px" class="easyui-tree" 
+					 data-options="method:'get',lines:true,animate: true,checkbox:true"> 
+			 	  </ul>
+				</div>
+			</div>
+			<div region="south" border="false"
+				style="text-align:center; height: 30px; line-height: 30px;">
+				<a id="ok" class="easyui-linkbutton" icon="icon-ok" onclick="btnEnt()"
+					href="javascript:void(0)"> 确定</a>
+				<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" id="reload" onclick="getTree()">刷新</a>
+					 <a id="btnCancel" onclick="cancel()"
+					class="easyui-linkbutton" icon="icon-cancel"
+					href="javascript:void(0)">取消</a>
+			</div>
+		</div>
+	</div>
 </body>
 	 <script src="${pageContext.request.contextPath}/assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="${pageContext.request.contextPath}/assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
