@@ -44,8 +44,15 @@ public class OesPrivilegeDev {
 	private String delOesUserUrl;
 	private String updateOesUserUrl;
 	private String addOesUserUrl;
+	private String userCenterUnBindUrl;
 	
 	
+	public String getUserCenterUnBindUrl() {
+		return userCenterUnBindUrl;
+	}
+	public void setUserCenterUnBindUrl(String userCenterUnBindUrl) {
+		this.userCenterUnBindUrl = userCenterUnBindUrl;
+	}
 	public String getFindOesUserUrl() {
 		return findOesUserUrl;
 	}
