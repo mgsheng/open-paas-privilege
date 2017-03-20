@@ -334,7 +334,7 @@ function addNav(data) {
 <script src="${pageContext.request.contextPath}/assets/global/scripts/app.min.js" type="text/javascript"></script>
 <script src="${pageContext.request.contextPath}/assets/global/plugins/bootstrap-tabdrop/js/bootstrap-tabdrop.js" type="text/javascript"></script>
 <script src="${pageContext.request.contextPath}/assets/layouts/layout/scripts/layout.min.js" type="text/javascript"></script>
-<script src="${pageContext.request.contextPath}/assets/layouts/layout/scripts/theme.min.js" type="text/javascript"></script>
+<script src="${pageContext.request.contextPath}/assets/layouts/layout/scripts/theme.js" type="text/javascript"></script>
 <script src="${pageContext.request.contextPath}/assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script>
 <script src="${pageContext.request.contextPath}/assets/layouts/global/scripts/quick-nav.min.js" type="text/javascript"></script>
 <script src="${pageContext.request.contextPath}/assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script>
