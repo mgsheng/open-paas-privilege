@@ -67,24 +67,21 @@ public class OesLatestVisitServiceImpl extends BaseControllerUtil implements Oes
 			List<OesLatestVisit> userLatestVisits = getOesLastVisitByUserId(userId, 0, 5);
 			List<Map<String, Object>> latesVisitRes = new ArrayList<Map<String, Object>>();
 			for (OesLatestVisit oesLatestVisit : userLatestVisits) {
-				for (Map<String, Object> resource : resList) {
-					// 获取资源url
-					if (oesLatestVisit.getMenuId().equals((String) resource.get("resourceId"))) {
+				for (Map<String, Object> menu : menuList) {
+					if (oesLatestVisit.getMenuId().equals(menu.get("menuId"))) {
 						Map<String, Object> map = new HashMap<String, Object>();
-						map.put("id", resource.get("resourceId"));
-						map.put("url", resource.get("baseUrl"));
-						map.put("name", resource.get("resourceName"));
-						// 获取菜单图标
-						for (Map<String, Object> menu : menuList) {
+						map.put("menuRule", menu.get("menuRule"));
+						map.put("id", menu.get("menuId"));
+						for (Map<String, Object> resource : resList) {
 							if (resource.get("menuId").equals(menu.get("menuId"))) {
-								map.put("menuRule", menu.get("menuRule"));
+								map.put("url", resource.get("baseUrl"));
+								map.put("name", resource.get("resourceName"));
 								break;
 							}
 						}
 						latesVisitRes.add(map);
 					}
 				}
-
 			}
 			parameter.clear();
 			parameter.put("menuList", latesVisitRes);
