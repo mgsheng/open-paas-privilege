@@ -613,7 +613,7 @@
 		        pagination: true,//显示分页工具栏
 		        columns:[[
 							{ field: 'LOGINNAME', title: '登陆名',align:'center',sortable:true,width:'20%'},
-							{ field: 'PASSWORD', title: '密码',align:'center',sortable:true,width:'10%'},
+							{ field: 'PASSWORD', title: '密码',align:'center',hidden:true,sortable:true,width:'10%'},
 							{ field: 'NAME', title: '姓名',align:'center',sortable:true,width:'10%'},
 							{ field: 'SEX', title: '性别',align:'center',sortable:true,width:'10%',
 								formatter : function(value, row, index) {  
