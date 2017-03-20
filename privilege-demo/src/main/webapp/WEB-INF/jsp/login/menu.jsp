@@ -77,7 +77,7 @@ function addMenu(data) {
 			}
 			menu +=	'<li><a href="'+url+'" title="'+n.text+'" id="'+n.id+'" onclick="latestClick(this)" close="true" class="nav-link iframeify">'+
             '<div class="bg_bor"> <i class="icon iconfont icon-iconfont-LearningCenter"></i></div>'+
-            '<div class="name">'+n.text+'</div></a></li>';
+            '<div class="name" style="text-align:center">'+n.text+'</div></a></li>';
 			
 		} else {
 			addNav(menu);
@@ -97,7 +97,7 @@ function addMenu(data) {
 				}
 				menulist += '<li><a href="'+url+'" title="'+o.text+'" id="'+o.id+'" onclick="latestClick(this)" close="true" class="nav-link iframeify">'+
                 '<div class="bg_bor"> <i class="icon iconfont icon-iconfont-LearningCenter"></i></div>'+
-                '<div class="name">'+o.text+'</div></a></li>';
+                '<div class="name" style="text-align:center">'+o.text+'</div></a></li>';
 			})
 			menulist += '</ul></div>';
 			$('.page-content').append(menulist);
