@@ -719,12 +719,12 @@
 			$('#KZROLEID').val(data.KZROLEID);//孔子学院roleId
 			$('#KZID').val(data.KZID);//孔子学院ID
 			$('#STAFFID').val(data.STAFFID);//职员ID
-			$('#ACTIVEBEGINDATE').datebox('setValue', data.ACTIVEBEGINDATE);//教材帐号生效日期
-			$('#ACTIVEENDDATE').datebox('setValue', data.ACTIVEENDDATE);//失效日期：
+			$('#ACTIVEBEGINDATE').datebox('setValue',"" );//教材帐号生效日期
+			$('#ACTIVEENDDATE').datebox('setValue', "");//失效日期：
 			$('#ACTIVESTATUS').val(data.ACTIVESTATUS);//教材帐号状态：
 			$('#ISEDITPURCHASEPRICE').val(data.ISEDITPURCHASEPRICE);//	采购价格修改权限：
 			$('#StudyType').val(data.STUDYTYPE);//教育类型
-			//$('#ORGANIZATIONID').val(data.ORGANIZATIONID);//组织ID
+			$('#ORGANIZATIONID').val(data.ORGANIZATIONID);//组织ID
 			$('#ORGANIZATIONTYPECODE').val(data.ORGANIZATIONTYPECODE);//组织类型ID
 			$('#HRLOGINNAME').val(data.HRLOGINNAME);
 		}
@@ -961,6 +961,7 @@
 			var StudyType=$('#StudyType').val();//教育类型
 			var HRLOGINNAME = $('#HRLOGINNAME').val();
 			var deptId = $('#deptId').val();
+			var ORGANIZATIONID = $('#ORGANIZATIONID').val();
 			if (ACTIVEBEGINDATE.length >0) {
 				var newTime = new Date(ACTIVEBEGINDATE);
 				ACTIVEBEGINDATE = newTime.format("yyyy-MM-dd hh:mm:ss");
@@ -994,7 +995,7 @@
 						"Name":Name,"SEX":SEX,"PHONENO":PHONENO,"type":'4',"StudyType":StudyType,"KZID":KZID,
 						"MOBILEPHONE":MOBILEPHONE,"FAX":FAX,"DEPARTMENT":DEPARTMENT,"EMAIL":EMAIL,"deptId":deptId,
 						"PERSONALDES":PERSONALDES,"ISSUPERADMIN":ISSUPERADMIN,"KZROLEID":KZROLEID,
-						"STAFFID":STAFFID,"ACTIVEBEGINDATE":"","ACTIVEENDDATE":"",
+						"STAFFID":STAFFID,"ACTIVEBEGINDATE":"","ACTIVEENDDATE":"","ORGANIZATIONID":ORGANIZATIONID,
 						"ACTIVESTATUS":ACTIVESTATUS,"ISEDITPURCHASEPRICE":ISEDITPURCHASEPRICE,"HRLOGINNAME":HRLOGINNAME
 					},
                  	function(data){
