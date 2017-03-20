@@ -3723,6 +3723,8 @@ privilege-demo/src/main/webapp/images/icon/tip.png -text
 privilege-demo/src/main/webapp/images/icon/undo.png -text
 privilege-demo/src/main/webapp/images/index_bg.jpg -text
 privilege-demo/src/main/webapp/images/layout-browser-hd-bg.gif -text
+privilege-demo/src/main/webapp/images/login/bg-yb.jpg -text
+privilege-demo/src/main/webapp/images/login/logo-yb.jpg -text
 privilege-demo/src/main/webapp/images/login_bg.png -text
 privilege-demo/src/main/webapp/images/login_bg1.png -text
 privilege-demo/src/main/webapp/images/logo.jpg -text
