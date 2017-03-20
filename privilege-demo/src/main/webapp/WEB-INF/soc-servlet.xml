@@ -48,6 +48,7 @@
 						<value>/oesGroup/authorizeRes</value>
 						<value>/user/getHomePage</value>
 						<value>/user/getMenu</value>
+						<value>/managerRole/findGroup</value>
 					</list>
 				</property>
 			</bean>
