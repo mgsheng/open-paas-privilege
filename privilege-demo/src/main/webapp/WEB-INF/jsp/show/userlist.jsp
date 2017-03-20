@@ -12,6 +12,9 @@
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/highcharts/highcharts.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/highcharts/modules/exporting.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
+		<style type="text/css">
+			.display{display: none;}
+		</style>
 	</head>
 	<body >
 			<div id="tt" class="easyui-tabs" fit="true" style="font-size:1em;">
@@ -25,10 +28,6 @@
 											<td>
 													<input class="easyui-textbox" name="username" id="un" prompt="选填" style="width:100%;" label="用&nbsp;户&nbsp;名:"></input> 
 											</td>
-											<!-- <td>
-												机&nbsp;&nbsp;&nbsp;&nbsp;构：&nbsp;<select class="easyui-combobox" data-options="editable:false"  id="groupName" name="groupName" style="width:280px;height:24px;padding:5px;">
-												</select>
-											</td> -->
 											<td>
 												<input id="cc" class="easyui-combobox" name="dept" data-options="valueField:'groupCode',textField:'groupName'" label="机&nbsp;&nbsp;构:" style="width:280px;height:24px;padding:5px;">
 											</td>
@@ -57,6 +56,10 @@
 											<span style="font-weight:bold;">修改用户</span>
 											<span class="icon-edit">&nbsp;&nbsp;&nbsp;&nbsp;</span>
 										</a>
+										<a href="javascript:void(0)" class="easyui-linkbutton" onclick="showMes();" style="margin-left:2%;padding-bottom:0.6%;display:inline;">
+											<span style="font-weight:bold;">查看详情</span>
+											<span class="icon-edit">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+										</a>
 										<a href="javascript:void(0)" class="easyui-linkbutton" onclick="openWinRole();" style="margin-left:2%;padding-bottom:0.6%;display:inline; ">
 											<span style="font-weight:bold;">授权角色</span>
 											<span class="icon-edit">&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -73,87 +76,424 @@
 					<div class="botton" style="margin-top:0px;width:100%;height:68%">
 						<table  id="dg"  class="easyui-datagrid" title="查询结果"  style="width:100%;max-width:100%;padding:20px 30px;"
 							data-options="singleSelect:true,method:'get'" fit="true">
-							<thead>
-								<tr>
-									<th data-options="field:'Id',align:'center'" hidden="true" style="width:15%;max-width:100%;">ID</th>
-									<th data-options="field:'userId',align:'center'" hidden="true" style="width:15%;max-width:100%;">ID</th>
-									<th data-options="field:'groupId',align:'center'" hidden="true" style="width:15%;max-width:100%;">groupId</th>
-									<th data-options="field:'userName',align:'center'" style="width:15%;max-width:100%;">用&nbsp;&nbsp;户&nbsp;&nbsp;名</th>
-									<th data-options="field:'groupName',align:'center'" style="width:15%;max-width:100%;">所属组织结构</th> 
-							 </tr>
-						</thead>
 					</table>
 				</div>
 			</div>
 		</div>	
 	<!--修改用户窗口--> 
-	<div id="upda" class="easyui-window" title="用户信息" collapsible="false" minimizable="false" maximizable="false" 
+	<div id="showMessage" class="easyui-window" title="用户信息详情" collapsible="false" minimizable="false" maximizable="false" 
 		icon="icon-save" style="background: #fafafa;">
-		<div region="center" border="false" style="background: #fff; border: 1px solid #ccc;">
-			<table cellpadding="10px" id="tb"  style="border: 0px;margin:10px 10px" >
-				<tr>
-					<td>组织机构：</td>
-					<td>
-						<input id="UserGroup" class="easyui-combobox" name="dept" data-options="valueField:'groupCode',textField:'groupName'"  style="width:280px;height:24px;padding:5px;">
-					</td>
-				</tr>
-			</table>
-		</div>
-		<div region="south" border="false" style="text-align:center; height: 50px; line-height: 50px;">
-			<a id="btnEp" class="easyui-linkbutton" icon="icon-ok" href="javascript:void(0)" onclick="updateUser()" style="margin:8px"> 确定</a>
-			<a id="btnCancel" class="easyui-linkbutton" onclick="closeWin()" icon="icon-cancel" href="javascript:void(0)" style="margin:8px">取消</a>
-		</div>
-	</div>
-	<!-- 添加用户窗口 -->
-	<div id="addWin" class="easyui-window" title="添加用户" style="width:37%;padding:30px 45px;background: #fafafa;height:450px;"
-		minimizable="false" maximizable="false" icon="icon-add">
-		<form id="ff" class="easyui-form" method="post" style="margin:15px 30px;width:90%" data-options="novalidate:true">
+		<div  style="overflow-x: auto;">
+		<form id="show" >
 			<table>
 				<tr>
-					<td > 
-						用&nbsp;&nbsp;户&nbsp;&nbsp;名:
+					<td >
+						组织机构：
 					</td>
-					<td style="width:80%;">	
-						<input id="uname" class="easyui-textbox" missingMessage="由6-18位字母、数字、下划线组成" name="username" 
-							type="text" style="width:100%;height:35px;padding:5px;" required=true>
+					<td >	
+						<input id="showGroup"  name="dept" class="disable" disabled="true">
+					</td>
+				</tr>
+				<tr>
+					<td > 
+						登&nbsp;&nbsp;录&nbsp;&nbsp;名:
+					</td>
+					<td >	
+						<input id="showLOGINNAME"  name="username" type="text"   disabled="true">
+					</td>
+				</tr>
+				<tr>
+					<td > 
+						真实姓名:
+					</td>
+					<td >	
+						<input id="showNAME" type="text" disabled="true">
+					</td>
+				</tr>
+				<tr>
+					<td > 
+						性别:
+					</td>
+					<td >	
+						<select  id="showSEX"  disabled="true">
+								<option value="01">男</option>
+								<option value="02">女</option>
+							</select> 
 					</td>
 				</tr>
 				<tr>
 					<td>
 						密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码:
 					</td>
-					<td style="width:80%;">	
-						<input id="pwd" class="easyui-passwordbox" missingMessage="由6-20位字母、数字、下划线组成"
-							 type="text"  name="password" style="width:100%;height:35px;padding:5px;" required=true>
+					<td >	
+						<input id="showPwd"  type="password"  name="text" disabled="true">
 					</td>
 				</tr>
 				<tr>
+					<td >
+						HR登录名：
+					</td>
+					<td>	
+						<input id="showHRLOGINNAME"  name="HRLOGINNAME"  type="text" disabled="true">
+					</td>
+					<td >
+						组织类型编码：
+					</td>
+					<td>	
+						<input id="showORGANIZATIONTYPECODE"  name="ORGANIZATIONTYPECODE"  type="text" disabled="true">
+					</td>
+				</tr>
+				<tr>
+					<td >
+						固定电话：
+					</td>
+					<td >	
+						<input id="showPHONENO"  name="PHONENO"  type="text" disabled="true">
+					</td>
+					<td >
+						移动电话：
+					</td>
+					<td >	
+						<input id="showMOBILEPHONE"  name="MOBILEPHONE"  type="text" disabled="true">
+					</td>
+				</tr>
+				<tr>
+					<td >
+						传真电话：
+					</td>
+					<td >	
+						<input id="showFAX"  name="FAX"  type="text" disabled="true">
+					</td>
+					<td >
+						电子邮箱：
+					</td>
+					<td >	
+						<input id="showEMAIL"  name="EMAIL"  type="email" disabled="true">
+					</td>
+				</tr>
+				<tr   >
+						<td >
+							所属部门：
+						</td>
+						<td >	
+							<input id="showDEPARTMENT"  name="DEPARTMENT"  type="text" disabled="true">
+						</td>
+				</tr>
+				<!-- 基础特有 -->
+					<tr class="base">
+						<td >
+							超级管理员：
+						</td>
+						<td >	
+							<select id="showISSUPERADMIN" disabled="true">
+								<option value="1">是</option>
+								<option value="0">否</option>
+							</select>
+						</td>
+						<td >
+							孔子学院角色ID：
+						</td>
+						<td >	
+							<input id="showKZROLEID"  name="KZROLEID"  type="text" disabled="true">
+						</td>
+					</tr>
+					<tr class="base">
+						<td >
+							孔子学院ID：
+						</td>
+						<td >	
+							<input id="showKZID"  name="KZID"  type="text" disabled="true"> 
+						</td>
+						<td >
+							职员ID：
+						</td>
+						<td >	
+							<input id="showSTAFFID"  name="STAFFID"  type="text" disabled="true">
+						</td>
+					</tr>
+					<tr class="base">
+						<td >
+							教材帐号生效日期：
+						</td>
+						<td >	
+							<input id="showACTIVEBEGINDATE"  name="ACTIVEBEGINDATE"  type="text" disabled="true">
+						</td>
+						<td >
+							失效日期：
+						</td>
+						<td >	
+							<input id="showACTIVEENDDATE"  name="ACTIVEENDDATE"  type="text" disabled="true"> 
+						</td>
+					</tr>
+					<tr  class="base">
+						<td >
+							教材帐号状态：
+						</td>
+						<td >	
+							<select id="showACTIVESTATUS" disabled="true">
+								<option value="1">1</option>
+							</select>
+						</td>
+						<td >
+							采购价格修改权限：
+						</td>
+						<td >	
+							<select id="showISEDITPURCHASEPRICE" disabled="true">
+								<option value="1">是</option>
+								<option value="0">否</option>
+							</select>
+						</td>
+						</tr>
+						<tr class="base">
+						<td>
+							教育类型
+						</td>
+						<td >	
+							<select id="showStudyType" disabled="true">
+								<option value="01">学历教育</option>
+								<option value="02">职业教育</option>
+								<option value="03">社区教育</option>
+								<option value="04">内部培训</option>
+								<option value="05">学历教育本部</option>
+								<option value="06">孔子学院</option>
+								<option value="07">内容服务</option>
+								<option value="08">辅修</option>
+							</select>
+						</td>
+					</tr>
+				</div> 
+			</table>
+		</div>
+		
+	</div>
+	<!-- 添加用户窗口 -->
+	<div id="addWin" class="easyui-window" title="添加用户" style="width:37%;padding:30px 45px;background: #fafafa;height:450px;"
+		minimizable="false" maximizable="false" icon="icon-add">
+		<div  style="overflow-x: auto;">
+		<form id="ff" method="post" >
+		<input id="userId" type="hidden">
+			<table>
+				<tr>
+					<td >
+						组织机构：
+					</td>
+					<td >	
+						<input id="group" class="easyui-combobox" name="dept" data-options="valueField:'groupCode',textField:'groupName'"  style="width:200px;height:24px;padding:5px;">
+					</td>
+				</tr>
+				<tr>
+					<td > 
+						登&nbsp;&nbsp;录&nbsp;&nbsp;名:
+					</td>
+					<td >	
+						<input id="LOGINNAME"  name="username" type="text" >
+					</td>
+				</tr>
+				<tr>
+					<td > 
+						真实姓名:
+					</td>
+					<td >	
+						<input id="NAME" type="text" >
+					</td>
+				</tr>
+				<tr>
+					<td > 
+						性别:
+					</td>
+					<td >	
+						<select  id="SEX"  >
+								<option value="01">男</option>
+								<option value="02">女</option>
+							</select> 
+					</td>
+				</tr>
+				<tr class="pass">
+					<td>
+						密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码:
+					</td>
+					<td >	
+						<input id="pwd" 
+							 type="password"  name="password" >
+					</td>
+				</tr>
+				<tr  class="pass">
 					<td>
 						确认密码：
 					</td>
-					<td style="width:80%;">	
-						<input id="confirm_pwd" class="easyui-passwordbox" missingMessage="由6-20位字母、数字、下划线组成"
-							name="confirmPwd" type="text"  style="width:100%;height:35px;padding:5px;" required=true>
+					<td >	
+						<input id="confirm_pwd" 
+							name="confirmPwd" type="password"   >
 					</td>
 				</tr>
 				<tr>
-					<td style="margin-bottom:20px">
-						组织机构：
+					<td >
+						HR登录名：
 					</td>
-					<td style="width:80%;">	
-						<input id="group" class="easyui-combobox" name="dept" data-options="valueField:'groupCode',textField:'groupName'"  style="width:280px;height:24px;padding:5px;">
+					<td>	
+						<input id="HRLOGINNAME"  name="HRLOGINNAME"  type="text">
+					</td>
+					<td >
+						组织类型编码：
+					</td>
+					<td>	
+						<input id="ORGANIZATIONTYPECODE"  name="ORGANIZATIONTYPECODE"  type="text">
 					</td>
 				</tr>
+				<tr>
+					<td >
+						固定电话：
+					</td>
+					<td >	
+						<input id="PHONENO"  name="PHONENO"  type="text">
+					</td>
+					<td >
+						移动电话：
+					</td>
+					<td >	
+						<input id="MOBILEPHONE"  name="MOBILEPHONE"  type="text">
+					</td>
+				</tr>
+				<tr>
+					<td >
+						传真电话：
+					</td>
+					<td >	
+						<input id="FAX"  name="FAX"  type="text">
+					</td>
+					<td >
+						电子邮箱：
+					</td>
+					<td >	
+						<input id="EMAIL"  name="EMAIL"  type="email">
+					</td>
+				</tr>
+				<tr  class="UNIVERSITY">
+						<td >
+							所属部门：
+						</td>
+						<td >	
+							<input id="DEPARTMENT"  name="DEPARTMENT"  type="text">
+						</td>
+						<td >
+							组织机构ID：
+						</td>
+						<td >	
+							<input id="ORGANIZATIONID"  name="ORGANIZATIONID"  type="text">
+						</td>
+				</tr>
+				<!-- 基础特有 -->
+					<tr class="base">
+						<td >
+							超级管理员：
+						</td>
+						<td >	
+							<select id="ISSUPERADMIN">
+								<option value="1">是</option>
+								<option value="0">否</option>
+							</select>
+						</td>
+						<td >
+							孔子学院角色ID：
+						</td>
+						<td >	
+							<input id="KZROLEID"  name="KZROLEID"  type="text">
+						</td>
+					</tr>
+					<tr class="base">
+						<td >
+							孔子学院ID：
+						</td>
+						<td >	
+							<input id="KZID"  name="KZID"  type="text">
+						</td>
+						<td >
+							职员ID：
+						</td>
+						<td >	
+							<input id="STAFFID"  name="STAFFID"  type="text">
+						</td>
+					</tr>
+					<tr >
+						<td >
+							教材帐号生效日期：
+						</td>
+						<td >	
+							<input id="ACTIVEBEGINDATE" type="text" class="easyui-datebox" style="width: 100px">
+						</td>
+						<td >
+							失效日期：
+						</td>
+						<td >	
+							<input id="ACTIVEENDDATE" type="text" class="easyui-datebox" style="width: 100px">
+						</td>
+					</tr>
+					<tr >
+						<td >
+							教材帐号状态：
+						</td>
+						<td >	
+							<select id="ACTIVESTATUS">
+								<option value="1">1</option>
+							</select>
+						</td>
+						<td >
+							采购价格修改权限：
+						</td>
+						<td >	
+							<select id="ISEDITPURCHASEPRICE">
+								<option value="1">是</option>
+								<option value="0">否</option>
+							</select>
+						</td>
+						</tr>
+						<tr >
+						<td>
+							教育类型
+						</td>
+						<td >	
+							<select id="StudyType">
+								<option value="01">学历教育</option>
+								<option value="02">职业教育</option>
+								<option value="03">社区教育</option>
+								<option value="04">内部培训</option>
+								<option value="05">学历教育本部</option>
+								<option value="06">孔子学院</option>
+								<option value="07">内容服务</option>
+								<option value="08">辅修</option>
+							</select>
+						</td>
+						<td  class="dept">
+							部门ID：
+						</td>
+						<td class="dept">	
+							<input id="deptId" type="text">
+						</td>
+					</tr>
+				</div> 
 			</table>
 		</form>
+		</div>
 		<div style="text-align:center;padding:5px 0">
 			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitAddForm()" style="width:80px;margin:10px 15px">提交</a>
 			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="closeAddWin()" style="width:80px;margin:10px 15px">取消</a>
 		</div>
 	</div>
+	
 	</body>
 	<script>
-		
+		var group;//存放组织机构选择的下拉框数据
+		var UserGroup//存放添加用户时 组织机构数据
+		$('#cc').combobox({
+			onSelect: function(record){
+				group = record;
+			}
+		});
+		$('#group').combobox({
+			onSelect: function(record){
+				UserGroup = record;
+			}
+		});
 		//添加tab页面
 		function addPanel(userName,userId,groupId){
 			if ($('#tt').tabs('exists', userName+'-授权角色')){
@@ -198,8 +538,8 @@
 			if (row){
 				$.messager.confirm('系统提示', '是否确定授权?', function(r){
 					if(r){
-						var userId = row.userId;
-						var userName=row.userName;
+						var userId = row.USERID;
+						var userName=row.LOGINNAME;
 						var groupId=row.groupId;
 						addPanel2(userName,userId,groupId);
 					}
@@ -214,9 +554,9 @@
 			if (row){
 				$.messager.confirm('系统提示', '是否确定授权?', function(r){
 					if(r){
-						var userId = row.userId;
+						var userId = row.USERID;
 						var groupId = row.groupId;
-						var userName=row.userName;
+						var userName=row.LOGINNAME;
 						addPanel(userName,userId,groupId);
 					}
 				});
@@ -224,7 +564,41 @@
             	msgShow('系统提示', '请选择用户！', 'warning');
             }
 		};
-		
+		//打开详情窗口
+		function showMes() {
+			var row = $('#dg').datagrid('getSelected');
+			if (row){
+				openWin();
+				//获取该用户的数据，并显示
+				showUserValue(row);
+			}else{
+            	msgShow('系统提示', '请选择修改用户！', 'info');
+            }
+		}
+		//显示用户详情
+		function showUserValue(data) {
+			$('#showGroup').val(data.groupName);
+			$('#showLOGINNAME').val(data.LOGINNAME);
+			$('#showPwd').val(data.PASSWORD);
+			$('#showNAME').val(data.NAME);//真实姓名
+			$('#showSEX').val(data.SEX);
+			$('#showPHONENO').val(data.PHONENO);//固定电话
+			$('#showMOBILEPHONE').val(data.MOBILEPHONE);//移动电话
+			$('#showFAX').val(data.FAX);//传真电话
+			$('#showEMAIL').val(data.EMAIL);
+			$('#showDEPARTMENT').val(data.DEPARTMENT);//部门
+			$('#showHRLOGINNAME').val(data.HRLOGINNAME);
+			$('#showISSUPERADMIN').val(data.ISSUPERADMIN);//是否是超级管理员
+			$('#showKZROLEID').val(data.KZROLEID);//孔子学院roleId
+			$('#showKZID').val(data.KZID);//孔子学院ID
+			$('#showSTAFFID').val(data.STAFFID);//职员ID
+			$('#showACTIVEBEGINDATE').val(data.ACTIVEBEGINDATE);//教材帐号生效日期
+			$('#showACTIVEENDDATE').val(data.ACTIVEENDDATE);//失效日期：
+			$('#showACTIVESTATUS').val(data.ACTIVESTATUS);//教材帐号状态：
+			$('#showISEDITPURCHASEPRICE').val(data.ISEDITPURCHASEPRICE);//	采购价格修改权限：
+			$('#showStudyType').val(data.STUDYTYPE);//教育类型
+			$('#showORGANIZATIONTYPECODE').val(data.ORGANIZATIONTYPECODE);//组织类型ID
+		}
 		//添加用户窗口
 		function addWin(){
 			 $('#addWin').window({
@@ -232,7 +606,9 @@
                 modal: true,
                 shadow: true,
                 closed: true,
-                resizable:false,
+                width: 700,
+                height: 560,
+                resizable:true,
                 closable:false
             });
 		}
@@ -240,6 +616,7 @@
 		//打开添加用户窗口
 		addWin();
 		function openAddWin(){
+			$('#userId').val('');
 			clearAddForm();
 			$('#addWin').window('open');
 		}
@@ -251,20 +628,45 @@
 		
 		// 清除添加用户表单
 		function clearAddForm(){
-			$('#ff').form('clear');
+			$('#LOGINNAME').val('').prop("disabled",false);
+			$('.pass').removeClass('display');
+			$('.dept').removeClass('display');
+			$('#deptId').val('');
+			$('#pwd').val('');
+			$('#confirm_pwd').val('');
+			$('#userId').val('');
+			$('#NAME').val('');
+			$('#SEX').val('01');
+			$('#PHONENO').val('');
+			$('#MOBILEPHONE').val('');
+			$('#FAX').val('');
+			$('#EMAIL').val('');
+			$('#DEPARTMENT').val('');
+			$('#ISSUPERADMIN').val('0');
+			$('#KZROLEID').val('');
+			$('#KZID').val('');
+			$('#STAFFID').val('');
+			$('#ACTIVEBEGINDATE').val('');
+			$('#ACTIVEENDDATE').val('');
+			$('#ACTIVESTATUS').val('1');
+			$('#ISEDITPURCHASEPRICE').val('1');	
+			$('#StudyType').val('01');//教育类型
+			$('#ORGANIZATIONID').val('');//组织ID
+			$('#ORGANIZATIONTYPECODE').val('');//组织类型ID
+			$('#HRLOGINNAME').val('');
 		}
 		
 		//修改用户窗口
         function win() {
-            $('#upda').window({
+            $('#showMessage').window({
                 title: '用户信息',
-                width: 500,
                 modal: true,
                 shadow: true,
                 closed: true,
-                height: 300,
-                resizable:false,
-                closable:false
+                width: 700,
+                height: 560,
+                resizable:true,
+                closable:true
             });
         }
         
@@ -281,7 +683,7 @@
 		//打开修改用户窗口
 		win();
 		function openWin(){
-			$('#upda').window('open');
+			$('#showMessage').window('open');
 		}
 		
 		//修改用户
@@ -290,15 +692,45 @@
 			clearTable();
 			var row = $('#dg').datagrid('getSelected');
 			if (row){
-				openWin();
-				$('#UserGroup').combobox('select',row.groupId);
+				openAddWin();
+				//获取该用户的数据，并显示
+				getUserValue(row);
+				$('#group').combobox('select',row.groupId);
 			}else{
             	msgShow('系统提示', '请选择修改用户！', 'info');
             }
 		};
+		//获取该用户的数据，并显示
+		function getUserValue(data) {
+			$('#group').combobox('select',data.groupId);
+			$('#userId').val(data.USERID);
+			$('#LOGINNAME').val(data.LOGINNAME).prop("disabled",true);
+			$('.pass').addClass("display");//密码隐藏
+			$('#pwd').val(data.PASSWORD);
+			$('.dept').addClass("display");//部门隐藏
+			$('#NAME').val(data.NAME);//真实姓名
+			$('#SEX').val(data.SEX);
+			$('#PHONENO').val(data.PHONENO);//固定电话
+			$('#MOBILEPHONE').val(data.MOBILEPHONE);//移动电话
+			$('#FAX').val(data.FAX);//传真电话
+			$('#EMAIL').val(data.EMAIL);
+			$('#DEPARTMENT').val(data.DEPARTMENT);//部门
+			$('#ISSUPERADMIN').val(data.ISSUPERADMIN);//是否是超级管理员
+			$('#KZROLEID').val(data.KZROLEID);//孔子学院roleId
+			$('#KZID').val(data.KZID);//孔子学院ID
+			$('#STAFFID').val(data.STAFFID);//职员ID
+			$('#ACTIVEBEGINDATE').datebox('setValue', data.ACTIVEBEGINDATE);//教材帐号生效日期
+			$('#ACTIVEENDDATE').datebox('setValue', data.ACTIVEENDDATE);//失效日期：
+			$('#ACTIVESTATUS').val(data.ACTIVESTATUS);//教材帐号状态：
+			$('#ISEDITPURCHASEPRICE').val(data.ISEDITPURCHASEPRICE);//	采购价格修改权限：
+			$('#StudyType').val(data.STUDYTYPE);//教育类型
+			//$('#ORGANIZATIONID').val(data.ORGANIZATIONID);//组织ID
+			$('#ORGANIZATIONTYPECODE').val(data.ORGANIZATIONTYPECODE);//组织类型ID
+			$('#HRLOGINNAME').val(data.HRLOGINNAME);
+		}
 		//关闭修改用户窗口
 		function closeWin(){
-			$('#upda').window('close');
+			$('#showMessage').window('close');
 		};
 		
 		//弹出信息窗口 title:标题 msgString:提示信息 msgType:信息类型 [error,info,question,warning]
@@ -312,15 +744,16 @@
 			if (row){
 				$.messager.confirm('系统提示', '是否确定删除?', function(r){
 					if (r){
-						   var id = row.Id;
-						   var appUserId = row.userId;
-						   var url='${pageContext.request.contextPath}/managerUser/removeUserByID?appId=${appId}&id='+id+'&appUserId='+appUserId;
+						   var appUserId = row.USERID;
+						   var loginName = row.LOGINNAME;
+						   var groupType = row.groupType;
+						   var url='${pageContext.request.contextPath}/managerUser/removeUserByID?appId=${appId}&appUserId='+appUserId+'&type=4&loginName='+loginName;
 						   $.post(url,
 			                    	function(data){
-			                        	if (data.status=='1') {
+			                        	if (data.status == '1') {
 				                			msgShow('系统提示', '删除成功！', 'warning');
 				                			findUsers();
-				    					}else if (data.status=='0'){
+				    					}else if (data.status == '0'){
 				    						msgShow('系统提示', '删除不成功！', 'warning');
 				    						findUsers();
 				    					}
@@ -340,9 +773,12 @@
 		}
 		// 查询用户方法
 		function findUsers(){
+			var groupId = null;
+			if (group != null) {
+				groupId = group.groupCode;
+			}
+			
 			//用户名
-			var groupId = $('#cc').combobox('getValue');
-        	var groupName=$('#cc').combobox('getText');
 			var username = $('#un').val().trim();
 			$('#dg').datagrid({
 				collapsible:true,
@@ -350,10 +786,49 @@
 				pagination:true,
 				queryParams: {
 					userName: username,
-					groupId:groupId
+					groupId:groupId,
+					type:'4'
 				},
 		        url: "${pageContext.request.contextPath}/managerUser/findUserList",  
 		        pagination: true,//显示分页工具栏
+		        columns:[[
+							{ field: 'LOGINNAME', title: '登陆名',align:'center',sortable:true,width:'20%'},
+							{ field: 'PASSWORD', title: '密码',align:'center',sortable:true,width:'10%'},
+							{ field: 'NAME', title: '姓名',align:'center',sortable:true,width:'10%'},
+							{ field: 'SEX', title: '性别',align:'center',sortable:true,width:'10%',
+								formatter : function(value, row, index) {  
+				                    if(value == '01'){  
+				                     	return '<span title="男"><font color=green>男</font></span>';     
+				                    } else if (value == '02') {  
+				                     	return '<span title="女"><font color=gray>女</font></span>';     
+				                    }                     
+				                }
+							},
+							{ field: 'SexValue', title: '性别值',align:'center',hidden:true,sortable:true,width:'10%'},
+							{ field: 'PHONENO', title: '固定电话',align:'center',sortable:true,width:'10%'},
+							{ field: 'MOBILEPHONE', title: '移动电话',align:'center',sortable:true,width:'10%'},
+							{ field: 'EMAIL', title: '邮箱',align:'center',hidden:true,sortable:true,width:'10%'},
+							{ field: 'FAX', title: '传真号码',align:'center',hidden:true,sortable:true,width:'10%'},
+							{ field: 'HRLOGINNAME', title: 'HR登录名',align:'center',hidden:true,sortable:true,width:'10%'},
+							{ field: 'DEPARTMENT', title: '部门',align:'center',hidden:true,sortable:true,width:'10%'},
+							{ field: 'KZROLEID', title: '孔子学院角色ID',align:'center',hidden:true,sortable:true,width:'10%'},
+							{ field: 'KZID', title: '孔子学院ID',align:'center',hidden:true,sortable:true,width:'10%'},
+							{ field: 'STAFFID', title: '职员ID',align:'center',hidden:true,sortable:true,width:'10%'},
+							{ field: 'USERID', title: '用户ID',hidden:true,align:'center',sortable:true,width:'10%'},
+							{ field: 'type', title: '类型',hidden:true,align:'center',sortable:true,width:'10%'},
+							{ field: 'groupId', title: '组织机构ID',hidden:true,align:'center',sortable:true,width:'10%'},
+							{ field: 'groupName', title: '组织机构',align:'center',sortable:true,width:'10%'},
+							{ field: 'ACTIVEBEGINDATE', title: '教材帐号生效日期',align:'center',hidden:true,sortable:true,width:'10%'},
+							{ field: 'ACTIVEENDDATE', title: '教材帐号失效日期',align:'center',hidden:true,sortable:true,width:'10%'},
+							{ field: 'ACTIVESTATUS', title: '教材帐号状态',align:'center',hidden:true,sortable:true,width:'10%'},
+							{ field: 'ActivieStatusValue', title: '教材帐号状态',hidden:true,align:'center',sortable:true,width:'10%'},
+							{ field: 'ISEDITPURCHASEPRICE', title: '采购价格修改权限',align:'center',hidden:true,sortable:true,width:'10%'},
+							{ field: 'ISSUPERADMIN', title: '超级管理员',align:'center',hidden:true,sortable:true,width:'10%'},
+							{ field: 'STUDYTYPE', title: '教育类型',align:'center',hidden:true,sortable:true,width:'10%'},
+							{ field: 'ORGANIZATIONTYPECODE', title: '组织类型编码',align:'center',hidden:true,sortable:true,width:'10%'},
+							{ field: 'ORGANIZATIONID', title: '组织ID',align:'center',hidden:true,sortable:true,width:'10%'}
+							
+							]],
 		        onLoadSuccess:function(data){
                     if (data.total<1){
                        $.messager.alert("系统提示","没有符合查询条件的数据!","info");
@@ -403,39 +878,98 @@
         //前端校验
 		function check(){
 			var regex_username = /^[a-zA-Z0-9_]{6,18}$/;
-			var regex_password= /^(\w){6,20}$/;
-			var username = $.trim($('#uname').val()) ;
+			var regex_password = /^(\w){6,20}$/;
+			var regex_IdCard = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)|(^\d{17}([0-9]|X)$)|(^\d{16}$)/; 
+			var regex_MOBILEPHONE = /^1[3|4|5|8|7][0-9]\d{4,8}$/;
+			var regex_PHONENO = /^0\d{2,3}-?\d{7,8}$/;   
+			var regex_EMAIL = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
+			var username = $.trim($('#LOGINNAME').val()) ;
 			var password = $.trim($('#pwd').val()) ;
 			var confirm_pass = $.trim($('#confirm_pwd').val()) ;
+			var NAME = $.trim($('#NAME').val()) ;
 			var groupId = $('#group').combobox('getValue');
+			var PHONENO = $.trim($('#PHONENO').val());
+			var MOBILEPHONE = $.trim($('#MOBILEPHONE').val());
+			var EMAIL = $('#EMAIL').val();
+			var userId = $('#userId').val();
+			if (NAME == "" || NAME == null) {
+				$.messager.alert("系统提示","姓名不能为空，请重新填写！","error");	
+				return false;
+			}
+			if (PHONENO == "" || PHONENO == null) {
+				$.messager.alert("系统提示","固定电话不能为空，请重新填写！","error");	
+				return false;
+			}
+			if (MOBILEPHONE == "" || MOBILEPHONE == null || regex_MOBILEPHONE.test(MOBILEPHONE) != true) {
+				$.messager.alert("系统提示","移动电话号码不能为空或格式不正确，请重新填写！","error");	
+				return false;
+			}
 			if(username == "" || username == null || username == undefined || regex_username.test(username) != true){
 					$.messager.alert("系统提示","用户名不能为空或格式不正确，请重新填写！","error");	
 					return false;
 			}
-			if(password == "" || password == null || password == undefined || regex_password.test(password) != true){
+			if (userId.length <= 0) {
+				if(password == "" || password == null || password == undefined || regex_password.test(password) != true){
 					$.messager.alert("系统提示","密码不能为空或格式不正确，请重新填写！","error");			
 					return false;
-			}
-			if(confirm_pass =="" || confirm_pass == null || confirm_pass == undefined || regex_password.test(confirm_pass) != true){
+				}
+				if(confirm_pass =="" || confirm_pass == null || confirm_pass == undefined || regex_password.test(confirm_pass) != true){
 					$.messager.alert("系统提示","确认密码不能为空或格式不正确，请重新填写！","error");		
 					return false;
+				}
+				if(password != confirm_pass){
+					$.messager.alert("系统提示","密码输入不一致，请重新输入！","error");
+					return false;
+				}
 			}
-			if(password != confirm_pass){
-				$.messager.alert("系统提示","密码输入不一致，请重新输入！","error");
-				return false;
-			}
+			
 			if(groupId == ''){
 				$.messager.alert("系统提示","请选择组织机构！","error");
 				return false;
+			}
+			if (EMAIL.length > 0) {
+				if(regex_EMAIL.test(EMAIL) != true){
+					$.messager.alert("系统提示","邮箱格式不正确！","error");
+					return false;
+				}
+				
 			}
 			return true;
 		}
 		
 		// 提交（用户信息）
 		function submitAddForm(){
-			var userName = $.trim($('#uname').val()) ;
+			var userName = $.trim($('#LOGINNAME').val());
 			var passWord = $.trim($('#pwd').val()) ;
 			var groupId = $('#group').combobox('getValue');
+			var Name = $('#NAME').val();//真实姓名
+			var SEX = $('#SEX').val();
+			var PHONENO = $('#PHONENO').val();
+			var MOBILEPHONE = $('#MOBILEPHONE').val();
+			var FAX=$('#FAX').val();//传真电话
+			var EMAIL=$('#EMAIL').val();
+			var DEPARTMENT=$('#DEPARTMENT').val();//部门
+			var PERSONALDES=$('#PERSONALDES').val();//个人描述
+			var ISSUPERADMIN=$('#ISSUPERADMIN').val();//是否是超级管理员
+			var KZROLEID=$('#KZROLEID').val();//孔子学院roleId
+			var KZID=$('#KZID').val();//孔子学院ID
+			var STAFFID=$('#STAFFID').val();//职员ID
+			var ACTIVEBEGINDATE = $('#ACTIVEBEGINDATE').datebox('getValue');//教材帐号生效日期
+			var ACTIVEENDDATE=$('#ACTIVEENDDATE').datebox('getValue');//失效日期：
+			var ACTIVESTATUS=$('#ACTIVESTATUS').val();//教材帐号状态：
+			var ISEDITPURCHASEPRICE=$('#ISEDITPURCHASEPRICE').val();//	采购价格修改权限：
+			var StudyType=$('#StudyType').val();//教育类型
+			var HRLOGINNAME = $('#HRLOGINNAME').val();
+			var deptId = $('#deptId').val();
+			if (ACTIVEBEGINDATE.length >0) {
+				var newTime = new Date(ACTIVEBEGINDATE);
+				ACTIVEBEGINDATE = newTime.format("yyyy-MM-dd hh:mm:ss");
+			}
+			if (ACTIVEENDDATE.length >0) {
+				var newTime = new Date(ACTIVEENDDATE);
+				ACTIVEENDDATE = newTime.format("yyyy-MM-dd hh:mm:ss");
+			}
+			
 			$('#ff').form('submit',{
 				onSubmit:function(){
 					return $(this).form('enableValidation').form('validate');
@@ -447,30 +981,69 @@
 			if(!check_result){
 				return;
 			}
-			$.post("${pageContext.request.contextPath}/managerUser/addUser",
-					{"appId":'${appId}',"appUserName":userName,"passWord":passWord,"groupId":groupId},
+			var url = '';
+			var userId = $('#userId').val();
+			if ($('#userId').val() != '') {
+				url = '${pageContext.request.contextPath}/managerUser/updateUser?appUserId='+userId;
+			} else {
+				url = '${pageContext.request.contextPath}/managerUser/addUser';
+			}
+			$.post(url,
+					{
+						"appId":'${appId}',"appUserName":userName,"passWord":passWord,"groupId":groupId,
+						"Name":Name,"SEX":SEX,"PHONENO":PHONENO,"type":'4',"StudyType":StudyType,"KZID":KZID,
+						"MOBILEPHONE":MOBILEPHONE,"FAX":FAX,"DEPARTMENT":DEPARTMENT,"EMAIL":EMAIL,"deptId":deptId,
+						"PERSONALDES":PERSONALDES,"ISSUPERADMIN":ISSUPERADMIN,"KZROLEID":KZROLEID,
+						"STAFFID":STAFFID,"ACTIVEBEGINDATE":"","ACTIVEENDDATE":"",
+						"ACTIVESTATUS":ACTIVESTATUS,"ISEDITPURCHASEPRICE":ISEDITPURCHASEPRICE,"HRLOGINNAME":HRLOGINNAME
+					},
                  	function(data){
-                     	if (data.status=='1') {
+                     	if (data.status == '1') {
                 			msgShow('系统提示', '添加成功！', 'warning');
                 			closeAddWin();
                 			findUsers();
-                			$('#ff').clear();
-    					}else if (data.status=='0') {
-    						msgShow('系统提示', '添加不成功！'+data.errMsg, 'warning');
+    					} else if (data.status == '0') {
+    						msgShow('系统提示', '添加不成功！' + data.errMsg, 'warning');
+    					} else if (data.status == '2') {
+    						msgShow('系统提示', '修改成功！', 'warning');
+    						findUsers();
+    						closeAddWin();
+    					} else if (data.status == '-1') {
+    						msgShow('系统提示', '修改不成功！' + data.errMsg, 'warning');
+    						closeAddWin();
+                			findUsers();
     					}
               });
 		}
 		
 		//页面预加载
 		$(function(){
-			findUsers();
-			$.post('${pageContext.request.contextPath}/managerUser/findGroup',function (data) {
+			$.post('${pageContext.request.contextPath}/managerUser/findGroup?type=4',function (data) {
 				$('.easyui-combobox').combobox('loadData',data);
-				if (data.length==1) {
-					$('#group').combobox('select',data[0].groupCode);
-					$('#cc').combobox('select',data[0].groupCode);
-				}
+				$('#cc').combobox('select',data[0].groupCode);
+				findUsers();
 			});
+			
 		});
+		Date.prototype.format = function(fmt) {
+			var o = {
+				"M+": this.getMonth() + 1, //月份 
+				"d+": this.getDate(), //日 
+				"h+": this.getHours(), //小时 
+				"m+": this.getMinutes(), //分 
+				"s+": this.getSeconds(), //秒 
+				"q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+				"S": this.getMilliseconds() //毫秒 
+			};
+			if (/(y+)/.test(fmt)) {
+				fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+			}
+			for (var k in o) {
+				if (new RegExp("(" + k + ")").test(fmt)) {
+					fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+				}
+			}
+			return fmt;
+		}
 	</script>
 </html>
