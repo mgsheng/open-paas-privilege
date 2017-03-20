@@ -3329,6 +3329,7 @@ privilege-demo/src/main/webapp/css/layout.css -text
 privilege-demo/src/main/webapp/css/light.css -text
 privilege-demo/src/main/webapp/css/login.css -text
 privilege-demo/src/main/webapp/css/morris.css -text
+privilege-demo/src/main/webapp/css/pages/login-yb.css -text
 privilege-demo/src/main/webapp/css/plugins.css -text
 privilege-demo/src/main/webapp/css/simple-line-icons.css -text
 privilege-demo/src/main/webapp/css/tasks.css -text
