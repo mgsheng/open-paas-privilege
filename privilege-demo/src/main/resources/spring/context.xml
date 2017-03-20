@@ -205,5 +205,6 @@
        		<property name="delOesUserUrl" value="${delete-oes-user-uri}"></property>
        		<property name="updateOesUserUrl" value="${update-oes-user-uri}"></property>
        		<property name="addOesUserUrl" value="${add-oes-user-uri}"></property>
+       		<property name="userCenterUnBindUrl" value="${usercenter-unbind-uri}"></property>
        </bean>
 </beans>
