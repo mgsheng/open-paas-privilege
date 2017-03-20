@@ -8,8 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" charset="utf-8">
     <link href="${pageContext.request.contextPath}/css/default.css"
 	rel="stylesheet" type="text/css" />
-	 <link href="${pageContext.request.contextPath}/css/pages/login-yb.css"
-	rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/css/themes/default/easyui.css" />
     <link href="${pageContext.request.contextPath}/css/login.css" rel="stylesheet" type="text/css">
