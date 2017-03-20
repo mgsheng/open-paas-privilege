@@ -170,6 +170,7 @@
                 					}else {
                 						msgShow('系统提示', '设置成功！', 'info');
                 						closeWin();
+                						getTree();
                 					}
                 				}	
                 		});
