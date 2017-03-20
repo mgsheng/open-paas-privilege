@@ -388,7 +388,7 @@
 							超级管理员：
 						</td>
 						<td >	
-							<select id="ISSUPERADMIN">
+							<select id="ISSUPERADMIN" value="0">
 								<option value="1">是</option>
 								<option value="0">否</option>
 							</select>
@@ -434,16 +434,16 @@
 						</td>
 						<td >	
 							<select id="ACTIVESTATUS">
-								<option value="1">1</option>
+								<option value="1">正常</option>
 							</select>
 						</td>
 						<td >
 							采购价格修改权限：
 						</td>
 						<td >	
-							<select id="ISEDITPURCHASEPRICE">
+							<select id="ISEDITPURCHASEPRICE" value="1">
 								<option value="1">是</option>
-								<option value="0">否</option>
+								<!-- <option value="0">否</option> -->
 							</select>
 						</td>
 						</tr>
@@ -643,16 +643,16 @@
 			$('#EMAIL').val('');
 			$('#DEPARTMENT').val('');
 			$('#ISSUPERADMIN').val('0');
-			$('#KZROLEID').val('');
-			$('#KZID').val('');
-			$('#STAFFID').val('');
+			$('#KZROLEID').val('').prop("disabled",false);
+			$('#KZID').val('').prop("disabled",false);
+			$('#STAFFID').val('').prop("disabled",false);//职员ID
 			$('#ACTIVEBEGINDATE').val('');
 			$('#ACTIVEENDDATE').val('');
 			$('#ACTIVESTATUS').val('1');
 			$('#ISEDITPURCHASEPRICE').val('1');	
 			$('#StudyType').val('01');//教育类型
-			$('#ORGANIZATIONID').val('');//组织ID
-			$('#ORGANIZATIONTYPECODE').val('');//组织类型ID
+			$('#ORGANIZATIONID').val('').prop("disabled",false);//组织ID
+			$('#ORGANIZATIONTYPECODE').val('').prop("disabled",false);//组织类型ID
 			$('#HRLOGINNAME').val('');
 		}
 		
@@ -716,16 +716,16 @@
 			$('#EMAIL').val(data.EMAIL);
 			$('#DEPARTMENT').val(data.DEPARTMENT);//部门
 			$('#ISSUPERADMIN').val(data.ISSUPERADMIN);//是否是超级管理员
-			$('#KZROLEID').val(data.KZROLEID);//孔子学院roleId
-			$('#KZID').val(data.KZID);//孔子学院ID
-			$('#STAFFID').val(data.STAFFID);//职员ID
+			$('#KZROLEID').val(data.KZROLEID).prop("disabled",true);//孔子学院roleId
+			$('#KZID').val(data.KZID).prop("disabled",true);//孔子学院ID
+			$('#STAFFID').val(data.STAFFID).prop("disabled",true);//职员ID
 			$('#ACTIVEBEGINDATE').datebox('setValue',"" );//教材帐号生效日期
 			$('#ACTIVEENDDATE').datebox('setValue', "");//失效日期：
 			$('#ACTIVESTATUS').val(data.ACTIVESTATUS);//教材帐号状态：
 			$('#ISEDITPURCHASEPRICE').val(data.ISEDITPURCHASEPRICE);//	采购价格修改权限：
 			$('#StudyType').val(data.STUDYTYPE);//教育类型
-			$('#ORGANIZATIONID').val(data.ORGANIZATIONID);//组织ID
-			$('#ORGANIZATIONTYPECODE').val(data.ORGANIZATIONTYPECODE);//组织类型ID
+			$('#ORGANIZATIONID').val(data.ORGANIZATIONID).prop("disabled",true);//组织ID
+			$('#ORGANIZATIONTYPECODE').val(data.ORGANIZATIONTYPECODE).prop("disabled",true);//组织类型ID
 			$('#HRLOGINNAME').val(data.HRLOGINNAME);
 		}
 		//关闭修改用户窗口
