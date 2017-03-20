@@ -167,9 +167,9 @@
                 			success:function(data) {
                 					if(data.status=="0"){
                 						msgShow('系统提示', '设置失败！', 'info');
-                						closeWin();
                 					}else {
                 						msgShow('系统提示', '设置成功！', 'info');
+                						closeWin();
                 					}
                 				}	
                 		});
