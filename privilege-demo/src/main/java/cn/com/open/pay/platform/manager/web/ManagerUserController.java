@@ -565,7 +565,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		String appId = request.getParameter("appId");
 		String appUserId = request.getParameter("appUserId");
 		String groupId = request.getParameter("groupId");
-		String type = request.getParameter("type");// 类型id
+		String type = request.getParameter("type");// 用户类型id 3-院校 ，4-基础，5-大区 ，6学习中心
 		String groupCodeName = "";// 存放组织机构Id的字段名称
 		switch (type) {
 		case "3":
@@ -655,7 +655,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		} else {
 			jsonObject.put(groupCodeName, groupId);// 相应组织编号
 		}
-		Boolean boo = false;// 是否修改成功
+		Boolean boo = false;// 是否修改成功  true为修改成功
 		Map<String, Object> map = new HashMap<String, Object>();
 		String result = sendPutByJson(oesPrivilegeDev.getUpdateOesUserUrl() + "?type=" + type, jsonObject);
 		if (result != null && !result.isEmpty()) {
@@ -720,7 +720,8 @@ public class ManagerUserController extends BaseControllerUtil {
 		String appId = request.getParameter("appId");
 		String appUserId = request.getParameter("appUserId");
 		String loginName = request.getParameter("loginName");
-		String type = request.getParameter("type");// 用户类型
+		String type = request.getParameter("type");// 用户类型id 3-院校 ，4-基础，5-大区 ，6学习中心
+		//获取token
 		String token = privilegeGetSignatureService.getToken();
 		Map<String, Object> map = privilegeGetSignatureService.getOauthSignature(oesPrivilegeDev.getAppId(),
 				oesPrivilegeDev.getClientId(), token);
@@ -730,6 +731,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		map.put("scope", "read,write");
 		map.put("source_id", appUserId);
 		map.put("username", loginName);
+		//解绑用户
 		String result = sendPost(oesPrivilegeDev.getUserCenterUnBindUrl(), map);
 		JSONObject object = null;
 		if (result != null && !result.isEmpty()) {
@@ -960,10 +962,10 @@ public class ManagerUserController extends BaseControllerUtil {
 		log.info("-------------------------addUser         start------------------------------------");
 		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
 		String appId = request.getParameter("appId");
-		String groupId = request.getParameter("groupId");
+		String groupId = request.getParameter("groupId");//组织机构ID
 		String appUserName = request.getParameter("appUserName");
-		String deptId = request.getParameter("deptId") == null ? "" : request.getParameter("deptId");
-		String type = request.getParameter("type");// 类型id
+		String deptId = request.getParameter("deptId") == null ? "" : request.getParameter("deptId");//部门Id
+		String type = request.getParameter("type");// 用户类型id 3-院校 ，4-基础，5-大区 ，6学习中心
 		String groupCodeName = "";// 存放组织机构Id的字段名称
 		switch (type) {
 		case "3":
@@ -1031,7 +1033,7 @@ public class ManagerUserController extends BaseControllerUtil {
 			String aString = result.substring(0, 1);
 			if (aString.equals("{")) {
 				JSONObject object = JSONObject.fromObject(result);
-				if ("0".equals(object.get("status"))) {// 用户名已存在
+				if ("0".equals(object.get("status"))) {// 用户名已存在，返回提示
 					WebUtils.writeJson(response, object);
 					return;
 				}
@@ -1045,7 +1047,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		jsonObject.put("PASSWORD", passWord);
 		jsonObject.put("NAME", Name);
 		jsonObject.put("SEX", SEX);
-		if (!"4".equals(type)) {
+		if (!"4".equals(type)) {//非基础端用户
 			jsonObject.put("IDCARD", IDCARD);
 			jsonObject.put("ADDRESS", ADDRESS == null ? "" : ADDRESS);
 			jsonObject.put("POSTCODE", POSTCODE == null ? "" : POSTCODE);
@@ -1082,6 +1084,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		}else {
 			jsonObject.put(groupCodeName, groupId);// 相应组织编号
 		}
+		//添加oes用户
 		result = sendPostByJson(oesPrivilegeDev.getAddOesUserUrl() + "?Type=" + type, jsonObject);
 		parameters.clear();
 		if (result != null) {
@@ -1098,9 +1101,10 @@ public class ManagerUserController extends BaseControllerUtil {
 					parameters.put("appUserName", appUserName);
 					parameters.put("groupId", groupId);
 					parameters.put("deptId", deptId);
+					//添加权限用户
 					result = sendPost(oesPrivilegeDev.getAddPrivilegeUserUrl(), parameters);
 					object = JSONObject.fromObject(result);
-					if (("1").equals(object.getString("status"))) {// 如果权限用户添加成功
+					if (("1").equals(object.getString("status"))) {// 如果权限用户添加成功，添加用户中心用户
 						parameters = privilegeGetSignatureService.getOauthSignature(appId,
 								oesPrivilegeDev.getClientId(), access_token);
 						parameters.put("access_token", access_token);
