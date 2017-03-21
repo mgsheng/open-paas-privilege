@@ -2,32 +2,32 @@
 <!DOCTYPE HTML>
 <html lang="en">
 <head >
-<meta charset="utf-8" />
-<title>OES教务系统</title>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta content="width=device-width, initial-scale=1" name="viewport" />
-<meta content="OES教务" name="description" />
-<meta content="" name="author" />
-<link href="${pageContext.request.contextPath}/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-<link href="${pageContext.request.contextPath}/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
-<link href="${pageContext.request.contextPath}/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-<link href="${pageContext.request.contextPath}/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
-<link href="${pageContext.request.contextPath}/assets/global/css/components.min.css" rel="stylesheet" id="style_components" type="text/css" />
-<link href="${pageContext.request.contextPath}/assets/global/css/plugins.min.css" rel="stylesheet" type="text/css" />
-<link href="${pageContext.request.contextPath}/assets/layouts/layout/css/layout.min.css" rel="stylesheet" type="text/css" />
-<link href="${pageContext.request.contextPath}/assets/layouts/layout/css/themes/default.min.css" rel="stylesheet" type="text/css" id="style_color" />
-<link href="${pageContext.request.contextPath}/assets/layouts/layout/css/custom.min.css" rel="stylesheet" type="text/css" />
-<link rel="shortcut icon" href="${pageContext.request.contextPath}/images/favicon.ico" />
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/global/css/iconFont/iconfont.css">
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/themes/default/easyui.css">
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/themes/icon.css">
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/dataList.css">
-<script src="${pageContext.request.contextPath}/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/highcharts/highcharts.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/highcharts/modules/exporting.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
-<script src="http://10.100.133.80:8630/ImplyWCookie.aspx?jsessionId=${jsessionId}"></script>
+	<meta charset="utf-8" />
+	<title>OES教务系统</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="width=device-width, initial-scale=1" name="viewport" />
+	<meta content="OES教务" name="description" />
+	<meta content="" name="author" />
+	<link href="${pageContext.request.contextPath}/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+	<link href="${pageContext.request.contextPath}/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+	<link href="${pageContext.request.contextPath}/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	<link href="${pageContext.request.contextPath}/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
+	<link href="${pageContext.request.contextPath}/assets/global/css/components.min.css" rel="stylesheet" id="style_components" type="text/css" />
+	<link href="${pageContext.request.contextPath}/assets/global/css/plugins.min.css" rel="stylesheet" type="text/css" />
+	<link href="${pageContext.request.contextPath}/assets/layouts/layout/css/layout.min.css" rel="stylesheet" type="text/css" />
+	<link href="${pageContext.request.contextPath}/assets/layouts/layout/css/themes/default.min.css" rel="stylesheet" type="text/css" id="style_color" />
+	<link href="${pageContext.request.contextPath}/assets/layouts/layout/css/custom.min.css" rel="stylesheet" type="text/css" />
+	<link rel="shortcut icon" href="${pageContext.request.contextPath}/images/favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/global/css/iconFont/iconfont.css">
+	<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/easyui.css" rel="stylesheet" type="text/css" />
+	<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/master.css" rel="stylesheet" type="text/css" /> 
+	<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/icon.css" rel="stylesheet" type="text/css" /> 
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/dataList.css">
+	<script src="${pageContext.request.contextPath}/assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
+	<script src="http://10.100.133.80:8630/ImplyWCookie.aspx?jsessionId=${jsessionId}"></script>
 
 <script type="text/javascript">
 
@@ -62,58 +62,54 @@
 	//关闭窗口
 	function closePwd() {
     	$('#w').window('close');
-    	
 	}
 	function openWin() {
     	$('#w').window('open');
-    	$('#txtOLdPass').val('');
-		$('#txtNewPass').val('');
-    	$('#txtRePass').val('');
+    	$("#txtOLdPass").textbox("setValue",'');
+    	$("#txtNewPass").textbox("setValue",'');
+    	$("#txtRePass").textbox("setValue",'');
+    	
 	} 
 
 //修改密码
 	function serverLogin() {
-		var $oldpass = $('#txtOLdPass');
-		var $newpass = $('#txtNewPass');
-    	var $rePass = $('#txtRePass');
-    	if ($oldpass.val() == '') {
+		var oldPass = $('#txtOLdPass').textbox("getValue");
+		var newPass = $('#txtNewPass').textbox("getValue");
+    	var rePass = $('#txtRePass').textbox("getValue");
+    	if (oldPass == '') {
        	 	msgShow('系统提示', '请输入旧密码！', 'warning');
         	return false;
     	}
-    	if ($newpass.val() == '') {
+    	if (newPass == '') {
         	msgShow('系统提示', '请输入密码！', 'warning');
         	return false;
     	} else {
-    		var a = $newpass.val().length;
-    		if (a<6||a>20) {
+    		var len = newPass.length;
+    		if (len < 6 || len > 20) {
     		 	msgShow('系统提示', '请输入6~20位密码', 'warning');
     		 	return false;
         	}
 		}
-    	if ($rePass.val() == '') {
+    	if (rePass == '') {
         	msgShow('系统提示', '请在一次输入密码！', 'warning');
         	return false;
     	}
 
-    	if ($newpass.val() != $rePass.val()) {
+    	if (newPass != rePass) {
         	msgShow('系统提示', '两次密码不一至！请重新输入', 'warning');
         	return false;
     	}
     	var userName="${username}";
     	$.post('${pageContext.request.contextPath}/user/update',
-          	{newpass:$newpass.val(),oldpass:$oldpass.val(),userName:"${username}"},
+          	{newpass:newPass,oldpass:oldPass,userName:"${username}"},
            	function(data) {
              	if (data.status == "1") {
         			msgShow('系统提示', '恭喜，密码修改成功！', 'info');
         			closePwd();
-        			$newpass.val('');
-                	$rePass.val('');
 				} else if (data.status == "2"){
 					msgShow('系统提示', data.errMsg, 'info');
 				} else {
 					msgShow('系统提示', data.errMsg, 'info');
-					$newpass.val('');
-                	$rePass.val('');
 				}
               
    	 	});
@@ -223,24 +219,19 @@
 
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-
                                 <div class="portlet">
                                     <div class="portlet-body">
                                         <div class="tabbable-custom tabbable-tabdrop">
                                             <ul class="nav nav-tabs"></ul>
                                             <div class="tab-content">
-
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                
                             </div>
                         </div>
-                        
                     </div>
                 </div>
-           
            	</div>
            	<div class="page-footer">
                 <div class="page-footer-inner"> 2017 &copy; 奥鹏教育
@@ -289,17 +280,17 @@
 				<table cellpadding=3>
 					<tr>
 						<td>旧密码：</td>
-						<td><input id="txtOLdPass" type="password" class="txt01" />
+						<td><input  class="easyui-textbox" id="txtOLdPass" type="password" class="txt01" />
 						</td>
 					</tr>
 					<tr>
 						<td>新密码：</td>
-						<td><input id="txtNewPass" type="password" class="txt01" />
+						<td><input class="easyui-textbox" id="txtNewPass" type="password" class="txt01" />
 						</td>
 					</tr>
 					<tr>
 						<td>确认密码：</td>
-						<td><input id="txtRePass" type="password" class="txt01" />
+						<td><input class="easyui-textbox" id="txtRePass" type="password" class="txt01" />
 						</td>
 					</tr>
 				</table>
