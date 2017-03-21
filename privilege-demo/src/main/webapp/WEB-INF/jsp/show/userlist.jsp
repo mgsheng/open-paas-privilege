@@ -4,13 +4,13 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>用户信息列表</title>
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/themes/default/easyui.css">
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/themes/icon.css">
+		<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/easyui.css" rel="stylesheet" type="text/css" />
+		<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/master.css" rel="stylesheet" type="text/css" /> 
+		<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/icon.css" rel="stylesheet" type="text/css" /> 
 		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/dataList.css">
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/js/highcharts/highcharts.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/js/highcharts/modules/exporting.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
 		<style type="text/css">
 			.display{display: none;}
@@ -21,12 +21,12 @@
 				<div title="用户信息">
 					<div style="border:0 solid;margin-bottom:0;" fit="true" >
 						<div class="top" style="width: 100%">
-							<div class="easyui-panel" title="操作" style="padding-top:1%;" fit="true" >
+							<div class="easyui-panel" title="操作" style="padding-top:1%;overflow:hidden;" fit="true" >
 								<form id="fm" method="post" action="/managerUser/findUsers">
 									<table cellpadding="5%"  style="margin-left:4%;">
 										<tr style="width:100%;">
 											<td>
-													<input class="easyui-textbox" name="username" id="un" prompt="选填" style="width:100%;" label="用&nbsp;户&nbsp;名:"></input> 
+												<input class="easyui-textbox" name="username" id="un" prompt="选填" style="width:100%;" label="用&nbsp;户&nbsp;名:"></input> 
 											</td>
 											<td>
 												<input id="cc" class="easyui-combobox" name="dept" data-options="valueField:'groupCode',textField:'groupName'" label="机&nbsp;&nbsp;构:" style="width:280px;height:24px;padding:5px;">
@@ -267,8 +267,8 @@
 		
 	</div>
 	<!-- 添加用户窗口 -->
-	<div id="addWin" class="easyui-window" title="添加用户" style="width:37%;padding:30px 45px;background: #fafafa;height:450px;"
-		minimizable="false" maximizable="false" icon="icon-add">
+	<div id="addWin" class="easyui-window" title="添加用户" style="top:10%;padding:40px 45px;background: #fafafa;height:400px;"
+		minimizable="false" maximizable="false" icon="icon-add" collapsible="false">
 		<div  style="overflow-x: auto;">
 		<form id="ff" method="post" >
 		<input id="userId" type="hidden">
@@ -286,15 +286,14 @@
 						登&nbsp;&nbsp;录&nbsp;&nbsp;名:
 					</td>
 					<td >	
-						<input id="LOGINNAME"  name="username" type="text" >
+						<input id="LOGINNAME"  class="easyui-textbox" name="username" type="text"  >
 					</td>
-				</tr>
-				<tr>
+				
 					<td > 
 						真实姓名:
 					</td>
 					<td >	
-						<input id="NAME" type="text" >
+						<input id="NAME" class="easyui-textbox" type="text" >
 					</td>
 				</tr>
 				<tr>
@@ -313,17 +312,13 @@
 						密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码:
 					</td>
 					<td >	
-						<input id="pwd" 
-							 type="password"  name="password" >
+						<input id="pwd"  class="easyui-textbox" type="password"  name="password" >
 					</td>
-				</tr>
-				<tr  class="pass">
 					<td>
 						确认密码：
 					</td>
 					<td >	
-						<input id="confirm_pwd" 
-							name="confirmPwd" type="password"   >
+						<input id="confirm_pwd"  class="easyui-textbox" name="confirmPwd" type="password"   >
 					</td>
 				</tr>
 				<tr>
@@ -331,13 +326,13 @@
 						HR登录名：
 					</td>
 					<td>	
-						<input id="HRLOGINNAME"  name="HRLOGINNAME"  type="text">
+						<input id="HRLOGINNAME"   class="easyui-textbox" name="HRLOGINNAME"  type="text">
 					</td>
 					<td >
 						组织类型编码：
 					</td>
 					<td>	
-						<input id="ORGANIZATIONTYPECODE"  name="ORGANIZATIONTYPECODE"  type="text">
+						<input id="ORGANIZATIONTYPECODE"  class="easyui-textbox" name="ORGANIZATIONTYPECODE"  type="text">
 					</td>
 				</tr>
 				<tr>
@@ -345,13 +340,13 @@
 						固定电话：
 					</td>
 					<td >	
-						<input id="PHONENO"  name="PHONENO"  type="text">
+						<input id="PHONENO"  class="easyui-textbox" name="PHONENO"  type="text">
 					</td>
 					<td >
 						移动电话：
 					</td>
 					<td >	
-						<input id="MOBILEPHONE"  name="MOBILEPHONE"  type="text">
+						<input id="MOBILEPHONE"  class="easyui-textbox"  name="MOBILEPHONE"  type="text">
 					</td>
 				</tr>
 				<tr>
@@ -359,13 +354,13 @@
 						传真电话：
 					</td>
 					<td >	
-						<input id="FAX"  name="FAX"  type="text">
+						<input id="FAX"  class="easyui-textbox" name="FAX"  type="text">
 					</td>
 					<td >
 						电子邮箱：
 					</td>
 					<td >	
-						<input id="EMAIL"  name="EMAIL"  type="email">
+						<input id="EMAIL"  class="easyui-textbox" name="EMAIL"  type="email">
 					</td>
 				</tr>
 				<tr  class="UNIVERSITY">
@@ -373,13 +368,13 @@
 							所属部门：
 						</td>
 						<td >	
-							<input id="DEPARTMENT"  name="DEPARTMENT"  type="text">
+							<input id="DEPARTMENT"  class="easyui-textbox" name="DEPARTMENT"  type="text">
 						</td>
 						<td >
 							组织机构ID：
 						</td>
 						<td >	
-							<input id="ORGANIZATIONID"  name="ORGANIZATIONID"  type="text">
+							<input id="ORGANIZATIONID"  class="easyui-textbox" name="ORGANIZATIONID"  type="text">
 						</td>
 				</tr>
 				<!-- 基础特有 -->
@@ -397,7 +392,7 @@
 							孔子学院角色ID：
 						</td>
 						<td >	
-							<input id="KZROLEID"  name="KZROLEID"  type="text">
+							<input id="KZROLEID"  class="easyui-textbox" name="KZROLEID"  type="text">
 						</td>
 					</tr>
 					<tr class="base">
@@ -405,13 +400,13 @@
 							孔子学院ID：
 						</td>
 						<td >	
-							<input id="KZID"  name="KZID"  type="text">
+							<input id="KZID"   class="easyui-textbox" name="KZID"  type="text">
 						</td>
 						<td >
 							职员ID：
 						</td>
 						<td >	
-							<input id="STAFFID"  name="STAFFID"  type="text">
+							<input id="STAFFID"  class="easyui-textbox" name="STAFFID"  type="text">
 						</td>
 					</tr>
 					<tr >
@@ -467,14 +462,15 @@
 							部门ID：
 						</td>
 						<td class="dept">	
-							<input id="deptId" type="text">
+							<input id="deptId" class="easyui-textbox" type="text">
 						</td>
 					</tr>
 				</div> 
 			</table>
 		</form>
 		</div>
-		<div style="text-align:center;padding:5px 0">
+		
+		<div region="south" border="false" style="text-align:center;padding:5px 0 line-height: 30px;">
 			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitAddForm()" style="width:80px;margin:10px 15px">提交</a>
 			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="closeAddWin()" style="width:80px;margin:10px 15px">取消</a>
 		</div>
@@ -628,32 +624,38 @@
 		
 		// 清除添加用户表单
 		function clearAddForm(){
-			$('#LOGINNAME').val('').prop("disabled",false);
+			$("#LOGINNAME").textbox("setValue",'');
+			$('#LOGINNAME').textbox('textbox').attr('readonly',false);  
 			$('.pass').removeClass('display');
 			$('.dept').removeClass('display');
-			$('#deptId').val('');
-			$('#pwd').val('');
-			$('#confirm_pwd').val('');
+			$("#deptId").textbox("setValue",'');
+			$("#pwd").textbox("setValue",'');
+			$("#confirm_pwd").textbox("setValue",'');
 			$('#userId').val('');
-			$('#NAME').val('');
+			$("#NAME").textbox("setValue",'');
 			$('#SEX').val('01');
-			$('#PHONENO').val('');
-			$('#MOBILEPHONE').val('');
-			$('#FAX').val('');
-			$('#EMAIL').val('');
-			$('#DEPARTMENT').val('');
+			$("#PHONENO").textbox("setValue",'');
+			$("#MOBILEPHONE").textbox("setValue",'');
+			$("#FAX").textbox("setValue",'');
+			$("#EMAIL").textbox("setValue",'');
+			$("#DEPARTMENT").textbox("setValue",'');
+			$("#KZROLEID").textbox("setValue",'');
+			$('#KZROLEID').textbox('textbox').attr('readonly',false);  
+			$("#KZID").textbox("setValue",'');
+			$('#KZID').textbox('textbox').attr('readonly',false);  
+			$("#STAFFID").textbox("setValue",'');
+			$('#STAFFID').textbox('textbox').attr('readonly',false);  
 			$('#ISSUPERADMIN').val('0');
-			$('#KZROLEID').val('').prop("disabled",false);
-			$('#KZID').val('').prop("disabled",false);
-			$('#STAFFID').val('').prop("disabled",false);//职员ID
-			$('#ACTIVEBEGINDATE').val('');
-			$('#ACTIVEENDDATE').val('');
+			$('#ACTIVEBEGINDATE').val('');//有效时间
+			$('#ACTIVEENDDATE').val('');//失效时间
 			$('#ACTIVESTATUS').val('1');
 			$('#ISEDITPURCHASEPRICE').val('1');	
 			$('#StudyType').val('01');//教育类型
-			$('#ORGANIZATIONID').val('').prop("disabled",false);//组织ID
-			$('#ORGANIZATIONTYPECODE').val('').prop("disabled",false);//组织类型ID
-			$('#HRLOGINNAME').val('');
+			$("#ORGANIZATIONID").textbox("setValue",'');
+			$('#ORGANIZATIONID').textbox('textbox').attr('readonly',false); 
+			$("#ORGANIZATIONTYPECODE").textbox("setValue",'');
+			$('#ORGANIZATIONTYPECODE').textbox('textbox').attr('readonly',false); 
+			$("#HRLOGINNAME").textbox("setValue",'');
 		}
 		
 		//修改用户窗口
@@ -699,29 +701,35 @@
 		function getUserValue(data) {
 			$('#group').combobox('select',data.groupId);
 			$('#userId').val(data.USERID);
-			$('#LOGINNAME').val(data.LOGINNAME).prop("disabled",true);
+			$("#LOGINNAME").textbox("setValue",data.LOGINNAME);//登陆名
+			$('#LOGINNAME').textbox('textbox').attr('readonly',true); //只读方式
 			$('.pass').addClass("display");//密码隐藏
-			$('#pwd').val(data.PASSWORD);
-			$('.dept').addClass("display");//部门隐藏
-			$('#NAME').val(data.NAME);//真实姓名
+			$("#pwd").textbox("setValue",data.PASSWORD);
+			$('.dept').addClass("display");//部门Id隐藏
+			$("#NAME").textbox("setValue",data.NAME);//真实姓名
 			$('#SEX').val(data.SEX);
-			$('#PHONENO').val(data.PHONENO);//固定电话
-			$('#MOBILEPHONE').val(data.MOBILEPHONE);//移动电话
-			$('#FAX').val(data.FAX);//传真电话
-			$('#EMAIL').val(data.EMAIL);
-			$('#DEPARTMENT').val(data.DEPARTMENT);//部门
+			$("#PHONENO").textbox("setValue",data.PHONENO);//固定电话
+			$("#MOBILEPHONE").textbox("setValue",data.MOBILEPHONE);//移动电话
+			$("#FAX").textbox("setValue",data.FAX);//传真电话
+			$("#EMAIL").textbox("setValue",data.EMAIL);//邮箱
+			$("#DEPARTMENT").textbox("setValue",data.DEPARTMENT);//部门
 			$('#ISSUPERADMIN').val(data.ISSUPERADMIN);//是否是超级管理员
-			$('#KZROLEID').val(data.KZROLEID).prop("disabled",true);//孔子学院roleId
-			$('#KZID').val(data.KZID).prop("disabled",true);//孔子学院ID
-			$('#STAFFID').val(data.STAFFID).prop("disabled",true);//职员ID
+			$("#KZROLEID").textbox("setValue",data.KZROLEID);//孔子学院roleId
+			$('#KZROLEID').textbox('textbox').attr('readonly',true);  //只读方式
+			$("#KZID").textbox("setValue",data.KZID);//孔子学院ID
+			$('#KZID').textbox('textbox').attr('readonly',true); 
+			$("#STAFFID").textbox("setValue",data.STAFFID);//职员ID
+			$('#STAFFID').textbox('textbox').attr('readonly',true); 
 			$('#ACTIVEBEGINDATE').datebox('setValue',"" );//教材帐号生效日期
 			$('#ACTIVEENDDATE').datebox('setValue', "");//失效日期：
 			$('#ACTIVESTATUS').val(data.ACTIVESTATUS);//教材帐号状态：
 			$('#ISEDITPURCHASEPRICE').val(data.ISEDITPURCHASEPRICE);//	采购价格修改权限：
 			$('#StudyType').val(data.STUDYTYPE);//教育类型
-			$('#ORGANIZATIONID').val(data.ORGANIZATIONID).prop("disabled",true);//组织ID
-			$('#ORGANIZATIONTYPECODE').val(data.ORGANIZATIONTYPECODE).prop("disabled",true);//组织类型ID
-			$('#HRLOGINNAME').val(data.HRLOGINNAME);
+			$("#ORGANIZATIONID").textbox("setValue",data.ORGANIZATIONID);
+			$('#ORGANIZATIONID').textbox('textbox').attr('readonly',true); //组织ID
+			$("#ORGANIZATIONTYPECODE").textbox("setValue",data.ORGANIZATIONTYPECODE);//组织类型ID
+			$('#ORGANIZATIONTYPECODE').textbox('textbox').attr('readonly',true); 
+			$("#HRLOGINNAME").textbox("setValue",data.HRLOGINNAME);//Hr登陆名
 		}
 		//关闭修改用户窗口
 		function closeWin(){
@@ -850,14 +858,14 @@
 			var regex_MOBILEPHONE = /^1[3|4|5|8|7][0-9]\d{4,8}$/;
 			var regex_PHONENO = /^0\d{2,3}-?\d{7,8}$/;   
 			var regex_EMAIL = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
-			var username = $.trim($('#LOGINNAME').val()) ;
-			var password = $.trim($('#pwd').val()) ;
-			var confirm_pass = $.trim($('#confirm_pwd').val()) ;
-			var NAME = $.trim($('#NAME').val()) ;
+			var username = $.trim($("#LOGINNAME").textbox("getValue"));
+			var password = $.trim($("#pwd").textbox("getValue"));
+			var confirm_pass = $.trim($("#confirm_pwd").textbox("getValue")) ;
+			var NAME = $.trim($("#NAME").textbox("getValue")) ;
 			var groupId = $('#group').combobox('getValue');
-			var PHONENO = $.trim($('#PHONENO').val());
-			var MOBILEPHONE = $.trim($('#MOBILEPHONE').val());
-			var EMAIL = $('#EMAIL').val();
+			var PHONENO = $.trim($("#PHONENO").textbox("getValue"));
+			var MOBILEPHONE = $.trim($("#MOBILEPHONE").textbox("getValue"));
+			var EMAIL = $.trim($("#EMAIL").textbox("getValue"));
 			var userId = $('#userId').val();
 			if (NAME == "" || NAME == null) {
 				$.messager.alert("系统提示","姓名不能为空，请重新填写！","error");	
@@ -906,29 +914,29 @@
 		
 		// 提交（用户信息）
 		function submitAddForm(){
-			var userName = $.trim($('#LOGINNAME').val());
-			var passWord = $.trim($('#pwd').val()) ;
+			$("#ORGANIZATIONID").textbox("getValue")
+			var userName = $.trim($("#LOGINNAME").textbox("getValue"));
+			var passWord = $.trim($("#pwd").textbox("getValue")) ;
 			var groupId = $('#group').combobox('getValue');
-			var Name = $('#NAME').val();//真实姓名
+			var Name = $("#NAME").textbox("getValue");//真实姓名
 			var SEX = $('#SEX').val();
-			var PHONENO = $('#PHONENO').val();
-			var MOBILEPHONE = $('#MOBILEPHONE').val();
-			var FAX = $('#FAX').val();//传真电话
-			var EMAIL = $('#EMAIL').val();
-			var DEPARTMENT = $('#DEPARTMENT').val();//部门
-			var PERSONALDES = $('#PERSONALDES').val();//个人描述
+			var PHONENO = $("#PHONENO").textbox("getValue");
+			var MOBILEPHONE = $("#MOBILEPHONE").textbox("getValue");
+			var FAX = $("#FAX").textbox("getValue");//传真电话
+			var EMAIL = $("#EMAIL").textbox("getValue");
+			var DEPARTMENT = $("#DEPARTMENT").textbox("getValue");//部门
 			var ISSUPERADMIN = $('#ISSUPERADMIN').val();//是否是超级管理员
-			var KZROLEID = $('#KZROLEID').val();//孔子学院roleId
-			var KZID = $('#KZID').val();//孔子学院ID
-			var STAFFID = $('#STAFFID').val();//职员ID
+			var KZROLEID = $("#KZROLEID").textbox("getValue");//孔子学院roleId
+			var KZID = $("#KZID").textbox("getValue");//孔子学院ID
+			var STAFFID = $("#STAFFID").textbox("getValue");//职员ID
 			var ACTIVEBEGINDATE = $('#ACTIVEBEGINDATE').datebox('getValue');//教材帐号生效日期
 			var ACTIVEENDDATE = $('#ACTIVEENDDATE').datebox('getValue');//失效日期：
 			var ACTIVESTATUS = $('#ACTIVESTATUS').val();//教材帐号状态：
 			var ISEDITPURCHASEPRICE = $('#ISEDITPURCHASEPRICE').val();//	采购价格修改权限：
 			var StudyType = $('#StudyType').val();//教育类型
-			var HRLOGINNAME = $('#HRLOGINNAME').val();
-			var deptId = $('#deptId').val();
-			var ORGANIZATIONID = $('#ORGANIZATIONID').val();
+			var HRLOGINNAME = $("#HRLOGINNAME").textbox("getValue");
+			var deptId = $("#deptId").textbox("getValue");
+			var ORGANIZATIONID = $("#ORGANIZATIONID").textbox("getValue");
 			if (ACTIVEBEGINDATE.length >0) {
 				var newTime = new Date(ACTIVEBEGINDATE);
 				ACTIVEBEGINDATE = newTime.format("yyyy-MM-dd hh:mm:ss");
@@ -961,9 +969,9 @@
 						"appId":'${appId}',"appUserName":userName,"passWord":passWord,"groupId":groupId,
 						"Name":Name,"SEX":SEX,"PHONENO":PHONENO,"type":'4',"StudyType":StudyType,"KZID":KZID,
 						"MOBILEPHONE":MOBILEPHONE,"FAX":FAX,"DEPARTMENT":DEPARTMENT,"EMAIL":EMAIL,"deptId":deptId,
-						"PERSONALDES":PERSONALDES,"ISSUPERADMIN":ISSUPERADMIN,"KZROLEID":KZROLEID,
+						"ISSUPERADMIN":ISSUPERADMIN,"KZROLEID":KZROLEID,"HRLOGINNAME":HRLOGINNAME,
 						"STAFFID":STAFFID,"ACTIVEBEGINDATE":"","ACTIVEENDDATE":"","ORGANIZATIONID":ORGANIZATIONID,
-						"ACTIVESTATUS":ACTIVESTATUS,"ISEDITPURCHASEPRICE":ISEDITPURCHASEPRICE,"HRLOGINNAME":HRLOGINNAME
+						"ACTIVESTATUS":ACTIVESTATUS,"ISEDITPURCHASEPRICE":ISEDITPURCHASEPRICE
 					},
                  	function(data){
                      	if (data.status == '1') {
