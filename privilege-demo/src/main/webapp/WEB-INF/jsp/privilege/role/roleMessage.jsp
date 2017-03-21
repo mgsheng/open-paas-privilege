@@ -3,14 +3,16 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/themes/default/easyui.css">
-	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/themes/icon.css">
+	<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/easyui.css" rel="stylesheet" type="text/css" />
+	<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/master.css" rel="stylesheet" type="text/css" /> 
+	<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/icon.css" rel="stylesheet" type="text/css" /> 
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/dataList.css">
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
 </head>
-<body>
+<body style="overflow: hidden;">
 
     
 	
@@ -45,10 +47,10 @@
 					<input id="id" type="hidden" />
 					<tr style="height: 40px">
 						<td>名称：</td>
-						<td><input id="roleName" type="text" class="txt01" value=""/>
+						<td><input id="roleName"  class="easyui-textbox" type="text" class="txt01" value=""/>
 						</td>
 						<td>部门名称：</td>
-						<td><input id="deptName" type="text" class="txt01" value=""/>
+						<td><input id="deptName"  class="easyui-textbox" type="text" class="txt01" value=""/>
 						</td>
 					</tr>
 					<tr style="height: 40px">
@@ -75,7 +77,7 @@
 					</tr>
 					<tr style="height: 40px">
 						<td>备注：</td>
-						<td colspan="3"><textarea id="remark" rows="2" cols="60"></textarea>
+						<td colspan="3"><textarea id="remark" rows="2" cols="40"></textarea>
 						</td>
 					</tr>
 				</table>
@@ -100,26 +102,26 @@
 
 	<script>
 	var group;//存放组织机构选择的下拉框数据
-	var initialResIds='';//用于存放修改界面中选中的resource
-	var initialFunIds='';//用于存放修改界面中选中的function
-	var checkedResIds='';//存放选中的resource
-	var checkedFunIds='';//存放选中的function
-	var addIds='';//存放修改时添加的权限Id
-	var delIds='';//存放修改时删除的权限Id
-	var checkIds='';//存放添加时的选中Id
-	var roleId='';
-	var groupList='';//存放下拉框组织机构所有数据
+	var initialResIds = '';//用于存放修改界面中选中的resource
+	var initialFunIds = '';//用于存放修改界面中选中的function
+	var checkedResIds = '';//存放选中的resource
+	var checkedFunIds = '';//存放选中的function
+	var addIds = '';//存放修改时添加的权限Id
+	var delIds = '';//存放修改时删除的权限Id
+	var checkIds = '';//存放添加时的选中Id
+	var roleId = '';
+	var groupList = '';//存放下拉框组织机构所有数据
 	$(document).ready(function(){
 		$.post('${pageContext.request.contextPath}/managerRole/findGroup',function (data) {
 			$('#cc').combobox('loadData',data);
-			groupList=data;
+			groupList = data;
 		});
 		
 		loadData();
 		//选择组织机构时更新树
 		$('#cc').combobox({
 			onSelect: function(record){
-				group=record;
+				group = record;
 				var groupId =record.groupCode;
 				if(groupId.length>0){
 					$.ajax({type:'GET',
@@ -163,10 +165,9 @@
 			if (groupList.length==1) {
 				$('#cc').combobox('select',groupList[0].groupCode);
 			}
-		   	document.getElementById("roleName").value=""; 
+			$("#roleName").textbox("setValue",'');
 			document.getElementById("id").value=""; 
-		    document.getElementById("roleName").value=""; 
-		    document.getElementById("deptName").value=""; 
+			$("#deptName").textbox("setValue",'');
 		    document.getElementById("remark").value=""; 
 		    $("#status").get(0).selectedIndex = 0;//index为索引值
 		   	clearChoose();
@@ -245,8 +246,8 @@
     }
     
     function removeit(){
-		 var roleName=$("#roleName").val();
-		 var appId=${appId};
+		 var roleName = $("#roleName").textbox("getValue");
+		 var appId = ${appId};
 		 var row = $('#dg').datagrid('getSelected');
 		 if (row){
 			$.messager.confirm('系统提示', '是否确定删除?', function(r){
@@ -277,27 +278,27 @@
 		
         //添加/修改
         function serverUpdate() {         	
-        	var privilegeRoleId=$("#id").val();
-        	var appId=${appId};
+        	var privilegeRoleId = $("#id").val();
+        	var appId = ${appId};
         	var ui = $('#deptree1').tree('getChecked', ['checked','checked']);
         	getCheckedIds(ui,checkIds);
-            var roleName = $('#roleName').val();
+            var roleName = $("#roleName").textbox("getValue");
             var status= $('#status').val();
-            var deptName=$('#deptName').val();
-            var groupId=group.groupCode;
-            var groupName=group.groupName;
-            var roleType= $('#roleType').val();
-            var remark=$('#remark').val();
+            var deptName = $("#deptName").textbox("getValue");
+            var groupId = group.groupCode;
+            var groupName = group.groupName;
+            var roleType = $('#roleType').val();
+            var remark = $('#remark').val();
             if (roleName == '') {
                 msgShow('系统提示', '请输入名称！', 'warning');
                 return false;
             }
             var url;
-            if(privilegeRoleId==null || privilegeRoleId==""){
+            if (privilegeRoleId == null || privilegeRoleId == ""){
                 url='${pageContext.request.contextPath}/managerRole/addRole';
-            }else{
+            } else {
             	getIds();
-            	url='${pageContext.request.contextPath}/managerRole/updateRole';
+            	url = '${pageContext.request.contextPath}/managerRole/updateRole';
             }
             $.post(url,{
             	appId:appId,
@@ -456,10 +457,10 @@
    					   var groupId=row.groupId;
    					   var remark=row.remark;
    					   $('#cc').combobox('select',groupId);
-   					   document.getElementById("id").value=id; 
-   					   document.getElementById("roleName").value=name; 
-   					   document.getElementById("deptName").value=deptName; 
-   					   document.getElementById("remark").value=remark; 
+   					   document.getElementById("id").value = id; 
+   					   $("#roleName").textbox("setValue",name);
+   					   $("#deptName").textbox("setValue",deptName);
+   					   document.getElementById("remark").value = remark; 
    					   if (roleType=='管理员') {
    						 	$("#roleType").val("2");
 						}else {
