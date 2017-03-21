@@ -11,7 +11,7 @@
 	<link href="${pageContext.request.contextPath}/css/pages/login-yb.css"
 	rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath}/css/themes/default/easyui.css" />
+	href="${pageContext.request.contextPath}/css/themes/bootstrap/easyui.css" />
     <link href="${pageContext.request.contextPath}/css/login.css" rel="stylesheet" type="text/css">
     <script src="${pageContext.request.contextPath}/js/jquery-1.4.4.min.js" type="text/javascript"></script>
     <script type="text/javascript"
@@ -38,7 +38,7 @@
                 <input type="password" id="password" name="password" placeholder="密码" >
             </div>
             <a href="#"><button class="l_btn" onclick="btnSubmit()">登录</button></a>
-            <p class="fr cz" onclick="clear()"><a href="javascript:void(0)" ></a>重置</p>
+            <p class="fr cz" ><a href="javascript:void(0)" ></a>重置</p>
         </div>
     </div>
 </div>
@@ -46,6 +46,10 @@
     <p>版权所有：奥鹏教育 Copyright ©2003-2015 open.com.cn ALL rights reserved</p>
 </footer>
 <script type="text/javascript">
+	$('.fr').click(function(){
+		$('#username').val('');
+		$('#password').val('');
+	});
 	function msgShow(title, msgString, msgType) {
 		$.messager.alert(title, msgString, msgType);
 	}
