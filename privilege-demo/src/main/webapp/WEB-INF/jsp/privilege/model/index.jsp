@@ -2,13 +2,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/themes/default/easyui.css">
-	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/themes/icon.css">
-	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/dataList.css">
-	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
-	<script type="text/javascript"
-	src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
+	<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/easyui.css" rel="stylesheet" type="text/css" />
+		<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/master.css" rel="stylesheet" type="text/css" /> 
+		<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/icon.css" rel="stylesheet" type="text/css" /> 
+		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/dataList.css">
+		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
 	<style type="text/css">
 		.txt01{
 			width: 230px;
@@ -54,29 +55,29 @@
 					</tr>
 					<tr>
 						<td>名称：</td>
-						<td><input id="moduleName" name="name" type="text" class="txt01" />
+						<td><input id="moduleName" class="easyui-textbox" name="name" type="text" class="txt01" />
 						</td>
 					</tr>
 					<tr id="url">
 						<td>URL：</td>
-						<td><input id="moduleUrl" type="text" name="moduleUrl" class="txt01" />
+						<td><input id="moduleUrl" class="easyui-textbox" type="text" name="moduleUrl" class="txt01" />
 						</td>
 					</tr>
 					<tr >
 						<td>图标：</td>
 						<td>
-							<select id="icon"></select><a id="clearIcon" class="easyui-linkbutton" icon="icon-clear" href="javascript:void(0)">清空图标</a> 
+							<select id="icon" ></select><a id="clearIcon" class="easyui-linkbutton" icon="icon-clear" href="javascript:void(0)">清空图标</a> 
 							<div id="sp"></div>
 						</td>
 					</tr>
 					<tr>
 						<td>code：</td>
-						<td><input id="code" type="text" name="code" class="txt01" />
+						<td><input id="code" type="text" class="easyui-textbox" name="code" class="txt01" />
 						</td>
 					</tr>
 					<tr>
 						<td>排序：</td>
-						<td><input id="display_order" name="displayOrder"type="text" class="txt01" />
+						<td><input id="display_order" class="easyui-textbox" name="displayOrder"type="text" class="txt01" />
 						</td>
 					</tr>
 					<tr>
@@ -127,7 +128,7 @@
 					</tr>
 					<tr>
 						<td>URL：</td>
-						<td><input id="opturl" type="text" name="url"class="txt01" />
+						<td><input id="opturl" class="easyui-textbox" type="text" name="url"class="txt01" />
 						</td>
 					</tr>
 				</table>
@@ -210,7 +211,7 @@
         }
       //添加或修改功能
         $('#addFunct2').click(function(){
-        	var optUrl = $('#opturl').val();
+        	var optUrl = $("#opturl").textbox("getValue");
         	if(optUrl == ''){
             	msgShow('系统提示', '请输入Url！', 'warning');
                 return false;
@@ -283,19 +284,19 @@
         menuIconUrl=menuIconUrl.substring(1); 
         //添加菜单或修改菜单
         function serverLogin() {
-            var name = $('#moduleName').val();
-            var code = $('#code').val();
-            var moduleUrl= $('#moduleUrl').val();
-            var displayOrder= $('#display_order').val();
-            var menuRule=$('#icon').combobox('getValue');
-            if(menuRule!=null&&menuRule!=""){
+            var name =  $("#moduleName").textbox("getValue");
+            var code = $("#code").textbox("getValue");
+            var moduleUrl = $("#moduleUrl").textbox("getValue");
+            var displayOrder = $("#display_order").textbox("getValue");
+            var menuRule = $('#icon').combobox('getValue');
+            if (menuRule != null && menuRule != ""){
             	  menuRule=menuIconUrl+menuRule;
                 }
-            var status= $('#status').combobox('getValue');
-            var parentId=$('#parentId').val();
-            var menuLevel=$('#menuLevel').val();
-            var menuId=$('#menuId').val();
-            var resourceId=$('#resourceId').val();
+            var status = $('#status').combobox('getValue');
+            var parentId = $('#parentId').val();
+            var menuLevel = $('#menuLevel').val();
+            var menuId = $('#menuId').val();
+            var resourceId = $('#resourceId').val();
             if (name == '') {
                 msgShow('系统提示', '请输入名称！', 'warning');
                 return false;
@@ -304,7 +305,7 @@
                 msgShow('系统提示', '请输入排序！', 'warning');
                 return false;
             }
-            if(!$('#moduleUrl').is(':hidden') &&  moduleUrl == ''){
+            if (!$('#url').is(':hidden') &&  moduleUrl == ''){
             	msgShow('系统提示', '请输入Url！', 'warning');
                 return false;
             }
@@ -759,14 +760,14 @@
 			function reset(){
 				jQuery('#parentName').val('');
 				jQuery('#parentId').val('');
-				jQuery('#moduleName').val('');
-				jQuery('#moduleUrl').val('');
-				jQuery('#code').val('');
-				jQuery('#display_order').val('');
+				$("#moduleName").textbox("setValue",'');
+				$("#moduleUrl").textbox("setValue",'');
+				$("#code").textbox("setValue",'');
+				$("#display_order").textbox("setValue",'');
 				$('#functionId').val('');
 				$('#menuLevel').val('');
 				$('#resourceId').val('');
-				$('#opturl').val('');
+				$("#opturl").textbox("setValue",'');
 				$('#menuId').val('');
 				$('#status').combobox('setValue', '1');
 			}
@@ -783,7 +784,7 @@
 		    	var optUrl=node.attributes.optUrl;
 				var optId=node.attributes.optId;
 				$('#functionId').val(functionId);
-				$('#opturl').val(optUrl);
+				$("#opturl").textbox("setValue",optUrl);
 				$('#operName').combobox('select',optId);
 				
 		    }
@@ -798,7 +799,7 @@
 				var resourceId;
 				if(data.ismodule=="0"){
 					menuId=data.id;
-					$('#moduleUrl').val("");
+					$("#moduleUrl").textbox("setValue",'');
 					$('#url').hide();
 				}else if (data.ismodule=="1") {
 					menuId=data.attributes.menuId;
@@ -806,7 +807,8 @@
 					$('#resourceId').val(resourceId);
 					$('#url').show();
 					var url = data.attributes.baseUrl;
-					$('#moduleUrl').val(url);
+					$("#moduleUrl").textbox("setValue",url);
+					//$('#moduleUrl').val(url);
 				}
 				var parentId = data.attributes.parentId;
 				var name = data.text;
@@ -823,9 +825,9 @@
 					$('#parentName').html(node.text);
 				}
 				jQuery('#parentId').val(parentId);
-				jQuery('#moduleName').val(name);
-				jQuery('#code').val(code);
-				jQuery('#display_order').val(displayOrder);
+				$("#moduleName").textbox("setValue",name);
+				$("#code").textbox("setValue",code);
+				$("#display_order").textbox("setValue",displayOrder);
 				jQuery('#menuLevel').val(menuLevel);
 
 				$('#status').combobox('setValue', status);
