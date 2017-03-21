@@ -4,13 +4,13 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>大区用户信息列表</title>
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/themes/default/easyui.css">
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/themes/icon.css">
+		<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/easyui.css" rel="stylesheet" type="text/css" />
+		<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/master.css" rel="stylesheet" type="text/css" /> 
+		<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/icon.css" rel="stylesheet" type="text/css" /> 
 		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/dataList.css">
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/js/highcharts/highcharts.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/js/highcharts/modules/exporting.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
 		<style type="text/css">
 			.display{display: none;}
@@ -21,7 +21,7 @@
 				<div title="用户信息">
 					<div style="border:0 solid;margin-bottom:0;" fit="true" >
 						<div class="top" style="width: 100%">
-							<div class="easyui-panel" title="操作" style="padding-top:1%;" fit="true" >
+							<div class="easyui-panel" title="操作" style="padding-top:1%;overflow: hidden;" fit="true" >
 								<form id="fm" method="post" action="/managerUser/findUsers">
 									<table cellpadding="5%"  style="margin-left:4%;">
 										<tr style="width:100%;">
@@ -207,15 +207,13 @@
 						登&nbsp;&nbsp;录&nbsp;&nbsp;名:
 					</td>
 					<td >	
-						<input id="LOGINNAME"  name="username" type="text" >
+						<input id="LOGINNAME" class="easyui-textbox" name="username" type="text" >
 					</td>
-				</tr>
-				<tr>
 					<td > 
 						真实姓名:
 					</td>
 					<td >	
-						<input id="NAME" type="text" >
+						<input id="NAME" class="easyui-textbox" type="text" >
 					</td>
 				</tr>
 				<tr>
@@ -234,17 +232,13 @@
 						密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码:
 					</td>
 					<td >	
-						<input id="pwd" 
-							 type="password"  name="password" >
+						<input id="pwd" class="easyui-textbox" type="password"  name="password" >
 					</td>
-				</tr>
-				<tr class="pass">
 					<td>
 						确认密码：
 					</td>
 					<td >	
-						<input id="confirm_pwd" 
-							name="confirmPwd" type="password"   >
+						<input id="confirm_pwd" class="easyui-textbox" name="confirmPwd" type="password"   >
 					</td>
 				</tr>
 				<tr>
@@ -252,13 +246,13 @@
 						HR登录名：
 					</td>
 					<td>	
-						<input id="HRLOGINNAME"  name="HRLOGINNAME"  type="text">
+						<input id="HRLOGINNAME" class="easyui-textbox"  name="HRLOGINNAME"  type="text">
 					</td>
 					<td >
 						身份证号：
 					</td>
 					<td>	
-						<input id="IDCARD"    type="text">
+						<input id="IDCARD"   class="easyui-textbox" type="text">
 					</td>
 				</tr>
 				<tr>
@@ -266,13 +260,13 @@
 						固定电话：
 					</td>
 					<td >	
-						<input id="PHONENO"  name="PHONENO"  type="text">
+						<input id="PHONENO" class="easyui-textbox" name="PHONENO"  type="text">
 					</td>
 					<td >
 						移动电话：
 					</td>
 					<td >	
-						<input id="MOBILEPHONE"  name="MOBILEPHONE"  type="text">
+						<input id="MOBILEPHONE" class="easyui-textbox" name="MOBILEPHONE"  type="text">
 					</td>
 				</tr>
 				<tr>
@@ -280,7 +274,7 @@
 						电子邮箱：
 					</td>
 					<td >	
-						<input id="EMAIL"  name="EMAIL"  type="email">
+						<input id="EMAIL" class="easyui-textbox" name="EMAIL"  type="email">
 					</td>
 				</tr>
 				<tr  >
@@ -288,7 +282,7 @@
 							联系地址：
 						</td>
 						<td >	
-							<input id="ADDRESS"  name="ADDRESS"  type="text">
+							<input id="ADDRESS" class="easyui-textbox" name="ADDRESS"  type="text">
 						</td>
 				</tr>
 				<tr  >
@@ -296,13 +290,13 @@
 							邮编：
 						</td>
 						<td >	
-							<input id="POSTCODE"  name="POSTCODE"  type="text">
+							<input id="POSTCODE" class="easyui-textbox"  name="POSTCODE"  type="text">
 						</td>
 						<td  class="dept">
 							部门ID：
 						</td>
 						<td class="dept">	
-							<input id="deptId" type="text">
+							<input id="deptId" class="easyui-textbox" type="text">
 						</td>
 				</tr>
 				
@@ -456,21 +450,24 @@
 		
 		// 清除添加用户表单
 		function clearAddForm(){
-			$('#LOGINNAME').val('');
-			$('.pass').removeClass("display");
-			$('.dept').removeClass("display");
-			$('#pwd').val('');
-			$('#confirm_pwd').val('');
-			$('#NAME').val('');//真实姓名
+			$("#LOGINNAME").textbox("setValue",'');
+			$('#LOGINNAME').textbox('textbox').attr('readonly',false);  
+			$('.pass').removeClass('display');
+			$('.dept').removeClass('display');
+			$("#deptId").textbox("setValue",'');
+			$("#pwd").textbox("setValue",'');
+			$("#confirm_pwd").textbox("setValue",'');
+			$('#userId').val('');
+			$("#NAME").textbox("setValue",'');
 			$('#SEX').val('01');
-			$('#PHONENO').val('');//固定电话
-			$('#MOBILEPHONE').val('');//移动电话
-			$('#EMAIL').val('');
-			$('#IDCARD').val('');//身份证号
-			$('#ADDRESS').val('');//地址
-			$('#POSTCODE').val('');//邮编
-			$('#HRLOGINNAME').val('');//HR登陆名
-			$('#deptId').val('');
+			$("#PHONENO").textbox("setValue",'');
+			$("#MOBILEPHONE").textbox("setValue",'');
+			$("#EMAIL").textbox("setValue",'');
+			$("#IDCARD").textbox("setValue",'');
+			$("#ADDRESS").textbox("setValue",'');
+			$("#POSTCODE").textbox("setValue",'');
+			$("#HRLOGINNAME").textbox("setValue",'');
+
 		}
 		
 		//修改用户窗口
@@ -513,21 +510,22 @@
 		};
 		//获取该用户的数据，并显示
 		function getUserValue(data) {
-			$('#group').combobox('select',data.DCENTERCODE);
+			$("#LOGINNAME").textbox("setValue",data.LOGINNAME);
+			$('#LOGINNAME').textbox('textbox').attr('readonly',true);  
+			$("#pwd").textbox("setValue",data.PASSWORD);
+			$("#NAME").textbox("setValue",data.NAME);//真实姓名
+			$("#PHONENO").textbox("setValue",data.PHONENO);//固定电话
+			$("#MOBILEPHONE").textbox("setValue",data.MOBILEPHONE);//移动电话
+			$("#EMAIL").textbox("setValue",data.EMAIL);
+			$("#IDCARD").textbox("setValue",data.IDCARD);//身份证号
+			$("#ADDRESS").textbox("setValue",data.ADDRESS);//地址
+			$("#POSTCODE").textbox("setValue",data.POSTCODE);//邮编
+			$("#HRLOGINNAME").textbox("setValue",data.HRLOGINNAME);//HR登陆名
+			$('#group').combobox('select',data.LCENTERCODE);
 			$('#userId').val(data.USERID);
-			$('#LOGINNAME').val(data.LOGINNAME);
 			$('.pass').addClass("display");
-			$('#pwd').val(data.PASSWORD);
 			$('.dept').addClass("display");
-			$('#NAME').val(data.NAME);//真实姓名
 			$('#SEX').val(data.SEX);
-			$('#PHONENO').val(data.PHONENO);//固定电话
-			$('#MOBILEPHONE').val(data.MOBILEPHONE);//移动电话
-			$('#EMAIL').val(data.EMAIL);
-			$('#IDCARD').val(data.IDCARD);//身份证号
-			$('#ADDRESS').val(data.ADDRESS);//地址
-			$('#POSTCODE').val(data.POSTCODE);//邮编
-			$('#HRLOGINNAME').val(data.HRLOGINNAME);//HR登陆名
 		}
 		//关闭修改用户窗口
 		function closeWin(){
@@ -646,16 +644,15 @@
 			var regex_MOBILEPHONE = /^1[3|4|5|8|7][0-9]\d{4,8}$/;
 			var regex_PHONENO = /^0\d{2,3}-?\d{7,8}$/;   
 			var regex_EMAIL = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
-			var username = $.trim($('#LOGINNAME').val()) ;
-			var password = $.trim($('#pwd').val()) ;
-			var confirm_pass = $.trim($('#confirm_pwd').val()) 
-			var IDCARD = $.trim($('#IDCARD').val()) ;
-			var NAME = $.trim($('#NAME').val()) ;
+			var username = $.trim($("#LOGINNAME").textbox("getValue")) ;
+			var password = $.trim($("#pwd").textbox("getValue")) ;
+			var confirm_pass = $.trim($("#confirm_pwd").textbox("getValue")) ;
+			var NAME = $.trim($("#NAME").textbox("getValue")) ;
 			var groupId = $('#group').combobox('getValue');
-			var IDCARD = $.trim($('#IDCARD').val());
-			var PHONENO = $.trim($('#PHONENO').val());
-			var MOBILEPHONE = $.trim($('#MOBILEPHONE').val());
-			var EMAIL = $('#EMAIL').val();
+			var IDCARD = $.trim($("#IDCARD").textbox("getValue"));
+			var PHONENO = $.trim($("#PHONENO").textbox("getValue"));
+			var MOBILEPHONE = $.trim($("#MOBILEPHONE").textbox("getValue"));
+			var EMAIL = $.trim($("#EMAIL").textbox("getValue"));
 			var userId = $('#userId').val();
 			if (NAME == "" || NAME == null) {
 				$.messager.alert("系统提示","姓名不能为空，请重新填写！","error");	
@@ -710,19 +707,19 @@
 		
 		// 提交（用户信息）
 		function submitAddForm(){
-			var userName = $.trim($('#LOGINNAME').val());
-			var passWord = $.trim($('#pwd').val()) ;
+			var userName = $.trim($("#LOGINNAME").textbox("getValue"));
+			var passWord = $.trim($("#pwd").textbox("getValue")) ;
 			var groupId = $('#group').combobox('getValue');
-			var Name = $('#NAME').val();//真实姓名
+			var Name = $("#NAME").textbox("getValue");//真实姓名
 			var SEX = $('#SEX').val();
-			var PHONENO = $('#PHONENO').val();
-			var MOBILEPHONE = $('#MOBILEPHONE').val();
-			var EMAIL = $('#EMAIL').val();
-			var IDCARD = $('#IDCARD').val();//身份证号
-			var POSTCODE = $('#POSTCODE').val();//邮编
-			var ADDRESS = $('#ADDRESS').val();//地址
-			var HRLOGINNAME = $('#HRLOGINNAME').val();//HR登陆名
-			var deptId = $('#deptId').val();
+			var PHONENO = $("#PHONENO").textbox("getValue");
+			var MOBILEPHONE = $("#MOBILEPHONE").textbox("getValue");
+			var EMAIL = $("#EMAIL").textbox("getValue");
+			var IDCARD = $("#IDCARD").textbox("getValue");//身份证号
+			var POSTCODE = $("#POSTCODE").textbox("getValue");//邮编
+			var ADDRESS = $("#ADDRESS").textbox("getValue");//地址
+			var HRLOGINNAME = $("#HRLOGINNAME").textbox("getValue");//HR登陆名
+			var deptId = $("#deptId").textbox("getValue");
 			$('#ff').form('submit',{
 				onSubmit:function(){
 					return $(this).form('enableValidation').form('validate');
