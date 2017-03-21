@@ -6,16 +6,16 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title>奥鹏教育</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" charset="utf-8">
-    <link href="${pageContext.request.contextPath}/css/default.css"
+    <link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/easyui.css" rel="stylesheet" type="text/css" />
+	<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/master.css" rel="stylesheet" type="text/css" /> 
+	<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/icon.css" rel="stylesheet" type="text/css" /> 
+	<link href="${pageContext.request.contextPath}/css/pages/login-yb.css"
 	rel="stylesheet" type="text/css" />
-	 <link href="${pageContext.request.contextPath}/css/pages/login-yb.css"
-	rel="stylesheet" type="text/css" />
-	<link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath}/css/themes/default/easyui.css" />
+	
     <link href="${pageContext.request.contextPath}/css/login.css" rel="stylesheet" type="text/css">
-    <script src="${pageContext.request.contextPath}/js/jquery-1.4.4.min.js" type="text/javascript"></script>
-    <script type="text/javascript"
-	src="${pageContext.request.contextPath}/js/jquery.easyui.min.1.2.2.js"></script>
+   <script src="${pageContext.request.contextPath}/js/jquery-1.4.4.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
     <script language="JavaScript">
         if(window != top){
             top.location.href="/";
