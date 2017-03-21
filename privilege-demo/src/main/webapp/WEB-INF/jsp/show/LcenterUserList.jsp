@@ -506,10 +506,6 @@
 			$('#fm').form('clear');
 		}
 		
-		// 清空修改用户窗口
-		function clearTable(){
-			$('#tb').form('clear');
-		};
 		
 		//打开修改用户窗口
 		win();
@@ -562,18 +558,18 @@
 		//根据用户ID删除用户
 		function removeUserByID(){
 			var row = $('#dg').datagrid('getSelected');
-			if (row){
+			if (row) {
 				$.messager.confirm('系统提示', '是否确定删除?', function(r){
-					if (r){
+					if (r) {
 						   var appUserId = row.USERID;
 						   var loginName = row.LOGINNAME;
 						   var url='${pageContext.request.contextPath}/managerUser/removeUserByID?appId=${appId}&appUserId='+appUserId+'&type=6&loginName='+loginName;
 						   $.post(url,
 			                    	function(data){
-			                        	if (data.status=='1') {
+			                        	if (data.status == '1') {
 				                			msgShow('系统提示', '删除成功！', 'warning');
 				                			findUsers();
-				    					}else if (data.status=='0'){
+				    					} else if (data.status == '0') {
 				    						msgShow('系统提示', '删除不成功！', 'warning');
 				    						findUsers();
 				    					}
@@ -585,12 +581,6 @@
             }
 		}
 		
-		//列表重新加载
-		function reload(url,name){
-			$('#dg').datagrid('reload',{
-	            url: url, queryParams:{ name:name}, method: "post"
-	          }); 
-		}
 		// 查询用户方法
 		function findUsers(){
 			var groupId = null;
@@ -756,7 +746,6 @@
 			var userName = $.trim($('#LOGINNAME').val());
 			var passWord = $.trim($('#pwd').val()) ;
 			var groupId = $('#group').combobox('getValue');
-			var codeName = UserGroup.codeName;
 			var Name = $('#NAME').val();//真实姓名
 			var SEX = $('#SEX').val();
 			var PHONENO = $('#PHONENO').val();
