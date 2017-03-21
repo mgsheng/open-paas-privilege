@@ -4,21 +4,21 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>OES机构列表</title>
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/themes/default/easyui.css">
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/themes/icon.css">
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/dataList.css">
-		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/js/highcharts/highcharts.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/js/highcharts/modules/exporting.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
+		<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/easyui.css" rel="stylesheet" type="text/css" />
+	<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/master.css" rel="stylesheet" type="text/css" /> 
+	<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/icon.css" rel="stylesheet" type="text/css" /> 
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/dataList.css">
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
 	</head>
 	<body >
 			<div id="tt" class="easyui-tabs" fit="true" style="font-size:1em;">
 				<div title="Oes机构信息">
 					<div style="border:0 solid;margin-bottom:0;" fit="true" >
 						<div class="top" style="width: 100%">
-							<div class="easyui-panel" title="操作" style="padding-top:1%;" fit="true" >
+							<div class="easyui-panel" title="操作" style="padding-top:1%;overflow: hidden;" fit="true" >
 								<form id="fm" method="post" action="/oesGroup/findGroups">
 									<table cellpadding="5%"  style="margin-left:4%;">
 										<tr style="width:100%;">
