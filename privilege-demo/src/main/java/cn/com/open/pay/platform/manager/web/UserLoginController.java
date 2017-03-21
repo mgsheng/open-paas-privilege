@@ -418,12 +418,15 @@ public class UserLoginController extends BaseControllerUtil {
 		String appId = (String) user.get("appId");
 		String menuId = request.getParameter("menuId");
 		String menuName = request.getParameter("menuName");
-		OesLatestVisit oesLatestVisit = new OesLatestVisit();
-		oesLatestVisit.setMenuId(menuId);
-		oesLatestVisit.setMenuName(menuName);
-		oesLatestVisit.setUserId(appUserId);
-		oesLatestVisitService.saveOesLatestVisit(oesLatestVisit);
-		oesLatestVisitService.updateUserLastVisitRedis(appUserId, appId);
+		if (menuId !=null && !menuId.isEmpty()) {
+			OesLatestVisit oesLatestVisit = new OesLatestVisit();
+			oesLatestVisit.setMenuId(menuId);
+			oesLatestVisit.setMenuName(menuName);
+			oesLatestVisit.setUserId(appUserId);
+			oesLatestVisitService.saveOesLatestVisit(oesLatestVisit);
+			oesLatestVisitService.updateUserLastVisitRedis(appUserId, appId);
+		}
+		
 
 	}
 
