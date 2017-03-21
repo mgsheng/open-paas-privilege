@@ -31,22 +31,22 @@
 
 <script type="text/javascript">
 
-//添加导航菜单
-function addNav(data) {
-	 $.each(data, function(i, n) {
-	 		var menulist ='<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle">'+
-                '<i class="icon-diamond"></i><span class="title">'+n.text+'</span><span class="arrow"></span></a>';
+	//添加导航菜单
+	function addNav(data) {
+	 	$.each(data, function(i, n) {
+	 		var menulist = '<li class="nav-item"><a href="javascript:;" class="nav-link nav-toggle">'+
+                			'<i class="icon-diamond"></i><span class="title">' + n.text + '</span><span class="arrow"></span></a>';
             
-	 		menulist +='<ul class="sub-menu">';
+	 		menulist += '<ul class="sub-menu">';
 	        $.each(n.children, function(j, o) {
-		        menulist+='<li class="nav-item  " style="background:url(${pageContext.request.contextPath}/'+o.attributes.menuRule+') no-repeat 20px;">'+
-			        '<a  href="${pageContext.request.contextPath}/user/getMenu?menuId='+o.id+'" title="'+o.text+'" id="'+o.id+'" close="true"  class="nav-link iframeify">'+
-                	'<span class="title">'+o.text+'</span></a></li>';
+		        menulist += '<li class="nav-item  " style="background:url(${pageContext.request.contextPath}/'+o.attributes.menuRule+') no-repeat 20px;">'+
+			        		'<a  href="${pageContext.request.contextPath}/user/getMenu?menuId=' + o.id + '" title="'+o.text+'" id="'+o.id+'" close="true"  class="nav-link iframeify">'+
+                			'<span class="title">' + o.text + '</span></a></li>';
 	         })
 	 		menulist += '</ul></li>';
 	 		$('#tapMenu').append(menulist);
-	 });
-}		
+	 	});
+	}		
 	//设置修改密码窗口
 	function openPwd() {
     	$('#w').window({
@@ -83,9 +83,9 @@ function addNav(data) {
     	if ($newpass.val() == '') {
         	msgShow('系统提示', '请输入密码！', 'warning');
         	return false;
-    	}else {
-    		var a=$newpass.val().length;
-    		if(a<6||a>20){
+    	} else {
+    		var a = $newpass.val().length;
+    		if (a<6||a>20) {
     		 	msgShow('系统提示', '请输入6~20位密码', 'warning');
     		 	return false;
         	}
@@ -103,18 +103,18 @@ function addNav(data) {
     	$.post('${pageContext.request.contextPath}/user/update',
           	{newpass:$newpass.val(),oldpass:$oldpass.val(),userName:"${username}"},
            	function(data) {
-             if (data.status=="1") {
+             	if (data.status == "1") {
         			msgShow('系统提示', '恭喜，密码修改成功！', 'info');
         			closePwd();
         			$newpass.val('');
-                    $rePass.val('');
-			}else if (data.status=="2"){
-				msgShow('系统提示', data.errMsg, 'info');
-			}else {
-				msgShow('系统提示', data.errMsg, 'info');
-				$newpass.val('');
-                $rePass.val('');
-			}
+                	$rePass.val('');
+				} else if (data.status == "2"){
+					msgShow('系统提示', data.errMsg, 'info');
+				} else {
+					msgShow('系统提示', data.errMsg, 'info');
+					$newpass.val('');
+                	$rePass.val('');
+				}
               
    	 	});
     
@@ -123,34 +123,31 @@ function addNav(data) {
 		$.messager.alert(title, msgString, msgType);
 	}
 	
-        $(function() {
-        	closePwd();
-        	var data = ${menus};
-        	if (data.status == "0") {
-            	alert(data.errMsg);
+    $(function() {
+       	closePwd();
+        var data = ${menus};
+        if (data.status == "0") {
+            alert(data.errMsg);
+        } else {
+            if (data.menus.length<=0) {
+				alert("没有相应菜单");
             } else {
-                if (data.menus.length<=0) {
-					alert("没有相应菜单");
-                } else {
-                       //添加导航菜单
-                    addNav(data.menus);
-				}
-            }
-            $('#loginOut').click(function() {
-                   window.location.href="${pageContext.request.contextPath}/user/loginOut";
-            });
+                    //添加左侧导航菜单
+               addNav(data.menus);
+			}
+       	}
+        $('#loginOut').click(function() {
+               window.location.href = "${pageContext.request.contextPath}/user/loginOut";
         });
+    });
 		
     </script>
  
 </head>
 <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white page-sidebar-fixed" style="overflow:hidden">
 	<div class="page-wrapper">
-            <!-- BEGIN HEADER -->
             <div class="page-header navbar navbar-fixed-top">
-                <!-- BEGIN HEADER INNER -->
                 <div class="page-header-inner ">
-                    <!-- BEGIN LOGO -->
                     <div class="page-logo">
                         <a href="#">
                             <img src="${pageContext.request.contextPath}/${logo}" alt="logo" style="width: 140px ;height:45px;margin:0" class="logo-default" /> </a>
@@ -158,17 +155,11 @@ function addNav(data) {
                             <span></span>
                         </div>
                     </div>
-                    <!-- END LOGO -->
-                    <!-- BEGIN RESPONSIVE MENU TOGGLER -->
                     <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
                         <span></span>
                     </a>
-                    <!-- END RESPONSIVE MENU TOGGLER -->
-                    <!-- BEGIN TOP NAVIGATION MENU -->
                     <div class="top-menu">
                         <ul class="nav navbar-nav pull-right">
-                            <!-- BEGIN USER LOGIN DROPDOWN -->
-                            <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
                             <li class="dropdown dropdown-user">
                                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                                     <img alt="" class="img-circle" src="../assets/layouts/layout/img/avatar3_small.jpg" />
