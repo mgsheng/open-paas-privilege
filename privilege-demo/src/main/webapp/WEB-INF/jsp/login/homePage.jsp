@@ -28,31 +28,24 @@
 <script type="text/javascript">
 	//点击折叠菜单
 	function menuClick(obj) {
-		var menu=$(obj).parent().next();
-		var boo=menu.css('display');
-		if(boo=='none'){
+		var menu = $(obj).parent().next();
+		var boo = menu.css('display');
+		if (boo == 'none') {
 			menu.css('display','block');
 		} else {
 			menu.css('display','none');
 		} 
 	}
+	//记录最近访问菜单
 	function latestClick(obj) {
-		var aa=$(obj);
-		var tabTitle = aa.children('.name').text();
-		var url=aa.attr("href");
-		var string=url.substring(0,1);
-		if (string=="/") {
-			url = '${pageContext.request.contextPath}'+aa.attr("rel")+"?appId=${appId}";
-		} else {
-			url = 'http://'+aa.attr("rel");
-		}
-		var menuid = aa.attr("id");
-		if (menuid!="") {
+		var menu = $(obj);
+		var tabTitle = menu.children('.name').text();//菜单名称
+		var menuid = menu.attr("id");//菜单id
+		if (menuid != "") {
 			$.post('${pageContext.request.contextPath}/user/saveLatestVisit',
 				{
 					menuId : menuid,
 					menuName : tabTitle,
-					
 				},function(data){});
 		}
 	 
@@ -65,10 +58,10 @@
 		//添加最近访问菜单
 	 	$.each(data.latestVisit, function(i, n) {
 			url = n.url;
-			var string=url.substring(0,1);
-			if(string=="/"){
+			var string = url.substring(0,1);
+			if (string == "/") {
 				url = '${pageContext.request.contextPath}'+url+"?appId=${appId}";
-			}else{
+			} else {
 				url = 'http://'+url;
 			}
 			menu +=	'<li><a href="'+url+'" title="'+n.name+'" id="'+n.id+'" onclick="latestClick(this)" close="true" class="nav-link iframeify">'+
@@ -77,6 +70,7 @@
  		});
 		$('#latestVisit').append(menu);
 		menu = '';
+		//添加常用菜单
 		$.each(data.frequentlyUsedMenu, function(i, n) {	
 			url = n.url;
 			var string=url.substring(0,1);
@@ -92,36 +86,37 @@
 		$('#frequentlyUsedMenu').append(menu);
 	}
 		
-        $(function() {
-        	closeWin();
-        	var data=${menus};
-            //添加最近访问和常用菜单
-            addMenu(data);
-            getTree();
+    $(function() {
+       	closeWin();
+        var data=${menus};
+        //添加最近访问和常用菜单
+        addMenu(data);
+        //获取菜单tree
+        getTree();
        });
         //获取树菜单
-    	function getTree() {
-    		$.ajax({type:'GET',
-    			url:'${pageContext.request.contextPath}/user/tree',
-    			data:{
+    function getTree() {
+    	$.ajax({type:'GET',
+    		url:'${pageContext.request.contextPath}/user/tree',
+    		data:{
     				appId:'${appId}',
     				appUserId:'${appUserId}'
-    				},
-    			success:function(data) {
-    					if(data.status=="0"){
-    						msgShow('系统提示', '您没有菜单！', 'info');
-    					}else {
-    						var json=data.tree;
-    						if (json.length>0) {
-    							$('#deptree').tree({data: json});
-    							selected();
-    						}
+    			},
+    		success:function(data) {
+    				if ( data.status == "0") {
+    					msgShow('系统提示', '您没有菜单！', 'info');
+    				} else {
+    					var json = data.tree;
+    					if (json.length>0) {
+    						$('#deptree').tree({data: json});
+    						selected();
     					}
-    				}	
-    		});
-    	}
-        function Win() {
-            $('#w').window({
+    				}
+    		}	
+    	});
+    }
+    function Win() {
+         $('#w').window({
                 title: '角色添加',
                 width: 550,
                 modal: true,
@@ -130,69 +125,69 @@
                 height: 500,
                 resizable:false
             });
-         }
+    }
       	//打开窗口
-        function openWin() {
-           $('#w').window('open');
-        }
+    function openWin() {
+         $('#w').window('open');
+    }
          //关闭窗口
-        function closeWin() {
-            $('#w').window('close');
-         }
+    function closeWin() {
+         $('#w').window('close');
+    }
       //弹出信息窗口 title:标题 msgString:提示信息 msgType:信息类型 [error,info,question,warning]
-    	function msgShow(title, msgString, msgType) {
-    		$.messager.alert(title, msgString, msgType);
-    	}
-        function cancel() {
-        	closeWin();
-        	getTree();
-		}
+    function msgShow(title, msgString, msgType) {
+    	$.messager.alert(title, msgString, msgType);
+    }
+    //关闭窗口
+    function cancel() {
+        closeWin();
+        getTree();
+	}
           
          //确认添加常用菜单
-    	function btnEnt() {
-    		//资源菜单id
-    		var resId=[];
-    		var select=$('#deptree').tree('getChecked', 'checked');
-    		$.each(select, function(i, n) {
-    			if(n.ismodule==1){
-    				resId.push(n.id);
-    			}
-    		});
-    		resId.join(",");
-    		$.messager.confirm('系统提示', '您确定修改么?', function(r) {
-                if (r) {
-                	$.ajax(
-                			{type:'POST',
-                			url:'${pageContext.request.contextPath}/user/saveMenu?appId=${appId}&appUserId=${appUserId}&resId='+resId,
-                			success:function(data) {
-                					if(data.status=="0"){
-                						msgShow('系统提示', '设置失败！', 'info');
-                					}else {
-                						msgShow('系统提示', '设置成功！', 'info');
-                						closeWin();
-                						getTree();
-                					}
-                				}	
-                		});
-                }
-            });
-    		
-        }
+    function btnEnt() {
+    	//资源菜单id
+    	var resId = [];
+    	var select = $('#deptree').tree('getChecked', 'checked');
+    	$.each(select, function(i, n) {
+    		if (n.ismodule == 1) {
+    			resId.push(n.id);
+    		}
+    	});
+    	resId.join(",");
+    	$.messager.confirm('系统提示', '您确定修改么?', function(r) {
+              if (r) {
+                  $.ajax({
+                      type:'POST',
+                	  url:'${pageContext.request.contextPath}/user/saveMenu?appId=${appId}&appUserId=${appUserId}&resId='+resId,
+                	  success:function(data) {
+                				if (data.status == "0") {
+                					msgShow('系统提示', '设置失败！', 'info');
+                				} else {
+                					msgShow('系统提示', '设置成功！', 'info');
+                					closeWin();
+                					getTree();
+                				}
+                	   }	
+                   });
+               }
+         });
+    }
     	//勾选用户常用菜单
-    	function selected(){
-    		$.post('${pageContext.request.contextPath}/user/getFrequentlyMenu?appUserId=${appUserId}',function(data){
-    				if(data.resourceId!=null){
-    					$.each(data.resourceId,function(i,m){
-    						var node=$("#deptree").tree('find',m);
-    						if(node!=null){
-    							if(node.ismodule=="1"){
-    								$("#deptree").tree('check',node.target);
-    							}
+    function selected(){
+    	$.post('${pageContext.request.contextPath}/user/getFrequentlyMenu?appUserId=${appUserId}',function(data){
+    			if (data.resourceId != null) {
+    				$.each(data.resourceId,function(i,m){
+    					var node = $("#deptree").tree('find',m);
+    					if (node != null) {
+    						if (node.ismodule == "1") {
+    							$("#deptree").tree('check',node.target);
     						}
-    					});
-    				}
-    			},"json");
-    	}
+    					}
+    				});
+    			}
+    	},"json");
+    }
     </script>
 </head>
 <body   class="page-content-white" >
