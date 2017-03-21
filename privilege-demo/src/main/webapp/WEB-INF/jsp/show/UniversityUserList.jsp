@@ -429,12 +429,12 @@
 		//打开授权功能窗口
 		function openWinFunction() {
 			var row = $('#dg').datagrid('getSelected');
-			if (row){
+			if (row) {
 				$.messager.confirm('系统提示', '是否确定授权?', function(r){
 					if(r){
 						var userId = row.USERID;
-						var userName=row.LOGINNAME;
-						var groupId=row.groupId;
+						var userName = row.LOGINNAME;
+						var groupId = row.groupId;
 						addPanel2(userName,userId,groupId);
 					}
 				});
@@ -450,22 +450,22 @@
 					if(r){
 						var userId = row.USERID;
 						var groupId = row.groupId;
-						var userName=row.LOGINNAME;
+						var userName = row.LOGINNAME;
 						addPanel(userName,userId,groupId);
 					}
 				});
-			}else{
+			} else {
             	msgShow('系统提示', '请选择用户！', 'warning');
             }
 		};
 		//打开详情窗口
 		function showMes() {
 			var row = $('#dg').datagrid('getSelected');
-			if (row){
+			if (row) {
 				openWin();
 				//获取该用户的数据，并显示
 				showUserValue(row);
-			}else{
+			} else {
             	msgShow('系统提示', '请选择修改用户！', 'info');
             }
 		}
@@ -557,10 +557,6 @@
 			$('#fm').form('clear');
 		}
 		
-		// 清空修改用户窗口
-		function clearTable(){
-			$('#tb').form('clear');
-		};
 		
 		//打开修改用户窗口
 		win();
@@ -570,15 +566,13 @@
 		
 		//修改用户
 		function updateWin(){
-			//打开修改用户窗口之前先清空
-			clearTable();
 			var row = $('#dg').datagrid('getSelected');
-			if (row){
+			if (row) {
 				openAddWin();
 				//获取该用户的数据，并显示
 				getUserValue(row);
 				$('#group').combobox('select',row.groupId);
-			}else{
+			} else {
             	msgShow('系统提示', '请选择修改用户！', 'info');
             }
 		};
@@ -621,13 +615,13 @@
 					if (r){
 						   var appUserId = row.USERID;
 						   var loginName = row.LOGINNAME;
-						   var url='${pageContext.request.contextPath}/managerUser/removeUserByID?appId=${appId}&appUserId='+appUserId+'&type=3&loginName='+loginName;
+						   var url = '${pageContext.request.contextPath}/managerUser/removeUserByID?appId=${appId}&appUserId='+appUserId+'&type=3&loginName='+loginName;
 						   $.post(url,
 			                    	function(data){
-			                        	if (data.status=='1') {
+			                        	if (data.status == '1') {
 				                			msgShow('系统提示', '删除成功！', 'warning');
 				                			findUsers();
-				    					}else if (data.status=='0'){
+				    					}else if (data.status == '0'){
 				    						msgShow('系统提示', '删除不成功！'+data.errMsg, 'warning');
 				    						findUsers();
 				    					}
@@ -639,12 +633,6 @@
             }
 		}
 		
-		//列表重新加载
-		function reload(url,name){
-			$('#dg').datagrid('reload',{
-	            url: url, queryParams:{ name:name}, method: "post"
-	          }); 
-		}
 		// 查询用户方法
 		function findUsers(){
 			var groupId = null;
@@ -698,7 +686,7 @@
 							
 							]],
 		        onLoadSuccess:function(data){
-                    if (data.total<1){
+                    if (data.total < 1){
                        $.messager.alert("系统提示","没有符合查询条件的数据!","info");
                   }
                 }
@@ -728,8 +716,8 @@
 			var regex_password = /^(\w){6,20}$/;
 			var regex_IdCard = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)|(^\d{17}([0-9]|X)$)|(^\d{16}$)/; 
 			var regex_MOBILEPHONE = /^1[3|4|5|8|7][0-9]\d{4,8}$/;
-			var regex_PHONENO=/^0\d{2,3}-?\d{7,8}$/;   
-			var regex_EMAIL=/^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
+			var regex_PHONENO = /^0\d{2,3}-?\d{7,8}$/;   
+			var regex_EMAIL = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
 			var username = $.trim($('#LOGINNAME').val()) ;
 			var password = $.trim($('#pwd').val()) ;
 			var confirm_pass = $.trim($('#confirm_pwd').val()) ;
@@ -738,7 +726,7 @@
 			var IDCARD = $.trim($('#IDCARD').val());
 			var PHONENO = $.trim($('#PHONENO').val());
 			var MOBILEPHONE = $.trim($('#MOBILEPHONE').val());
-			var EMAIL=$('#EMAIL').val();
+			var EMAIL = $('#EMAIL').val();
 			var userId = $('#userId').val();
 			if (NAME == "" || NAME == null) {
 				$.messager.alert("系统提示","姓名不能为空，请重新填写！","error");	
@@ -756,7 +744,7 @@
 				$.messager.alert("系统提示","移动电话号码不能为空或格式不正确，请重新填写！","error");	
 				return false;
 			}
-			if(username == "" || username == null || username == undefined || regex_username.test(username) != true){
+			if (username == "" || username == null || username == undefined || regex_username.test(username) != true){
 					$.messager.alert("系统提示","用户名不能为空或格式不正确，请重新填写！","error");	
 					return false;
 			}
@@ -765,22 +753,22 @@
 					$.messager.alert("系统提示","密码不能为空或格式不正确，请重新填写！","error");			
 					return false;
 				}
-				if(confirm_pass == "" || confirm_pass == null || confirm_pass == undefined || regex_password.test(confirm_pass) != true){
+				if (confirm_pass == "" || confirm_pass == null || confirm_pass == undefined || regex_password.test(confirm_pass) != true){
 					$.messager.alert("系统提示","确认密码不能为空或格式不正确，请重新填写！","error");		
 					return false;
 				}
-				if(password != confirm_pass){
+				if (password != confirm_pass) {
 					$.messager.alert("系统提示","密码输入不一致，请重新输入！","error");
 					return false;
 				}
 			}
 			
-			if(groupId == ''){
+			if (groupId == '') {
 				$.messager.alert("系统提示","请选择组织机构！","error");
 				return false;
 			}
 			if (EMAIL.length > 0) {
-				if(regex_EMAIL.test(EMAIL) != true){
+				if (regex_EMAIL.test(EMAIL) != true) {
 					$.messager.alert("系统提示","邮箱格式不正确！","error");
 					return false;
 				}
@@ -794,7 +782,6 @@
 			var userName = $.trim($('#LOGINNAME').val());
 			var passWord = $.trim($('#pwd').val()) ;
 			var groupId = $('#group').combobox('getValue');
-			var codeName = UserGroup.codeName;
 			var Name = $('#NAME').val();//真实姓名
 			var SEX = $('#SEX').val();
 			var PHONENO = $('#PHONENO').val();
@@ -817,7 +804,7 @@
 			
 			// 提交信息前完成前端校验
 			var check_result = check();
-			if(!check_result){
+			if (!check_result) {
 				return;
 			}
 			var url = '';
