@@ -443,7 +443,7 @@
 						<td >	
 							<select id="ISEDITPURCHASEPRICE" value="1">
 								<option value="1">是</option>
-								<!-- <option value="0">否</option> -->
+								<!--  <option value="0">否</option>  -->
 							</select>
 						</td>
 						</tr>
@@ -539,8 +539,8 @@
 				$.messager.confirm('系统提示', '是否确定授权?', function(r){
 					if(r){
 						var userId = row.USERID;
-						var userName=row.LOGINNAME;
-						var groupId=row.groupId;
+						var userName = row.LOGINNAME;
+						var groupId = row.groupId;
 						addPanel2(userName,userId,groupId);
 					}
 				});
@@ -556,7 +556,7 @@
 					if(r){
 						var userId = row.USERID;
 						var groupId = row.groupId;
-						var userName=row.LOGINNAME;
+						var userName = row.LOGINNAME;
 						addPanel(userName,userId,groupId);
 					}
 				});
@@ -567,11 +567,11 @@
 		//打开详情窗口
 		function showMes() {
 			var row = $('#dg').datagrid('getSelected');
-			if (row){
+			if (row) {
 				openWin();
 				//获取该用户的数据，并显示
 				showUserValue(row);
-			}else{
+			} else {
             	msgShow('系统提示', '请选择修改用户！', 'info');
             }
 		}
@@ -675,10 +675,7 @@
 			$('#fm').form('clear');
 		}
 		
-		// 清空修改用户窗口
-		function clearTable(){
-			$('#tb').form('clear');
-		};
+		
 		
 		//打开修改用户窗口
 		win();
@@ -688,15 +685,13 @@
 		
 		//修改用户
 		function updateWin(){
-			//打开修改用户窗口之前先清空
-			clearTable();
 			var row = $('#dg').datagrid('getSelected');
 			if (row){
 				openAddWin();
 				//获取该用户的数据，并显示
 				getUserValue(row);
 				$('#group').combobox('select',row.groupId);
-			}else{
+			} else {
             	msgShow('系统提示', '请选择修改用户！', 'info');
             }
 		};
@@ -741,36 +736,30 @@
 		//根据用户ID删除用户
 		function removeUserByID(){
 			var row = $('#dg').datagrid('getSelected');
-			if (row){
+			if (row) {
 				$.messager.confirm('系统提示', '是否确定删除?', function(r){
-					if (r){
+					if (r) {
 						   var appUserId = row.USERID;
 						   var loginName = row.LOGINNAME;
 						   var groupType = row.groupType;
-						   var url='${pageContext.request.contextPath}/managerUser/removeUserByID?appId=${appId}&appUserId='+appUserId+'&type=4&loginName='+loginName;
+						   var url = '${pageContext.request.contextPath}/managerUser/removeUserByID?appId=${appId}&appUserId='+appUserId+'&type=4&loginName='+loginName;
 						   $.post(url,
 			                    	function(data){
 			                        	if (data.status == '1') {
 				                			msgShow('系统提示', '删除成功！', 'warning');
 				                			findUsers();
-				    					}else if (data.status == '0'){
+				    					} else if (data.status == '0'){
 				    						msgShow('系统提示', '删除不成功！', 'warning');
 				    						findUsers();
 				    					}
 			                 });
 					}
 			   });
-			}else{
+			} else {
             	msgShow('系统提示', '请选择要删除的用户！', 'info');
             }
 		}
 		
-		//列表重新加载
-		function reload(url,name){
-			$('#dg').datagrid('reload',{
-	            url: url, queryParams:{ name:name}, method: "post"
-	          }); 
-		}
 		// 查询用户方法
 		function findUsers(){
 			var groupId = null;
@@ -852,28 +841,6 @@
 		}
        
         
-        // 提交修改后的用户信息
-         function updateUser() {
-		 	var row = $('#dg').datagrid('getSelected');
-			var Id=row.Id;
-			var appUserId=row.userId;
-            var groupId = $('#UserGroup').combobox('getValue');
-            if (groupId == '') {
-                msgShow('系统提示', '请选择组织机构！', 'warning');
-                return false;
-            }
-            $.post("${pageContext.request.contextPath}/managerUser/updateUser",
-            		{"appId":'${appId}',"groupId":groupId,"appUserId":appUserId,"Id":Id},
-                 	function(data){
-            			if (data.status=='1') {
-                			msgShow('系统提示', '修改成功！', 'warning');
-                			closeWin();
-                			findUsers();
-    					}else if (data.status=='0'){
-    						msgShow('系统提示', '修改不成功！', 'warning');
-    					}
-              });
-        }
         
         //前端校验
 		function check(){
@@ -928,7 +895,7 @@
 				return false;
 			}
 			if (EMAIL.length > 0) {
-				if(regex_EMAIL.test(EMAIL) != true){
+				if (regex_EMAIL.test(EMAIL) != true) {
 					$.messager.alert("系统提示","邮箱格式不正确！","error");
 					return false;
 				}
@@ -946,19 +913,19 @@
 			var SEX = $('#SEX').val();
 			var PHONENO = $('#PHONENO').val();
 			var MOBILEPHONE = $('#MOBILEPHONE').val();
-			var FAX=$('#FAX').val();//传真电话
-			var EMAIL=$('#EMAIL').val();
-			var DEPARTMENT=$('#DEPARTMENT').val();//部门
-			var PERSONALDES=$('#PERSONALDES').val();//个人描述
-			var ISSUPERADMIN=$('#ISSUPERADMIN').val();//是否是超级管理员
-			var KZROLEID=$('#KZROLEID').val();//孔子学院roleId
-			var KZID=$('#KZID').val();//孔子学院ID
-			var STAFFID=$('#STAFFID').val();//职员ID
+			var FAX = $('#FAX').val();//传真电话
+			var EMAIL = $('#EMAIL').val();
+			var DEPARTMENT = $('#DEPARTMENT').val();//部门
+			var PERSONALDES = $('#PERSONALDES').val();//个人描述
+			var ISSUPERADMIN = $('#ISSUPERADMIN').val();//是否是超级管理员
+			var KZROLEID = $('#KZROLEID').val();//孔子学院roleId
+			var KZID = $('#KZID').val();//孔子学院ID
+			var STAFFID = $('#STAFFID').val();//职员ID
 			var ACTIVEBEGINDATE = $('#ACTIVEBEGINDATE').datebox('getValue');//教材帐号生效日期
-			var ACTIVEENDDATE=$('#ACTIVEENDDATE').datebox('getValue');//失效日期：
-			var ACTIVESTATUS=$('#ACTIVESTATUS').val();//教材帐号状态：
-			var ISEDITPURCHASEPRICE=$('#ISEDITPURCHASEPRICE').val();//	采购价格修改权限：
-			var StudyType=$('#StudyType').val();//教育类型
+			var ACTIVEENDDATE = $('#ACTIVEENDDATE').datebox('getValue');//失效日期：
+			var ACTIVESTATUS = $('#ACTIVESTATUS').val();//教材帐号状态：
+			var ISEDITPURCHASEPRICE = $('#ISEDITPURCHASEPRICE').val();//	采购价格修改权限：
+			var StudyType = $('#StudyType').val();//教育类型
 			var HRLOGINNAME = $('#HRLOGINNAME').val();
 			var deptId = $('#deptId').val();
 			var ORGANIZATIONID = $('#ORGANIZATIONID').val();
@@ -979,7 +946,7 @@
 			
 			// 提交信息前完成前端校验
 			var check_result = check();
-			if(!check_result){
+			if (!check_result) {
 				return;
 			}
 			var url = '';
@@ -1033,7 +1000,7 @@
 				"h+": this.getHours(), //小时 
 				"m+": this.getMinutes(), //分 
 				"s+": this.getSeconds(), //秒 
-				"q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+				"q+": Math.floor((this.getMonth() + 3) / 3), 
 				"S": this.getMilliseconds() //毫秒 
 			};
 			if (/(y+)/.test(fmt)) {
