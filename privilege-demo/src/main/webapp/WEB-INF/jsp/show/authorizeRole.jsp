@@ -4,20 +4,20 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>授权角色</title>
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/themes/default/easyui.css">
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/themes/icon.css">
+		<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/easyui.css" rel="stylesheet" type="text/css" />
+		<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/master.css" rel="stylesheet" type="text/css" /> 
+		<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/icon.css" rel="stylesheet" type="text/css" /> 
 		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/dataList.css">
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/js/highcharts/highcharts.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/js/highcharts/modules/exporting.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
 	</head>
-	<body >
+	<body style="overflow: hidden;">
 		<!-- 授权角色窗口 -->
 		<div class="easyui-pannel">
 			<div id="authorizeRoleWin" class="botton" style="margin-top:0;width:100%;height:500px;border:1px;" >
-				<div id="tbRole" style="padding:10px 10px;">
+				<div id="tbRole" style="padding:10px 10px;height: 30px">
 					<span style="text-align:left;" hidden="true" >
 						<input class="easyui-textbox" id="${id}" name="${userName}" hidden="true">
 					</span>
