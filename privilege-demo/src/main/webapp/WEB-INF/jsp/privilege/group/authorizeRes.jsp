@@ -4,22 +4,14 @@
 <head>
 <meta charset="UTF-8">
 <title>授权资源</title>
-<link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath}/css/themes/default/easyui.css">
-<link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath}/css/themes/icon.css">
-<link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath}/css/dataList.css">
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/js/highcharts/highcharts.js"></script>
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/js/highcharts/modules/exporting.js"></script>
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
+	<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/easyui.css" rel="stylesheet" type="text/css" />
+	<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/master.css" rel="stylesheet" type="text/css" /> 
+	<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/icon.css" rel="stylesheet" type="text/css" /> 
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/dataList.css">
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
 </head>
 <body>
 	<!-- 授权资源窗口 -->
@@ -28,8 +20,8 @@
 			style="margin-top: 0; width: 50%; height: 1000px; border: 1px;">
 			<div id="tbFun" style="padding: 10px 10px;">
 				<span style="text-align: left;" hidden="true"> 
-				<input class="easyui-textbox" id="${groupCode}" name="${groupName}" hidden="true"/>
-				<input class="easyui-textbox" id="roleId"  value="${roleId}" hidden="true"/>
+				<input  id="${groupCode}" name="${groupName}" hidden="true"/>
+				<input  id="roleId"  value="${roleId}" hidden="true"/>
 				</span> &nbsp;&nbsp;&nbsp;&nbsp; <span style="float: right;"> <a
 					href="#" class="easyui-linkbutton" iconCls="icon-ok" plain="true"
 					id="ok" onclick="submitAuthorizeRes();">确认</a> <a href="#"
@@ -56,7 +48,7 @@
 	<!--注册组织机构管理员用户-->
 	<div id="w" class="easyui-window" title="注册组织机构管理员用户" collapsible="false"
 		minimizable="false" maximizable="false" icon="icon-save"
-		style="width: 300px; height: 150px; padding: 5px;
+		style="width: 300px; height: 250px; padding: 5px;
         background: #fafafa;">
 		<div class="easyui-layout" fit="true">
 			<div region="center" border="false"
@@ -64,17 +56,18 @@
 				<table cellpadding=3>
 					<tr>
 						<td>用户名：</td>
-						<td><input id="userName" type="text" class="txt01" />
+						<td>
+							<input id="userName"  class="easyui-textbox" type="text" class="txt01" />
 						</td>
 					</tr>
 					<tr>
 						<td>密码：</td>
-						<td><input id="txtPass" type="password" class="txt01" />
+						<td><input id="txtPass" class="easyui-textbox" type="password" class="txt01" />
 						</td>
 					</tr>
 					<tr>
 						<td>确认密码：</td>
-						<td><input id="txtRePass" type="password" class="txt01" />
+						<td><input id="txtRePass" class="easyui-textbox" type="password" class="txt01" />
 						</td>
 					</tr>
 				</table>
@@ -99,7 +92,7 @@
 				<table cellpadding=3>
 					<tr>
 						<td>角色名称：</td>
-						<td><input id="roleName" type="text" class="txt01" />
+						<td><input id="roleName" class="easyui-textbox" type="text" class="txt01" />
 						</td>
 					</tr>
 				</table>
@@ -142,11 +135,11 @@
 	//创建组织机构管理员角色取消按钮
 	$('#btnClose').click(function() {
 		$('#roleWin').window('close');
-		$('#roleName').val('');
+		$("#roleName").textbox("setValue",'');
 	});
 	//创建组织机构管理员角色确定按钮
 	$('#btnEnter').click(function() {
-		var roleName=$('#roleName').val();
+		var roleName = $("#roleName").textbox("getValue");
 		if ($('#roleId').val() != '') {
             msgShow('系统提示', '该组织机构已经存在管理员角色！', 'warning');
             return false;
@@ -168,7 +161,7 @@
 						$('#roleId').val(data.privilegeRoleid);
 						msgShow('系统提示', '添加管理员角色成功！', 'info');
 						$('#roleWin').window('close');
-						$('#roleName').val('');
+						$("#roleName").textbox("setValue",'');
 					}else {
 						msgShow('系统提示', '添加管理员角色失败！', 'error');
 					}
@@ -181,38 +174,38 @@
     });
     $('#btnCancel').click(function() {
     	$('#w').window('close');
-    	$('#userName').val('');
-    	$('#txtPass').val('');
-        $('#txtRePass').val('');
+    	$("#userName").textbox("setValue",'');
+    	$("#txtPass").textbox("setValue",'');
+    	$("#txtRePass").textbox("setValue",'');
     });
     //注册用户
 	function serverLogin() {
-		var $userName = $('#userName');
-    	var $passWord = $('#txtPass');
-        var $rePass = $('#txtRePass');
+		var userName = $("#userName").textbox("getValue");
+    	var passWord = $("#txtPass").textbox("getValue");
+        var rePass = $("#txtRePass").textbox("getValue");
         if ($('#roleId').val() == '') {
             msgShow('系统提示', '该组织机构不存在管理角色！请创建', 'warning');
             return false;
         }
-        if ($userName.val() == '') {
+        if (userName == '') {
             msgShow('系统提示', '请输入用户名！', 'warning');
             return false;
         }
-        if ($passWord.val() == '') {
+        if (passWord == '') {
             msgShow('系统提示', '请输入密码！', 'warning');
             return false;
         }else {
-        	var a=$passWord.val().length;
-        	if(a<6||a>20){
+        	var len = passWord.length;
+        	if (len < 6||len > 20) {
         		 	msgShow('系统提示', '请输入6~20位密码', 'warning');
         		 	return false;
             	}
 		}
-        if ($rePass.val() == '') {
+        if (rePass == '') {
             msgShow('系统提示', '请在一次输入密码！', 'warning');
             return false;
         }
-        if ($passWord.val() != $rePass.val()) {
+        if (passWord != rePass) {
             msgShow('系统提示', '2次密码不一致！', 'warning');
             return false;
         }
@@ -223,17 +216,17 @@
 					appId:'${appId}',
 					groupId:'${groupCode}',
 					roleId:$('#roleId').val(),
-					appUserName:$('#userName').val(),
-					passWord:$('#txtPass').val()
+					appUserName:userName,
+					passWord:passWord
 				},
 			dataType:'json',
         	success:function(data) {
             		if (data.status=='1') {
             			msgShow('系统提示', '注册成功！', 'warning');
             			$('#w').window('close');
-            	    	$('#userName').val('');
-            	    	$('#txtPass').val('');
-            	        $('#txtRePass').val('');
+            			$("#userName").textbox("setValue",'');
+            			$("#txtPass").textbox("setValue",'');
+            			$("#txtRePass").textbox("setValue",'');
 					}else {
 						msgShow('系统提示', '注册不成功！'+data.errMsg, 'warning');
 					}
@@ -249,7 +242,7 @@
              modal: true,
              shadow: true,
              closed: true,
-             height: 200,
+             height: 300,
              resizable:false,
              closable:false
          });
