@@ -34,7 +34,13 @@ public interface OesUserService {
 	 * @param Id
 	 * @return
 	 */
-	Boolean deleteUser(Integer Id);
+	Boolean deleteUser(String userId);
+	
+	/**
+	 * 更新用户
+	 * @param oesUser
+	 * @return
+	 */
 	Boolean updateUser(OesUser oesUser);
 	
 	List<OesUser> findByPage(String groupId,int start, int limit,String userName);
