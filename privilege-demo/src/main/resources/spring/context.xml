@@ -206,5 +206,6 @@
        		<property name="updateOesUserUrl" value="${update-oes-user-uri}"></property>
        		<property name="addOesUserUrl" value="${add-oes-user-uri}"></property>
        		<property name="userCenterUnBindUrl" value="${usercenter-unbind-uri}"></property>
+       		<property name="userDataSourceSwitch" value="${user-data-source-switch}"></property>
        </bean>
 </beans>
