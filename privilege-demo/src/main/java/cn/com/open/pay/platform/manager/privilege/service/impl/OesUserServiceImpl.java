@@ -35,9 +35,9 @@ public class OesUserServiceImpl implements OesUserService {
 	}
 
 	@Override
-	public Boolean deleteUser(Integer Id) {
+	public Boolean deleteUser(String userId) {
 		try {
-			oesUserRepository.deleteUser(Id);
+			oesUserRepository.deleteUser(userId);
 			return true;
 		} catch (Exception e) {
 			return false;
