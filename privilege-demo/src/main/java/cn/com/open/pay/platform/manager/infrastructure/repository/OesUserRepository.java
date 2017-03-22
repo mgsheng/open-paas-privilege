@@ -17,7 +17,7 @@ public interface OesUserRepository extends Repository {
 	List<Map<String, Object>> getUserListByPage(@Param("groupId") String groupId,@Param("start") int start,@Param("limit") int limit,@Param("userName") String userName);
 	int getUserCount(@Param("groupId")String groupId,@Param("userName") String userName);
 	void saveUser(OesUser oesUser);
-	void deleteUser(@Param("Id")Integer Id); 
+	void deleteUser(@Param("userId")String userId); 
 	void updateUser(OesUser oesUser);
 	List<OesUser> findByPage(@Param("groupId") String groupId,@Param("start") int start,@Param("limit") int limit,@Param("userName") String userName);
 }
