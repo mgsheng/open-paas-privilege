@@ -51,9 +51,9 @@
         (#{groupId},#{userName},#{userId})
 	</insert>
 	<delete id="deleteUser" flushCache="true">
-		delete from oes_user where Id=#{Id}
+		delete from oes_user where user_id=#{userId}
 	</delete>
 	<update id="updateUser" parameterType="OesUser" >
-		update oes_user set group_id = #{groupId} where Id=#{id}
+		update oes_user set group_id = #{groupId} where user_id=#{userId}
 	</update>
 </mapper>
