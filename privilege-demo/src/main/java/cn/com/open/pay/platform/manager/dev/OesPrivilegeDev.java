@@ -45,8 +45,17 @@ public class OesPrivilegeDev {
 	private String updateOesUserUrl;
 	private String addOesUserUrl;
 	private String userCenterUnBindUrl;
+	private String userDataSourceSwitch;
 	
 	
+	
+	
+	public String getUserDataSourceSwitch() {
+		return userDataSourceSwitch;
+	}
+	public void setUserDataSourceSwitch(String userDataSourceSwitch) {
+		this.userDataSourceSwitch = userDataSourceSwitch;
+	}
 	public String getUserCenterUnBindUrl() {
 		return userCenterUnBindUrl;
 	}
