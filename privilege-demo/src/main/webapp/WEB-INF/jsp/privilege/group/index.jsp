@@ -5,13 +5,19 @@
 		<meta charset="UTF-8">
 		<title>OES机构列表</title>
 		<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/easyui.css" rel="stylesheet" type="text/css" />
-	<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/master.css" rel="stylesheet" type="text/css" /> 
-	<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/icon.css" rel="stylesheet" type="text/css" /> 
-	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/dataList.css">
-	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
+		<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/master.css" rel="stylesheet" type="text/css" /> 
+		<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/icon.css" rel="stylesheet" type="text/css" /> 
+		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/dataList.css">
+		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
+		<style type="text/css">
+			.easyui-tabs>.tabs-panels>.panel>.panel-body-noborder{
+				overflow: hidden;
+			}
+		
+		</style>
 	</head>
 	<body >
 			<div id="tt" class="easyui-tabs" fit="true" style="font-size:1em;">
