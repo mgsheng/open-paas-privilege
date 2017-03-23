@@ -83,111 +83,106 @@
 	<!--修改用户窗口--> 
 	<div id="showMessage" class="easyui-window" title="用户信息详情" collapsible="false" minimizable="false" maximizable="false" 
 		icon="icon-save" style="background: #fafafa;">
-		<div  style="overflow-x: auto;">
-		<form id="show" >
-			<table>
-				<tr>
-					<td >
-						组织机构：
-					</td>
-					<td >	
-						<input id="showGroup"   class="disable" disabled="true">
-					</td>
-				</tr>
-				<tr>
-					<td > 
-						登&nbsp;&nbsp;录&nbsp;&nbsp;名:
-					</td>
-					<td >	
-						<input id="showLOGINNAME"  name="username" type="text"   disabled="true">
-					</td>
-				</tr>
-				<tr>
-					<td > 
-						真实姓名:
-					</td>
-					<td >	
-						<input id="showNAME" type="text" disabled="true">
-					</td>
-				</tr>
-				<tr>
-					<td > 
-						性别:
-					</td>
-					<td >	
-						<select  id="showSEX"  disabled="true">
+		<div   class="easyui-layout" style="overflow-x: auto;">
+			<div class="easyui-panel" style="padding:5px;height: 500px;widows:300px;margin-top:5px;overflow-y:scroll;">
+				<table  cellpadding=3>
+					<tr>
+						 <td >
+							组织机构：
+						</td> 
+						<td >	
+							<input id="showGroup"  class="easyui-textbox"  class="disable" disabled="true">
+						</td>
+						<td > 
+							登&nbsp;&nbsp;录&nbsp;&nbsp;名:
+						</td>
+						<td >	
+							<input id="showLOGINNAME" class="easyui-textbox"  name="username" type="text"   disabled="true">
+						</td>
+					</tr>
+					<tr>
+						<td > 
+							真实姓名:
+						</td>
+						<td >	
+							<input id="showNAME" class="easyui-textbox"  type="text" disabled="true">
+						</td>
+						<td > 
+							性别:
+						</td>
+						<td >	
+							<select  id="showSEX"  disabled="true">
 								<option value="01">男</option>
 								<option value="02">女</option>
 							</select> 
-					</td>
-				</tr>
-				<tr>
-					<td>
-						密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码:
-					</td>
-					<td >	
-						<input id="showPwd"  type="password"  name="text" disabled="true">
-					</td>
-				</tr>
-				<tr>
-					<td >
-						HR登录名：
-					</td>
-					<td>	
-						<input id="showHRLOGINNAME"  name="HRLOGINNAME"  type="text" disabled="true">
-					</td>
-					<td >
-						身份证号：
-					</td>
-					<td>	
-						<input id="showIDCARD"    type="text" disabled="true">
-					</td>
-				</tr>
-				<tr>
-					<td >
-						固定电话：
-					</td>
-					<td >	
-						<input id="showPHONENO"   type="text" disabled="true">
-					</td>
-					<td >
-						移动电话：
-					</td>
-					<td >	
-						<input id="showMOBILEPHONE"  name="MOBILEPHONE"  type="text" disabled="true">
-					</td>
-				</tr>
-				<tr>
-					<td >
-						传真电话：
-					</td>
-					<td >	
-						<input id="showFAX"  name="FAX"  type="text" disabled="true">
-					</td>
-					<td >
-						电子邮箱：
-					</td>
-					<td >	
-						<input id="showEMAIL"  name="EMAIL"  type="email" disabled="true">
-					</td>
-				</tr>
-				<tr   >
-						<td >
-							地址：
+						</td>
+					</tr>
+					<tr>
+						<td>
+							密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码:
 						</td>
 						<td >	
-							<input id="showADDRESS"  name="ADDRESS"  type="text" disabled="true">
+							<input id="showPwd" class="easyui-textbox"  type="password"  name="text" disabled="true">
 						</td>
-				</tr>
-				<tr   >
+					</tr>
+					<tr>
 						<td >
-							邮编：
+							HR登录名：
+						</td>
+						<td>	
+							<input id="showHRLOGINNAME" class="easyui-textbox"  name="HRLOGINNAME"  type="text" disabled="true">
+						</td>
+						<td >
+							身份证号：
+						</td>
+						<td>	
+							<input id="showIDCARD"  class="easyui-textbox"   type="text" disabled="true">
+						</td>
+					</tr>
+					<tr>
+						<td >
+							固定电话：
 						</td>
 						<td >	
-							<input id="showPOSTCODE"  name="POSTCODE"  type="text" disabled="true">
+							<input id="showPHONENO" class="easyui-textbox"   type="text" disabled="true">
 						</td>
-				</tr>
-				<tr  >
+						<td >
+							移动电话：
+						</td>
+						<td >	
+							<input id="showMOBILEPHONE" class="easyui-textbox"  name="MOBILEPHONE"  type="text" disabled="true">
+						</td>
+					</tr>
+					<tr>
+						<td >
+							传真电话：
+						</td>
+						<td >	
+							<input id="showFAX"  name="FAX" class="easyui-textbox"  type="text" disabled="true">
+						</td>
+						<td >
+							电子邮箱：
+						</td>
+						<td >	
+							<input id="showEMAIL"  name="EMAIL" class="easyui-textbox"   type="email" disabled="true">
+						</td>
+					</tr>
+					<tr   >
+							<td >
+								地址：
+							</td>
+							<td >	
+								<input id="showADDRESS"  class="easyui-textbox"  name="ADDRESS"  type="text" disabled="true">
+							</td>
+				
+							<td >
+								邮编：
+							</td>
+							<td >	
+								<input id="showPOSTCODE" class="easyui-textbox"  name="POSTCODE"  type="text" disabled="true">
+							</td>
+					</tr>
+					<tr  >
 						<td >
 							归属：
 						</td>
@@ -200,20 +195,21 @@
 							部门：
 						</td>
 						<td >	
-							<input id="showDEPARTMENT"  disabled="true"> 
+							<input id="showDEPARTMENT" class="easyui-textbox"  disabled="true"> 
 						</td>
-				</tr>
-				<tr  >
+					</tr>
+					<tr  >
 						<td >
 							个人描述：
 						</td>
 						<td >	
 							<textarea id="showPERSONALDES" rows="" cols=""  disabled="true"></textarea>
 						</td>
-				</tr>
-					
+					</tr>
 				</div> 
-			</table>
+				</table>
+			</div>
+		
 		</div>
 		
 	</div>
@@ -466,22 +462,21 @@
 		}
 		//显示用户详情
 		function showUserValue(data) {
-			$('#showGroup').val(data.groupName);
-			$('#showLOGINNAME').val(data.LOGINNAME);
-			$('#showPwd').val(data.PASSWORD);
-			$('#showNAME').val(data.NAME);//真实姓名
 			$('#showSEX').val(data.SEX);
-			$('#showPHONENO').val(data.PHONENO);//固定电话
-			$('#showMOBILEPHONE').val(data.MOBILEPHONE);//移动电话
-			$('#showFAX').val(data.FAX);//传真电话
-			$('#showEMAIL').val(data.EMAIL);
-			$('#showIDCARD').val(data.IDCARD);//身份证号
-			$('#showADDRESS').val(data.ADDRESS);//地址
-			$('#showPOSTCODE').val(data.POSTCODE);//邮编
+			$("#showGroup").textbox("setValue",data.groupName);//组织机构
+			$("#showLOGINNAME").textbox("setValue",data.LOGINNAME);//登录名
+			$("#showPwd").textbox("setValue",data.PASSWORD);//密码
+			$("#showNAME").textbox("setValue",data.NAME);//真实姓名
+			$("#showPHONENO").textbox("setValue",data.PHONENO);//固定电话
+			$("#showMOBILEPHONE").textbox("setValue",data.MOBILEPHONE);//移动电话
+			$("#showEMAIL").textbox("setValue",data.EMAIL);//邮箱
+			$("#showIDCARD").textbox("setValue",data.IDCARD);//身份证号
+			$("#showADDRESS").textbox("setValue",data.ADDRESS);//地址
+			$("#showPOSTCODE").textbox("setValue",data.POSTCODE);//邮编
+			$("#showFAX").textbox("setValue",data.FAX);//传真
+			$("#showDEPARTMENT").textbox("setValue",data.DEPARTMENT);//部门
 			$('#showATTACH').val(data.ATTACH);//邮编
-			$('#showDEPARTMENT').val(data.DEPARTMENT);//邮编
-			$('#showPERSONALDES').val(data.PERSONALDES);//邮编
-			
+			$('#showPERSONALDES').val(data.PERSONALDES);//个人描述
 		}
 		//添加用户窗口
 		function addWin(){
@@ -527,6 +522,7 @@
 			$("#IDCARD").textbox("setValue",'');
 			$("#ADDRESS").textbox("setValue",'');
 			$("#POSTCODE").textbox("setValue",'');
+			$("#HRLOGINNAME").textbox("setValue",'');
 			$("#DEPARTMENT").textbox("setValue",'');
 			$("#deptId").textbox("setValue",'');
 			$("#IDCARD").textbox("setValue",'');
@@ -542,7 +538,7 @@
                 modal: true,
                 shadow: true,
                 closed: true,
-                width: 700,
+                width: 530,
                 height: 560,
                 resizable:true,
                 closable:true
@@ -551,7 +547,16 @@
         
         // 清除查询表单
 		function clearForm(){
-			$('#fm').form('clear');
+			$('#un').textbox("setValue",'');
+			if (group != null) {
+				$('#cc').combobox('unselect',group.groupCode);
+			}
+			group = null;
+			var data = $('#cc').combobox('getData');
+			if (data.length == 1) {
+				group = data[0];
+				$('#cc').combobox('select',data[0].groupCode);
+			}
 		}
 		
 		
@@ -592,6 +597,7 @@
 			$("#IDCARD").textbox("setValue",data.IDCARD);
 			$("#ADDRESS").textbox("setValue",data.ADDRESS);
 			$("#POSTCODE").textbox("setValue",data.POSTCODE);
+			$("#HRLOGINNAME").textbox("setValue",data.HRLOGINNAME);
 			$("#DEPARTMENT").textbox("setValue",data.DEPARTMENT);
 			$("#IDCARD").textbox("setValue",data.IDCARD);
 			$('#ATTACH').val(data.ATTACH);//归属
@@ -843,7 +849,9 @@
 		$(function(){
 			$.post('${pageContext.request.contextPath}/managerUser/findGroup?type=3',function (data) {
 				$('.easyui-combobox').combobox('loadData',data);
-				$('#cc').combobox('select',data[0].groupCode);
+				if (data.length == 1) {
+					$('#cc').combobox('select',data[0].groupCode);
+				}
 				findUsers();
 			});
 			
