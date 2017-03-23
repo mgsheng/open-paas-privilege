@@ -271,7 +271,37 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		WebUtils.writeJsonToMap(response, map);
 		return;
 	}
-
+	/**
+	 * 设置模块图标
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "updateIcon")
+	public void updateIcon(HttpServletRequest request, HttpServletResponse response) {
+		String appId = request.getParameter("appId").trim();
+		String menuId = request.getParameter("menuId").trim();//菜单Id
+		String menuRule = request.getParameter("menuRule").trim();//菜单图标路径
+		String parentId = request.getParameter("parentId");
+		String status = request.getParameter("status");
+		String displayOrder = request.getParameter("displayOrder");
+		String menuLevel = request.getParameter("menuLevel");
+		String menuCode = request.getParameter("code").trim();
+		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
+		map.put("appId", appId);
+		map.put("menuId", menuId);
+		map.put("menuRule", menuRule);
+		map.put("status", status);
+		map.put("dislayOrder", displayOrder);
+		map.put("menuLevel", menuLevel);
+		map.put("parentId", parentId);
+		map.put("menuRule", menuRule);
+		map.put("menuCode", menuCode);
+		String reslut = sendPost(oesPrivilegeDev.getModifyMenuUrl(), map);
+		JSONObject jsonObject = JSONObject.fromObject(reslut);
+		WebUtils.writeJson(response, jsonObject);
+	}
 	/**
 	 * 修改模块
 	 * 
@@ -282,7 +312,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	@RequestMapping(value = "updateModule")
 	public void updateModule(HttpServletRequest request, HttpServletResponse response) {
 		log.info("-------------------------detail       start------------------------------------");
-		String appId = request.getParameter("appId");
+		String appId = request.getParameter("appId").trim();
 		String optUrl = request.getParameter("optUrl");
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
 		map.put("appId", appId);
@@ -311,11 +341,11 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 			String parentId = request.getParameter("parentId");
 			String status = request.getParameter("status");
 			String displayOrder = request.getParameter("displayOrder");
-			String url = request.getParameter("url");
+			String url = request.getParameter("url").trim();
 			String menuLevel = request.getParameter("menuLevel");
-			String menuRule = request.getParameter("menuRule");
-			String menuName = request.getParameter("name");
-			String menuCode = request.getParameter("code");
+			String menuRule = request.getParameter("menuRule").trim();
+			String menuName = request.getParameter("name").trim();
+			String menuCode = request.getParameter("code").trim();
 			String resourceId = request.getParameter("resourceId");
 			try {
 				if (menuName != null) {
