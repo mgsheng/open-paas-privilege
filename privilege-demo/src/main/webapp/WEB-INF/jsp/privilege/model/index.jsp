@@ -19,6 +19,7 @@
 <body>
 	<div class="easyui-panel" title="模块管理" style="width:100%;max-width:100%;padding:20px 30px;height:540px;">
 	<div style="padding:2px 5px; text-align: right;">
+		<a href="#" class="easyui-linkbutton" iconCls="icon-set" plain="true" id="editIcon">设置图标</a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" id="reload" onclick="reload()">刷新</a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="addRoot">添加根菜单</a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="addMenu">添加菜单</a>
@@ -61,13 +62,6 @@
 					<tr id="url">
 						<td>URL：</td>
 						<td><input id="moduleUrl" class="easyui-textbox" type="text" name="moduleUrl" class="txt01" />
-						</td>
-					</tr>
-					<tr >
-						<td>图标：</td>
-						<td>
-							<select id="icon" ></select><a id="clearIcon" class="easyui-linkbutton" icon="icon-clear" href="javascript:void(0)">清空图标</a> 
-							<div id="sp"></div>
 						</td>
 					</tr>
 					<tr>
@@ -143,6 +137,36 @@
 			</div>
 		</div>
 	</div>
+	<!-- 设置图标窗口 -->
+	<div id="iconWin" class="easyui-window" title="图标" collapsible="false"
+		minimizable="false" maximizable="false" icon="icon-save"
+		style="width: 500px; height: 300px; padding: 5px;
+        background: #fafafa;">
+		<div class="easyui-layout" fit="true">
+			<div region="center" border="false"
+				style="padding: 10px; background: #fff; border: 1px solid #ccc;">
+				<form id="resourceFrom" style="padding-top: 10px;" action="">
+				<table cellpadding=6>
+					<tr >
+						<td>图标：</td>
+						<td>
+							<select id="icon" ></select><a id="clearIcon" class="easyui-linkbutton" icon="icon-clear" href="javascript:void(0)">清空图标</a> 
+							<div id="sp"></div>
+						</td>
+					</tr>
+					
+				</table>
+				</form>
+			</div>
+			<div region="south" border="false"
+				style="text-align:center; height: 30px; line-height: 30px;">
+				<a id="" class="easyui-linkbutton" icon="icon-ok" onclick="iconEdit()"
+					href="javascript:void(0)"> 确定</a> <a 
+					class="easyui-linkbutton" icon="icon-cancel"  onclick="closeIcon()"
+					href="javascript:void(0)">取消</a>
+			</div>
+		</div>
+	</div>
 	<div id='loading' style='position:absolute;left:0;width:100%;height:100%;top:0;background:#E0ECFF;opacity:0.8;filter:alpha(opacity=80);'>
 			<div style='position:absolute;  cursor1:wait;left:50%;top:200px;width:auto;height:16px;padding:12px 5px 10px 30px;border:2px solid #ccc;color:#000;'> 
  				正在加载，请等待...
@@ -188,6 +212,20 @@
                 resizable:false
             });
         }
+        //设置=窗口
+        function iconWin() {
+            $('#iconWin').window({
+                title: '设置图标',
+                width: 600,
+                modal: true,
+                shadow: true,
+                closed: true,
+                top:150,
+                left:400,
+                height: 400,
+                resizable:false
+            });
+        }
         function openFunction() {
             $('#function').window({
                 title: '功能',
@@ -201,6 +239,9 @@
                 resizable:false
             });
         } 
+        function closeIcon() {
+        	  $('#iconWin').window('close');
+        }
         //关闭窗口
         function closePwd() {
             $('#wmodule').window('close');
@@ -209,6 +250,106 @@
         function closeFunction() {
             $('#function').window('close');
         }
+        //设置图标按钮点击
+        $('#editIcon').click(function(){
+        	var node = $('#deptree').tree('getSelected');
+			if (node){
+				if (node.ismodule == 2) {//如果选择的是功能，提示
+					msgShow('系统提示', '请选择父级！', 'warning');
+				} else {
+					$('#iconWin').window('open');
+	        	 	var value = node.attributes.menuRule;
+			        value = value.substr(value.lastIndexOf("/")+1);
+			        $('#icon').combo('setValue', value).combo('setText', value);
+				}
+			} else {
+				msgShow('系统提示', '请选择模块！', 'warning');
+			}
+        });
+        var menuIconUrl = '${menuIconUrl}';//存放图片文件夹路径
+        menuIconUrl = menuIconUrl.substring(1); 
+        //设置图标
+        function iconEdit() {
+        	var node = $('#deptree').tree('getSelected');
+        	var menuId = null;
+        	if (node.ismodule == 1) {//为资源菜单
+            	menuId = node.attributes.menuId;
+			} else {
+				menuId = node.id;
+			}
+        	var moduleUrl = $("#moduleUrl").textbox("getValue");
+            var menuRule = $('#icon').combobox('getValue');
+            if (menuRule != null && menuRule != ""){
+                menuRule = menuIconUrl + menuRule;
+            }
+            $.post('${pageContext.request.contextPath}/module/updateIcon',
+                    {
+                		'menuId' : menuId ,
+                		'menuRule':menuRule ,
+                		'appId':'${appId}',
+                		'name':node.name,
+                        'code':node.attributes.menuCode,
+                        'parentId':node.attributes.parentId,
+                        'status':node.attributes.status,
+                        'displayOrder':node.attributes.dislayOrder,
+                        'menuLevel':node.attributes.menuLevel
+
+                    },
+					function(data){
+						if (data.status == '1') {
+							msgShow('系统提示', '设置成功！', 'warning');
+							closeIcon();//关闭窗口
+							if (node.ismodule == 1) {//如果为资源菜单
+								//menuRule不为空显示选择的图标
+	                			if (menuRule != null && menuRule != "") {
+	                 				$(node.target).children(".tree-icon").css("background","url(${pageContext.request.contextPath}/"+menuRule+")");
+	                 			} else {
+	                 				$(node.target).children(".tree-icon").removeAttr("style");
+	                 				$(node.target).children(".tree-icon").addClass("icon icon-mini-add");
+	    						}
+	                			$('#deptree').tree('update',{
+	                  				target: node.target,
+	                  				'text':node.name,
+	                  				'attributes':{
+	                  					'baseUrl':node.attributes.baseUrl,
+	                  					'status':node.attributes.status,
+	                  					'menuId':node.attributes.menuId,
+	                 					'menuCode':node.attributes.menuCode,
+	                  					'dislayOrder':node.attributes.dislayOrder,
+	                 					'menuLevel':node.attributes.menuLevel,
+										'parentId':node.attributes.parentId,  
+										'menuRule':menuRule
+	                  				}
+	                  			});
+							} else {
+								//menuRule不为空显示选择的图标
+	                			if (menuRule != null && menuRule != "") {
+	                 				$(node.target).children(".tree-icon").css("background","url(${pageContext.request.contextPath}/"+menuRule+")");
+	                 			} else {
+	                 				$(node.target).children(".tree-icon").css("background","");
+	                 				$(node.target).children(".tree-icon").removeClass('tree-file').addClass("tree-folder");
+	    						}
+	                			$('#deptree').tree('update',{//目录菜单
+	                  				target: node.target,
+	                  				'text':node.name,
+	                  				'attributes':{
+	                  					'parentId':node.attributes.parentId,
+	                  					'menuCode':node.attributes.menuCode,
+	                  					'status':node.attributes.status,
+	                  					'dislayOrder':node.attributes.dislayOrder,
+	                 					'menuLevel':node.attributes.menuLevel,
+	                 					'menuRule':menuRule
+	                  				}
+	                  			}); 
+							}
+							
+						} else {
+							msgShow('系统提示', '设置失败！', 'warning');
+						}
+						
+    				}
+            );
+		}
       //添加或修改功能
         $('#addFunct2').click(function(){
         	var optUrl = $("#opturl").textbox("getValue");
@@ -228,7 +369,6 @@
                     		if(data.returnMsg=='2'){
                              	msgShow('系统提示', '恭喜，修改成功！', 'info');
                              	close();
-                             	 //var funNode=$('#deptree').tree('getSelected');
                              	var node = $('#deptree').tree('getSelected');
                               	$('#deptree').tree('update',{
                               		target: node.target,
@@ -238,15 +378,14 @@
                               				'optUrl':optUrl
                               			}
                               		});
-                             	//reload();
                             	$('#function').window('close');
-                    		}else if(data.returnMsg=='0') {
+                    		}else if (data.returnMsg == '0') {
                     			msgShow('系统提示', '修改失败！', 'info');
                     			reload();
                             	$('#function').window('close');
 							}
                     		$('#function').window('close');
-                        });
+                });
         		$('#functionId').val('');
         	}else {
         		$.post('${pageContext.request.contextPath}/module/addModuel',
@@ -266,10 +405,9 @@
                              				'optUrl':optUrl
                              			}
                              		}]});
-                             	//reload();
                             	$('#function').window('close');
                             	
-                    		}else if(data.returnMsg=='0'){
+                    		}else if (data.returnMsg == '0') {
                     			msgShow('系统提示', '添加失败！', 'info');
                              	close();
                              	reload();
@@ -280,41 +418,39 @@
         		$('#functionId').val("");
 			}
         });
-        var menuIconUrl='${menuIconUrl}';
-        menuIconUrl=menuIconUrl.substring(1); 
         //添加菜单或修改菜单
         function serverLogin() {
+        	var regex_dislayOrder = /^(\d)$/;
             var name =  $("#moduleName").textbox("getValue");
             var code = $("#code").textbox("getValue");
             var moduleUrl = $("#moduleUrl").textbox("getValue");
             var displayOrder = $("#display_order").textbox("getValue");
-            var menuRule = $('#icon').combobox('getValue');
-            if (menuRule != null && menuRule != ""){
-            	  menuRule=menuIconUrl+menuRule;
-                }
             var status = $('#status').combobox('getValue');
             var parentId = $('#parentId').val();
             var menuLevel = $('#menuLevel').val();
             var menuId = $('#menuId').val();
             var resourceId = $('#resourceId').val();
+            var menuRule = '';
             if (name == '') {
                 msgShow('系统提示', '请输入名称！', 'warning');
                 return false;
             }
-            if (displayOrder == '') {
-                msgShow('系统提示', '请输入排序！', 'warning');
+            if (displayOrder == '' || regex_dislayOrder.test(displayOrder) != true) {
+                msgShow('系统提示', '请输入正确的排序！', 'warning');
                 return false;
             }
             if (!$('#url').is(':hidden') &&  moduleUrl == ''){
             	msgShow('系统提示', '请输入Url！', 'warning');
                 return false;
             }
-			var url="";
+			var url = "";
 			
-		    if(menuId==""){
-				url='${pageContext.request.contextPath}/module/addModuel';
-		    }else{
-				url='${pageContext.request.contextPath}/module/updateModule';
+		    if(menuId == ""){//如果菜单Id不存在，则添加菜单，反之更新菜单
+				url = '${pageContext.request.contextPath}/module/addModuel';
+		    } else {
+				url = '${pageContext.request.contextPath}/module/updateModule';
+				var node = $("#deptree").tree('getSelected');
+				menuRule = node.attributes.menuRule;
 		    }
              $.post(url, {
                  	'name':name,
@@ -323,151 +459,122 @@
                  	'status':status,
                  	'displayOrder':displayOrder,
                  	'menuLevel':menuLevel,
-                 	'menuRule':menuRule,
                  	'url':moduleUrl,
                  	'menuId':menuId,
                  	'resourceId':resourceId,
-                 	'appId':'${appId}'
-                 },function(data) {
-                if(data.returnMsg=='1'){
-                    //清除图标组合框的值
-                    $('#icon').combo('setValue', null).combo('setText', null);
-                 	msgShow('系统提示', '恭喜，添加成功！', 'info');
-                 	$('#wmodule').window('close');
-                 	var menu=$('#deptree').tree('getSelected');
-                 	if(data.resourceId==null){
-                 		if(parentId=="0"){
-                 			var root = $("#deptree").tree('getRoot');
-                 			$('#deptree').tree('append',{parent:null,
-                         		data:[{
-                         			'id':data.menuId,
-                         			'pid':parentId,
-                         			'text':name,
-                         			'ismodule':'0',
-                         			'attributes':{
-                         				'menuCode':code,
-                         				'status':status,
-                         				'dislayOrder':displayOrder,
-                         				'menuLevel':parseInt(menuLevel)+1,
-    									'parentId':parentId               				
-                         			}
+                 	'appId':'${appId}',
+                 	'menuRule':menuRule
+                 },
+                 function (data) {
+                	if (data.returnMsg == '1') {
+                    	//清除图标组合框的值
+                 		msgShow('系统提示', '恭喜，添加成功！', 'info');
+                 		$('#wmodule').window('close');
+                 		var menu = $('#deptree').tree('getSelected');
+                 		if (data.resourceId == null) {
+                 			if (parentId == "0") {
+                 				var root = $("#deptree").tree('getRoot');
+                 				$('#deptree').tree('append',{parent:null,
+                         			data:[{
+                         				'id':data.menuId,
+                         				'pid':parentId,
+                         				'text':name,
+                         				'ismodule':'0',
+                         				'attributes':{
+                         					'menuCode':code,
+                         					'status':status,
+                         					'dislayOrder':displayOrder,
+                         					'menuLevel':parseInt(menuLevel)+1,
+    										'parentId':parentId,
+    										'menuRule':""                				
+                         				}
                          		}]});
-                 		}else {
-                 			$('#deptree').tree('append',{parent: menu.target,
-                         		data:[{
-                         			'id':data.menuId,
-                         			'pid':parentId,
-                         			'text':name,
-                         			'ismodule':'0',
-                         			'attributes':{
-                         				'menuCode':code,
-                         				'status':status,
-                         				'dislayOrder':displayOrder,
-                         				'menuLevel':parseInt(menuLevel)+1,
-    									'parentId':parentId,
-    									'menuRule':menuRule             				
-                         			}
+                 			}else {
+                 				$('#deptree').tree('append',{parent: menu.target,
+                         			data:[{
+                         				'id':data.menuId,
+                         				'pid':parentId,
+                         				'text':name,
+                         				'ismodule':'0',
+                         				'attributes':{
+                         					'menuCode':code,
+                         					'status':status,
+                         					'dislayOrder':displayOrder,
+                         					'menuLevel':parseInt(menuLevel)+1,
+    										'parentId':parentId,
+    										'menuRule':""             				
+                         				}
                          		}]});
                  			
-						}
-                 		//添加图标
-                 		var nn = $('#deptree').tree('find', data.menuId);
-                 		if(menuRule!=null&&menuRule!=""){
-                     			$(nn.target).children(".tree-icon").css("background","url(${pageContext.request.contextPath}/"+menuRule+")");
-                     	}else {
-                				$(nn.target).children(".tree-icon").removeClass('tree-file').addClass("tree-folder");
-						}
+							}
                  		
-                 	}else{//添加资源菜单
-                 		$('#deptree').tree('append',{parent: menu.target,
-                     		data:[{
-                     			'id':data.resourceId,
-                     			'pid':parentId,
-                     			'text':name,
-                     			'ismodule':'1',
-                     			'attributes':{
-                     				'baseUrl':moduleUrl,
-                     				'menuId':data.menuId,
-                     				'parentId':parentId,
-                     				'menuCode':code,
-                     				'status':status,
-                     				'dislayOrder':displayOrder,
-                     				'menuLevel':parseInt(menuLevel)+1,
-                     				'menuRule':menuRule   
+                 		} else {//添加资源菜单
+                 			$('#deptree').tree('append',{parent: menu.target,
+                     			data:[{
+                     				'id':data.resourceId,
+                     				'pid':parentId,
+                     				'text':name,
+                     				'ismodule':'1',
+                     				'attributes':{
+                     					'baseUrl':moduleUrl,
+                     					'menuId':data.menuId,
+                     					'parentId':parentId,
+                     					'menuCode':code,
+                     					'status':status,
+                     					'dislayOrder':displayOrder,
+                     					'menuLevel':parseInt(menuLevel)+1,
+                     					'menuRule':""   
 
-                     			}
+                     				}
                      		}]});
-                 		//添加图标
-                 		var nn = $('#deptree').tree('find', data.resourceId);
-                 		//menuRule不为空显示选择的图标
-                 		if(menuRule!=null&&menuRule!=""){
-                 			$(nn.target).children(".tree-icon").css("background","url(${pageContext.request.contextPath}/"+menuRule+")");
-                 		}else {
-                 			$(nn.target).children(".tree-icon").addClass("icon icon-mini-add");
+                 		}
+                 		reset();
+                		$('#wmodule').window('close');
+                	}else if(data.returnMsg == '2') {
+                 		msgShow('系统提示', '恭喜，修改成功！', 'info');
+                 		close();
+                		reset();
+                		var node = $('#deptree').tree('getSelected');
+                		if (resourceId != null && resourceId != "" && typeof(resourceId) != "undefined"){//资源菜单
+                			$('#deptree').tree('update',{
+                  				target: node.target,
+                  				'text':name,
+                  				'attributes':{
+                  					'baseUrl':moduleUrl,
+                  					'status':status,
+                  					'menuId':menuId,
+                 					'menuCode':code,
+                  					'dislayOrder':displayOrder,
+                 					'menuLevel':parseInt(menuLevel)+1,
+									'parentId':parentId,  
+									'menuRule':node.attributes.menuRule
+                  				}
+                  			}); 
+                		}else {
+                			$('#deptree').tree('update',{//目录菜单
+                  				target: node.target,
+                  				'text':name,
+                  				'attributes':{
+                  					'parentId':parentId,
+                  					'menuCode':code,
+                  					'status':status,
+                  					'dislayOrder':displayOrder,
+                 					'menuLevel':parseInt(menuLevel)+1,
+                 					'menuRule':node.attributes.menuRule
+                  				}
+                  			}); 
 						}
-                 	}
-                 	reset();
-                	$('#wmodule').window('close');
-                }else if(data.returnMsg=='2'){
-                 	msgShow('系统提示', '恭喜，修改成功！', 'info');
-                 	$('#icon').combo('setValue', null).combo('setText', null);
-                 	close();
-                	reset();
-                	var node = $('#deptree').tree('getSelected');
-                	if(resourceId!==null&&resourceId!=""&&typeof(resourceId)!="undefined"){//资源菜单
-                		//menuRule不为空显示选择的图标
-                		if(menuRule!=null&&menuRule!=""){
-                 			$(node.target).children(".tree-icon").css("background","url(${pageContext.request.contextPath}/"+menuRule+")");
-                 		}else {
-                 			$(node.target).children(".tree-icon").removeAttr("style");
-                 			$(node.target).children(".tree-icon").addClass("icon icon-mini-add");
-    					}
-                		$('#deptree').tree('update',{
-                  			target: node.target,
-                  			'text':name,
-                  			'attributes':{
-                  				'baseUrl':moduleUrl,
-                  				'status':status,
-                  				'menuId':menuId,
-                 				'menuCode':code,
-                  				'dislayOrder':displayOrder,
-                 				'menuLevel':parseInt(menuLevel)+1,
-								'parentId':parentId,  
-								'menuRule':menuRule
-                  			}
-                  		}); 
-                	}else {
-                    	//menuRule不为空显示选择的图标
-                		if(menuRule!=null&&menuRule!=""){
-                 			$(node.target).children(".tree-icon").css("background","url(${pageContext.request.contextPath}/"+menuRule+")");
-                 		}else {
-                 			$(node.target).children(".tree-icon").css("background","");
-                 			$(node.target).children(".tree-icon").removeClass('tree-file').addClass("tree-folder");
-    					}
-                		$('#deptree').tree('update',{//目录菜单
-                  			target: node.target,
-                  			'text':name,
-                  			'attributes':{
-                  				'parentId':parentId,
-                  				'menuCode':code,
-                  				'status':status,
-                  				'dislayOrder':displayOrder,
-                 				'menuLevel':parseInt(menuLevel)+1,
-                 				'menuRule':menuRule
-                  			}
-                  		}); 
-					}
                 	
-                 	$('#wmodule').window('close');
-                }else if(data.returnMsg=='0'){
-                 	msgShow('系统提示', '系统错误！', 'info');
-                	reset();
-                	 close();
-                }
-                $('#wmodule').window('close');
-            }); 
+                 		$('#wmodule').window('close');
+                	} else if(data.returnMsg == '0'){
+                 		msgShow('系统提示', '系统错误！', 'info');
+                		reset();
+                		close();
+               	 	}
+                	$('#wmodule').window('close');
+            	}); 
             
-        }
+        	}
 		//弹出信息窗口 title:标题 msgString:提示信息 msgType:信息类型 [error,info,question,warning]
 		function msgShow(title, msgString, msgType) {
 			$.messager.alert(title, msgString, msgType);
@@ -579,7 +686,7 @@
 	    	 
 		     openPwd();
 		     openFunction();
-		    
+		     iconWin();
             
             //删除
           $('#delete').click(function() {
@@ -747,8 +854,8 @@
 				}else{
 					$('#wmodule').window('open');
 			         updateModel(node);
-			         var value=node.attributes.menuRule;
-			         value=value.substr(value.lastIndexOf("/")+1);
+			         var value = node.attributes.menuRule;
+			         value = value.substr(value.lastIndexOf("/")+1);
 			         $('#icon').combo('setValue', value).combo('setText', value);
 				}
 	            
@@ -790,25 +897,24 @@
 		    }
 		     function updateModel(data){
 				reset();
-				if(data.id==null || data.id==0){
+				if (data.id == null || data.id == 0) {
 					return;
 				}
-				data=$('#deptree').tree('getSelected');
+				data = $('#deptree').tree('getSelected');
 				//赋值
 				var menuId;
 				var resourceId;
-				if(data.ismodule=="0"){
-					menuId=data.id;
+				if (data.ismodule == "0") {
+					menuId = data.id;
 					$("#moduleUrl").textbox("setValue",'');
 					$('#url').hide();
-				}else if (data.ismodule=="1") {
-					menuId=data.attributes.menuId;
-					resourceId=data.id;
+				} else if (data.ismodule == "1") {
+					menuId = data.attributes.menuId;
+					resourceId = data.id;
 					$('#resourceId').val(resourceId);
 					$('#url').show();
 					var url = data.attributes.baseUrl;
 					$("#moduleUrl").textbox("setValue",url);
-					//$('#moduleUrl').val(url);
 				}
 				var parentId = data.attributes.parentId;
 				var name = data.text;
@@ -817,11 +923,10 @@
 				var status = data.attributes.status;
 				var menuLevel = data.attributes.menuLevel-1;
 				$('#menuId').val(menuId);
-				if(parentId==0){
+				if (parentId == 0) {
 					$('#parentName').html('根节点');
-				}
-				else{
-					var node=$('#deptree').tree('find',parentId);
+				} else {
+					var node = $('#deptree').tree('find',parentId);
 					$('#parentName').html(node.text);
 				}
 				jQuery('#parentId').val(parentId);
@@ -829,7 +934,6 @@
 				$("#code").textbox("setValue",code);
 				$("#display_order").textbox("setValue",displayOrder);
 				jQuery('#menuLevel').val(menuLevel);
-
 				$('#status').combobox('setValue', status);
 
 			}
