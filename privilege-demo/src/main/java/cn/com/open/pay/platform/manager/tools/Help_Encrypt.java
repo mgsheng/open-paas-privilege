@@ -9,8 +9,8 @@ import org.apache.commons.lang.StringUtils;
 
 
 public class Help_Encrypt {
-	private static String IV_KEY ="OPEN2012";   //OPEN2012
-	private static String PASSWORD_CRYPT_KEY ="OPEN2012";   //OPEN2012
+	private static String IV_KEY ="openkeys";   //OPEN2012
+	private static String PASSWORD_CRYPT_KEY ="openkeys";   //OPEN2012
 	
 	//解密数据     
 	public static String decrypt(String message,String key) throws Exception {     
