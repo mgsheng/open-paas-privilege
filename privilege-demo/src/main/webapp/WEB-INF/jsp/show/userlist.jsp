@@ -91,15 +91,13 @@
 						组织机构：
 					</td>
 					<td >	
-						<input id="showGroup"  name="dept" class="disable" disabled="true">
+						<input id="showGroup"   class="easyui-textbox" name="dept" class="disable" disabled="true">
 					</td>
-				</tr>
-				<tr>
 					<td > 
 						登&nbsp;&nbsp;录&nbsp;&nbsp;名:
 					</td>
 					<td >	
-						<input id="showLOGINNAME"  name="username" type="text"   disabled="true">
+						<input id="showLOGINNAME"  class="easyui-textbox" name="username" type="text"   disabled="true">
 					</td>
 				</tr>
 				<tr>
@@ -107,10 +105,8 @@
 						真实姓名:
 					</td>
 					<td >	
-						<input id="showNAME" type="text" disabled="true">
+						<input id="showNAME" type="text" class="easyui-textbox" disabled="true">
 					</td>
-				</tr>
-				<tr>
 					<td > 
 						性别:
 					</td>
@@ -126,7 +122,7 @@
 						密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码:
 					</td>
 					<td >	
-						<input id="showPwd"  type="password"  name="text" disabled="true">
+						<input id="showPwd" class="easyui-textbox" type="password"  name="text" disabled="true">
 					</td>
 				</tr>
 				<tr>
@@ -134,13 +130,13 @@
 						HR登录名：
 					</td>
 					<td>	
-						<input id="showHRLOGINNAME"  name="HRLOGINNAME"  type="text" disabled="true">
+						<input id="showHRLOGINNAME"  class="easyui-textbox" name="HRLOGINNAME"  type="text" disabled="true">
 					</td>
 					<td >
 						组织类型编码：
 					</td>
 					<td>	
-						<input id="showORGANIZATIONTYPECODE"  name="ORGANIZATIONTYPECODE"  type="text" disabled="true">
+						<input id="showORGANIZATIONTYPECODE"  class="easyui-textbox" name="ORGANIZATIONTYPECODE"  type="text" disabled="true">
 					</td>
 				</tr>
 				<tr>
@@ -148,13 +144,13 @@
 						固定电话：
 					</td>
 					<td >	
-						<input id="showPHONENO"  name="PHONENO"  type="text" disabled="true">
+						<input id="showPHONENO"  class="easyui-textbox" name="PHONENO"  type="text" disabled="true">
 					</td>
 					<td >
 						移动电话：
 					</td>
 					<td >	
-						<input id="showMOBILEPHONE"  name="MOBILEPHONE"  type="text" disabled="true">
+						<input id="showMOBILEPHONE"   class="easyui-textbox" name="MOBILEPHONE"  type="text" disabled="true">
 					</td>
 				</tr>
 				<tr>
@@ -162,13 +158,13 @@
 						传真电话：
 					</td>
 					<td >	
-						<input id="showFAX"  name="FAX"  type="text" disabled="true">
+						<input id="showFAX"  name="FAX"  class="easyui-textbox"  type="text" disabled="true">
 					</td>
 					<td >
 						电子邮箱：
 					</td>
 					<td >	
-						<input id="showEMAIL"  name="EMAIL"  type="email" disabled="true">
+						<input id="showEMAIL"  name="EMAIL"   class="easyui-textbox" type="email" disabled="true">
 					</td>
 				</tr>
 				<tr   >
@@ -176,7 +172,7 @@
 							所属部门：
 						</td>
 						<td >	
-							<input id="showDEPARTMENT"  name="DEPARTMENT"  type="text" disabled="true">
+							<input id="showDEPARTMENT"   class="easyui-textbox" name="DEPARTMENT"  type="text" disabled="true">
 						</td>
 				</tr>
 				<!-- 基础特有 -->
@@ -194,7 +190,7 @@
 							孔子学院角色ID：
 						</td>
 						<td >	
-							<input id="showKZROLEID"  name="KZROLEID"  type="text" disabled="true">
+							<input id="showKZROLEID"  class="easyui-textbox" name="KZROLEID"  type="text" disabled="true">
 						</td>
 					</tr>
 					<tr class="base">
@@ -202,13 +198,13 @@
 							孔子学院ID：
 						</td>
 						<td >	
-							<input id="showKZID"  name="KZID"  type="text" disabled="true"> 
+							<input id="showKZID"  class="easyui-textbox" name="KZID"  type="text" disabled="true"> 
 						</td>
 						<td >
 							职员ID：
 						</td>
 						<td >	
-							<input id="showSTAFFID"  name="STAFFID"  type="text" disabled="true">
+							<input id="showSTAFFID"  class="easyui-textbox" name="STAFFID"  type="text" disabled="true">
 						</td>
 					</tr>
 					<tr class="base">
@@ -216,13 +212,13 @@
 							教材帐号生效日期：
 						</td>
 						<td >	
-							<input id="showACTIVEBEGINDATE"  name="ACTIVEBEGINDATE"  type="text" disabled="true">
+							<input id="showACTIVEBEGINDATE"  class="easyui-textbox" name="ACTIVEBEGINDATE"  type="text" disabled="true">
 						</td>
 						<td >
 							失效日期：
 						</td>
 						<td >	
-							<input id="showACTIVEENDDATE"  name="ACTIVEENDDATE"  type="text" disabled="true"> 
+							<input id="showACTIVEENDDATE"  class="easyui-textbox" name="ACTIVEENDDATE"  type="text" disabled="true"> 
 						</td>
 					</tr>
 					<tr  class="base">
@@ -573,27 +569,25 @@
 		}
 		//显示用户详情
 		function showUserValue(data) {
-			$('#showGroup').val(data.groupName);
-			$('#showLOGINNAME').val(data.LOGINNAME);
-			$('#showPwd').val(data.PASSWORD);
-			$('#showNAME').val(data.NAME);//真实姓名
 			$('#showSEX').val(data.SEX);
-			$('#showPHONENO').val(data.PHONENO);//固定电话
-			$('#showMOBILEPHONE').val(data.MOBILEPHONE);//移动电话
-			$('#showFAX').val(data.FAX);//传真电话
-			$('#showEMAIL').val(data.EMAIL);
-			$('#showDEPARTMENT').val(data.DEPARTMENT);//部门
-			$('#showHRLOGINNAME').val(data.HRLOGINNAME);
 			$('#showISSUPERADMIN').val(data.ISSUPERADMIN);//是否是超级管理员
-			$('#showKZROLEID').val(data.KZROLEID);//孔子学院roleId
-			$('#showKZID').val(data.KZID);//孔子学院ID
-			$('#showSTAFFID').val(data.STAFFID);//职员ID
-			$('#showACTIVEBEGINDATE').val(data.ACTIVEBEGINDATE);//教材帐号生效日期
-			$('#showACTIVEENDDATE').val(data.ACTIVEENDDATE);//失效日期：
-			$('#showACTIVESTATUS').val(data.ACTIVESTATUS);//教材帐号状态：
 			$('#showISEDITPURCHASEPRICE').val(data.ISEDITPURCHASEPRICE);//	采购价格修改权限：
 			$('#showStudyType').val(data.STUDYTYPE);//教育类型
-			$('#showORGANIZATIONTYPECODE').val(data.ORGANIZATIONTYPECODE);//组织类型ID
+			$("#showGroup").textbox("setValue",data.groupName);//组织机构
+			$("#showLOGINNAME").textbox("setValue",data.LOGINNAME);//登陆名
+			$("#showPwd").textbox("setValue",data.PASSWORD);
+			$("#showNAME").textbox("setValue",data.NAME);//真实姓名
+			$("#showPHONENO").textbox("setValue",data.PHONENO);//固定电话
+			$("#showMOBILEPHONE").textbox("setValue",data.MOBILEPHONE);//移动电话
+			$("#showFAX").textbox("setValue",data.FAX);//传真
+			$("#showEMAIL").textbox("setValue",data.EMAIL);//邮箱
+			$("#showDEPARTMENT").textbox("setValue",data.DEPARTMENT);//部门
+			$("#showHRLOGINNAME").textbox("setValue",data.HRLOGINNAME);//HR登录名
+			$("#showKZID").textbox("setValue",data.KZID);//孔子学院ID
+			$("#showSTAFFID").textbox("setValue",data.STAFFID);//职员Id
+			$("#showACTIVEBEGINDATE").textbox("setValue",data.ACTIVEBEGINDATE);//教材生效时间
+			$("#showACTIVEENDDATE").textbox("setValue",data.ACTIVEENDDATE);//失效时间
+			$("#showORGANIZATIONTYPECODE").textbox("setValue",data.ORGANIZATIONTYPECODE);//组织机构类型cod
 		}
 		//添加用户窗口
 		function addWin(){
@@ -674,7 +668,16 @@
         
         // 清除查询表单
 		function clearForm(){
-			$('#fm').form('clear');
+			$('#un').textbox("setValue",'');
+			if (group != null) {
+				$('#cc').combobox('unselect',group.groupCode);
+			}
+			group = null;
+			var data = $('#cc').combobox('getData');
+			if (data.length == 1) {
+				group = data[0];
+				$('#cc').combobox('select',data[0].groupCode);
+			}
 		}
 		
 		
@@ -996,7 +999,9 @@
 		$(function(){
 			$.post('${pageContext.request.contextPath}/managerUser/findGroup?type=4',function (data) {
 				$('.easyui-combobox').combobox('loadData',data);
-				$('#cc').combobox('select',data[0].groupCode);
+				if (data.length == 1) {
+					$('#cc').combobox('select',data[0].groupCode);
+				}
 				findUsers();
 			});
 			
