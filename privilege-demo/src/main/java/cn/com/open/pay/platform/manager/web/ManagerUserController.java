@@ -26,15 +26,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.com.open.pay.platform.manager.dev.OesPrivilegeDev;
 import cn.com.open.pay.platform.manager.privilege.model.OesGroup;
+import cn.com.open.pay.platform.manager.privilege.model.OesUser;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeFunction;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeOperation;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource1;
 import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
 import cn.com.open.pay.platform.manager.privilege.service.OesGroupService;
+import cn.com.open.pay.platform.manager.privilege.service.OesUserService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGetSignatureService;
 import cn.com.open.pay.platform.manager.tools.AESUtils;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
+import cn.com.open.pay.platform.manager.tools.Help_Encrypt;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
 
 @Controller
@@ -48,7 +51,8 @@ public class ManagerUserController extends BaseControllerUtil {
 	private OesPrivilegeDev oesPrivilegeDev;
 	@Autowired
 	private OesGroupService oesGroupService;
-
+	@Autowired
+	private OesUserService oesUserService;
 
 	/**
 	 * 跳转到用户信息列表的页面
@@ -673,6 +677,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		map = privilegeGetSignatureService.getSignature(appId);
 		map.put("appId", appId);
 		map.put("appUserId", appUserId);
+		String errMsg = "";//存放错误信息
 		if (boo) {
 			// 先查询该用户的信息
 			result = sendPost(oesPrivilegeDev.getUserPrivilegeUrl(), map);
@@ -687,21 +692,33 @@ public class ManagerUserController extends BaseControllerUtil {
 				map.put("deptId", deptId);
 				map.put("groupId", groupId);
 				map.put("method", "1");
-				// 更新用户
-				result = sendPost(oesPrivilegeDev.getModitUserPrivilegeUrl(), map);
-				object = JSONObject.fromObject(result);
-				map.clear();
-				if ("1".equals(object.get("status"))) {
-					map.put("status", "2");
-				} else {
-					map.put("status", "-1");
+				//更新oes_privilege库 中用户
+				OesUser oesUser = new OesUser();
+				oesUser.setUserId(appUserId);
+				oesUser.setGroupId(groupId);
+				boo = oesUserService.updateUser(oesUser);
+				if (boo) {
+					// 更新权限用户
+					result = sendPost(oesPrivilegeDev.getModitUserPrivilegeUrl(), map);
+					object = JSONObject.fromObject(result);
+					if ("1".equals(object.get("status"))) {
+						boo = true;
+					} else {
+						boo = false;
+					}
 				}
 			} else {
-				map.put("status", "-1");
-				map.put("errMsg", object.get("errMsg"));
+				boo = false;
+				errMsg = (String) object.get("errMsg");
 			}
+		}
+		map.clear();
+		//boo 为true 更新成功 反之，失败
+		if (boo) {
+			map.put("status", "2");
 		} else {
 			map.put("status", "-1");
+			map.put("errMsg", errMsg);
 		}
 		WebUtils.writeJsonToMap(response, map);
 		return;
@@ -731,6 +748,8 @@ public class ManagerUserController extends BaseControllerUtil {
 		map.put("scope", "read,write");
 		map.put("source_id", appUserId);
 		map.put("username", loginName);
+		Boolean boo = false;//是否删除成功
+		String errMsg = "";//存放错误信息
 		//解绑用户
 		String result = sendPost(oesPrivilegeDev.getUserCenterUnBindUrl(), map);
 		JSONObject object = null;
@@ -745,31 +764,31 @@ public class ManagerUserController extends BaseControllerUtil {
 					map = (Map<String, Object>) array.get(0);
 					String Status = (String) map.get("Status");
 					if ("True".equals(Status)) {
-						map = privilegeGetSignatureService.getSignature(appId);
-						map.put("appUserId", appUserId);
-						map.put("appId", appId);
-						// 删除权限库中用户
-						result = sendPost(oesPrivilegeDev.getDelUserPrivilegeUrl(), map);
-						object = JSONObject.fromObject(result);
-						WebUtils.writeJson(response, object);
-					} else {
-						map.clear();
-						map.put("status", "0");
-						map.put("errMsg", "失败");
-						WebUtils.writeJsonToMap(response, map);
-					}
-				} else {
-					map.clear();
-					map.put("status", "0");
-					map.put("errMsg", "失败");
-					WebUtils.writeJsonToMap(response, map);
-				}
+						//删除oes_privilege中用户
+						boo = oesUserService.deleteUser(appUserId);
+						//如果删除成功，删除权限用户
+						if (boo) {
+							map = privilegeGetSignatureService.getSignature(appId);
+							map.put("appUserId", appUserId);
+							map.put("appId", appId);
+							// 删除权限库中用户
+							result = sendPost(oesPrivilegeDev.getDelUserPrivilegeUrl(), map);
+							object = JSONObject.fromObject(result);
+							WebUtils.writeJson(response, object);
+							return;
+						} 
+					} 
+				} 
 			} else {
-				map.clear();
-				map.put("status", "0");
-				map.put("errMsg", object.get("errMsg"));
-				WebUtils.writeJsonToMap(response, map);
+				errMsg = object.getString("errMsg");
 			}
+		}
+		//如果删除失败，返回提示
+		if (!boo) {
+			map.clear();
+			map.put("status", "0");
+			map.put("errMsg",errMsg);
+			WebUtils.writeJsonToMap(response, map);
 		}
 		
 
@@ -834,9 +853,47 @@ public class ManagerUserController extends BaseControllerUtil {
 	 */
 	@RequestMapping("findUserList")
 	public void findUserList(HttpServletRequest request, HttpServletResponse response) {
-		String groupId = request.getParameter("groupId");
-		OesGroup oesGroup = oesGroupService.findByCode(groupId);
+		log.info("findUser--start");
+		String groupId = request.getParameter("groupId");//组织机构Id
 		String type = request.getParameter("type");// 用户类型
+		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
+		if (("").equals(groupId)) {
+				// 用户角色类型，1-普通用户，2-管理员，3-组织机构管理员
+				int Type = (int) user.get("Type");
+				if (Type == 1 || Type == 3) {
+					groupId = user.get("groupId").equals("null") ? null
+							: (String) user.get("groupId");
+				}
+		}
+		String typeName = null;//组织机构类型
+		String groupCodeName = "";// 存放组织机构Id的字段名称
+		switch (type) {
+		case "3":
+			groupCodeName = "UNIVERSITYCODE";
+			typeName = "院校";
+			break;
+		case "4":
+			groupCodeName = "ORGANIZATIONID";
+			typeName = "基础";
+			break;
+		case "5":
+			groupCodeName = "DCENTERCODE";
+			typeName = "大区";
+			break;
+		case "6":
+			groupCodeName = "LCENTERCODE";
+			typeName = "学习中心";
+			break;
+		default:
+			break;
+		}
+		List<OesGroup> oesGroupList = new ArrayList<OesGroup>();
+		if (!groupId.isEmpty()) {
+			OesGroup oesGroup = oesGroupService.findByCode(groupId);
+			oesGroupList.add(oesGroup);
+		} else {
+			oesGroupList = oesGroupService.findByTypeName(typeName);
+		}
 		if ("4".equals(type)) {
 			groupId = "";
 		}
@@ -852,16 +909,59 @@ public class ManagerUserController extends BaseControllerUtil {
 		//url 参数
 		String parameter = "type=" + type + "&loginName=" + userName + "&orgCode=" + groupId + "&page="+currentPage +
 				"&page_size=" +pageSize ;
+		//用户数据源  如果为true 用户数据从oes_privilege库中读取
+		Boolean userDataSourceSwitch = new Boolean(oesPrivilegeDev.getUserDataSourceSwitch());
+		if (userDataSourceSwitch) {//从oes_privilege读取
+			List<OesUser> userList = oesUserService.findByPage(groupId, currentPage, pageSize, userName);
+			List<Map<String, Object>> oesUserList = new ArrayList<Map<String, Object>>();
+			for (OesUser oesUser : userList) {
+				if (oesGroupList.size() == 1) {
+					Map<String, Object> userMap = new HashMap<String, Object>();
+					userMap.put("groupName", oesGroupList.get(0).getGroupName());
+					userMap.put("groupId", oesGroupList.get(0).getGroupCode());
+					userMap.put("USERID", oesUser.getUserId());
+					userMap.put("LOGINNAME", oesUser.getUserName());
+					oesUserList.add(userMap);
+				} else {
+					for (OesGroup group : oesGroupList) {
+						if (oesUser.getGroupId().equals(group.getGroupCode())) {
+							Map<String, Object> userMap = new HashMap<String, Object>();
+							userMap.put("groupName", group.getGroupName());
+							userMap.put("groupId", group.getGroupCode());
+							userMap.put("USERID", oesUser.getUserId());
+							userMap.put("LOGINNAME", oesUser.getUserName());
+							oesUserList.add(userMap);
+						}
+					}
+				}
+			}
+			int count = oesUserService.getUserCount(groupId, userName);
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("rows", user);
+			map.put("total", count);
+			WebUtils.writeJson(response, JSONObject.fromObject(map));
+			return;
+		}
+		//调用oes用户查询接口
 		String result = sendGet(oesPrivilegeDev.getFindOesUserUrl(), parameter);
 		JSONObject object = JSONObject.fromObject(result);
 		List<Map<String, Object>> users = null;
-		int userNum = 0;
+		int userNum = 0;//用户数
 		if (object.getInt("Code") == 0) {
 			users = JSONArray.toList(object.getJSONArray("Data"), Map.class);
 			userNum = object.getInt("Count");
-			for (Map<String, Object> user : users) {
-				user.put("groupId", oesGroup.getGroupCode());
-				user.put("groupName", oesGroup.getGroupName());
+			for (Map<String, Object> oesUser : users) {
+				if (oesGroupList.size() == 1) {
+					oesUser.put("groupId", oesGroupList.get(0).getGroupCode());
+					oesUser.put("groupName", oesGroupList.get(0).getGroupName());
+				} else {
+					for (OesGroup group : oesGroupList) {
+						if (oesUser.get(groupCodeName).equals(group.getGroupCode())) {
+							oesUser.put("groupId", group.getGroupCode());
+							oesUser.put("groupName", group.getGroupName());
+						}
+					}
+				}
 			}
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1013,6 +1113,8 @@ public class ManagerUserController extends BaseControllerUtil {
 		String ORGANIZATIONID = request.getParameter("ORGANIZATIONID");
 		appUserName = java.net.URLEncoder.encode(appUserName, "UTF-8");
 		String passWord = request.getParameter("passWord");
+		String newPass = "";
+		newPass = Help_Encrypt.encrypt(passWord);
 		try {// 密码AES加密
 			passWord = AESUtils.encrypt(passWord, oesPrivilegeDev.getClientSecret());
 		} catch (Exception e) {
@@ -1044,7 +1146,7 @@ public class ManagerUserController extends BaseControllerUtil {
 		parameters.clear();
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("LOGINNAME", appUserName);
-		jsonObject.put("PASSWORD", passWord);
+		jsonObject.put("PASSWORD", newPass);
 		jsonObject.put("NAME", Name);
 		jsonObject.put("SEX", SEX);
 		if (!"4".equals(type)) {//非基础端用户
@@ -1087,9 +1189,10 @@ public class ManagerUserController extends BaseControllerUtil {
 		//添加oes用户
 		result = sendPostByJson(oesPrivilegeDev.getAddOesUserUrl() + "?Type=" + type, jsonObject);
 		parameters.clear();
+		boolean boo = false;//是否添加成功，true为成功
 		if (result != null) {
 			JSONObject object = JSONObject.fromObject(result);
-			if (object.getInt("Code") == 0) {// oes用户中心注册成功后，调用添加权限用户接口
+			if (object.getInt("Code") == 0) {// oes添加成功后，调用添加权限用户接口
 				JSONArray array = JSONArray.fromObject(object.get("Data"));
 				Map<String, Object> map = (Map<String, Object>) array.get(0);
 				String Status = (String) map.get("Status");
@@ -1115,27 +1218,32 @@ public class ManagerUserController extends BaseControllerUtil {
 						parameters.put("isValidate", 1);
 						parameters.put("password", passWord);
 						parameters.put("source_id", appUserId);
-						result = sendPost(oesPrivilegeDev.getUserCenterRegUrl(), parameters);
-						if (result != null && !("").equals(result)) {
-							String aString = result.substring(0, 1);
-							if (aString.equals("{")) {
-								object = JSONObject.fromObject(result);
-								WebUtils.writeJson(response, object);
-								return;
+						//添加oes_privilege 用户
+						OesUser oesUser = new OesUser();
+						oesUser.setUserId(appUserId);
+						oesUser.setGroupId(groupId);
+						oesUser.setUserName(appUserName);
+						boo = oesUserService.saveUser(oesUser);
+						if (boo) {//如果添加成功，注册用户中心用户
+							result = sendPost(oesPrivilegeDev.getUserCenterRegUrl(), parameters);
+							if (result != null && !("").equals(result)) {
+								String aString = result.substring(0, 1);
+								if (aString.equals("{")) {
+									object = JSONObject.fromObject(result);
+									WebUtils.writeJson(response, object);
+									return;
+								}
 							}
 						}
-					} else {// 如果权限用户添加失败
-						parameters.put("status", "0");
-						parameters.put("errMsg", "保存失败");
-						WebUtils.writeJsonToMap(response, parameters);
-						return;
-					}
+					} 
 				}
-			} else {// 如果oes用户添加不成功，返回错误提示
-				parameters.put("errMsg", object.get("Message"));
-				WebUtils.writeJsonToMap(response, parameters);
-				return;
-			}
+			} 
+		}
+		if (!boo) {//保存不成功
+			parameters.clear();
+			parameters.put("status", "0");
+			parameters.put("errMsg", "保存失败");
+			WebUtils.writeJsonToMap(response, parameters);
 		}
 	}
 }
