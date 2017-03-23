@@ -47,10 +47,10 @@
 	}
 	//添加第三级菜单
 	function addNav(data) {
-		var dom = '<div  class="portlet-body"><ul class="icon_lists clear">';
+		var dom = '<div class="portlet box default"><div class="portlet-title"></div><div class="portlet-body" ><ul class="icon_lists clear">';
 		if (data.length > 0) {
 			dom += data ;
-			dom += '</ul></div>';
+			dom += '</ul></div></div>';
 			$('.page-content').append(dom);
 		}
 	}
