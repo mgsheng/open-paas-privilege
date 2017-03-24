@@ -46,10 +46,24 @@ public class OesPrivilegeDev {
 	private String addOesUserUrl;
 	private String userCenterUnBindUrl;
 	private String userDataSourceSwitch;
+	private String IvKey;
+	private String PassWordCryptKey;
 	
 	
 	
 	
+	public String getIvKey() {
+		return IvKey;
+	}
+	public void setIvKey(String ivKey) {
+		IvKey = ivKey;
+	}
+	public String getPassWordCryptKey() {
+		return PassWordCryptKey;
+	}
+	public void setPassWordCryptKey(String passWordCryptKey) {
+		PassWordCryptKey = passWordCryptKey;
+	}
 	public String getUserDataSourceSwitch() {
 		return userDataSourceSwitch;
 	}
