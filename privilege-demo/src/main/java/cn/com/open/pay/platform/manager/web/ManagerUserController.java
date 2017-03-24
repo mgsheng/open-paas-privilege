@@ -1114,7 +1114,11 @@ public class ManagerUserController extends BaseControllerUtil {
 		appUserName = java.net.URLEncoder.encode(appUserName, "UTF-8");
 		String passWord = request.getParameter("passWord");
 		String newPass = "";
-		newPass = Help_Encrypt.encrypt(passWord);
+		try {//DES加密
+			newPass = Help_Encrypt.toHexString(Help_Encrypt.encrypt(passWord,oesPrivilegeDev.getPassWordCryptKey(),oesPrivilegeDev.getIvKey())).toUpperCase();
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
 		try {// 密码AES加密
 			passWord = AESUtils.encrypt(passWord, oesPrivilegeDev.getClientSecret());
 		} catch (Exception e) {
