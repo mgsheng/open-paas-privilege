@@ -825,11 +825,6 @@ privilege-demo/src/main/webapp/assets/global/plugins/font-awesome/fonts/fontawes
 privilege-demo/src/main/webapp/assets/global/plugins/font-awesome/fonts/fontawesome-webfont.woff2 -text
 privilege-demo/src/main/webapp/assets/global/plugins/holder.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/ie8.fix.min.js -text
-privilege-demo/src/main/webapp/assets/global/plugins/jquery-easyui/.DS_Store -text
-privilege-demo/src/main/webapp/assets/global/plugins/jquery-easyui/ISSUE_TEMPLATE.zh-CN.md -text
-privilege-demo/src/main/webapp/assets/global/plugins/jquery-easyui/PULL_REQUEST_TEMPLATE.zh-CN.md -text
-privilege-demo/src/main/webapp/assets/global/plugins/jquery-easyui/README.md -text
-privilege-demo/src/main/webapp/assets/global/plugins/jquery-easyui/index.html -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery-easyui/jquery.easyui-plus.min.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery-easyui/jquery.easyui.min.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery-easyui/jquery.min.js -text
