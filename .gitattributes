@@ -819,7 +819,6 @@ privilege-demo/src/main/webapp/assets/global/plugins/jquery-easyui/themes/insdep
 privilege-demo/src/main/webapp/assets/global/plugins/jquery-easyui/themes/insdep/images/validatebox_warning.png -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery-easyui/themes/insdep/jquery.insdep-extend.min.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery-easyui/themes/insdep/master.css -text
-privilege-demo/src/main/webapp/assets/global/plugins/jquery-migrate.min.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery.blockui.min.js -text
