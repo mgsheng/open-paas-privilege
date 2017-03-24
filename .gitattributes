@@ -2752,7 +2752,6 @@ privilege-demo/src/main/webapp/assets/pages/img/logo.png -text
 privilege-demo/src/main/webapp/assets/pages/img/logos/.DS_Store -text
 privilege-demo/src/main/webapp/assets/pages/img/portlet-collapse-icon-dark.png -text
 privilege-demo/src/main/webapp/assets/pages/img/portlet-expand-icon-dark.png -text
-privilege-demo/src/main/webapp/assets/pages/media/.DS_Store -text
 privilege-demo/src/main/webapp/assets/pages/media/bg/.DS_Store -text
 privilege-demo/src/main/webapp/assets/pages/media/blog/.DS_Store -text
 privilege-demo/src/main/webapp/assets/pages/media/email/.DS_Store -text
@@ -2761,10 +2760,6 @@ privilege-demo/src/main/webapp/assets/pages/media/invoice/.DS_Store -text
 privilege-demo/src/main/webapp/assets/pages/media/pages/.DS_Store -text
 privilege-demo/src/main/webapp/assets/pages/media/pages/Thumbs.db -text
 privilege-demo/src/main/webapp/assets/pages/media/pages/jt_03.png -text
-privilege-demo/src/main/webapp/assets/pages/media/profile/.DS_Store -text
-privilege-demo/src/main/webapp/assets/pages/media/search/.DS_Store -text
-privilege-demo/src/main/webapp/assets/pages/media/users/.DS_Store -text
-privilege-demo/src/main/webapp/assets/pages/media/works/.DS_Store -text
 privilege-demo/src/main/webapp/assets/pages/scripts/system_management.js -text
 privilege-demo/src/main/webapp/assets/pages/scripts/system_management.min.js -text
 privilege-demo/src/main/webapp/css/bootstrap-switch.css -text
