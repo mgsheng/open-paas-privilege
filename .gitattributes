@@ -2743,7 +2743,6 @@ privilege-demo/src/main/webapp/assets/pages/css/system_management.min.css -text
 privilege-demo/src/main/webapp/assets/pages/css/tasks.css -text
 privilege-demo/src/main/webapp/assets/pages/css/tasks.min.css -text
 privilege-demo/src/main/webapp/assets/pages/img/avatars/.DS_Store -text
-privilege-demo/src/main/webapp/assets/pages/img/background/.DS_Store -text
 privilege-demo/src/main/webapp/assets/pages/img/bg-opacity.png -text
 privilege-demo/src/main/webapp/assets/pages/img/bg-white-lock.png -text
 privilege-demo/src/main/webapp/assets/pages/img/bg-white.png -text
@@ -2753,7 +2752,6 @@ privilege-demo/src/main/webapp/assets/pages/img/login/logo-yb.jpg -text
 privilege-demo/src/main/webapp/assets/pages/img/logo-invert.png -text
 privilege-demo/src/main/webapp/assets/pages/img/logo.png -text
 privilege-demo/src/main/webapp/assets/pages/img/logos/.DS_Store -text
-privilege-demo/src/main/webapp/assets/pages/img/page_general_search/.DS_Store -text
 privilege-demo/src/main/webapp/assets/pages/img/portlet-collapse-icon-dark.png -text
 privilege-demo/src/main/webapp/assets/pages/img/portlet-expand-icon-dark.png -text
 privilege-demo/src/main/webapp/assets/pages/media/.DS_Store -text
