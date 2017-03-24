@@ -538,7 +538,6 @@ privilege-demo/src/main/webapp/assets/global/plugins/bootstrap/fonts/bootstrap/g
 privilege-demo/src/main/webapp/assets/global/plugins/bootstrap/fonts/bootstrap/glyphicons-halflings-regular.woff2 -text
 privilege-demo/src/main/webapp/assets/global/plugins/bootstrap/js/bootstrap.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/bootstrap/js/bootstrap.min.js -text
-privilege-demo/src/main/webapp/assets/global/plugins/excanvas.min.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/font-awesome/css/font-awesome.css -text
 privilege-demo/src/main/webapp/assets/global/plugins/font-awesome/css/font-awesome.min.css -text
 privilege-demo/src/main/webapp/assets/global/plugins/font-awesome/fonts/FontAwesome.otf -text
@@ -547,7 +546,6 @@ privilege-demo/src/main/webapp/assets/global/plugins/font-awesome/fonts/fontawes
 privilege-demo/src/main/webapp/assets/global/plugins/font-awesome/fonts/fontawesome-webfont.ttf -text
 privilege-demo/src/main/webapp/assets/global/plugins/font-awesome/fonts/fontawesome-webfont.woff -text
 privilege-demo/src/main/webapp/assets/global/plugins/font-awesome/fonts/fontawesome-webfont.woff2 -text
-privilege-demo/src/main/webapp/assets/global/plugins/holder.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/ie8.fix.min.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery-easyui/jquery.easyui-plus.min.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery-easyui/jquery.easyui.min.js -text
@@ -823,15 +821,12 @@ privilege-demo/src/main/webapp/assets/global/plugins/jquery-easyui/themes/insdep
 privilege-demo/src/main/webapp/assets/global/plugins/jquery-easyui/themes/insdep/jquery.insdep-extend.min.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery-easyui/themes/insdep/master.css -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery-migrate.min.js -text
-privilege-demo/src/main/webapp/assets/global/plugins/jquery-slimscroll/README.md -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js -text
-privilege-demo/src/main/webapp/assets/global/plugins/jquery-slimscroll/slimScroll.jquery.json -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery.blockui.min.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery.easing.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery.input-ip-address-control-1.0.min.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery.min.js -text
-privilege-demo/src/main/webapp/assets/global/plugins/jquery.min.map -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery.mockjax.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery.parallax.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery.pulsate.min.js -text
