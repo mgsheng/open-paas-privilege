@@ -529,7 +529,6 @@ privilege-demo/src/main/webapp/assets/global/plugins/bootstrap-switch/js/bootstr
 privilege-demo/src/main/webapp/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/bootstrap-tabdrop/css/tabdrop.css -text
 privilege-demo/src/main/webapp/assets/global/plugins/bootstrap-tabdrop/js/bootstrap-tabdrop.js -text
-privilege-demo/src/main/webapp/assets/global/plugins/bootstrap/css/bootstrap-rtl.min.css -text
 privilege-demo/src/main/webapp/assets/global/plugins/bootstrap/css/bootstrap.css -text
 privilege-demo/src/main/webapp/assets/global/plugins/bootstrap/css/bootstrap.min.css -text
 privilege-demo/src/main/webapp/assets/global/plugins/bootstrap/fonts/bootstrap/glyphicons-halflings-regular.eot -text
