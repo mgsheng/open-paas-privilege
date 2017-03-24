@@ -827,9 +827,7 @@ privilege-demo/src/main/webapp/assets/global/plugins/jquery.min.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery.parallax.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery.pulsate.min.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery.scrollTo.min.js -text
-privilege-demo/src/main/webapp/assets/global/plugins/jquery.sparkline.min.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/js.cookie.min.js -text
-privilege-demo/src/main/webapp/assets/global/plugins/livecss.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/simple-line-icons/fonts/Simple-Line-Icons.dev.svg -text
 privilege-demo/src/main/webapp/assets/global/plugins/simple-line-icons/fonts/Simple-Line-Icons.eot -text
 privilege-demo/src/main/webapp/assets/global/plugins/simple-line-icons/fonts/Simple-Line-Icons.svg -text
