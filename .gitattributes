@@ -2772,7 +2772,6 @@ privilege-demo/src/main/webapp/assets/pages/media/profile/.DS_Store -text
 privilege-demo/src/main/webapp/assets/pages/media/search/.DS_Store -text
 privilege-demo/src/main/webapp/assets/pages/media/users/.DS_Store -text
 privilege-demo/src/main/webapp/assets/pages/media/works/.DS_Store -text
-privilege-demo/src/main/webapp/assets/pages/scripts/.DS_Store -text
 privilege-demo/src/main/webapp/assets/pages/scripts/system_management.js -text
 privilege-demo/src/main/webapp/assets/pages/scripts/system_management.min.js -text
 privilege-demo/src/main/webapp/css/bootstrap-switch.css -text
