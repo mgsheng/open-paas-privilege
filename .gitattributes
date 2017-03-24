@@ -540,7 +540,6 @@ privilege-demo/src/main/webapp/assets/global/plugins/bootstrap/fonts/bootstrap/g
 privilege-demo/src/main/webapp/assets/global/plugins/bootstrap/js/bootstrap.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/bootstrap/js/bootstrap.min.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/excanvas.min.js -text
-privilege-demo/src/main/webapp/assets/global/plugins/font-awesome/.DS_Store -text
 privilege-demo/src/main/webapp/assets/global/plugins/font-awesome/css/font-awesome.css -text
 privilege-demo/src/main/webapp/assets/global/plugins/font-awesome/css/font-awesome.min.css -text
 privilege-demo/src/main/webapp/assets/global/plugins/font-awesome/fonts/FontAwesome.otf -text
