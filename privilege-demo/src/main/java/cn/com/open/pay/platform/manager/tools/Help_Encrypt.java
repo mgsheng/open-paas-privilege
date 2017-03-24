@@ -25,6 +25,15 @@ public class Help_Encrypt {
         return new String(retByte);      
 	}    
 	
+	public static byte[] encrypt(String message, String key ,String IV_KEY) throws Exception {     
+	    Cipher cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");    
+	    DESKeySpec desKeySpec = new DESKeySpec(key.getBytes("UTF-8"));    
+	    SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");     
+	    SecretKey secretKey = keyFactory.generateSecret(desKeySpec);     
+	    IvParameterSpec iv = new IvParameterSpec(IV_KEY.getBytes("UTF-8"));     
+	    cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);    
+	    return cipher.doFinal(message.getBytes("UTF-8"));     
+	}    
 	public static byte[] encrypt(String message, String key) throws Exception {     
 	    Cipher cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");    
 	    DESKeySpec desKeySpec = new DESKeySpec(key.getBytes("UTF-8"));    
