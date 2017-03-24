@@ -2752,11 +2752,6 @@ privilege-demo/src/main/webapp/assets/pages/img/logo.png -text
 privilege-demo/src/main/webapp/assets/pages/img/logos/.DS_Store -text
 privilege-demo/src/main/webapp/assets/pages/img/portlet-collapse-icon-dark.png -text
 privilege-demo/src/main/webapp/assets/pages/img/portlet-expand-icon-dark.png -text
-privilege-demo/src/main/webapp/assets/pages/media/bg/.DS_Store -text
-privilege-demo/src/main/webapp/assets/pages/media/blog/.DS_Store -text
-privilege-demo/src/main/webapp/assets/pages/media/email/.DS_Store -text
-privilege-demo/src/main/webapp/assets/pages/media/gallery/.DS_Store -text
-privilege-demo/src/main/webapp/assets/pages/media/invoice/.DS_Store -text
 privilege-demo/src/main/webapp/assets/pages/media/pages/.DS_Store -text
 privilege-demo/src/main/webapp/assets/pages/media/pages/Thumbs.db -text
 privilege-demo/src/main/webapp/assets/pages/media/pages/jt_03.png -text
