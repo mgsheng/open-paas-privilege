@@ -3223,14 +3223,7 @@ privilege-demo/src/main/webapp/images/welcome1.png -text
 privilege-demo/src/main/webapp/images/welcome_1.png -text
 privilege-demo/src/main/webapp/index.jsp -text
 privilege-demo/src/main/webapp/js/easyloader.js -text
-privilege-demo/src/main/webapp/js/highcharts/adapters/mootools-adapter.js -text
-privilege-demo/src/main/webapp/js/highcharts/adapters/mootools-adapter.src.js -text
-privilege-demo/src/main/webapp/js/highcharts/adapters/prototype-adapter.js -text
-privilege-demo/src/main/webapp/js/highcharts/adapters/prototype-adapter.src.js -text
-privilege-demo/src/main/webapp/js/highcharts/highcharts-more.js -text
-privilege-demo/src/main/webapp/js/highcharts/highcharts-more.src.js -text
 privilege-demo/src/main/webapp/js/highcharts/highcharts.js -text
-privilege-demo/src/main/webapp/js/highcharts/highcharts.src.js -text
 privilege-demo/src/main/webapp/js/highcharts/modules/annotations.js -text
 privilege-demo/src/main/webapp/js/highcharts/modules/annotations.src.js -text
 privilege-demo/src/main/webapp/js/highcharts/modules/canvas-tools.js -text
