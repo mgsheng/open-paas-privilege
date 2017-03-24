@@ -823,9 +823,7 @@ privilege-demo/src/main/webapp/assets/global/plugins/jquery-migrate.min.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery.blockui.min.js -text
-privilege-demo/src/main/webapp/assets/global/plugins/jquery.input-ip-address-control-1.0.min.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery.min.js -text
-privilege-demo/src/main/webapp/assets/global/plugins/jquery.mockjax.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery.parallax.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery.pulsate.min.js -text
 privilege-demo/src/main/webapp/assets/global/plugins/jquery.scrollTo.min.js -text
