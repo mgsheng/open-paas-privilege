@@ -775,9 +775,6 @@ privilege-demo/src/main/webapp/assets/global/img/syncfusion-icons-white.png -tex
 privilege-demo/src/main/webapp/assets/global/img/syncfusion-icons.png -text
 privilege-demo/src/main/webapp/assets/global/plugins/.DS_Store -text
 privilege-demo/src/main/webapp/assets/global/plugins/animate/animate.css -text
-privilege-demo/src/main/webapp/assets/global/plugins/bootstrap-switch/.DS_Store -text
-privilege-demo/src/main/webapp/assets/global/plugins/bootstrap-switch/LICENSE -text
-privilege-demo/src/main/webapp/assets/global/plugins/bootstrap-switch/README.md -text
 privilege-demo/src/main/webapp/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.css -text
 privilege-demo/src/main/webapp/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css -text
 privilege-demo/src/main/webapp/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.js -text
