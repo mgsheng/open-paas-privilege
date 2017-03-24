@@ -15,10 +15,6 @@
 <script type="text/javascript"
 	src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
 <script type="text/javascript"
-	src="${pageContext.request.contextPath}/js/highcharts/highcharts.js"></script>
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/js/highcharts/modules/exporting.js"></script>
-<script type="text/javascript"
 	src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
 </head>
 <body>
