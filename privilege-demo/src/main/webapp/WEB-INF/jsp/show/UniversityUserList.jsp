@@ -849,7 +849,7 @@
 		$(function(){
 			$.post('${pageContext.request.contextPath}/managerUser/findGroup?type=3',function (data) {
 				$('.easyui-combobox').combobox('loadData',data);
-				if (data.length == 1) {
+				if (data.length > 0) {
 					$('#cc').combobox('select',data[0].groupCode);
 				}
 				findUsers();
