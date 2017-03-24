@@ -2693,7 +2693,6 @@ privilege-demo/src/main/webapp/assets/layouts/layout/scripts/layout.js -text
 privilege-demo/src/main/webapp/assets/layouts/layout/scripts/layout.min.js -text
 privilege-demo/src/main/webapp/assets/layouts/layout/scripts/theme.js -text
 privilege-demo/src/main/webapp/assets/layouts/layout/scripts/theme.min.js -text
-privilege-demo/src/main/webapp/assets/pages/.DS_Store -text
 privilege-demo/src/main/webapp/assets/pages/css/.DS_Store -text
 privilege-demo/src/main/webapp/assets/pages/css/about.css -text
 privilege-demo/src/main/webapp/assets/pages/css/about.min.css -text
