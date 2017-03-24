@@ -435,7 +435,6 @@ privilege-demo/src/main/webapp/WEB-INF/jsp/usercenter/userQueryMessage.jsp -text
 privilege-demo/src/main/webapp/WEB-INF/log4j.xml -text
 privilege-demo/src/main/webapp/WEB-INF/soc-servlet.xml -text
 privilege-demo/src/main/webapp/WEB-INF/web.xml -text
-privilege-demo/src/main/webapp/assets/.DS_Store -text
 privilege-demo/src/main/webapp/assets/global/css/components-md-rtl.min.css -text
 privilege-demo/src/main/webapp/assets/global/css/components-md.css -text
 privilege-demo/src/main/webapp/assets/global/css/components-md.min.css -text
