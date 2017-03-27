@@ -78,8 +78,8 @@
 						<td>状态：</td>
 						<td>
 			                 <select class="easyui-combobox" data-options="editable:false" id="status" name="status" style="width:100%">
-								<option value="1">有效</option>
-								<option value="0">无效</option>
+								<option value="0">有效</option>
+								<option value="1">无效</option>
 							</select>
 						</td>
 					</tr>
