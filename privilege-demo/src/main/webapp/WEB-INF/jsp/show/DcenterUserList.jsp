@@ -408,6 +408,7 @@
 			$("#showLOGINNAME").textbox("setValue",data.LOGINNAME);//登录名
 			$("#showPwd").textbox("setValue",data.PASSWORD);//密码
 			$("#showNAME").textbox("setValue",data.NAME);//真实姓名
+			$("#showHRLOGINNAME").textbox("setValue",data.HRLOGINNAME);//HR登陆名
 			$("#showPHONENO").textbox("setValue",data.PHONENO);//固定电话
 			$("#showMOBILEPHONE").textbox("setValue",data.MOBILEPHONE);//移动电话
 			$("#showEMAIL").textbox("setValue",data.EMAIL);//邮箱
