@@ -207,7 +207,7 @@
        		<property name="addOesUserUrl" value="${add-oes-user-uri}"></property>
        		<property name="userCenterUnBindUrl" value="${usercenter-unbind-uri}"></property>
        		<property name="userDataSourceSwitch" value="${user-data-source-switch}"></property>
-       		<property name="IvKey" value="{IvKey}"></property>
-       		<property name="PassWordCryptKey" value="{PassWordCryptKey}"></property>
+       		<property name="IvKey" value="${IvKey}"></property>
+       		<property name="PassWordCryptKey" value="${PassWordCryptKey}"></property>
        </bean>
 </beans>
