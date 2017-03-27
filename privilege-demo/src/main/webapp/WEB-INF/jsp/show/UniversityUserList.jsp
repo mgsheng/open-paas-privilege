@@ -475,6 +475,7 @@
 			$("#showPOSTCODE").textbox("setValue",data.POSTCODE);//邮编
 			$("#showFAX").textbox("setValue",data.FAX);//传真
 			$("#showDEPARTMENT").textbox("setValue",data.DEPARTMENT);//部门
+			$("#showHRLOGINNAME").textbox("setValue",data.HRLOGINNAME);//HR登陆名
 			$('#showATTACH').val(data.ATTACH);//邮编
 			$('#showPERSONALDES').val(data.PERSONALDES);//个人描述
 		}
