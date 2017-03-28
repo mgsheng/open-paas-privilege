@@ -38,18 +38,23 @@
 			menu.css('display','none');
 		} 
 	}
+
 	//记录最近访问菜单
 	function latestClick(obj) {
 		var menu = $(obj);
 		var tabTitle = menu.children('.name').text();//菜单名称
-		var menuid = menu.attr("id");//菜单id
-		if (menuid != "") {
-			$.post('${pageContext.request.contextPath}/user/saveLatestVisit',
-				{
-					menuId : menuid,
-					menuName : tabTitle,
-				},function(data){});
-		}
+		var menuId = menu.attr("id");//菜单id
+		if (menuId != "") {
+			window.setTimeout(function(){
+				$.post('${pageContext.request.contextPath}/user/saveLatestVisit',
+					{
+						menuId : menuId,
+						menuName : tabTitle,
+					},function(data){
+				});
+			
+			},5000); 
+		} 
 	 
 	}
 
@@ -66,23 +71,31 @@
 			} else {
 				url = 'http://'+url;
 			}
+			var menuRule = 'icon iconfont icon-iconfont-LearningCenter';
+			if (n.menuRule.length > 0) {
+				menuRule = n.menuRule;
+			}
 			menu +=	'<li><a href="'+url+'" title="'+n.name+'" id="'+n.id+'" onclick="latestClick(this)" close="true" class="nav-link iframeify">'+
-            		'<div class="bg_bor"> <i class="icon iconfont icon-iconfont-LearningCenter"></i></div>'+
+            		'<div class="bg_bor"> <i class="'+menuRule+'"></i></div>'+
             		'<div class="name" style="text-align:center">'+n.name+'</div></a></li>';
  		});
 		$('#latestVisit').append(menu);
 		menu = '';
 		//添加常用菜单
-		$.each(data.frequentlyUsedMenu, function(i, n) {	
+		$.each(data.frequentlyUsedMenu, function(i, n) {
+			var menuRule = 'icon iconfont icon-iconfont-LearningCenter';
+			if (n.menuRule.length > 0) {
+				menuRule = n.menuRule;
+			}	
 			url = n.url;
-			var string=url.substring(0,1);
-			if(string=="/"){
+			var string = url.substring(0,1);
+			if (string == "/") {
 				url = '${pageContext.request.contextPath}'+url+"?appId=${appId}";
 			}else{
 				url = 'http://'+url;
 			}
 			menu +=	'<li><a href="'+url+'" title="'+n.name+'" id="'+n.id+'" onclick="latestClick(this)" close="true" class="nav-link iframeify">'+
-            		'<div class="bg_bor"> <i class="icon iconfont icon-iconfont-LearningCenter"></i></div>'+
+            		'<div class="bg_bor"> <i class="'+menuRule+'"></i></div>'+
             		'<div class="name" style="text-align:center">'+n.name+'</div></a></li>';
 		});	
 		$('#frequentlyUsedMenu').append(menu);
@@ -90,7 +103,7 @@
 		
     $(function() {
        	closeWin();
-        var data=${menus};
+        var data = ${menus};
         //添加最近访问和常用菜单
         addMenu(data);
         //获取菜单tree
@@ -109,7 +122,7 @@
     					msgShow('系统提示', '您没有菜单！', 'info');
     				} else {
     					var json = data.tree;
-    					if (json.length>0) {
+    					if (json.length > 0) {
     						$('#deptree').tree({data: json});
     						selected();
     					}
