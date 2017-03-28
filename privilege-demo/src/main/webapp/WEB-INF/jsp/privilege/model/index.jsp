@@ -399,7 +399,6 @@
                  },
                  function (data) {
                 	if (data.returnMsg == '1') {
-                    	//清除图标组合框的值
                  		msgShow('系统提示', '恭喜，添加成功！', 'info');
                  		$('#wmodule').window('close');
                  		var menu = $('#deptree').tree('getSelected');
@@ -459,6 +458,9 @@
 
                      				}
                      		}]});
+                     		//添加默认图标
+                 			var nn = $('#deptree').tree('find', data.resourceId);
+                 			$(nn.target).children(".tree-icon").attr("class","icon iconfont icon-iconfont-LearningCenter");
                  		}
                  		reset();
                 		$('#wmodule').window('close');
@@ -596,100 +598,33 @@
 	    	getTree();
 		    openPwd();
 		    openFunction();
-            
-            //删除
-          $('#delete').click(function() {
-    			if(node){
-       			  	if(node.ismodule=="0"){
-     			  	 	menuId=node.id;
-     		    	 	var childrenNodes = $('#deptree').tree('getChildren',node.target);
-     		    	 	if(childrenNodes.length>0){
-     		    		 	$.each(childrenNodes,function(i,n){
-     		    		 		if(n.ismodule=="1"){
-     		    		 			menuIds.push(n.attributes.menuId);
-     			    		 		resourceIds.push(n.id);
-     		    		 		}else if (n.ismodule=="0") {
-     		    		 			menuIds.push(n.id);
-								}else {
-									functionIds.push(n.id);
-								}
-     			    	 	});
-     		    		 	menuIds.join(",");
-     		    		 	resourceIds.join(",");
-     		    		 	functionIds.join(",");
-     		    		 	if(functionIds.length>0){
-  		    			 		delFunctions(functionIds);
-  		    		 		}
-  		    		 		if(menuIds.length>0){
-  		    			 		delMenu(resourceIds, menuIds);
-  		    		 		}
-     		    	 	}
-     		    	 	url=encodeURI('${pageContext.request.contextPath}/module/deleteMenu?menuId='+menuId+'&resourceId='+resourceId+'&appId=${appId}');
-       		     	}else if (node.ismodule=="1") {
-       		    	 	var childrenNodes = $('#deptree').tree('getChildren',node.target);
-       		    	 	if(childrenNodes.length>0){
-       		    		 	$.each(childrenNodes,function(i,n){
-       		    				 functionIds.push(n.id);
-       			    	 	});
-       		    		 	functionIds.join(",");
-       		    		 	delFunctions(functionIds);
-       		    		 }
-       		    	 	
-       		    	 	resourceId=node.id;
-       		    		menuId=node.attributes.menuId;
-       		    	 	url=encodeURI(encodeURI('${pageContext.request.contextPath}/module/deleteMenu?menuId='+menuId+'&resourceId='+resourceId+'&appId=${appId}'));
-       				}else {
-       					functionId=node.id;
-       					url=encodeURI('${pageContext.request.contextPath}/module/delFunction?functionId='+functionId+'&appId=${appId}');
-       				}
-    		
-    				 	if (boo){
-    					 	$.post(url, function(data) {
-    			                if(data.returnMsg=='1'){
-    			                 	msgShow('系统提示', '恭喜，删除成功！', 'info');
-    			                 	close();
-    			                 	var Nodes = $('#deptree').tree('getSelected');
-    			                 	$('#deptree').tree('pop',Nodes.target);
-    			                 	getRoot();
-    			                }else if(data.returnMsg=='0'){
-    			                 	msgShow('系统提示', '删除失败！', 'info');
-    			                 	close();
-    			                 	reload();
-    			                }
-    			            }); 
-    			     	}
-    			 }else{
-		       		msgShow('系统提示', '请选择需要删除的节点！', 'info');
-		     	}
-              
-         });
-
-          $('#delete2').click(function() {
-              
+		});
+		//删除菜单
+		$('#delete2').click(function() {
          	 var node = $('#deptree').tree('getSelected');
-  	   		 if(node==null){
+  	   		 if (node == null) {
   	   			msgShow('系统提示', '请选中要删除的数据', 'info');
   	   		 }
-  	   		 if(node){
+  	   		 if (node) {
 	   				$.messager.confirm('系统提示', '是否确定删除?', function(r){
-	   					if(r){
-	   						var functionIds=[];
-	      		     		var menuIds=[];
-	      		     		var resourceIds=[];
+	   					if (r) {
+	   						var functionIds = [];
+	      		     		var menuIds = [];
+	      		     		var resourceIds = [];
 	      			 		var url;
-	      					if(node.ismodule=="0"){
+	      					if (node.ismodule == "0") {
 	      	  			  	 	//menuId=node.id;
 	      	  			  	 	//本菜单id
 	      	  			  		menuIds.push(node.id);
 	      	  		    	 	var childrenNodes = $('#deptree').tree('getChildren',node.target);
-	      	  		    	 	if(childrenNodes.length>0){
+	      	  		    	 	if (childrenNodes.length > 0) {
 	      	  		    	 			$.each(childrenNodes,function(i,n){
-	      	  		    		 			if(n.ismodule=="1"){
+	      	  		    		 			if (n.ismodule == "1") {
 	      	  		    		 				menuIds.push(n.attributes.menuId);
 	      	  			    		 			resourceIds.push(n.id);
-	      	  		    		 			}else if (n.ismodule=="0") {
+	      	  		    		 			} else if (n.ismodule == "0") {
 	      	  		    		 				menuIds.push(n.id);
-	      									}else {
+	      									} else {
 	      										functionIds.push(n.id);
 	      									}
 	      	  			    	 		});
@@ -698,10 +633,10 @@
 	      	  		    		 		functionIds.join(",");
 	      	  		    		 	
 	      	  		    	 		}
-	      	  		    	 		url=encodeURI('${pageContext.request.contextPath}/module/deleteModuel?menuId='+menuIds+'&resourceId='+resourceIds+'&functionId='+functionIds+'&appId=${appId}');
-	      	    		     	}else if (node.ismodule=="1") {
+	      	  		    	 		url = encodeURI('${pageContext.request.contextPath}/module/deleteModuel?menuId='+menuIds+'&resourceId='+resourceIds+'&functionId='+functionIds+'&appId=${appId}');
+	      	    		     	}else if (node.ismodule == "1") {
 	      	    		    	 	var childrenNodes = $('#deptree').tree('getChildren',node.target);
-	      	    		    	 	if(childrenNodes.length>0){
+	      	    		    	 	if (childrenNodes.length > 0) {
 	      	    		    		 	$.each(childrenNodes,function(i,n){
 	      	    		    				 functionIds.push(n.id);
 	      	    			    	 	});
@@ -712,19 +647,19 @@
 	      	    		    	 	menuIds.push(node.attributes.menuId);
 	      	    		    	 	menuIds.join(",");
 	      			    		 	resourceIds.join(",");
-	      			    		 	url=encodeURI('${pageContext.request.contextPath}/module/deleteModuel?menuId='+menuIds+'&resourceId='+resourceIds+'&functionId='+functionIds+'&appId=${appId}');
-	      	    				}else {
+	      			    		 	url = encodeURI('${pageContext.request.contextPath}/module/deleteModuel?menuId='+menuIds+'&resourceId='+resourceIds+'&functionId='+functionIds+'&appId=${appId}');
+	      	    				} else {
 	      	    					functionIds.push(node.id);
 	      	    					functionIds.join(",");
-	      	    					url=encodeURI('${pageContext.request.contextPath}/module/deleteModuel?functionId='+functionIds+'&appId=${appId}');
+	      	    					url = encodeURI('${pageContext.request.contextPath}/module/deleteModuel?functionId='+functionIds+'&appId=${appId}');
 	      	    				}
 	      	 					$.post(url,function(data) {
-	      	 			             if(data.returnMsg=='1'){
+	      	 			             if (data.returnMsg == '1') {
 	      	 			             	msgShow('系统提示', '恭喜，删除成功！', 'info');
 	      	 			             	var Nodes = $('#deptree').tree('getSelected');
 	      	 			             	$('#deptree').tree('pop',Nodes.target);
 	      	 			                getRoot();
-	      	 			             }else if(data.returnMsg=='0'){
+	      	 			             } else if (data.returnMsg == '0') {
 	      	 			                 msgShow('系统提示', '删除失败！', 'info');
 	      	 			                 close();
 	      	 			                 reload();
@@ -732,11 +667,9 @@
 	      	 			        }); 
 	      	 			     	
 	 	   				}
-  	   			});
-	   		}
-      });
-  		
-});
+  	   				});
+	   			}
+      	});
 	    $('#btnEp').click(function() {
             serverLogin();
         });
