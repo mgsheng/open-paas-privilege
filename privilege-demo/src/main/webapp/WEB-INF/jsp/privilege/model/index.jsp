@@ -10,7 +10,7 @@
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
-			<link href="${pageContext.request.contextPath}/assets/layouts/layout/css/custom.min.css" rel="stylesheet" type="text/css" />
+		<link href="${pageContext.request.contextPath}/assets/layouts/layout/css/custom.min.css" rel="stylesheet" type="text/css" />
 		<link href="${pageContext.request.contextPath}/assets/global/css/iconFont/iconfont.css" rel="stylesheet" type="text/css" />
 	<style type="text/css">
 		.txt01{
@@ -19,9 +19,7 @@
 		.easyui-tabs>.tabs-panels>.panel>.panel-body-noborder{
 				overflow: hidden;
 		}
-		.panel-body{
-			overflow: hidden;
-		}
+	
 	</style>
 </head>
 <body style="overflow: hidden;">
@@ -29,7 +27,7 @@
 		<div title="模块管理">
 			<div style="border:0 solid;margin-bottom:0;" fit="true" >
 				<!-- <div class="top" style="width: 100%;overflow:hidden; "> -->
-					<div class="easyui-panel" title="模块管理" style="width:100%;max-width:100%;padding:20px 30px;height:520px;">
+					<div class="easyui-panel" title="模块管理" style="width:100%;max-width:100%;padding:20px 30px;height:520px;overflow:hidden;">
 						<div style="padding:2px 5px; text-align: right;">
 							<a href="#" class="easyui-linkbutton" iconCls="icon-set" plain="true" id="editIcon">设置图标</a>
 							<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" id="reload" onclick="reload()">刷新</a>
@@ -40,7 +38,8 @@
 							<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" id="delete2" >删除</a>
 						</div>
 						<div class="easyui-panel" style="padding:5px;height: 95%;overflow:auto;">
-		 					 <ul id="deptree"  style="height: 100%"class="easyui-tree" > 
+		 					 <ul id="deptree"  style="height: 100%"class="easyui-tree" data-options="
+		 					 animate:true,lines:true"> 
 	 							</ul>
 						</div>
 					</div>
@@ -182,6 +181,14 @@
 			onExpand: function(node){
 				if(node.ismodule == "1"){
 					$(node.target).children('.tree-hit').next().removeClass("tree-folder-open");
+				}
+			},
+			onBeforeExpand:function(node){
+				if(node.ismodule == "1"){
+					var children = $(node.target).next();
+					if (children.length == 0) {
+						return false;
+					}
 				}
 			}
 		});
