@@ -180,7 +180,6 @@
 		$('#deptree').tree({
 			//资源菜单展开时，移除tree自带图标
 			onExpand: function(node){
-				console.log(node.ismodule);
 				if(node.ismodule == "1"){
 					$(node.target).children('.tree-hit').next().removeClass("tree-folder-open");
 				}
@@ -595,12 +594,8 @@
 		}
 	    $(function(){  
 	    	getTree();
-	    	$('.tree-hit').click(function(){
-				console.log($(this).next());
-				$(this).next().removeClass('tree-folder-open');
-			});
-		     openPwd();
-		     openFunction();
+		    openPwd();
+		    openFunction();
             
             //删除
           $('#delete').click(function() {
@@ -706,7 +701,6 @@
 	      	  		    	 		url=encodeURI('${pageContext.request.contextPath}/module/deleteModuel?menuId='+menuIds+'&resourceId='+resourceIds+'&functionId='+functionIds+'&appId=${appId}');
 	      	    		     	}else if (node.ismodule=="1") {
 	      	    		    	 	var childrenNodes = $('#deptree').tree('getChildren',node.target);
-	      	    		    	 	console.log(childrenNodes);
 	      	    		    	 	if(childrenNodes.length>0){
 	      	    		    		 	$.each(childrenNodes,function(i,n){
 	      	    		    				 functionIds.push(n.id);
@@ -722,7 +716,6 @@
 	      	    				}else {
 	      	    					functionIds.push(node.id);
 	      	    					functionIds.join(",");
-	      	    					console.log(functionIds);
 	      	    					url=encodeURI('${pageContext.request.contextPath}/module/deleteModuel?functionId='+functionIds+'&appId=${appId}');
 	      	    				}
 	      	 					$.post(url,function(data) {
