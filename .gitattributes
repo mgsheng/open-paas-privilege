@@ -814,6 +814,7 @@ privilege-demo/src/main/webapp/assets/layouts/layout/scripts/theme.js -text
 privilege-demo/src/main/webapp/assets/layouts/layout/scripts/theme.min.js -text
 privilege-demo/src/main/webapp/assets/pages/css/about.css -text
 privilege-demo/src/main/webapp/assets/pages/css/about.min.css -text
+privilege-demo/src/main/webapp/assets/pages/css/add_menu.css -text
 privilege-demo/src/main/webapp/assets/pages/css/blog.css -text
 privilege-demo/src/main/webapp/assets/pages/css/blog.min.css -text
 privilege-demo/src/main/webapp/assets/pages/css/coming-soon.css -text
