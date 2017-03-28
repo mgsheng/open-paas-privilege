@@ -61,7 +61,6 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		log.info("-------------------------index      start------------------------------------");
 		String appId = request.getParameter("appId");
 		model.addAttribute("appId", appId);
-		model.addAttribute("menuIconUrl", oesPrivilegeDev.getMenuIconUrl());
 		return "privilege/model/index";
 	}
 	
@@ -276,29 +275,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		WebUtils.writeJson(response, jsonArr);
 		return;
 	}
-	/**
-	 * 获取所有图标
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping(value = "getIcon")
-	public void getIcon(HttpServletRequest request, HttpServletResponse response)  {
-		log.info("-------------------------getIcon      start------------------------------------");
-		String path=request.getRealPath(oesPrivilegeDev.getMenuIconUrl());
-		File file=new File(path);
-		File[] fileList= file.listFiles();
-		List<String> fileName=new ArrayList<String>();
-		for (File file2 : fileList) {
-			fileName.add(file2.getName());
-		}
-		//返回所有图片的名称
-		Map<String, Object> map=new HashMap<String, Object>();
-		map.put("icon", fileName);
-		WebUtils.writeJsonToMap(response, map);
-		return;
-	}
+	
 	/**
 	 * 设置模块图标
 	 * 
@@ -310,7 +287,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	public void updateIcon(HttpServletRequest request, HttpServletResponse response) {
 		String appId = request.getParameter("appId").trim();
 		String menuId = request.getParameter("menuId").trim();//菜单Id
-		String menuRule = request.getParameter("menuRule").trim();//菜单图标路径
+		String menuRule = request.getParameter("menuRule");//菜单图标路径
 		String parentId = request.getParameter("parentId").trim();//父Id
 		String status = request.getParameter("status");//状态
 		String displayOrder = request.getParameter("displayOrder");//排序
