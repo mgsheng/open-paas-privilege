@@ -39,7 +39,7 @@
             
 	 		menulist += '<ul class="sub-menu">';
 	        $.each(n.children, function(j, o) {
-		        menulist += '<li class="nav-item  " style="background:url(${pageContext.request.contextPath}/'+o.attributes.menuRule+') no-repeat 20px;">'+
+		        menulist += '<li class="nav-item  " >'+
 			        		'<a  href="${pageContext.request.contextPath}/user/getMenu?menuId=' + o.id + '" title="'+o.text+'" id="'+o.id+'" close="true"  class="nav-link iframeify">'+
                 			'<span class="title">' + o.text + '</span></a></li>';
 	         })
