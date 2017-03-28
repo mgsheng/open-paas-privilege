@@ -19,7 +19,10 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/global/css/iconFont/demo.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/assets/global/css/iconFont/iconfont.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/pages/css/system_management.min.css"/>
+	<style type="text/css">
+		a{text-decoration: none;}
 	
+	</style>
 <script type="text/javascript">
 	//点击折叠菜单
 	function menuClick(obj) {
@@ -35,14 +38,17 @@
 	function latestClick(obj) {
 		var menu = $(obj);
 		var tabTitle = menu.children('.name').text();//菜单名称
-		var menuid = menu.attr("id");//菜单id
-		if (menuid != "") {
-			$.post('${pageContext.request.contextPath}/user/saveLatestVisit',
-				{
-					menuId : menuid,
-					menuName : tabTitle,
-				},function(data){});
-		}
+		var menuId = menu.attr("id");//菜单id
+		if (menuId != "") {
+			window.setTimeout(function(){
+				$.post('${pageContext.request.contextPath}/user/saveLatestVisit',
+					{
+						menuId : menuId,
+						menuName : tabTitle,
+					},function(data){
+				});
+			},3000); 
+		} 
 	 
 	}
 	//添加第三级菜单
@@ -68,8 +74,12 @@
 				} else {
 					url = 'http://'+url;
 				}
+				var menuRule = 'icon iconfont icon-iconfont-LearningCenter';
+				if (n.attributes.menuRule.length > 0) {
+					menuRule = n.attributes.menuRule;
+				}
 				menu +=	'<li><a href="'+url+'" title="'+n.text+'" id="'+n.id+'" onclick="latestClick(this)" close="true" class="nav-link iframeify">'+
-            			'<div class="bg_bor"> <i class="icon iconfont icon-iconfont-LearningCenter"></i></div>'+
+            			'<div class="bg_bor"> <i class="'+menuRule+'"></i></div>'+
             			'<div class="name" style="text-align:center">'+n.text+'</div></a></li>';
 			
 			} else {
@@ -81,6 +91,10 @@
            					'<a href="javascript:;" class="collapse"></a></div></div>';
 				menulist += '<div  class="portlet-body"><ul class="icon_lists clear">';
 				$.each(n.children, function(j, o) {
+					var menuRule = 'icon iconfont icon-iconfont-LearningCenter';
+					if (o.attributes.menuRule.length > 0) {
+						menuRule = o.attributes.menuRule;
+					}
 					url = o.attributes.baseUrl;
 					var string = url.substring(0,1);
 					if (string == "/") {
@@ -89,7 +103,7 @@
 						url = 'http://'+url;
 					}
 					menulist += '<li><a href="'+url+'" title="'+o.text+'" id="'+o.id+'" onclick="latestClick(this)" close="true" class="nav-link iframeify">'+
-                				'<div class="bg_bor"> <i class="icon iconfont icon-iconfont-LearningCenter"></i></div>'+
+                				'<div class="bg_bor"> <i class="'+menuRule+'"></i></div>'+
                 				'<div class="name" style="text-align:center">'+o.text+'</div></a></li>';
 				})
 				menulist += '</ul></div>';
