@@ -10,28 +10,44 @@
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
+			<link href="${pageContext.request.contextPath}/assets/layouts/layout/css/custom.min.css" rel="stylesheet" type="text/css" />
+		<link href="${pageContext.request.contextPath}/assets/global/css/iconFont/iconfont.css" rel="stylesheet" type="text/css" />
 	<style type="text/css">
 		.txt01{
 			width: 230px;
 		}
+		.easyui-tabs>.tabs-panels>.panel>.panel-body-noborder{
+				overflow: hidden;
+		}
+		.panel-body{
+			overflow: hidden;
+		}
 	</style>
 </head>
-<body>
-	<div class="easyui-panel" title="模块管理" style="width:100%;max-width:100%;padding:20px 30px;height:540px;">
-	<div style="padding:2px 5px; text-align: right;">
-		<a href="#" class="easyui-linkbutton" iconCls="icon-set" plain="true" id="editIcon">设置图标</a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" id="reload" onclick="reload()">刷新</a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="addRoot">添加根菜单</a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="addMenu">添加菜单</a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="add">添加资源</a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" id="edit">修改</a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" id="delete2" >删除</a>
-	</div>
-	<div class="easyui-panel" style="padding:5px;height: 95%;overflow-x:scroll;">
-		  <ul id="deptree"  style="height: 100%"class="easyui-tree" > 
-	 </ul>
-	</div>
-	</div>
+<body style="overflow: hidden;">
+	<div id="tt" class="easyui-tabs" fit="true" style="font-size:1em;">
+		<div title="模块管理">
+			<div style="border:0 solid;margin-bottom:0;" fit="true" >
+				<!-- <div class="top" style="width: 100%;overflow:hidden; "> -->
+					<div class="easyui-panel" title="模块管理" style="width:100%;max-width:100%;padding:20px 30px;height:520px;">
+						<div style="padding:2px 5px; text-align: right;">
+							<a href="#" class="easyui-linkbutton" iconCls="icon-set" plain="true" id="editIcon">设置图标</a>
+							<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" id="reload" onclick="reload()">刷新</a>
+							<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="addRoot">添加根菜单</a>
+							<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="addMenu">添加菜单</a>
+							<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="add">添加资源</a>
+							<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" id="edit">修改</a>
+							<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" id="delete2" >删除</a>
+						</div>
+						<div class="easyui-panel" style="padding:5px;height: 95%;overflow:auto;">
+		 					 <ul id="deptree"  style="height: 100%"class="easyui-tree" > 
+	 							</ul>
+						</div>
+					</div>
+				<!-- </div> -->
+			</div>	
+		</div>
+	</div>		
 	<!--添加模块-->
 	<div id="wmodule" class="easyui-window" title="资源添加" collapsible="false"
 		minimizable="false" maximizable="false" icon="icon-save"
@@ -137,66 +153,39 @@
 			</div>
 		</div>
 	</div>
-	<!-- 设置图标窗口 -->
-	<div id="iconWin" class="easyui-window" title="图标" collapsible="false"
-		minimizable="false" maximizable="false" icon="icon-save"
-		style="width: 500px; height: 300px; padding: 5px;
-        background: #fafafa;">
-		<div class="easyui-layout" fit="true">
-			<div region="center" border="false"
-				style="padding: 10px; background: #fff; border: 1px solid #ccc;">
-				<form id="resourceFrom" style="padding-top: 10px;" action="">
-				<table cellpadding=6>
-					<tr >
-						<td>图标：</td>
-						<td>
-							<select id="icon" ></select><a id="clearIcon" class="easyui-linkbutton" icon="icon-clear" href="javascript:void(0)">清空图标</a> 
-							<div id="sp"></div>
-						</td>
-					</tr>
-					
-				</table>
-				</form>
-			</div>
-			<div region="south" border="false"
-				style="text-align:center; height: 30px; line-height: 30px;">
-				<a id="" class="easyui-linkbutton" icon="icon-ok" onclick="iconEdit()"
-					href="javascript:void(0)"> 确定</a> <a 
-					class="easyui-linkbutton" icon="icon-cancel"  onclick="closeIcon()"
-					href="javascript:void(0)">取消</a>
-			</div>
-		</div>
-	</div>
 	<div id='loading' style='position:absolute;left:0;width:100%;height:100%;top:0;background:#E0ECFF;opacity:0.8;filter:alpha(opacity=80);'>
 			<div style='position:absolute;  cursor1:wait;left:50%;top:200px;width:auto;height:16px;padding:12px 5px 10px 30px;border:2px solid #ccc;color:#000;'> 
  				正在加载，请等待...
 			</div>
 	</div> 
 </body>
+ <script type="text/javascript" src="${pageContext.request.contextPath}/assets/global/plugins/iframeWin/jquery.iframeWin.js"></script>
 <script>
-	//清空所选图标
-	$('#clearIcon').click(function(){
-		  $('#icon').combo('setValue', null).combo('setText', null);
-		});
 	//遍历树，显示图标
 	function getRoot(){
-		var node=$('#deptree').tree('getRoots');
+		var node = $('#deptree').tree('getRoots');
 		$.each(node,function(i,n){
-			if(n.attributes.menuRule!=""){
-				$(n.target).children(".tree-icon").css("background","url(${pageContext.request.contextPath}/"+n.attributes.menuRule+")");
-			}
-			var children=$('#deptree').tree('getChildren',n.target);
+			var children = $('#deptree').tree('getChildren',n.target);
 			$.each(children,function(i,m){
-				if(m.attributes.menuRule!= "" && m.ismodule!=2){
-					$(m.target).children(".tree-icon").css("background","url(${pageContext.request.contextPath}/"+m.attributes.menuRule+")");
-				}else{
-						if(m.ismodule=="1"){
-							$(m.target).children(".tree-icon").addClass("icon icon-mini-add");
-						}
+				if(m.ismodule == "1"){
+					var menuRule = 'icon iconfont icon-iconfont-LearningCenter';
+					if (m.attributes.menuRule != "") {
+						menuRule = m.attributes.menuRule;
 					}
+					$(m.target).children(".tree-icon").attr("class",menuRule);//removeClass("tree-folder").addClass(menuRule);
+				}
 			});
 		});
-	}
+	}	
+		$('#deptree').tree({
+			//资源菜单展开时，移除tree自带图标
+			onExpand: function(node){
+				console.log(node.ismodule);
+				if(node.ismodule == "1"){
+					$(node.target).children('.tree-hit').next().removeClass("tree-folder-open");
+				}
+			}
+		});
 	
 	   //设置=窗口
         function openPwd() {
@@ -212,20 +201,7 @@
                 resizable:false
             });
         }
-        //设置=窗口
-        function iconWin() {
-            $('#iconWin').window({
-                title: '设置图标',
-                width: 600,
-                modal: true,
-                shadow: true,
-                closed: true,
-                top:150,
-                left:400,
-                height: 400,
-                resizable:false
-            });
-        }
+       
         function openFunction() {
             $('#function').window({
                 title: '功能',
@@ -239,8 +215,24 @@
                 resizable:false
             });
         } 
-        function closeIcon() {
-        	  $('#iconWin').window('close');
+        //更换图标
+        function editIcon(menuRule){
+        	var node = $('#deptree').tree('getSelected');
+        	$(node.target).children('.tree-hit').next().prop("class", menuRule);
+        	$('#deptree').tree('update',{
+                  				target: node.target,
+                  				'text':node.text,
+                  				'attributes':{
+                  					'baseUrl':node.attributes.baseUrl,
+                  					'status':node.attributes.status,
+                  					'menuId':node.attributes.menuId,
+                 					'menuCode':node.attributes.menuCode,
+                  					'dislayOrder':node.attributes.dislayOrder,
+                 					'menuLevel':node.attributes.menuLevel,
+									'parentId':node.attributes.parentId,  
+									'menuRule':menuRule
+                  				}
+                  			}); 
         }
         //关闭窗口
         function closePwd() {
@@ -250,106 +242,47 @@
         function closeFunction() {
             $('#function').window('close');
         }
+        //添加tab页面
+		function addPanel(node){
+			if ($('#tt').tabs('exists', node.text+'-设置图标')){
+			 	$('#tt').tabs('select', node.text+'-设置图标');
+			} else {
+				 var menuId = node.attributes.menuId;
+				 var menuRule = node.attributes.menuRule;//class 样式
+				 var parentId = node.pid;
+				 var status = node.attributes.status;//状态
+				 var menuLevel = node.attributes.menuLevel;//层级
+				 var dislayOrder = node.attributes.dislayOrder;//排序
+				 var url = '${pageContext.request.contextPath}/module/icon?appId=${appId}&menuId='+menuId+
+				 '&menuRule='+menuRule+'&parentId='+parentId+'&status='+status+'&menuLevel='+menuLevel+
+				 '&dislayOrder='+dislayOrder;
+			 	 var content = '<iframe scrolling="auto" frameborder="0" src="'+url+'" style="width:100%;height:100%;"></iframe>';
+				 $('#tt').tabs('add',{
+					 title:node.text+'-设置图标',
+					 content:content,
+					 closable:true,
+					 cache:true
+				 });
+			}
+		}
         //设置图标按钮点击
         $('#editIcon').click(function(){
         	var node = $('#deptree').tree('getSelected');
 			if (node){
-				if (node.ismodule == 2) {//如果选择的是功能，提示
-					msgShow('系统提示', '请选择父级！', 'warning');
+				if (node.ismodule == 1) {
+					var menuName = node.text;
+					var menuId = node.attributes.menuId;
+					var menuRule = node.attributes.menuRule;
+					var parentId = node.pid;
+					addPanel(node);
 				} else {
-					$('#iconWin').window('open');
-	        	 	var value = node.attributes.menuRule;
-			        value = value.substr(value.lastIndexOf("/")+1);
-			        $('#icon').combo('setValue', value).combo('setText', value);
+					msgShow('系统提示', '请选择资源菜单！', 'warning');
 				}
 			} else {
 				msgShow('系统提示', '请选择模块！', 'warning');
 			}
         });
-        var menuIconUrl = '${menuIconUrl}';//存放图片文件夹路径
-        menuIconUrl = menuIconUrl.substring(1); 
-        //设置图标
-        function iconEdit() {
-        	var node = $('#deptree').tree('getSelected');
-        	var menuId = null;
-        	if (node.ismodule == 1) {//为资源菜单
-            	menuId = node.attributes.menuId;
-			} else {
-				menuId = node.id;
-			}
-        	var moduleUrl = $("#moduleUrl").textbox("getValue");
-            var menuRule = $('#icon').combobox('getValue');
-            if (menuRule != null && menuRule != ""){
-                menuRule = menuIconUrl + menuRule;
-            }
-            $.post('${pageContext.request.contextPath}/module/updateIcon',
-                    {
-                		'menuId' : menuId ,
-                		'menuRule':menuRule ,
-                		'appId':'${appId}',
-                		'name':node.name,
-                        'code':node.attributes.menuCode,
-                        'parentId':node.attributes.parentId,
-                        'status':node.attributes.status,
-                        'displayOrder':node.attributes.dislayOrder,
-                        'menuLevel':node.attributes.menuLevel
-
-                    },
-					function(data){
-						if (data.status == '1') {
-							msgShow('系统提示', '设置成功！', 'warning');
-							closeIcon();//关闭窗口
-							if (node.ismodule == 1) {//如果为资源菜单
-								//menuRule不为空显示选择的图标
-	                			if (menuRule != null && menuRule != "") {
-	                 				$(node.target).children(".tree-icon").css("background","url(${pageContext.request.contextPath}/"+menuRule+")");
-	                 			} else {
-	                 				$(node.target).children(".tree-icon").removeAttr("style");
-	                 				$(node.target).children(".tree-icon").addClass("icon icon-mini-add");
-	    						}
-	                			$('#deptree').tree('update',{
-	                  				target: node.target,
-	                  				'text':node.name,
-	                  				'attributes':{
-	                  					'baseUrl':node.attributes.baseUrl,
-	                  					'status':node.attributes.status,
-	                  					'menuId':node.attributes.menuId,
-	                 					'menuCode':node.attributes.menuCode,
-	                  					'dislayOrder':node.attributes.dislayOrder,
-	                 					'menuLevel':node.attributes.menuLevel,
-										'parentId':node.attributes.parentId,  
-										'menuRule':menuRule
-	                  				}
-	                  			});
-							} else {
-								//menuRule不为空显示选择的图标
-	                			if (menuRule != null && menuRule != "") {
-	                 				$(node.target).children(".tree-icon").css("background","url(${pageContext.request.contextPath}/"+menuRule+")");
-	                 			} else {
-	                 				$(node.target).children(".tree-icon").css("background","");
-	                 				$(node.target).children(".tree-icon").removeClass('tree-file').addClass("tree-folder");
-	    						}
-	                			$('#deptree').tree('update',{//目录菜单
-	                  				target: node.target,
-	                  				'text':node.name,
-	                  				'attributes':{
-	                  					'parentId':node.attributes.parentId,
-	                  					'menuCode':node.attributes.menuCode,
-	                  					'status':node.attributes.status,
-	                  					'dislayOrder':node.attributes.dislayOrder,
-	                 					'menuLevel':node.attributes.menuLevel,
-	                 					'menuRule':menuRule
-	                  				}
-	                  			}); 
-							}
-							
-						} else {
-							msgShow('系统提示', '设置失败！', 'warning');
-						}
-						
-    				}
-            );
-		}
+        
       //添加或修改功能
         $('#addFunct2').click(function(){
         	var optUrl = $("#opturl").textbox("getValue");
@@ -638,12 +571,7 @@
 	     		msgShow('系统提示', '请选择父菜单！', 'info');
 	     	}
        });
-	     //点击图片设置组合框的值
-	     function imgClick(obj) {
-       	  	 var v = $(obj).attr('value');
-             var s = $(obj).attr('text');
-             $('#icon').combo('setValue', v).combo('setText', s).combo('hidePanel');
-		}
+	     
 		function getTree() {
 			$('#loading').show();  
 	    	$.ajax({type:'GET',
@@ -667,26 +595,12 @@
 		}
 	    $(function(){  
 	    	getTree();
-	    	$('#icon').combo({
-                required:true,
-                editable:false ,
-                width:255 ,
-                panelHeight:300 
-            });
-	    	 $('#sp').appendTo($('#icon').combo('panel'));
-	         //读取所有图标并显示
-	    	 $.post("${pageContext.request.contextPath}/module/getIcon",function(data){
-		    	 	$.each(data.icon,function(i,n){
-		    	 			var img='<span>'
-			                +'<img onclick="imgClick(this)" src="${pageContext.request.contextPath}/images/icon/'+n+'" value="'+n+'" text="'+n+'" style="width: 20px;height: 20px;"></img>'
-			                +'</span>';
-		    	 			$('#sp').append(img);
-			    	 	});
-		    	 });
-	    	 
+	    	$('.tree-hit').click(function(){
+				console.log($(this).next());
+				$(this).next().removeClass('tree-folder-open');
+			});
 		     openPwd();
 		     openFunction();
-		     iconWin();
             
             //删除
           $('#delete').click(function() {
@@ -718,7 +632,6 @@
      		    	 	url=encodeURI('${pageContext.request.contextPath}/module/deleteMenu?menuId='+menuId+'&resourceId='+resourceId+'&appId=${appId}');
        		     	}else if (node.ismodule=="1") {
        		    	 	var childrenNodes = $('#deptree').tree('getChildren',node.target);
-       		    	 	console.log(childrenNodes);
        		    	 	if(childrenNodes.length>0){
        		    		 	$.each(childrenNodes,function(i,n){
        		    				 functionIds.push(n.id);
@@ -854,9 +767,6 @@
 				}else{
 					$('#wmodule').window('open');
 			         updateModel(node);
-			         var value = node.attributes.menuRule;
-			         value = value.substr(value.lastIndexOf("/")+1);
-			         $('#icon').combo('setValue', value).combo('setText', value);
 				}
 	            
             }else{
