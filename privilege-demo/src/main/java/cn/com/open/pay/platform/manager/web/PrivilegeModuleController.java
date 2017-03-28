@@ -53,7 +53,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	 * 
 	 * @param request
 	 * @param model
-	 * @param bool
+	 * @param response
 	 * @return
 	 */
 	@RequestMapping(value = "index")
@@ -63,6 +63,34 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		model.addAttribute("appId", appId);
 		model.addAttribute("menuIconUrl", oesPrivilegeDev.getMenuIconUrl());
 		return "privilege/model/index";
+	}
+	
+	/**
+	 * 跳转模块图标页面
+	 * 
+	 * @param request
+	 * @param model
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "icon")
+	public String icon(HttpServletRequest request, HttpServletResponse response, Model model) {
+		log.info("-------------------------index      start------------------------------------");
+		String appId = request.getParameter("appId");
+		String menuRule = request.getParameter("menuRule");
+		String menuId = request.getParameter("menuId");
+		String parentId = request.getParameter("parentId");
+		String status = request.getParameter("status");
+		String menuLevel = request.getParameter("menuLevel");
+		String dislayOrder = request.getParameter("dislayOrder");
+		model.addAttribute("appId", appId);
+		model.addAttribute("menuRule", menuRule);
+		model.addAttribute("menuId", menuId);
+		model.addAttribute("parentId", parentId);
+		model.addAttribute("status", status);
+		model.addAttribute("menuLevel", menuLevel);
+		model.addAttribute("dislayOrder", dislayOrder);
+		return "privilege/model/icon";
 	}
 
 	@RequestMapping(value = "tree")
@@ -283,21 +311,18 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		String appId = request.getParameter("appId").trim();
 		String menuId = request.getParameter("menuId").trim();//菜单Id
 		String menuRule = request.getParameter("menuRule").trim();//菜单图标路径
-		String parentId = request.getParameter("parentId");
-		String status = request.getParameter("status");
-		String displayOrder = request.getParameter("displayOrder");
-		String menuLevel = request.getParameter("menuLevel");
-		String menuCode = request.getParameter("code").trim();
+		String parentId = request.getParameter("parentId").trim();//父Id
+		String status = request.getParameter("status");//状态
+		String displayOrder = request.getParameter("displayOrder");//排序
+		String menuLevel = request.getParameter("menuLevel");//层级
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
 		map.put("appId", appId);
 		map.put("menuId", menuId);
 		map.put("menuRule", menuRule);
+		map.put("parentId", parentId);
 		map.put("status", status);
 		map.put("dislayOrder", displayOrder);
 		map.put("menuLevel", menuLevel);
-		map.put("parentId", parentId);
-		map.put("menuRule", menuRule);
-		map.put("menuCode", menuCode);
 		String reslut = sendPost(oesPrivilegeDev.getModifyMenuUrl(), map);
 		JSONObject jsonObject = JSONObject.fromObject(reslut);
 		WebUtils.writeJson(response, jsonObject);
