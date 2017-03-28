@@ -181,7 +181,7 @@
 
 	function selected(roleId) {
 		$.ajax({
-		    url:"${pageContext.request.contextPath}/managerRole/QueryRoleDetails?appId=${appId}&id="+id, 
+		    url:"${pageContext.request.contextPath}/managerRole/QueryRoleDetails?appId=${appId}&id="+roleId, 
 			success: function(data) {
 				var node;
 				$(data.nodeList).each(function(){
