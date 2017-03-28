@@ -16,6 +16,8 @@
 	src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
 <script type="text/javascript"
 	src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
+<link href="${pageContext.request.contextPath}/assets/layouts/layout/css/custom.min.css" rel="stylesheet" type="text/css" />
+<link href="${pageContext.request.contextPath}/assets/global/css/iconFont/iconfont.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 	<!-- 授权角色窗口 -->
@@ -41,40 +43,53 @@
 	</div>
 	<div id='loading' style='position:absolute;left:0;width:100%;height:100%;top:0;background:#E0ECFF;opacity:0.8;filter:alpha(opacity=80);'>
 			<div style='position:absolute;  cursor1:wait;left:50%;top:200px;width:auto;height:16px;padding:12px 5px 10px 30px;border:2px solid #ccc;color:#000;'> 
- 				正在加载，请等待...
+ 				<img alt="" src="${pageContext.request.contextPath}/assets/global/img/input-spinner.gif">正在加载，请等待...
 			</div>
 	</div>
 </body>
 <script>
-//修改tree 图标样式
-function getRoot(){
-	var node=$('#tt').tree('getRoots');
-	$.each(node,function(i,n){
-		if($(n.target).children(".tree-icon").hasClass('tree-file')){
-			$(n.target).children(".tree-icon").removeClass('tree-file').addClass("tree-folder");
-		}
-		$(n.target).children(".tree-icon").addClass("tree-folder");
-		var children=$('#tt').tree('getChildren',n.target);
-		$.each(children,function(i,m){
-			if(m.ismodule=="0"){
-				if($(m.target).children(".tree-icon").hasClass('tree-file')){
-					$(m.target).children(".tree-icon").removeClass('tree-file').addClass("tree-folder");
+	//修改tree 图标样式
+	function getRoot(){
+		var node = $('#tt').tree('getRoots');
+		$.each(node,function(i,n){
+			var children = $('#tt').tree('getChildren',n.target);
+			$.each(children,function(i,m){
+				if(m.ismodule == "1"){
+					var menuRule = 'icon iconfont icon-iconfont-LearningCenter';
+					if (m.attributes.menuRule != "") {
+						menuRule = m.attributes.menuRule;
+					}
+					$(m.target).children(".tree-icon").attr("class",menuRule);//removeClass("tree-folder").addClass(menuRule);
 				}
-			}else if (m.ismodule=="1") {
-				$(m.target).children(".tree-icon").addClass("icon icon-mini-add");
+			});
+		});
+	}	
+	$('#tt').tree({
+			//资源菜单展开时，移除tree自带图标
+			onExpand: function(node){
+				if (node.ismodule == "1") {
+					$(node.target).children('.tree-hit').next().removeClass("tree-folder-open");
+				}
+			},
+			onBeforeExpand:function(node){
+				if(node.ismodule == "1"){
+					var children = $(node.target).next();
+					if (children.length == 0) {
+						return false;
+					}
+				}
 			}
 		});
-	});
-}
+	
 	function getTree() {
 		$('#loading').show();
 		$.ajax({type:'GET',
 			url:'${pageContext.request.contextPath}/managerUser/tree?appId=${appId}&groupId=${groupId}',
 			success:function(data) {
-					if(data.status=="0"){
+					if (data.status == "0") {
 						msgShow('系统提示', '该组织机构无权限！', 'info');
-					}else {
-						var json=data.tree;
+					} else {
+						var json = data.tree;
 						if (json.length>0) {
 							$('#tt').tree({data: json});
 							getRoot();
@@ -100,23 +115,23 @@ function getRoot(){
 	//勾选用户拥有的功能
 	function selected(){
 		$.post('${pageContext.request.contextPath}/managerUser/function?id=${id}&appId=${appId}',function(data){
-				if(data.functionIds!=null){
+				if (data.functionIds != null) {
 					$.each(data.functionIds,function(i,n){
-						var node=$("#tt").tree('find',n);
-						if(node!=null){
-							if(node.ismodule=="2"){
+						var node = $("#tt").tree('find',n);
+						if(node != null){
+							if (node.ismodule == "2") {
 								$("#tt").tree('check',node.target);
 							}
 						}
 					});
 				}
-				if(data.resourceIds!=null){
+				if (data.resourceIds != null) {
 					$.each(data.resourceIds,function(i,m){
-						var node=$("#tt").tree('find',m);
-						if(node!=null){
-							if(node.ismodule=="1"){
-								var nn=$("#tt").tree('getChildren',node.target);
-								if(nn.length<=0){
+						var node = $("#tt").tree('find',m);
+						if (node != null) {
+							if (node.ismodule == "1") {
+								var nn = $("#tt").tree('getChildren',node.target);
+								if (nn.length<=0) {
 									$("#tt").tree('check',node.target);
 								}
 							}
@@ -135,24 +150,24 @@ function getRoot(){
 	//授权确认
 	function submitAuthorizeFun(){
 		$('#loading').show();
-		var resId=[];
-		var funId=[];
-		var select=$('#tt').tree('getChecked', 'checked');
+		var resId = [];
+		var funId = [];
+		var select = $('#tt').tree('getChecked', 'checked');
 		$.each(select, function(i, n) {
-			if(n.ismodule==2){
+			if (n.ismodule == 2) {
 				funId.push(n.id);
-			}else if(n.ismodule==1){
+			} else if (n.ismodule == 1) {
 				resId.push(n.id);
 			}
 		});
 		resId.join(",");
 		funId.join(",");
-		 var url='${pageContext.request.contextPath}/managerUser/authorizeFun?id=${id}&resource='+resId+'&function='+funId+'&userName=${userName}&appId=${appId}';
+		 var url = '${pageContext.request.contextPath}/managerUser/authorizeFun?id=${id}&resource='+resId+'&function='+funId+'&userName=${userName}&appId=${appId}';
          $.post(url, function(data) {
         	 $('#loading').hide();
-             if(data.result==true){
+             if (data.result == true) {
               	msgShow('系统提示', '恭喜，授权功能成功！', 'info');
-             }else{
+             } else {
                	msgShow('系统提示', '授权功能失败！', 'error');
                	//刷新
                	getTree();
