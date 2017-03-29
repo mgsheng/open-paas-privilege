@@ -87,7 +87,7 @@
        </select>
     <update id="updatePrivilegeMenu" parameterType="PrivilegeMenu" flushCache="true">
         update privilege_menu set
-        <if test="menuCode != null and menuCode !=''">
+        <if test="menuCode !=''">
         menu_code = #{menuCode},
         </if>
          <if test="menuName != null and menuName !=''" >
@@ -99,19 +99,19 @@
          <if test="menuRule != null and menuRule !=''" >
         menu_rule = #{menuRule},
         </if>
-         <if test="menuLevel != null" >
+         <if test="menuLevel != null and menuRule !=''" >
         menu_level = #{menuLevel},
         </if>
          <if test="createTime != null" >
         create_time = #{createTime},
         </if>
-         <if test="parentId != null" >
+         <if test="parentId != null and parentId !=''" >
         parent_id = #{parentId},
         </if>
-         <if test="displayOrder != null " >
+         <if test="displayOrder != null and displayOrder !=''" >
         display_order = #{displayOrder},
         </if>
-         <if test="status != null " >
+         <if test="status != null and status !=''" >
         status = #{status},
         </if>
         create_time=#{createTime}
