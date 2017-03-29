@@ -1,6 +1,5 @@
 package cn.com.open.pay.platform.manager.web;
 
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -74,14 +73,15 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 	 */
 	@RequestMapping(value = "icon")
 	public String icon(HttpServletRequest request, HttpServletResponse response, Model model) {
-		log.info("-------------------------index      start------------------------------------");
+		log.info("-------------------------icon      start------------------------------------");
 		String appId = request.getParameter("appId");
-		String menuRule = request.getParameter("menuRule");
-		String menuId = request.getParameter("menuId");
+		String menuRule = request.getParameter("menuRule");//图标样式
+		String menuId = request.getParameter("menuId");//菜单Id
 		String parentId = request.getParameter("parentId");
-		String status = request.getParameter("status");
-		String menuLevel = request.getParameter("menuLevel");
-		String dislayOrder = request.getParameter("dislayOrder");
+		String status = request.getParameter("status");//状态
+		String menuLevel = request.getParameter("menuLevel");//层级
+		String dislayOrder = request.getParameter("dislayOrder");//排序
+		String menuCode = request.getParameter("menuCode");
 		model.addAttribute("appId", appId);
 		model.addAttribute("menuRule", menuRule);
 		model.addAttribute("menuId", menuId);
@@ -89,6 +89,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		model.addAttribute("status", status);
 		model.addAttribute("menuLevel", menuLevel);
 		model.addAttribute("dislayOrder", dislayOrder);
+		model.addAttribute("menuCode", menuCode);
 		return "privilege/model/icon";
 	}
 
@@ -292,6 +293,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		String status = request.getParameter("status");//状态
 		String displayOrder = request.getParameter("displayOrder");//排序
 		String menuLevel = request.getParameter("menuLevel");//层级
+		String menuCode = request.getParameter("menuCode");
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
 		map.put("appId", appId);
 		map.put("menuId", menuId);
@@ -300,6 +302,7 @@ public class PrivilegeModuleController extends BaseControllerUtil {
 		map.put("status", status);
 		map.put("dislayOrder", displayOrder);
 		map.put("menuLevel", menuLevel);
+		map.put("menuCode", menuCode);
 		String reslut = sendPost(oesPrivilegeDev.getModifyMenuUrl(), map);
 		JSONObject jsonObject = JSONObject.fromObject(reslut);
 		WebUtils.writeJson(response, jsonObject);
