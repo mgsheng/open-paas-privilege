@@ -49,6 +49,8 @@
 						<value>/user/getHomePage</value>
 						<value>/user/getMenu</value>
 						<value>/managerRole/findGroup</value>
+						<value>/module/updateIcon</value>
+						
 					</list>
 				</property>
 			</bean>
