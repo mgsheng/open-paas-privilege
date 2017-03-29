@@ -259,9 +259,10 @@
 				 var status = node.attributes.status;//状态
 				 var menuLevel = node.attributes.menuLevel;//层级
 				 var dislayOrder = node.attributes.dislayOrder;//排序
+				 var menuCode = node.attributes.menuCode;
 				 var url = '${pageContext.request.contextPath}/module/icon?appId=${appId}&menuId='+menuId+
 				 '&menuRule='+menuRule+'&parentId='+parentId+'&status='+status+'&menuLevel='+menuLevel+
-				 '&dislayOrder='+dislayOrder;
+				 '&dislayOrder='+dislayOrder+'&menuCode='+menuCode;
 			 	 var content = '<iframe scrolling="auto" frameborder="0" src="'+url+'" style="width:100%;height:100%;"></iframe>';
 				 $('#tt').tabs('add',{
 					 title:node.text+'-设置图标',
