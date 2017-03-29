@@ -4,20 +4,16 @@
 <head>
 <meta charset="UTF-8">
 <title>授权角色</title>
-<link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath}/css/themes/default/easyui.css">
-<link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath}/css/themes/icon.css">
-<link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath}/css/dataList.css">
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
-<script type="text/javascript"
-	src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
-<link href="${pageContext.request.contextPath}/assets/layouts/layout/css/custom.min.css" rel="stylesheet" type="text/css" />
-<link href="${pageContext.request.contextPath}/assets/global/css/iconFont/iconfont.css" rel="stylesheet" type="text/css" />
+	<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/easyui.css" rel="stylesheet" type="text/css" />
+	<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/master.css" rel="stylesheet" type="text/css" /> 
+	<link href="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/icon.css" rel="stylesheet" type="text/css" /> 
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/dataList.css">
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
+	<link href="${pageContext.request.contextPath}/assets/layouts/layout/css/custom.min.css" rel="stylesheet" type="text/css" />
+	<link href="${pageContext.request.contextPath}/assets/global/css/iconFont/iconfont.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 	<!-- 授权角色窗口 -->
