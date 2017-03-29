@@ -72,13 +72,14 @@
     </select>
 
 	<select id="findUserResourcesFunId"  resultType="java.lang.String" flushCache="true">
-		SELECT c.privilege_funid FROM privilege_user a,privilege_user_role b,privilege_role_resource c
-		WHERE  a.app_id=#{appId} AND a.app_userid=#{appUserId}
-		AND a.uid=b.user_id AND b.privilege_roleid=c.privilege_roleid AND c.privilege_funid IS NOT null
+		SELECT c.privilege_funid FROM privilege_user a,privilege_user_role b,privilege_role_resource c,
+		privilege_role pr WHERE  a.app_id=#{appId} AND a.app_userid=#{appUserId} AND a.uid=b.user_id
+		AND b.privilege_roleid=c.privilege_roleid AND b.privilege_roleid = pr.privilege_roleid AND pr.status=0
+		 AND c.privilege_funid IS NOT null
 	</select>
 	<select id="findUserRoleResources"  resultMap="privilegeRoleResourceMap" flushCache="true">
-		SELECT c.* FROM privilege_user a,privilege_user_role b,privilege_role_resource c
-		WHERE  a.app_id=#{appId} AND a.app_userid=#{appUserId}
+		SELECT c.* FROM privilege_user a,privilege_user_role b,privilege_role_resource c,privilege_role pr
+		WHERE  a.app_id=#{appId} AND a.app_userid=#{appUserId} AND b.privilege_roleid = pr.privilege_roleid AND pr.status=0
 		AND a.uid=b.user_id AND b.privilege_roleid=c.privilege_roleid
 	</select>
 	<select id="findUserResourcesFunIdByResIsNull"  resultType="java.lang.String" flushCache="true">
