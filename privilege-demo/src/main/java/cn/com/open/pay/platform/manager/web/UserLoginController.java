@@ -426,7 +426,7 @@ public class UserLoginController extends BaseControllerUtil {
 			oesLatestVisitService.saveOesLatestVisit(oesLatestVisit);
 			oesLatestVisitService.updateUserLastVisitRedis(appUserId, appId);
 		}
-		
+		log.info("------saveLatestVisit end--------");
 
 	}
 
@@ -521,38 +521,43 @@ public class UserLoginController extends BaseControllerUtil {
 		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
 		String appUserId = (String) user.get("appUserId");
 		String appId = (String) user.get("appId");
+		JSONObject object = (JSONObject) user.get("privilege");
+		//用户权限内拥有的菜单
+		List<PrivilegeMenu> menuList = JSONArray.toList(object.getJSONArray("menuList"), PrivilegeMenu.class);
+		Map<String, PrivilegeMenu> aidMap = new LinkedHashMap<String, PrivilegeMenu>();
+		for (PrivilegeMenu menu : menuList) {
+			aidMap.put(menu.getMenuId(), menu);
+		}
 		// 获取最近访问菜单
 		List<Map<String, Object>> latestVisitRes = oesLatestVisitService.getUserLastVisitRedis(appUserId, appId);
 		// 获取常用菜单
 		List<Map<String, Object>> frequentlyUsedRes = oesFrequentlyUsedMenuService.getUserFrequentlyMenuRedis(appUserId,
 				appId);
+		//排除用户无权限菜单
+		List<Map<String, Object>> latestVisitMenuList = new ArrayList<Map<String, Object>>();
+		for (Map<String, Object> latestVisitMenu : latestVisitRes) {
+			PrivilegeMenu menu = aidMap.get(latestVisitMenu.get("id"));
+			if (menu != null) {
+				latestVisitMenuList.add(latestVisitMenu);
+			}
+		}
+		List<Map<String, Object>> frequentlyUsedMenuList = new ArrayList<Map<String, Object>>();
+		for (Map<String, Object> frequentlyUsedMenu : frequentlyUsedRes) {
+			PrivilegeMenu menu = aidMap.get(frequentlyUsedMenu.get("id"));
+			if (menu != null) {
+				frequentlyUsedMenuList.add(frequentlyUsedMenu);
+			}
+		}
 		Map<String, Object> menu = new HashMap<String, Object>();
-		menu.put("latestVisit", latestVisitRes);
-		menu.put("frequentlyUsedMenu", frequentlyUsedRes);
+		menu.put("latestVisit", latestVisitMenuList);
+		menu.put("frequentlyUsedMenu", frequentlyUsedMenuList);
 		model.addAttribute("menus", JSONObject.fromObject(menu));
 		model.addAttribute("appId", appId);
 		model.addAttribute("appUserId", appUserId);
 		return "login/homePage";
 	}
 
-	/**
-	 * 跳转常用菜单管理
-	 * 
-	 * @param request
-	 * @param model
-	 * @param bool
-	 * @return
-	 */
-	@RequestMapping(value = "index")
-	public String stats(HttpServletRequest request, HttpServletResponse response, Model model) {
-		log.info("-------------------------index      start------------------------------------");
-		String appId = request.getParameter("appId");
-		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
-		String appUserId = (String) user.get("appUserId");
-		model.addAttribute("appId", appId);
-		model.addAttribute("appUserId", appUserId);
-		return "user/index";
-	}
+	
 
 	/**
 	 * 获取子菜单
