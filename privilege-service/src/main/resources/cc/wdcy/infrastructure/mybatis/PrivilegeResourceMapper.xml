@@ -39,12 +39,12 @@
          where menu_id = #{menuId}
 	</select>
 	<select id="getResourceListByFunIds" resultMap="privilegeResourceMap" flushCache="true">
-         SELECT pr.* FROM privilege_resource pr,privilege_function pf
+         SELECT pr.* FROM privilege_resource pr,privilege_function pf,privilege_menu pm
 		WHERE pf.id IN 
 		<foreach item="item" index="index" collection="functionIds" open="(" separator="," close=")">  
           #{item}  
         </foreach>
-		AND pf.resource_id=pr.resource_id AND pr.app_id=#{appId}
+		AND pf.resource_id=pr.resource_id AND pr.app_id=#{appId}  AND pr.menu_id=pm.id AND pm.status=0
 	</select>
 	<select id="getResourceListByFunId" resultMap="privilegeResourceMap" flushCache="true">
          SELECT pr.* FROM privilege_resource pr,privilege_function pf
@@ -55,9 +55,9 @@
   		 SELECT base_url FROM privilege_resource WHERE app_id =#{appId} AND NOT(base_url IS NULL OR base_url='')
  	</select>
 	<select id="findByResource_Id" resultMap="privilegeResourceMap" flushCache="true">
-         select * from privilege_resource
-         where  resource_id = #{resourceId}
-         and app_id=#{appId}
+         select pr.* from privilege_resource pr,privilege_menu pm 
+         where  pr.resource_id = #{resourceId} and pr.menu_id=pm.id and pm.status=0
+         and pr.app_id=#{appId}
        
 	</select>
     <select id="findByResourceId" resultMap="privilegeResourceMap" flushCache="true">
@@ -73,11 +73,12 @@
          limit #{startRow},#{pageSize} 
 	</select>
 	<select id="getResourceListByUserId" resultMap="privilegeResourceMap" flushCache="true">
-		SELECT DISTINCT d.*
-		 FROM privilege_user a,privilege_user_role b,privilege_role_resource c,privilege_resource d
+		SELECT DISTINCT d.* FROM privilege_user a,privilege_user_role b,privilege_role_resource c,
+		privilege_resource d,privilege_role pr,privilege_menu pm
 		WHERE a.app_userid=#{appUserId}
          AND a.app_id=#{appId} AND a.uid=b.user_id AND b.privilege_roleid=c.privilege_roleid 
-         AND c.resource_id=d.resource_id AND d.app_id=#{appId}
+         AND b.privilege_roleid = pr.privilege_roleid AND pr.status=0
+         AND c.resource_id=d.resource_id AND d.app_id=#{appId} AND d.menu_id =pm.id AND pm.status=0
 	</select>
 	 <select id="getResourceListByAppId" resultMap="privilegeResourceMap" flushCache="true">
 	 	select * from privilege_resource where app_id=#{appId}
