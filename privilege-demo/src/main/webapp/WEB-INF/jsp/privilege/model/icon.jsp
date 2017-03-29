@@ -729,7 +729,9 @@
 						var menuRule = '';
 						var icon = $('.active');
 						var iconChildren = icon.children().eq(0);
+						//如果没有选择，加入默认图标
 						if (iconChildren.length == 0){
+							//默认的图标
 							menuRule = 'icon iconfont icon-iconfont-LearningCenter';
 						} else {
 							menuRule = iconChildren.attr("class");
@@ -742,7 +744,8 @@
 									'parentId':'${parentId}',
 									'status':'${status}',
 									'menuLevel':'${menuLevel}',
-									'displayOrder':'${dislayOrder}'
+									'displayOrder':'${dislayOrder}',
+									'menuCode':'${menuCode}'
 								},
 								function(data){
 									if (data.status == 1){
