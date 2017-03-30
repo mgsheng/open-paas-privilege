@@ -92,7 +92,7 @@ public class PrivilegeGetSignatureServiceImpl extends BaseControllerUtil impleme
 		returnMap.put("signature", signature);
 		returnMap.put("timestamp", timestamp);
 		returnMap.put("signatureNonce", signatureNonce);
-		returnMap.put("client_id", key);
+		returnMap.put("client_id", client_id);
 		returnMap.put("access_token", access_token);
 		return returnMap;
 	}
