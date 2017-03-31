@@ -20,5 +20,9 @@ public class RedisConstant {
 	
 	/*间隔符*/
 	 public static final String SIGN="_";
+	 /**
+	  * 应用菜单缓存版本key
+	  */
+	 public static final String APPMENUVERSIONCACHE = "privilegeService_appMenuVersion_";
 	
 }
