@@ -16,6 +16,6 @@ public interface OesLatestVisitService {
 	
 	List<Map<String, Object>> getUserLastVisitRedis(String userId,String appId);
 	
-	Boolean updateUserLastVisitRedis(String userId,String appId);
+	List<Map<String, Object>> updateUserLastVisitRedis(String userId,String appId);
 	
 }
