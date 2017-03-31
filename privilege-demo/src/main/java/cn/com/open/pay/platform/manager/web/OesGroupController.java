@@ -7,7 +7,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,16 +24,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.pay.platform.manager.dev.OesPrivilegeDev;
 import cn.com.open.pay.platform.manager.privilege.model.OesGroup;
-import cn.com.open.pay.platform.manager.privilege.model.OesUser;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeMenu;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource1;
 import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
 import cn.com.open.pay.platform.manager.privilege.service.OesGroupService;
-import cn.com.open.pay.platform.manager.privilege.service.OesUserService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeGetSignatureService;
-import cn.com.open.pay.platform.manager.redis.impl.RedisClientTemplate;
-import cn.com.open.pay.platform.manager.redis.impl.RedisConstant;
-import cn.com.open.pay.platform.manager.tools.AESUtils;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
 
@@ -54,11 +48,8 @@ public class OesGroupController extends BaseControllerUtil {
 	private PrivilegeGetSignatureService privilegeGetSignatureService;
 	@Autowired
 	private OesPrivilegeDev oesPrivilegeDev;
-	@Autowired
-	private OesUserService oesUserService;
-	@Autowired
-	private RedisClientTemplate redisClientTemplate;
-	private static final String AccessTokenPrefix = RedisConstant.ACCESSTOKEN_CACHE;
+	
+	
 
 	/**
 	 * 跳转到机构管理页面
@@ -159,19 +150,6 @@ public class OesGroupController extends BaseControllerUtil {
 		String groupCode = request.getParameter("groupCode");
 		String groupName = request.getParameter("groupName");
 		String appId = request.getParameter("appId");
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("appId", appId);
-		map.put("groupId", groupCode);
-		map.put("roleType", "2");
-		map.put("start", "0");
-		map.put("limit", "5");
-		String result = sendPost(oesPrivilegeDev.getQueryRoleUrl(), map);
-		JSONObject object = JSONObject.fromObject(result);
-		int count = object.getInt("total");
-		if (count > 0) {
-			List<Map<String, Object>> roleList = (List<Map<String, Object>>) object.get("roleList");
-			model.addAttribute("roleId", roleList.get(0).get("privilegeRoleId"));
-		}
 		model.addAttribute("groupCode", groupCode);
 		model.addAttribute("groupName", groupName);
 		model.addAttribute("appId", appId);
@@ -213,7 +191,27 @@ public class OesGroupController extends BaseControllerUtil {
 		WebUtils.writeJson(response, JSONObject.fromObject(aMap));
 		return;
 	}
-
+	/**
+	 * 查找组织机构管理员角色
+	 * 
+	 * @param request
+	 * @param response
+	 */
+	@RequestMapping("findGroupAdminRole")
+	public void findGroupAdminRole(HttpServletRequest request, HttpServletResponse response){
+		log.info("------------findGroupAdminRole start-----------");
+		String groupCode = request.getParameter("groupCode");
+		String appId = request.getParameter("appId");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("appId", appId);
+		map.put("groupId", groupCode);
+		map.put("roleType", "2");
+		map.put("start", "0");
+		map.put("limit", "10");
+		String result = sendPost(oesPrivilegeDev.getQueryRoleUrl(), map);
+		JSONObject object = JSONObject.fromObject(result);
+		WebUtils.writeJson(response, object);
+	}
 	/**
 	 * 授权机构资源
 	 * 
@@ -329,120 +327,23 @@ public class OesGroupController extends BaseControllerUtil {
 		WebUtils.writeErrorJson(response, job);
 	}
 
-	/**
-	 * 注册组织机构管理员
-	 * 
-	 * @return 返回到前端json数据
-	 * @throws UnsupportedEncodingException
-	 */
-	@RequestMapping(value = "addGroupAdministrator")
-	public void CreateGroupAdministrator(HttpServletRequest request, HttpServletResponse response)
-			throws UnsupportedEncodingException {
-		OesUser oesUser = new OesUser();
-		String appId = request.getParameter("appId");
-		String groupId = request.getParameter("groupId");
-		String roleId = request.getParameter("roleId");
-		String appUserName = request.getParameter("appUserName");
-		oesUser.setGroupId(groupId);
-		oesUser.setUserName(appUserName);
-		appUserName = java.net.URLEncoder.encode(appUserName, "UTF-8");
-		String passWord = request.getParameter("passWord");
-		try {
-			passWord = AESUtils.encrypt(passWord, oesPrivilegeDev.getClientSecret());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		// 从缓存中获取token
-		String access_token = (String) redisClientTemplate.getObject(oesPrivilegeDev.getAppId() + AccessTokenPrefix);
-		Map<String, Object> parameters = new HashMap<String, Object>();
-		// 若缓存中没有token 获取token
-		if (access_token == null) {
-			parameters.put("client_id", oesPrivilegeDev.getClientId());
-			parameters.put("client_secret", oesPrivilegeDev.getClientSecret());
-			parameters.put("scope", "read,write");
-			parameters.put("grant_type", oesPrivilegeDev.getGrantType());
-			String result = sendPost(oesPrivilegeDev.getOauthTokenUrl(), parameters);
-			if (result != null && !("").equals(result)) {
-				String aString = result.substring(0, 1);
-				if (aString.equals("{")) {
-					JSONObject object = JSONObject.fromObject(result);
-					access_token = (String) object.get("access_token");
-					if (access_token != null && !("").equals(access_token)) {
-						redisClientTemplate.setObjectByTime(oesPrivilegeDev.getAppId() + AccessTokenPrefix,
-								access_token, 40000);
-					}
-				}
-			}
-		}
-		parameters = privilegeGetSignatureService.getOauthSignature(oesPrivilegeDev.getAppId(),
-				oesPrivilegeDev.getClientId(), access_token);
-		parameters.put("grant_type", oesPrivilegeDev.getGrantType());
-		parameters.put("scope", "read,write");
-		parameters.put("username", appUserName);
-		parameters.put("client_id", oesPrivilegeDev.getClientId());
-		parameters.put("isValidate", 1);
-		parameters.put("password", passWord);
-		String appUserId = UUID.randomUUID().toString().replaceAll("-", "");
-		oesUser.setUserId(appUserId);
-		parameters.put("source_id", appUserId);
-		Boolean boo = false;// 是否注册成功标识
-		String result = sendPost(oesPrivilegeDev.getUserCenterRegUrl(), parameters);
-		if (result != null && !("").equals(result)) {
-			String aString = result.substring(0, 1);
-			if (aString.equals("{")) {
-				JSONObject object = JSONObject.fromObject(result);
-				if ("1".equals(object.get("status"))) {
-					boo = true;
-				} else {
-					WebUtils.writeJson(response, result);
-					return;
-				}
-			}
-		}
-		if (boo) {// 用户中心注册成功后，添加权限用户
-			parameters = privilegeGetSignatureService.getSignature(appId);
-			parameters.put("appId", appId);
-			parameters.put("appUserId", appUserId);
-			parameters.put("appUserName", appUserName);
-			parameters.put("groupId", groupId);
-			parameters.put("privilegeRoleId", roleId);
-			result = sendPost(oesPrivilegeDev.getAddPrivilegeUserUrl(), parameters);
-			JSONObject object = JSONObject.fromObject(result);
-			if (("1").equals(object.getString("status"))) {
-				boo = oesUserService.saveUser(oesUser);
-				parameters.clear();
-				if (boo) {
-					parameters.put("status", "1");
-				} else {
-					parameters.put("status", "0");
-					parameters.put("errMsg", "保存失败");
-				}
-			} else {
-				parameters.put("status", "0");
-				parameters.put("errMsg", "保存失败");
-			}
-			WebUtils.writeJsonToMap(response, parameters);
-			return;
-		}
-	}
+	
 
 	@RequestMapping(value = "tree")
 	public void getModelTree(HttpServletRequest request, HttpServletResponse response) {
 		String appId = request.getParameter("appId");
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
 		map.put("appId", appId);
-		String s = sendPost(oesPrivilegeDev.getAppMenuRedisUrl(), map);
-		JSONObject obj = JSONObject.fromObject(s);// 将json字符串转换为json对象
-		JSONArray objArray = JSONArray.fromObject(obj.get("menuList"));
+		String result = sendPost(oesPrivilegeDev.getAppMenuRedisUrl(), map);
+		JSONObject obj = JSONObject.fromObject(result);// 将json字符串转换为json对象
+		JSONArray menuArray = JSONArray.fromObject(obj.get("menuList"));
 		// 将json对象转换为java对象
-		List<PrivilegeMenu> menuList = JSONArray.toList(objArray, PrivilegeMenu.class);
-		String s1 = sendPost(oesPrivilegeDev.getAppResRedisUrl(), map);
-		JSONObject obj1 = new JSONObject().fromObject(s1);// 将json字符串转换为json对象
-		JSONArray obj1Array = JSONArray.fromObject(obj1.get("resourceList"));
-		String operation = sendPost(oesPrivilegeDev.getAllOperationUrl(), map);
-		obj = JSONObject.fromObject(operation);
+		List<PrivilegeMenu> menuList = JSONArray.toList(menuArray, PrivilegeMenu.class);
+		result = sendPost(oesPrivilegeDev.getAppResRedisUrl(), map);
+		obj = new JSONObject().fromObject(result);// 将json字符串转换为json对象
+		JSONArray resourceArray = JSONArray.fromObject(obj.get("resourceList"));
 		// 将json对象转换为java对象
-		List<PrivilegeResource1> resourceList = JSONArray.toList(obj1Array, PrivilegeResource1.class);
+		List<PrivilegeResource1> resourceList = JSONArray.toList(resourceArray, PrivilegeResource1.class);
 		List<TreeNode> nodes = convertTreeNodeList(menuList);
 		JSONArray jsonArr = JSONArray.fromObject(buildTree2(nodes, resourceList));
 		WebUtils.writeJson(response, jsonArr);
