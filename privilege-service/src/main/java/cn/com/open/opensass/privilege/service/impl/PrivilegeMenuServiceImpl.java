@@ -36,6 +36,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 	private static final String prefix = RedisConstant.USERMENU_CACHE;
 	private static final String AppMenuRedisPrefix = RedisConstant.APPMENU_CACHE;
 	private static final String SIGN = RedisConstant.SIGN;
+	private static final String appMenuVersionCache = RedisConstant.APPMENUVERSIONCACHE;
 	@Autowired
 	private RedisClientTemplate redisClientTemplate;
 	@Autowired
@@ -127,6 +128,8 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 			}
 			
 		}
+		//应用菜单版本号
+		Integer version = (Integer) redisClientTemplate.getObject(appMenuVersionCache+appId);
 		String menuJedis = redisDao.getUrlRedis(prefix, appId, appUserId);
 		if (null == menuJedis || menuJedis.length() <= 0)
 
@@ -176,7 +179,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 
 			Set<PrivilegeMenuVo> privilegeMenuListData = getAllMenuByUserId(privilegeMenuList,
 					privilegeMenuListReturn); /* 缓存中是否存在 */
-			/*
+			
 			if (Type == 3) {//如果用户角色为组织机构管理员
 				//把该组织机构拥有的菜单放入缓存
 				PrivilegeAjaxMessage message = privilegeGroupService.findGroupPrivilege(user.getGroupId(), appId);
@@ -186,7 +189,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 					List<PrivilegeMenuVo> groupMenuList=JSONArray.toList(array, PrivilegeMenuVo.class);
 					privilegeMenuListData.addAll(groupMenuList);
 				}
-			}*/
+			}
 			if (privilegeMenuListData.size() <= 0) {
 				ajaxMessage.setCode("0");
 				ajaxMessage.setMessage("MENU-IS-NULL");
@@ -196,6 +199,9 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 			PrivilegeUrl privilegeUrl = new PrivilegeUrl();
 			Map<Object, Object> map = new HashMap<Object, Object>();
 			map.put("menuList", privilegeMenuListData);
+			if (version != null) {
+				map.put("version", version);
+			}
 			String json = new JSONObject().fromObject(map).toString();
 
 			privilegeUrl.setPrivilegeUrl(json);
@@ -207,6 +213,22 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 			log.info("getMenu接口获取数据并写入，读取redis数据开始：" + menuJedis);
 		}
 		if (null != menuJedis && menuJedis.length() > 0) {
+			//从缓存中获取应用菜单版本，与用户菜单缓存版本号对比，若版本号不相同，更新用户菜单缓存
+			if (version != null) {
+				JSONObject object = JSONObject.fromObject(menuJedis);
+				Integer userMenuCacheVersions = (Integer) object.get("version");
+				if (userMenuCacheVersions == null) {
+					 ajaxMessage = updateMenuRedis(appId, appUserId);
+				} else {
+					if (version.equals(userMenuCacheVersions)) {
+						ajaxMessage.setCode("1");
+						ajaxMessage.setMessage(menuJedis);
+					} else {
+						ajaxMessage = updateMenuRedis(appId, appUserId);
+					}
+				}
+				return ajaxMessage;
+			}
 			ajaxMessage.setCode("1");
 			ajaxMessage.setMessage(menuJedis);
 			return ajaxMessage;
@@ -356,6 +378,14 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 
 	@Override
 	public PrivilegeAjaxMessage updateAppMenuRedis(String appId) {
+		//更新应用菜单版本号
+		Integer version = (Integer) redisClientTemplate.getObject(appMenuVersionCache+appId);
+		if (version == null) {
+			version = 1;
+		} else {
+			version += 1;
+		}
+		redisClientTemplate.setObject(appMenuVersionCache+appId,version);
 		boolean RedisKeyExist = redisDao.existKeyRedis(AppMenuRedisPrefix, appId);
 		if (RedisKeyExist) {
 			delAppMenuRedis(appId);
