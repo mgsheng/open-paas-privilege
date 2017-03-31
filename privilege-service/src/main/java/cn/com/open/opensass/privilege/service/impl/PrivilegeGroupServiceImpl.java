@@ -47,6 +47,8 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 	private PrivilegeGroupResourceService privilegeGroupResourceService;
 	// 缓存前缀
 	private String groupCachePrefix = RedisConstant.PRIVILEGE_GROUPCACHE;
+	//应用菜单版本缓存前缀
+	private static final String appMenuVersionCache = RedisConstant.APPMENUVERSIONCACHE;
 	// 缓存间隔符
 	public static final String SIGN = RedisConstant.SIGN;
 	private static final Logger log = LoggerFactory.getLogger(PrivilegeGroupServiceImpl.class);
@@ -90,10 +92,27 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 		}*/
 
 		String PRIVILEGESERVICE_GROUPCACHE_APPID_GROUPID = groupCachePrefix + appId + SIGN + groupId;
-
+		//应用菜单版本号
+		Integer version = (Integer) redisClientTemplate.getObject(appMenuVersionCache + appId);
 		/* 缓存中是否存在 存在返回 */
 		String jsonString = redisClientTemplate.getString(PRIVILEGESERVICE_GROUPCACHE_APPID_GROUPID);
 		if (null != jsonString && jsonString.length() > 0) {
+			//从缓存中获取应用菜单版本，与组织机构缓存版本号对比，若版本号不相同，更新组织机构缓存
+			if (version != null) {
+				JSONObject object = JSONObject.fromObject(jsonString);
+				Integer groupMenuCacheVersions = (Integer) object.get("version");
+				if (groupMenuCacheVersions == null) {
+					 ajaxMessage = updateGroupPrivilegeCache(groupId, appId);
+				} else {
+					if (version.equals(groupMenuCacheVersions)) {
+						ajaxMessage.setCode("1");
+						ajaxMessage.setMessage(jsonString);
+					} else {
+						ajaxMessage = updateGroupPrivilegeCache(groupId, appId);
+					}
+				}
+				return ajaxMessage;
+			}
 			log.info("获取到缓存");
 			ajaxMessage.setCode("1");
 			ajaxMessage.setMessage(jsonString);
@@ -140,6 +159,10 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 		// 获取所有父菜单
 		Set<PrivilegeMenuVo> allMenu = privilegeMenuService.getAllMenuByUserId(menuList, privilegeMenuVoSet);
 		redisMap.put("menuList", allMenu);
+		//应用菜单版本号不为null,则加入组织机构缓存版本号
+		if (version != null) {
+			redisMap.put("version", version);
+		}
 		// 向redis中添加组织机构的缓存
 		redisClientTemplate.setString(PRIVILEGESERVICE_GROUPCACHE_APPID_GROUPID,
 				JSONObject.fromObject(redisMap).toString());
