@@ -21,6 +21,7 @@ import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import cn.com.open.opensass.privilege.service.PrivilegeFunctionService;
 import cn.com.open.opensass.privilege.service.PrivilegeGroupService;
+import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
 import cn.com.open.opensass.privilege.service.PrivilegeResourceService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleResourceService;
 import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
@@ -35,6 +36,8 @@ import net.sf.json.JSONObject;
 public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService {
 	private static final String prefix = RedisConstant.USERROLE_CACHE;
 	public static final String SIGN = RedisConstant.SIGN;
+	//角色缓存版本key
+	private static final String roleVersionRedisPrefix = RedisConstant.ROLEVERSIONCACHE;
 	private static final Logger log = LoggerFactory.getLogger(PrivilegeUserRedisServiceImpl.class);
 	@Autowired
 	private PrivilegeUserService privilegeUserService;
@@ -44,6 +47,8 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 	private PrivilegeResourceService privilegeResourceService;
 	@Autowired
 	private PrivilegeFunctionService privilegeFunctionService;
+	@Autowired
+	private PrivilegeMenuService privilegeMenuService;
 	@Autowired
 	private RedisClientTemplate redisClientTemplate;
 	@Autowired
@@ -55,7 +60,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 
 	@Override
 	public PrivilegeAjaxMessage getRedisUserRole(String appId, String appUserId) {
-
+		
 		PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
 		/* 验证用户是否存在 */
 		PrivilegeUser privilegeUser = privilegeUserService.findByAppIdAndUserId(appId, appUserId);
@@ -73,13 +78,44 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 		/* 缓存中是否存在 存在返回 */
 		log.info("获取缓存");
 		String jsonString = redisClientTemplate.getString(userCacheRoleKey);
+		
 		if (null != jsonString && jsonString.length() > 0) {
+			JSONObject object = JSONObject.fromObject(jsonString);
+			List<Map<String, Object>> roles = JSONArray.toList(object.getJSONArray("roleList"),Map.class);
+			//如果用户拥有角色，获取该角色的版本号，与用户缓存的版本号对比，若不相同则更新用户缓存
+			if (roles.size()>0) {
+				for (Map<String, Object> map : roles) {
+					String roleId = (String) map.get("privilegeRoleId");
+					Integer roleVersion = (Integer) redisClientTemplate.getObject(roleVersionRedisPrefix+appId+SIGN+roleId);
+					if (roleVersion != null) {
+						Integer userRoleVersion = (Integer) map.get("version");
+						if (userRoleVersion == null) {
+							privilegeMenuService.updateMenuRedis(appId, appUserId);
+							return updateUserRoleRedis(appId, appUserId);
+						} else {
+							if (!roleVersion.equals(userRoleVersion)) {
+								privilegeMenuService.updateMenuRedis(appId, appUserId);
+								return updateUserRoleRedis(appId, appUserId);
+							}
+						}
+					}
+				}
+			}
 			ajaxMessage.setCode("1");
 			ajaxMessage.setMessage(jsonString);
 			return ajaxMessage;
 		}
 		log.info("从数据库获取数据");
 		List<Map<String, Object>> roles = privilegeRoleService.getRoleListByUserId(appUserId, appId);
+		if (roles.size()>0) {
+			for (Map<String, Object> map : roles) {
+				String roleId = (String) map.get("privilegeRoleId");
+				Integer roleVersion = (Integer) redisClientTemplate.getObject(roleVersionRedisPrefix+appId+SIGN+roleId);
+				if (roleVersion != null) {
+					map.put("version", roleVersion);
+				}
+			}
+		}
 		roleMap.put("roleList", roles);
 		List<PrivilegeRole> roleList = privilegeRoleService.getRoleListByUserIdAndAppId(appUserId, appId);
 		List resourceList = null;
@@ -152,7 +188,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 				}
 			}
 			resourceSet.addAll(resourceList);
-			/*if (Type == 3) {
+			if (Type == 3) {
 				// 如果为机构管理员，返回该组织机构的资源
 				PrivilegeAjaxMessage message = privilegeGroupService.findGroupPrivilege(privilegeUser.getGroupId(),
 						appId);
@@ -162,7 +198,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 					List<PrivilegeResourceVo> PrivilegeResourceVo=JSONArray.toList(objArray, PrivilegeResourceVo.class);
 					resourceSet.addAll(PrivilegeResourceVo);
 				} 
-			}*/
+			}
 			roleMap.put("resourceList", resourceSet);
 		} else {
 			// 如果为管理员，返回应用资源缓存
@@ -233,7 +269,6 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 					// 该组织机构拥有的资源
 					List<Map<String, Object>> resources = (List<Map<String, Object>>) object.get("resourceList");
 					List<Map<String, Object>> functions = new ArrayList<Map<String, Object>>();
-					// 遍历选出该组织机构拥有的功能
 					for (Map<String, Object> resource : resources) {
 						for (Map<String, Object> function : functionList) {
 							if (function.get("resourceId").equals(resource.get("resourceId"))) {
@@ -244,6 +279,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 					functionSet.addAll(functions);
 				}
 			}
+			roleMap.put("functionList", functionSet);
 		}
 
 		// 放入缓存
