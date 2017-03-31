@@ -54,6 +54,10 @@
 											<span style="font-weight:bold;">授权资源</span>
 											<span class="icon-edit">&nbsp;&nbsp;&nbsp;&nbsp;</span>
 										</a>
+										<a href="javascript:void(0)" class="easyui-linkbutton" onclick="createAdminRole();" style="margin-left:2%;padding-bottom:0.6%;display:inline; ">
+											<span style="font-weight:bold;">创建机构管理员角色</span>
+											<span class="icon-add">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+										</a>
 									</div>
 								</form>
 							</div>
@@ -120,8 +124,81 @@
 			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="closeAddWin()" style="width:80px;">取消</a>
 		</div>
 	</div>
+	<!--添加组织机构管理员角色-->
+	<div id="roleWin" class="easyui-window" title="创建组织机构管理员" collapsible="false"
+		minimizable="false" maximizable="false" icon="icon-save"
+		style="width: 300px; height: 150px; padding: 5px;
+        background: #fafafa;">
+		<div class="easyui-layout" fit="true">
+			<div region="center" border="false"
+				style="padding: 10px; background: #fff; border: 1px solid #ccc;">
+				<table cellpadding=3>
+					<tr>
+						<td>角色名称：</td>
+						<td><input id="roleName" class="easyui-textbox" type="text" class="txt01" />
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div region="south" border="false"
+				style="text-align: right; height: 30px; line-height: 30px;">
+				<a id="btnEnter" class="easyui-linkbutton" icon="icon-ok"
+					href="javascript:void(0)"></a> <a id="btnClose"
+					class="easyui-linkbutton" icon="icon-cancel"
+					href="javascript:void(0)"></a>
+			</div>
+		</div>
+	</div>
 </body>
 	<script>
+		//创建组织机构管理员角色取消按钮
+		$('#btnClose').click(function() {
+			$('#roleWin').window('close');
+		});
+		//创建组织机构管理员角色确定按钮
+		$('#btnEnter').click(function() {
+			var roleName = $("#roleName").textbox("getValue");
+        	if (roleName == '') {
+        		msgShow('系统提示', '请填写角色名称！', 'warning');
+            	return false;
+			}
+			var row = $('#dg').datagrid('getSelected');
+			$.post('${pageContext.request.contextPath}/oesGroup/addRole',
+					{
+						appId : '${appId}',
+						roleName : roleName,
+						groupName : row.groupName,
+						roleType : '2',
+						groupId : row.groupCode,
+						status : '0'
+					},function(data){
+						if (data.status == '1') {
+							msgShow('系统提示', '添加管理员角色成功！', 'info');
+							$('#roleWin').window('close');
+						} else {
+							msgShow('系统提示', '添加管理员角色失败！', 'error');
+						}
+
+					});
+    	});
+		//管理员角色窗口
+		function roleWin() {
+			$('#roleWin').window({
+            	title: '创建管理员角色',
+            	width: 300,
+            	modal: true,
+            	shadow: true,
+            	closed: true,
+            	height: 200,
+            	resizable:false,
+            	closable:false
+        	});
+		}
+		//打开创建管理员角色窗口
+		function openRoleWin(){
+			$('#roleWin').window('open');
+			$("#roleName").textbox("setValue",'');
+		}
 		//打开授权资源窗口
 		function openWinRes() {
 			var row = $('#dg').datagrid('getSelected');
@@ -129,7 +206,7 @@
 				$.messager.confirm('系统提示', '是否确定授权?', function(r){
 					if(r){
 						var groupCode = row.groupCode;
-						var groupName=row.groupName;
+						var groupName = row.groupName;
 						addPanel2(groupName,groupCode);
 					}
 				});
@@ -137,16 +214,40 @@
             	msgShow('系统提示', '请选择机构！', 'warning');
             }
 		}
-		
+		//创建组织机构管理员角色
+		function createAdminRole(){
+			var row = $('#dg').datagrid('getSelected');
+			if (row){
+				//组织机构Id
+				var groupId = row.groupCode;
+				//查询该组织机构是否已经拥有管理员角色，若没有继续创建
+				$.post("${pageContext.request.contextPath}/oesGroup/findGroupAdminRole",
+						{
+							'appId':'${appId}',
+							'groupCode':groupId
+						},
+						function(data){
+							if (data.total > 0) {
+								msgShow('系统提示', '该机构已有管理员角色！', 'warning');
+								return false;
+							} else {
+								openRoleWin();
+							}
+						}
+				);
+			}else{
+            	msgShow('系统提示', '请选择机构！', 'warning');
+            }
+		}
 		//添加tab页面
 		function addPanel2(groupName,groupCode){
-			if ($('#tt').tabs('exists', groupName)){
-			 	$('#tt').tabs('select', groupName);
+			if ($('#tt').tabs('exists', groupName + '-授权资源')){
+			 	$('#tt').tabs('select', groupName + '-授权资源');
 			} else {
 				 var url = '${pageContext.request.contextPath}/oesGroup/toRes?groupCode='+groupCode+'&groupName='+groupName+'&appId='+${appId};
 			 	 var content = '<iframe scrolling="auto" frameborder="0" src="'+url+'" style="width:100%;height:100%;"></iframe>';
 				 $('#tt').tabs('add',{
-					 title:groupName+'-授权资源',
+					 title:groupName + '-授权资源',
 					 content:content,
 					 closable:true,
 					 cache:true
@@ -263,6 +364,7 @@
 		
 		//页面预加载
 		$(function(){
+			roleWin();
 			findGroups();
 			 //设置分页控件 
 		    var p = $('#dg').datagrid('getPager'); 
