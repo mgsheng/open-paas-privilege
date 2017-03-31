@@ -46,4 +46,12 @@ public class RedisConstant {
   * 组织机构缓存key
   */
  public static final String PRIVILEGE_GROUPCACHE = "privilegeService_groupCache_";
+ /**
+  * 应用菜单缓存版本key
+  */
+ public static final String APPMENUVERSIONCACHE = "privilegeService_appMenuVersion_";
+ /**
+  * 角色缓存版本key
+  */
+ public static final String ROLEVERSIONCACHE = "privilegeService_roleVersion_";
 }
