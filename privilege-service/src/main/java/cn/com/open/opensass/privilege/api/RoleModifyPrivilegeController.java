@@ -274,6 +274,8 @@ public class RoleModifyPrivilegeController extends BaseControllerUtil{
 		}
     	//更新缓存
 		PrivilegeAjaxMessage message=privilegeRoleService.updateAppRoleRedis(appId);
+		//更新角色的版本号缓存
+		privilegeRoleService.updateRoleVersion(appId,privilegeRoleId);
 		if (message.getCode().equals("1")) {
 			map.put("status","1");
 		} else {
