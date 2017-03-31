@@ -118,34 +118,32 @@
 		});
 		
 		loadData();
-		//选择组织机构时更新树
-		$('#cc').combobox({
-			onSelect: function(record){
-				group = record;
-				var groupId =record.groupCode;
-				if(groupId.length>0){
-					$.ajax({type:'GET',
-						url:'${pageContext.request.contextPath}/managerRole/tree?appId=${appId}&groupId='+groupId,
-						success:function(data) {
-								if(data.status=="0"){
-									msgShow('系统提示', '该组织机构无权限！', 'info');
-									$('#deptree1').tree({data: []});
-								}else {
-									var json=data.tree;
-									if (json.length>0) {
-										$('#deptree1').tree({data: json});
-										if (roleId.length>0) {
-											selected(roleId);
-										}
-									}else {
-										msgShow('系统提示', '该组织机构无权限！', 'info');
-									}
-									
-								}
+		$.ajax({	
+				type:'GET',
+				url:'${pageContext.request.contextPath}/managerRole/tree?appId=${appId}',
+				success:function(data) {
+					if (data.status == "0"){
+						msgShow('系统提示', '该无权限！', 'info');
+						$('#deptree1').tree({data: []});
+					} else {
+						var json = data.tree;
+						if (json.length>0) {
+							$('#deptree1').tree({data: json});
+							if (roleId.length>0) {
+									selected(roleId);
 							}
-					});
+						} else {
+							msgShow('系统提示', '无权限！', 'info');
+						}
+									
+					}
 				}
-			}
+			});
+		//选择组织机构
+		$('#cc').combobox({
+			 onSelect: function(record){
+				group = record;
+			} 
 		});
 		var p = $('#dg').datagrid('getPager'); 
 	    $(p).pagination({ 
