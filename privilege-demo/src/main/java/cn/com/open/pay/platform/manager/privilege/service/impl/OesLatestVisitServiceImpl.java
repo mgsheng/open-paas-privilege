@@ -29,6 +29,7 @@ public class OesLatestVisitServiceImpl extends BaseControllerUtil implements Oes
 	@Autowired
 	private RedisClientTemplate redisClientTemplate;
 	private static final String UserLastVisitPrefix = RedisConstant.USER_LATEST_VISIT;
+	private static final String appMenuVersionCache = RedisConstant.APPMENUVERSIONCACHE;
 	private static final String SIGN = RedisConstant.SIGN;
 
 	@Override
@@ -50,9 +51,25 @@ public class OesLatestVisitServiceImpl extends BaseControllerUtil implements Oes
 	public List<Map<String, Object>> getUserLastVisitRedis(String userId, String appId) {
 		// 获取用户最近导航菜单缓存，若没有查询数据库，
 		String json = redisClientTemplate.getString(UserLastVisitPrefix + appId + SIGN + userId);
+		//从缓存中获取应用菜单版本，与用户最近访问菜单缓存版本号对比，若版本号不相同，更新用户最近访问菜单缓存
+		Integer appMenuVersion =  (Integer) redisClientTemplate.getObject(appMenuVersionCache+appId);
 		if (null != json && json.length() > 0) {
 			JSONObject object = JSONObject.fromObject(json);
-			List<Map<String, Object>> menuList = (List<Map<String, Object>>) object.get("menuList");
+			List<Map<String, Object>> menuList = new ArrayList<Map<String, Object>>();
+			if (appMenuVersion != null) {
+				Integer userMenuVersion = (Integer) object.get("version");
+				if (userMenuVersion == null) {
+					menuList = updateUserLastVisitRedis(userId, appId);
+				} else {
+					if (appMenuVersion.equals(userMenuVersion)) {
+						menuList = (List<Map<String, Object>>) object.get("menuList");
+					} else {
+						menuList = updateUserLastVisitRedis(userId, appId);
+					}
+				}
+				return menuList;
+			}
+			menuList = (List<Map<String, Object>>) object.get("menuList");
 			return menuList;
 		} else {
 			Map<String, Object> parameter = privilegeGetSignatureService.getSignature(appId);
@@ -80,11 +97,16 @@ public class OesLatestVisitServiceImpl extends BaseControllerUtil implements Oes
 							}
 						}
 						latesVisitRes.add(map);
+						break;
 					}
 				}
 			}
 			parameter.clear();
 			parameter.put("menuList", latesVisitRes);
+			//应用菜单版本号不为null。加入用户常用菜单缓存版本号
+			if (appMenuVersion != null) {
+				parameter.put("version", appMenuVersion);
+			}
 			redisClientTemplate.setString(UserLastVisitPrefix + appId + SIGN + userId,
 					JSONObject.fromObject(parameter).toString());
 			return latesVisitRes;
@@ -92,10 +114,10 @@ public class OesLatestVisitServiceImpl extends BaseControllerUtil implements Oes
 	}
 
 	@Override
-	public Boolean updateUserLastVisitRedis(String userId, String appId) {
+	public List<Map<String, Object>> updateUserLastVisitRedis(String userId, String appId) {
 		redisClientTemplate.del(UserLastVisitPrefix + appId + SIGN + userId);
-		getUserLastVisitRedis(userId, appId);
-		return true;
+		List<Map<String, Object>> list = getUserLastVisitRedis(userId, appId);
+		return list;
 	}
 
 }
