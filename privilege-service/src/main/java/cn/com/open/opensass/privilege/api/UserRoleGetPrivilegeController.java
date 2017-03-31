@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.opensass.privilege.model.App;
 import cn.com.open.opensass.privilege.model.PrivilegeMenu;
-import cn.com.open.opensass.privilege.model.PrivilegeResource;
 import cn.com.open.opensass.privilege.model.PrivilegeRole;
 import cn.com.open.opensass.privilege.model.PrivilegeUser;
 import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
@@ -144,9 +143,12 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 			writeErrorJson(response, map);
 			return;
 		} else {
+			//获取用户角色资源缓存，
 			JSONObject obj1 = JSONObject.fromObject(roleMessage.getMessage());// 将json字符串转换为json对象
 			JSONArray objArray = (JSONArray) obj1.get("roleList");
 			roleMap.put("roleList", objArray);
+			objArray = (JSONArray) obj1.get("functionList");
+			roleMap.put("functionList", objArray);
 			// 去重处理
 			Set<PrivilegeResourceVo> privilegeResourceVos = new HashSet<PrivilegeResourceVo>();
 			// 如果为管理员 返回应用所有资源
@@ -170,19 +172,17 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 				privilegeResourceVos.addAll(resources);
 			} else {
 				objArray = (JSONArray) obj1.get("resourceList");
-				List<PrivilegeResourceVo> userResourceVos=JSONArray.toList(objArray, PrivilegeResourceVo.class);
+				List<PrivilegeResourceVo> userResourceVos = JSONArray.toList(objArray, PrivilegeResourceVo.class);
 				privilegeResourceVos.addAll(userResourceVos);
-				if (Type==3) {//如果为组织机构管理员，加入组织机构资源缓存
+				if (Type == 3) {//如果为组织机构管理员，加入组织机构资源缓存
 					menuMessage = privilegeGroupService.findGroupPrivilege(user.getGroupId(), user.getAppId());
-					obj1=JSONObject.fromObject(menuMessage.getMessage());
-					objArray=(JSONArray) obj1.get("resourceList");
-					List<PrivilegeResourceVo> groupResourceList=JSONArray.toList(objArray, PrivilegeResourceVo.class);
+					obj1 = JSONObject.fromObject(menuMessage.getMessage());
+					objArray = (JSONArray) obj1.get("resourceList");
+					List<PrivilegeResourceVo> groupResourceList = JSONArray.toList(objArray, PrivilegeResourceVo.class);
 					privilegeResourceVos.addAll(groupResourceList);
 				}
 			}
 			roleMap.put("resourceList", privilegeResourceVos);
-			objArray = (JSONArray) obj1.get("functionList");
-			roleMap.put("functionList", objArray);
 			map.putAll(roleMap);
 		}
 
@@ -266,10 +266,10 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 				List<PrivilegeMenuVo> userMenuList=JSONArray.toList(objArray, PrivilegeMenuVo.class);
 				menuSet.addAll(userMenuList);
 				if (Type==3) {//如果为组织机构管理员，加入组织机构菜单缓存
-					menuMessage=privilegeGroupService.findGroupPrivilege(user.getGroupId(), user.getAppId());
-					obj1=JSONObject.fromObject(menuMessage.getMessage());
-					objArray=(JSONArray) obj1.get("menuList");
-					List<PrivilegeMenuVo> groupMenuList=JSONArray.toList(objArray, PrivilegeMenuVo.class);
+					menuMessage = privilegeGroupService.findGroupPrivilege(user.getGroupId(), user.getAppId());
+					obj1 = JSONObject.fromObject(menuMessage.getMessage());
+					objArray = (JSONArray) obj1.get("menuList");
+					List<PrivilegeMenuVo> groupMenuList = JSONArray.toList(objArray, PrivilegeMenuVo.class);
 					menuSet.addAll(groupMenuList);
 				}
 			}
