@@ -420,14 +420,15 @@ public class ManagerRoleController extends BaseControllerUtil {
 
 	@RequestMapping(value = "tree")
 	public void getModelTree(HttpServletRequest request, HttpServletResponse response) {
-		String groupId = request.getParameter("groupId");
+		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
+		String appUserId = (String) user.get("appUserId");
 		String appId = request.getParameter("appId");
 		Map<String, Object> map = privilegeGetSignatureService.getSignature(appId);
 		map.put("appId", appId);
-		map.put("groupId", groupId);
+		map.put("appUserId", appUserId);
 		JSONArray jsonArr = null;
 		// 获取组织机构缓存
-		String s = sendPost(oesPrivilegeDev.getGroupCacheUrl(), map);
+		String s = sendPost(oesPrivilegeDev.getUserPrivilegeUrl(), map);
 		if (s != null && !("").equals(s)) {
 			JSONObject jsonObject = JSONObject.fromObject(s);
 			// status为1时，该组织机构存在，构建tree
@@ -438,8 +439,6 @@ public class ManagerRoleController extends BaseControllerUtil {
 					JSONArray resourceArray = (JSONArray) jsonObject.get("resourceList");
 					// 将json对象转换为java对象
 					List<PrivilegeMenu> menuList = JSONArray.toList(menuArray, PrivilegeMenu.class);
-					s = sendPost(oesPrivilegeDev.getAppResRedisUrl(), map);
-					jsonObject = JSONObject.fromObject(s);// 将json字符串转换为json对象
 					JSONArray functionArray = (JSONArray) jsonObject.get("functionList");
 					s = sendPost(oesPrivilegeDev.getAllOperationUrl(), map);
 					jsonObject = JSONObject.fromObject(s);
