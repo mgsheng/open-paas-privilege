@@ -21,18 +21,11 @@
 			<div id="tbFun" style="padding: 10px 10px;">
 				<span style="text-align: left;" hidden="true"> 
 				<input  id="${groupCode}" name="${groupName}" hidden="true"/>
-				<input  id="roleId"  value="${roleId}" hidden="true"/>
 				</span> &nbsp;&nbsp;&nbsp;&nbsp; <span style="float: right;"> <a
 					href="#" class="easyui-linkbutton" iconCls="icon-ok" plain="true"
 					id="ok" onclick="submitAuthorizeRes();">确认</a> <a href="#"
 					class="easyui-linkbutton" iconCls="icon-undo" plain="true"
 					id="undo" onclick="cancelAuthorizeRes();">取消</a>
-					<a href="#"
-					class="easyui-linkbutton" iconCls="icon-add" plain="true"
-					id="" onclick="CreateGroupRole();">创建组织机构管理员</a>
-					<a href="#"
-					class="easyui-linkbutton" iconCls="icon-add" plain="true"
-					id="" onclick="CreateGroupAdministrator();">创建组织机构管理员用户</a>
 				</span>
 			</div>
 			
@@ -45,220 +38,14 @@
  				正在加载，请等待...
 			</div>
 	</div>
-	<!--注册组织机构管理员用户-->
-	<div id="w" class="easyui-window" title="注册组织机构管理员用户" collapsible="false"
-		minimizable="false" maximizable="false" icon="icon-save"
-		style="width: 300px; height: 250px; padding: 5px;
-        background: #fafafa;">
-		<div class="easyui-layout" fit="true">
-			<div region="center" border="false"
-				style="padding: 10px; background: #fff; border: 1px solid #ccc;">
-				<table cellpadding=3>
-					<tr>
-						<td>用户名：</td>
-						<td>
-							<input id="userName"  class="easyui-textbox" type="text" class="txt01" />
-						</td>
-					</tr>
-					<tr>
-						<td>密码：</td>
-						<td><input id="txtPass" class="easyui-textbox" type="password" class="txt01" />
-						</td>
-					</tr>
-					<tr>
-						<td>确认密码：</td>
-						<td><input id="txtRePass" class="easyui-textbox" type="password" class="txt01" />
-						</td>
-					</tr>
-				</table>
-			</div>
-			<div region="south" border="false"
-				style="text-align: right; height: 30px; line-height: 30px;">
-				<a id="btnEp" class="easyui-linkbutton" icon="icon-ok"
-					href="javascript:void(0)"></a> <a id="btnCancel"
-					class="easyui-linkbutton" icon="icon-cancel"
-					href="javascript:void(0)"></a>
-			</div>
-		</div>
-	</div>
-	<!--添加组织机构管理员角色-->
-	<div id="roleWin" class="easyui-window" title="创建组织机构管理员" collapsible="false"
-		minimizable="false" maximizable="false" icon="icon-save"
-		style="width: 300px; height: 150px; padding: 5px;
-        background: #fafafa;">
-		<div class="easyui-layout" fit="true">
-			<div region="center" border="false"
-				style="padding: 10px; background: #fff; border: 1px solid #ccc;">
-				<table cellpadding=3>
-					<tr>
-						<td>角色名称：</td>
-						<td><input id="roleName" class="easyui-textbox" type="text" class="txt01" />
-						</td>
-					</tr>
-				</table>
-			</div>
-			<div region="south" border="false"
-				style="text-align: right; height: 30px; line-height: 30px;">
-				<a id="btnEnter" class="easyui-linkbutton" icon="icon-ok"
-					href="javascript:void(0)"></a> <a id="btnClose"
-					class="easyui-linkbutton" icon="icon-cancel"
-					href="javascript:void(0)"></a>
-			</div>
-		</div>
-	</div>
+	
 </body>
 <script>
 	var initialResIds="";//用于存放修改界面中选中的resource
 	var checkedResIds="";//存放选中的resource
 	var addIds="";//存放修改时添加的权限Id
 	var delIds="";//存放修改时删除的权限Id
-	//修改tree 图标样式
-	function getRoot(){
-		var node=$('#tt').tree('getRoots');
-		$.each(node,function(i,n){
-			if($(n.target).children(".tree-icon").hasClass('tree-file')){
-				$(n.target).children(".tree-icon").removeClass('tree-file').addClass("tree-folder");
-			}
-			$(n.target).children(".tree-icon").addClass("tree-folder");
-			var children=$('#tt').tree('getChildren',n.target);
-			$.each(children,function(i,m){
-				if(m.ismodule=="0"){
-					if($(m.target).children(".tree-icon").hasClass('tree-file')){
-						$(m.target).children(".tree-icon").removeClass('tree-file').addClass("tree-folder");
-					}
-				}else if (m.ismodule=="1") {
-					$(m.target).children(".tree-icon").addClass("icon icon-mini-add");
-				}
-			});
-		});
-	}
-	//创建组织机构管理员角色取消按钮
-	$('#btnClose').click(function() {
-		$('#roleWin').window('close');
-		$("#roleName").textbox("setValue",'');
-	});
-	//创建组织机构管理员角色确定按钮
-	$('#btnEnter').click(function() {
-		var roleName = $("#roleName").textbox("getValue");
-		if ($('#roleId').val() != '') {
-            msgShow('系统提示', '该组织机构已经存在管理员角色！', 'warning');
-            return false;
-        }
-        if (roleName == '') {
-        	msgShow('系统提示', '请填写角色名称！', 'warning');
-            return false;
-		}
-		$.post('${pageContext.request.contextPath}/oesGroup/addRole',
-				{
-					appId:'${appId}',
-					roleName:roleName,
-					groupName:'${groupName}',
-					roleType:'2',
-					groupId:'${groupCode}',
-					status:'0'
-				},function(data){
-					if (data.status=='1') {
-						$('#roleId').val(data.privilegeRoleid);
-						msgShow('系统提示', '添加管理员角色成功！', 'info');
-						$('#roleWin').window('close');
-						$("#roleName").textbox("setValue",'');
-					}else {
-						msgShow('系统提示', '添加管理员角色失败！', 'error');
-					}
-
-				});
-    });
-    //注册用户确认
-	$('#btnEp').click(function() {
-        serverLogin();
-    });
-    $('#btnCancel').click(function() {
-    	$('#w').window('close');
-    	$("#userName").textbox("setValue",'');
-    	$("#txtPass").textbox("setValue",'');
-    	$("#txtRePass").textbox("setValue",'');
-    });
-    //注册用户
-	function serverLogin() {
-		var userName = $("#userName").textbox("getValue");
-    	var passWord = $("#txtPass").textbox("getValue");
-        var rePass = $("#txtRePass").textbox("getValue");
-        if ($('#roleId').val() == '') {
-            msgShow('系统提示', '该组织机构不存在管理角色！请创建', 'warning');
-            return false;
-        }
-        if (userName == '') {
-            msgShow('系统提示', '请输入用户名！', 'warning');
-            return false;
-        }
-        if (passWord == '') {
-            msgShow('系统提示', '请输入密码！', 'warning');
-            return false;
-        }else {
-        	var len = passWord.length;
-        	if (len < 6||len > 20) {
-        		 	msgShow('系统提示', '请输入6~20位密码', 'warning');
-        		 	return false;
-            	}
-		}
-        if (rePass == '') {
-            msgShow('系统提示', '请在一次输入密码！', 'warning');
-            return false;
-        }
-        if (passWord != rePass) {
-            msgShow('系统提示', '2次密码不一致！', 'warning');
-            return false;
-        }
-        $.ajax({
-        	type:'POST',
-        	url:'${pageContext.request.contextPath}/oesGroup/addGroupAdministrator',
-			data:{
-					appId:'${appId}',
-					groupId:'${groupCode}',
-					roleId:$('#roleId').val(),
-					appUserName:userName,
-					passWord:passWord
-				},
-			dataType:'json',
-        	success:function(data) {
-            		if (data.status=='1') {
-            			msgShow('系统提示', '注册成功！', 'warning');
-            			$('#w').window('close');
-            			$("#userName").textbox("setValue",'');
-            			$("#txtPass").textbox("setValue",'');
-            			$("#txtRePass").textbox("setValue",'');
-					}else {
-						msgShow('系统提示', '注册不成功！'+data.errMsg, 'warning');
-					}
-        			
-            	}
-            });
-        
-	}
-	function openWindow() {
-         $('#w').window({
-             title: '注册管理员用户',
-             width: 300,
-             modal: true,
-             shadow: true,
-             closed: true,
-             height: 300,
-             resizable:false,
-             closable:false
-         });
-     }
-    function openRoleWin() {
-		$('#roleWin').window({
-            title: '创建管理员',
-            width: 300,
-            modal: true,
-            shadow: true,
-            closed: true,
-            height: 200,
-            resizable:false,
-            closable:false
-        });
-	}
+   
 	function getTree() {
 		 $('#loading').show();  
 			//加载菜单树
@@ -271,23 +58,11 @@
 					  );
 	}
 	 $(function(){ 
-		 openRoleWin();
-		 openWindow();
 		 getTree();
 	 });
-	//创建组织机构管理员用户
-	function CreateGroupAdministrator() {
-		 $('#w').window('open');
-	}
 	
-	//创建组织机构管理员角色
-	function CreateGroupRole() {
-		if ($('#roleId').val() != '') {
-            msgShow('系统提示', '该组织机构已经存在管理员角色！', 'warning');
-            return false;
-        }	
-		$('#roleWin').window('open');
-	}
+	
+	
 	//取消选中
 	function cancelAuthorizeRes() {
 		 getTree();
