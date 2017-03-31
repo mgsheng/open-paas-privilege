@@ -26,6 +26,10 @@ import net.sf.json.JSONObject;
 public class PrivilegeRoleServiceImpl implements PrivilegeRoleService {
 
 	private static final String AppRoleRedisPrefix = RedisConstant.APPROLE_CACHE;
+	//间隔符
+	public static final String SIGN = RedisConstant.SIGN;
+	//角色缓存版本key
+	private static final String roleVersionRedisPrefix = RedisConstant.ROLEVERSIONCACHE;
 	private static final Logger log = LoggerFactory.getLogger(PrivilegeRoleServiceImpl.class);
     @Autowired
     private PrivilegeRoleRepository privilegeRoleRepository;
@@ -172,6 +176,26 @@ public class PrivilegeRoleServiceImpl implements PrivilegeRoleService {
 	@Override
 	public int getRoleCountByAppIdAndGroupId(String appId, String groupId,Integer roleType) {
 		return privilegeRoleRepository.getRoleCountByAppIdAndGroupId(appId, groupId,roleType);
+	}
+	/**
+    *	更新角色版本号
+    * @param appId 应用Id
+    * @param privilegeRoleId  角色Id
+    * @return PrivilegeAjaxMessage
+    */
+	@Override
+	public PrivilegeAjaxMessage updateRoleVersion(String appId,
+			String privilegeRoleId) {
+		
+		Integer roleVersion = (Integer) redisClientTemplate.getObject(roleVersionRedisPrefix + appId + SIGN
+						+ privilegeRoleId);
+		if (roleVersion == null) {
+			roleVersion = 1;
+		} else {
+			roleVersion += 1;
+		}
+		redisClientTemplate.setObject(roleVersionRedisPrefix + appId + SIGN+ privilegeRoleId, roleVersion);
+		return null;
 	}
 
 }
