@@ -18,5 +18,5 @@ public interface OesFrequentlyUsedMenuService {
 	
 	List<Map<String, Object>> getUserFrequentlyMenuRedis(String userId,String appId);
 	
-	Boolean updateUserFrequentlyMenuRedis(String userId,String appId);
+	List<Map<String, Object>> updateUserFrequentlyMenuRedis(String userId,String appId);
 }
