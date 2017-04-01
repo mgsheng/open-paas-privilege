@@ -20,4 +20,11 @@ public interface PrivilegeGroupService {
 	PrivilegeAjaxMessage updateGroupPrivilegeCache(String groupId,String appId);
 	List<PrivilegeGroup> findByAppId(String appId);
 	Boolean deleteByGroupId(String groupId, String appId);
+	/**
+	 * 更新组织机构版本号缓存
+	 * @param groupId 
+	 * @param appId
+	 * @return
+	 */
+	PrivilegeAjaxMessage updateGroupVersion(String groupId,String appId);
 }
