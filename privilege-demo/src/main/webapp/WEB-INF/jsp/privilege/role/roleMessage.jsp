@@ -37,8 +37,8 @@
 		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" id="delete" onclick="removeit();"></a>
 	</div>
 	<div id="w" class="easyui-window" title="角色添加" collapsible="false"
-		minimizable="false" maximizable="false" icon="icon-save"
-		style="width: 300px; height: 150px; padding: 5px;
+		minimizable="false" maximizable="false" icon="icon-save" 
+		style="width: 300px; height: 150px; padding: 5px;top:100px;left:340px;
         background: #fafafa;">
 		<div class="easyui-layout" fit="true">
 			<div border="false"
