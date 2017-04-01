@@ -39,6 +39,8 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 	//角色缓存版本key
 	private static final String roleVersionRedisPrefix = RedisConstant.ROLEVERSIONCACHE;
 	private static final Logger log = LoggerFactory.getLogger(PrivilegeUserRedisServiceImpl.class);
+	//应用组织机构版本缓存前缀
+	private static final String groupVersionCachePerfix = RedisConstant.GROUPVERSIONCACHE;
 	@Autowired
 	private PrivilegeUserService privilegeUserService;
 	@Autowired
@@ -72,7 +74,11 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 		String privilegeResourceIds = privilegeUser.getResourceId();
 		String privilegeFunctionIds = privilegeUser.getPrivilegeFunId();
 		Map<String, Object> roleMap = new HashMap<String, Object>();
-
+		//用户组织机构Id
+		String groupId = privilegeUser.getGroupId();
+		//组织机构版本号
+		Integer groupVersion = (Integer) redisClientTemplate.getObject(groupVersionCachePerfix + appId + SIGN
+				+ groupId);
 		// redis key
 		String userCacheRoleKey = prefix + appId + SIGN + appUserId;
 		/* 缓存中是否存在 存在返回 */
@@ -100,6 +106,19 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 						}
 					}
 				}
+				//获取组织机构的版本号，与用户缓存的组织机构版本号对比，若不相同则更新用户缓存
+				if (groupVersion != null) {
+					Integer userGroupVersion =  (Integer) object.get("groupVersion");
+					if (userGroupVersion == null) {
+						privilegeMenuService.updateMenuRedis(appId, appUserId);
+						return updateUserRoleRedis(appId, appUserId);
+					} else {
+						if (!userGroupVersion.equals(groupVersion)) {
+							privilegeMenuService.updateMenuRedis(appId, appUserId);
+							return updateUserRoleRedis(appId, appUserId);
+						}
+					}
+				}
 			}
 			ajaxMessage.setCode("1");
 			ajaxMessage.setMessage(jsonString);
@@ -115,6 +134,10 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 					map.put("version", roleVersion);
 				}
 			}
+		}
+		//如果用户所在的组织机构版本号不为null,加入用户组织机构版本号
+		if (groupVersion != null) {
+			roleMap.put("groupVersion", groupVersion);
 		}
 		roleMap.put("roleList", roles);
 		List<PrivilegeRole> roleList = privilegeRoleService.getRoleListByUserIdAndAppId(appUserId, appId);
