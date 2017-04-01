@@ -68,6 +68,9 @@
      	<if test="roleType != null and roleType !=''" >
         	and role_type = #{roleType}
      	</if>
+     	<if test="roleName != null and roleName !=''" >
+        	and role_name = #{roleName}
+     	</if>
      	 limit #{start},#{limit}
 	</select>
 	<select id="getRoleCountByAppIdAndGroupId"  resultType="java.lang.Integer">
@@ -77,6 +80,9 @@
         </if>
         <if test="roleType != null and roleType !=''" >
         	and role_type = #{roleType}
+     	</if>
+     	<if test="roleName != null and roleName !=''" >
+        	and role_name = #{roleName}
      	</if>
 	</select>
 	<select id="findRoleByAppId" resultType="java.lang.String" flushCache="true">
