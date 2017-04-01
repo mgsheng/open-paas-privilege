@@ -297,7 +297,6 @@
 		function findGroups(){
         	var groupCode =$('#queryGroupName').combobox('getValue');
 			//var groupCode = $('#queryGroupCode').val().trim();
-			groupName = encodeURI(encodeURI(groupName));
 			var appId=${appId};
 			$('#dg').datagrid({
 				collapsible:true,
