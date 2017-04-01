@@ -28,9 +28,9 @@
 								<form id="fm" method="post" action="/oesGroup/findGroups">
 									<table cellpadding="5%"  style="margin-left:4%;">
 										<tr style="width:100%;">
-											<td>
+											<!-- <td>
 												<input class="easyui-textbox" name="queryGroupCode" id="queryGroupCode" prompt="选填" style="width:100%;" label="机构编码:"></input> 
-											</td>
+											</td> -->
 											<td>
 												<input id="queryGroupName" class="easyui-combobox" data-options="valueField:'groupCode',textField:'groupName'" label="机构名称:" style="width:280px;height:24px;padding:5px;">
 											</td>
@@ -295,15 +295,15 @@
 		
 		// 查询机构方法
 		function findGroups(){
-        	var groupName=$('#queryGroupName').combobox('getText');
-			var groupCode = $('#queryGroupCode').val().trim();
+        	var groupCode =$('#queryGroupName').combobox('getValue');
+			//var groupCode = $('#queryGroupCode').val().trim();
+			groupName = encodeURI(encodeURI(groupName));
 			var appId=${appId};
 			$('#dg').datagrid({
 				collapsible:true,
 				rownumbers:true,
 				pagination:true,
 				queryParams: {
-					groupName: groupName,
 					groupCode: groupCode,
 					appId: appId
 				},
