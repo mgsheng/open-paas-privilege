@@ -209,5 +209,6 @@
        		<property name="userDataSourceSwitch" value="${user-data-source-switch}"></property>
        		<property name="ivKey" value="${IvKey}"></property>
        		<property name="passWordCryptKey" value="${PassWordCryptKey}"></property>
+       		<property name="userSingleSignOnUrl" value="${user-singlesignon-uri}"></property>
        </bean>
 </beans>
