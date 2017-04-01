@@ -83,7 +83,7 @@
 				</table>
 								  
 			
-			<div class="easyui-panel" style="padding:5px;height: 55%;widows:300px;margin-top:5px;overflow-y:scroll;">
+			<div class="easyui-panel" style="padding:5px;height: 51%;widows:300px;margin-top:5px;overflow-y:scroll;">
 				  <ul id="deptree1"  style="height: 100%;width: 200px" class="easyui-tree" 
 					 data-options="method:'get',lines:true,animate: true,checkbox:true"> 
 			 	  </ul>
