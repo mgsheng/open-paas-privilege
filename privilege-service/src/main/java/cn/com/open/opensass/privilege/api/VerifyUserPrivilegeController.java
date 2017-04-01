@@ -27,6 +27,8 @@ import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
 import cn.com.open.opensass.privilege.tools.WebUtils;
+import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 /**
@@ -35,7 +37,8 @@ import net.sf.json.JSONObject;
 @Controller
 @RequestMapping("/userRole/")
 public class VerifyUserPrivilegeController extends BaseControllerUtil {
-	private static final Logger log = LoggerFactory.getLogger(VerifyUserPrivilegeController.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(VerifyUserPrivilegeController.class);
 	@Autowired
 	private AppService appService;
 	@Autowired
@@ -48,7 +51,8 @@ public class VerifyUserPrivilegeController extends BaseControllerUtil {
 	private PrivilegeRoleService privilegeRoleService;
 
 	@RequestMapping("verifyUserPrivilege")
-	public void verifyUserPrivilege(HttpServletRequest request, HttpServletResponse response) {
+	public void verifyUserPrivilege(HttpServletRequest request,
+			HttpServletResponse response) {
 		String appUserId = request.getParameter("appUserId").trim();
 		String appId = request.getParameter("appId").trim();
 		String optUrl = request.getParameter("optUrl").trim();
@@ -63,7 +67,8 @@ public class VerifyUserPrivilegeController extends BaseControllerUtil {
 			app = appService.findById(Integer.parseInt(appId));
 			redisClient.setObject(RedisConstant.APP_INFO + appId, app);
 		}
-		Boolean f = OauthSignatureValidateHandler.validateSignature(request, app);
+		Boolean f = OauthSignatureValidateHandler.validateSignature(request,
+				app);
 		if (!f) {
 			WebUtils.paraMandaChkAndReturn(10001, response, "认证失败");
 			return;
@@ -71,47 +76,44 @@ public class VerifyUserPrivilegeController extends BaseControllerUtil {
 		// 权限是否认证成功 认证成功为true
 		Boolean states = false;
 
-		PrivilegeUser privilegeUser = privilegeUserService.findByAppIdAndUserId(appId, appUserId);
+		PrivilegeUser privilegeUser = privilegeUserService
+				.findByAppIdAndUserId(appId, appUserId);
 		log.info("getDataPrivilege用户数据，appid=" + appId + ",用户Id=" + appUserId);
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (null == privilegeUser) {
 			// 若没有该用户 返回认证失败
-			states = false;
 			map.put("status", "0");
 			map.put("error_code", "10001");
 			writeErrorJson(response, map);
 			return;
 		}
 
-		int Type = 1;// 角色类型，1-普通用户，2-系统管理员，3-组织机构管理员
 		// 判断是否是管理员
-		List<PrivilegeRole> roles = privilegeRoleService.getRoleListByUserIdAndAppId(appUserId, appId);
+		List<PrivilegeRole> roles = privilegeRoleService
+				.getRoleListByUserIdAndAppId(appUserId, appId);
 		for (PrivilegeRole role : roles) {
 			if (role.getRoleType() != null) {
 				if (role.getRoleType() == 2) {
-					// 角色组织机构id不为空，为组织机构管理员
-					if (role.getGroupId() != null && !role.getGroupId().isEmpty()) {
-						Type = 3;
-					} else {// 角色组织机构id为空，为系统管理员，直接返回认证成功
+					// 角色组织机构id为空，为系统管理员
+					if (role.getGroupId() == null || role.getGroupId().isEmpty()) {
 						map.put("status", "1");
 						writeErrorJson(response, map);
 						return;
-					}
-					break;
+					} 
 				}
 
 			}
 		}
-		PrivilegeUrl url = null;
-		if (Type != 2) {
-			// 获取用户url
-			url = privilegeUrlService.getPrivilegeUrl(appId, appUserId, privilegeUser, Type);
-		}
-		String json = url.getPrivilegeUrl();
-		JSONObject object = JSONObject.fromObject(json);
-		List<String> urlList = (List<String>) object.get("urlList");
-		for (String s : urlList) {
-			if (s.indexOf(optUrl) > -1) {
+		// 获取用户url缓存
+		PrivilegeAjaxMessage message = privilegeUrlService.getRedisUrl(appId,
+				appUserId);
+		String redisString = message.getMessage();
+		JSONObject object = JSONObject.fromObject(redisString);
+		List<String> urlList = JSONArray.toList(object.getJSONArray("urlList"),
+				String.class);
+		// 验证是否有权限
+		for (String url : urlList) {
+			if (url.indexOf(optUrl) > -1) {
 				states = true;
 			}
 		}
