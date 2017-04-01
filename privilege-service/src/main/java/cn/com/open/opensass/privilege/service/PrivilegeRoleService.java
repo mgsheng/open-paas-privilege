@@ -39,9 +39,9 @@ public interface PrivilegeRoleService {
 
 	List<PrivilegeRole> getRoleListByUserIdAndAppId(String appUserId, String appId);
 
-	List<PrivilegeRole> getRoleListByAppIdAndGroupId(String appId, String groupId,Integer roleType,int start, int limit);
+	List<PrivilegeRole> getRoleListByAppIdAndGroupId(String appId, String groupId,String roleName,Integer roleType,int start, int limit);
 
-	int getRoleCountByAppIdAndGroupId(String appId, String groupId,Integer roleType);
+	int getRoleCountByAppIdAndGroupId(String appId, String groupId,Integer roleType, String roleName);
 	
 	PrivilegeAjaxMessage updateRoleVersion(String appId,String privilegeRoleId);
 }
