@@ -14,9 +14,35 @@
 </head>
 <body style="overflow: hidden;">
 
-    
+    <div class="easyui-panel" title="操作" style="padding-top:1%;overflow: hidden;height:100px"  >
+		<form id="fm" method="post" action="/oesGroup/findGroups">
+			<table cellpadding="5%"  style="margin-left:4%;">
+				<tr style="width:100%;">
+					<td>
+						<input class="easyui-textbox" name="queryRoleName" id="queryRoleName" prompt="选填" style="width:100%;" label="角色名称:"></input> 
+					</td>
+					<td>
+						<input id="queryGroupName" class="easyui-combobox" data-options="valueField:'groupCode',textField:'groupName'" label="机构名称:" style="width:280px;height:24px;padding:5px;">
+					</td>
+					<td>
+						<a href="javascript:void(0)" class="easyui-linkbutton" onclick="loadData();" style="margin-left:3.5%;padding-bottom:0.6%;display:inline;">
+							<span style="font-weight:bold;">查&nbsp;&nbsp;&nbsp;&nbsp;询</span>
+							<span class="icon-search">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+						</a>
+					</td>
+					<td>
+						<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm();" style="margin-left:2%;padding-bottom:0.6%;display:inline;">
+							<span style="font-weight:bold;">清&nbsp;&nbsp;&nbsp;&nbsp;除</span>
+							<span class="icon-clear">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+						</a>
+					</td>
+				</tr>
+										
+			</table>
+		</form>
+	</div>
 	
-	<table id="dg" class="easyui-datagrid" title="权限角色管理" style="width:100%;height:540px"
+	<table id="dg" class="easyui-datagrid" title="权限角色管理" style="width:100%;height:440px"
 			data-options="rownumbers:true,singleSelect:true,url:'',method:'get',toolbar:'#tb'">
 		<thead>
 			<tr>
@@ -111,9 +137,20 @@
 	var checkIds = '';//存放添加时的选中Id
 	var roleId = '';
 	var groupList = '';//存放下拉框组织机构所有数据
+	var queryGroup = null;//存放查询时组织机构选择的下拉框数据
+	$('#queryGroupName').combobox({
+			onSelect: function(record){
+				queryGroup = record;
+			}
+		});
 	$(document).ready(function(){
+		
 		$.post('${pageContext.request.contextPath}/managerRole/findGroup',function (data) {
 			$('#cc').combobox('loadData',data);
+			$('#queryGroupName').combobox('loadData',data);
+				if (data.length == 1) {
+					$('#queryGroupName').combobox('select',data[0].groupCode);
+				}
 			groupList = data;
 		});
 		
@@ -211,12 +248,34 @@
        		$('#deptree1').tree('uncheck', node[i].target);
     	}
 	}  
+	//清除查询内容
+	function clearForm(){
+		$("#queryRoleName").textbox("setValue","");
+		if (queryGroup != null) {
+				$('#queryGroupName').combobox('unselect',queryGroup.groupCode);
+			}
+		queryGroup = null;
+		var data = $('#queryGroupName').combobox('getData');
+			if (data.length == 1) {
+				queryGroup = data[0];
+				$('#queryGroupName').combobox('select',data[0].groupCode);
+			}
+	}
 	//加载数据
 	function loadData(){
+		var roleName = $("#queryRoleName").textbox("getValue");
+		var groupCode = '';
+		if (queryGroup != null) {
+		 	groupCode = queryGroup.groupCode;
+		}
 		$('#dg').datagrid({
 			collapsible:true,
 			rownumbers:true,
 			pagination: true,
+			queryParams: {
+					roleName: roleName,
+					groupId : groupCode
+				},
 	        url: '${pageContext.request.contextPath}/managerRole/getRoleMessage?appId=${appId}',  
 	        onLoadSuccess:function(data){
 	           if (data.total<1){
