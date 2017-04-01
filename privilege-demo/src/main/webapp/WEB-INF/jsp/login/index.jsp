@@ -27,7 +27,7 @@
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/assets/global/plugins/jquery-easyui/themes/insdep/jquery.insdep-extend.min.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
-	<script src="http://10.100.133.80:8630/ImplyWCookie.aspx?jsessionId=${jsessionId}"></script>
+	<script src="${userSingleSignOnUrl}?jsessionId=${jsessionId}"></script>
 
 <script type="text/javascript">
 
