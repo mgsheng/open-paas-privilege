@@ -20,14 +20,11 @@
 	
 	<select id="findByPage" resultMap="oesGroupMap" flushCache="true">
 		select * from oes_group where 1=1
-		<if test="(groupName != null and groupName !='') and (groupCode ==null or groupCode=='')">
+		<if test="groupName != null and groupName !=''">
 			and group_name=#{groupName}
 		</if>
-		<if test="(groupName == null or groupName =='') and (groupCode !=null and groupCode!='')">
+		<if test="groupCode !=null and groupCode!=''">
 			and group_code=#{groupCode}
-		</if>
-		<if test="(groupName != null and groupName !='') and (groupCode !=null and groupCode!='')">
-			and (group_code=#{groupCode} or group_name=#{groupName})
 		</if>
 		limit #{startRow},#{pageSize}
 	</select>
