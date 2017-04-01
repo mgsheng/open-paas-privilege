@@ -75,11 +75,18 @@ public class ManagerRoleController extends BaseControllerUtil {
 	public void showSearch1(HttpServletRequest request, HttpServletResponse response, Model model) {
 		log.info("-------------------------showSearch         start------------------------------------");
 		Map<String, Object> user = (Map<String, Object>) request.getSession().getAttribute("user");
-		String groupId = null;
+		String groupId = request.getParameter("groupId");
 		// 用户角色类型，1-普通用户，2-管理员，3-组织机构管理员
 		int Type = (int) user.get("Type");
 		if (Type == 1 || Type == 3) {
 			groupId = user.get("groupId").equals("null") ? null : (String) user.get("groupId");
+		}
+		//角色名
+		String roleName = request.getParameter("roleName");
+		try {
+			roleName = java.net.URLEncoder.encode(roleName, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
 		}
 		String appId = request.getParameter("appId");
 		// 当前第几页
@@ -95,6 +102,7 @@ public class ManagerRoleController extends BaseControllerUtil {
 		Map<String, Object> SignatureMap = new HashMap<String, Object>();
 		SignatureMap.put("appId", appId);
 		SignatureMap.put("groupId", groupId);
+		SignatureMap.put("roleName", roleName);
 		SignatureMap.put("start", startRow);
 		SignatureMap.put("limit", pageSize);
 		String s = sendPost(oesPrivilegeDev.getQueryRoleUrl(), SignatureMap);
