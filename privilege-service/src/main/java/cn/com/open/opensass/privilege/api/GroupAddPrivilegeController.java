@@ -125,7 +125,8 @@ public class GroupAddPrivilegeController extends BaseControllerUtil{
     		privilegeGroupService.savePrivilegeGroup(pg);
     		//存放缓存
     		PrivilegeAjaxMessage message=privilegeGroupService.findGroupPrivilege(groupId, appId);
-    		
+    		//更新机构版本号
+    		privilegeGroupService.updateGroupVersion(groupId, appId);
     		if (message.getCode().equals("1")) {
     			map.put("status","1");
     		} else {
