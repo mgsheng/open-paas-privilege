@@ -35,6 +35,7 @@ public class PrivilegeRoleController extends BaseControllerUtil {
 		String appId = request.getParameter("appId");
 		String groupId = request.getParameter("groupId");
 		String roleType = request.getParameter("roleType");
+		String roleName = request.getParameter("roleName");
 		String start=request.getParameter("start");
     	String limit=request.getParameter("limit");
 		if (!paraMandatoryCheck(Arrays.asList(appId,start,limit))) {
@@ -45,8 +46,8 @@ public class PrivilegeRoleController extends BaseControllerUtil {
 		if (roleType!=null) {
 			type=Integer.parseInt(roleType);
 		}
-		List<PrivilegeRole> roleList=service.getRoleListByAppIdAndGroupId(appId, groupId,type,Integer.parseInt(start) , Integer.parseInt(limit));
-		int count=service.getRoleCountByAppIdAndGroupId(appId, groupId,type);
+		List<PrivilegeRole> roleList=service.getRoleListByAppIdAndGroupId(appId, groupId,roleName,type,Integer.parseInt(start) , Integer.parseInt(limit));
+		int count=service.getRoleCountByAppIdAndGroupId(appId, groupId,type,roleName);
 		Map<String, Object> roleMap = new HashMap<String, Object>();
 		roleMap.put("roleList", roleList);
 		roleMap.put("total", count);
