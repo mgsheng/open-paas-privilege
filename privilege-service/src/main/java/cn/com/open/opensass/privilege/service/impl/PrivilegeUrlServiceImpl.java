@@ -1,6 +1,5 @@
 package cn.com.open.opensass.privilege.service.impl;
 
-import cn.com.open.opensass.privilege.api.UrlRedisPrivilegeController;
 import cn.com.open.opensass.privilege.dao.PrivilegeUrl;
 import cn.com.open.opensass.privilege.dao.cache.RedisDao;
 import cn.com.open.opensass.privilege.model.PrivilegeFunction;
@@ -8,10 +7,11 @@ import cn.com.open.opensass.privilege.model.PrivilegeResource;
 import cn.com.open.opensass.privilege.model.PrivilegeRole;
 import cn.com.open.opensass.privilege.model.PrivilegeRoleResource;
 import cn.com.open.opensass.privilege.model.PrivilegeUser;
+import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import cn.com.open.opensass.privilege.service.*;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
-import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,11 +25,15 @@ import java.util.*;
  */
 @Service("privilegeUrlService")
 public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
-	private static final Logger log = LoggerFactory.getLogger(UrlRedisPrivilegeController.class);
+	private static final Logger log = LoggerFactory.getLogger(PrivilegeUrlServiceImpl.class);
 	private static final String prifix = RedisConstant.USERPRIVILEGES_CACHE;
+	private static final String SIGN = RedisConstant.SIGN;
+	private static final String roleVersionPrifix = RedisConstant.ROLEVERSIONCACHE;
 	private static final String jsonKeyName = "urlList";
 	@Autowired
 	private RedisDao redisDao;
+	@Autowired
+	private RedisClientTemplate redisClientTemplate;
 	@Autowired
 	private PrivilegeUserService privilegeUserService;
 	@Autowired
@@ -42,24 +46,53 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 	private PrivilegeRoleService privilegeRoleService;
 	@Autowired
 	private PrivilegeGroupService privilegeGroupService;
-	@Autowired
-	private PrivilegeMenuService privilegeMenuService;
+	
 
 	@Override
 	public PrivilegeAjaxMessage getRedisUrl(String appId, String appUserId) {
 		PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
 		/* 获取用户UID */
 		PrivilegeUser privilegeUser = privilegeUserService.findByAppIdAndUserId(appId, appUserId);
-		log.info("getDataPrivilege用户数据，appid=" + appId + ",用户Id=" + appUserId);
+		log.info("getRedisUrl用户数据，appid=" + appId + ",用户Id=" + appUserId);
 		if (null == privilegeUser) {
 			ajaxMessage.setCode("0");
 			ajaxMessage.setMessage("User Is Null");
 			return ajaxMessage;
 		}
 		/* 缓存中是否存在 */
-		String urlJedis = redisDao.getUrlRedis(prifix, appId, appUserId);
-		log.info("getDataPrivilege接口读取redis数据：" + urlJedis);
-		if (null == urlJedis || urlJedis.length() <= 0) {
+		String key = prifix + appId +SIGN +appUserId; 
+		String urlJedis = redisClientTemplate.getString(key);
+		if (urlJedis != null ) {
+			//如果用户拥有角色，获取该角色的版本号，与用户缓存的版本号对比，若不相同则更新用户url缓存
+			JSONObject object = JSONObject.fromObject(urlJedis);
+			JSONArray roleArray = object.getJSONArray("roleList");
+			if (roleArray != null) {
+				List<Map<String, Object>> roles = JSONArray.toList(roleArray,Map.class);
+				if (roles.size()>0) {
+					for (Map<String, Object> role : roles) {
+						String privilegeRoleId = (String) role.get("privilegeRoleId");
+						Integer roleVersion = (Integer) redisClientTemplate.getObject(roleVersionPrifix+appId+SIGN+privilegeRoleId);
+						if (roleVersion != null) {
+							Integer userRoleVersion = (Integer) role.get("version");
+							if (userRoleVersion == null) {
+								return updateRedisUrl(appId, appUserId);
+							} else {
+								if (!userRoleVersion.equals(roleVersion)) {
+									return updateRedisUrl(appId, appUserId);
+								}
+							}
+							
+						}
+					}
+				}
+			} else {
+				return updateRedisUrl(appId, appUserId);
+			}
+			//如果用户拥有角色，获取该角色的版本号，与用户缓存的版本号对比，若不相同则更新用户缓存
+			ajaxMessage.setCode("1");
+			ajaxMessage.setMessage(urlJedis);
+			return ajaxMessage;
+		} else {
 			int Type = 1;// 角色类型，1-普通用户，2-系统管理员，3-组织机构管理员
 			List<PrivilegeRole> roles = privilegeRoleService.getRoleListByUserIdAndAppId(appUserId, appId);
 			for (PrivilegeRole role : roles) {
@@ -74,28 +107,37 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 					}
 				}
 			}
+			List<Map<String, Object>>  roleList = new ArrayList<Map<String,Object>>();
+			if (roles.size()>0) {
+				for (PrivilegeRole privilegeRole : roles) {
+					Integer roleVersion = (Integer) redisClientTemplate.getObject(roleVersionPrifix+appId+SIGN+privilegeRole.getPrivilegeRoleId());
+					Map<String, Object> role = new HashMap<String, Object>();
+					role.put("privilegeRoleId", privilegeRole.getPrivilegeRoleId());
+					//如果该角色版本号不为null，加入用户url角色的版本号
+					if (roleVersion != null) {
+						role.put("version", roleVersion);
+					}
+					roleList.add(role);
+				}
+			}
+			
 			PrivilegeUrl url = null;
 			if (Type == 2) {
 				url = getAllPrivilegeUrl(appId);
 			} else {
 				url = getPrivilegeUrl(appId, appUserId, privilegeUser, Type);
 			}
-
+			String json = url.getPrivilegeUrl();
+			JSONObject object = JSONObject.fromObject(json);
+			List<String> urlList = (List<String>) object.get("urlList");
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("urlList", urlList);
+			map.put("roleList", roleList);
 			/* 写入redis */
-			log.info("getDataPrivilege接口获取数据并写入redis数据开始");
-			redisDao.putUrlRedis(prifix, url, appId, appUserId);
-
-			/* 读取redis */
-			urlJedis = redisDao.getUrlRedis(prifix, appId, appUserId);
-			log.info("getDataPrivilege接口获取数据并写入，读取redis数据开始：" + urlJedis);
-		}
-		if (null != urlJedis && urlJedis.length() > 0) {
+			log.info("getRedisUrl接口获取数据并写入redis数据开始");
+			redisClientTemplate.setString(key,JSONObject.fromObject(map).toString());
 			ajaxMessage.setCode("1");
-			ajaxMessage.setMessage(urlJedis);
-			return ajaxMessage;
-		} else {
-			ajaxMessage.setCode("0");
-			ajaxMessage.setMessage("NULL");
+			ajaxMessage.setMessage(JSONObject.fromObject(map).toString());
 			return ajaxMessage;
 		}
 	}
@@ -113,7 +155,7 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 		}
 
 		/* 删除redis健值 */
-		log.info("updateDataPrivilege删除redis数据");
+		log.info("updateRedisUrl删除redis数据");
 		redisDao.deleteRedisKey(prifix, appId, appUserId);
 		return getRedisUrl(appId, appUserId);
 	}
@@ -198,55 +240,47 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 				}
 			}
 		}
-		/* roleResource表中 资源function */
-		ArrayList<String> functionIdList = new ArrayList<String>();
+		/* roleResource表中 资源与function */
 		List<PrivilegeRoleResource> rivilegeRoleResources = privilegeRoleResourceService.findUserRoleResources(appId,
 				appUserId);
 		for (PrivilegeRoleResource roleResource : rivilegeRoleResources) {
 			if (roleResource != null) {
-				if (roleResource.getResourceId() != null && !("").equals(roleResource.getResourceId())) {
+				//如果资源Id不为null,查询资源和该资源下的功能
+				if (roleResource.getResourceId() != null && !roleResource.getResourceId().isEmpty()) {
 					PrivilegeResource privilegeResource = privilegeResourceService
 							.findByResourceId(roleResource.getResourceId(), appId);
 					if (null != privilegeResource && null != privilegeResource.getBaseUrl()
 							&& privilegeResource.getBaseUrl().length() > 0) {
 						setUrl.add(privilegeResource.getBaseUrl());
 					}
+					List<Map<String, Object>> funcList = privilegeFunctionService.getFunctionByRId(roleResource.getResourceId(), appId);
+					for (Map<String, Object> map : funcList) {
+						if (map.get("optUrl") != null && !("").equals(map.get("optUrl"))) {
+							setUrl.add((String) map.get("optUrl"));
+						}
+					}
 				}
-				if (roleResource.getPrivilegeFunId() == null || ("").equals(roleResource.getPrivilegeFunId())) {
+				//功能ID不为null，查询功能和该功能所在的资源
+				if (roleResource.getPrivilegeFunId() != null && !roleResource.getPrivilegeFunId().isEmpty()) {
+					String[] functionIds = roleResource.getPrivilegeFunId().split(",");
 					List<Map<String, Object>> functions = privilegeFunctionService
-							.getFunctionByRId(roleResource.getResourceId(), appId);
+							.getFunctionListByFunctionIds(functionIds, appId);
 					for (Map<String, Object> map : functions) {
 						if (map.get("optUrl") != null && !("").equals(map.get("optUrl"))) {
 							setUrl.add((String) map.get("optUrl"));
 						}
 					}
-				} else {
-					// roleResource表中functionIds
-					functionIdList.add(roleResource.getPrivilegeFunId());
-				}
-			}
-
-		}
-
-		if (null != functionIdList && functionIdList.size() > 0) {
-			for (String functionId : functionIdList) {
-				String[] functionIds = functionId.split(",");
-				for (String fid : functionIds) {
-					if (null != fid && fid.length() > 0) {
-						// 通过 roleResource表 functionId 查找资源
-						PrivilegeResource resource = privilegeResourceService.getResourceListByFunId(fid, appId);
-						if (null != resource && null != resource.getBaseUrl()) {
-							setUrl.add(resource.getBaseUrl());
-						}
-						PrivilegeFunction privilegeFunction = privilegeFunctionService.findByFunctionId(fid, appId);
-						if (null != privilegeFunction && null != privilegeFunction.getOptUrl()
-								&& privilegeFunction.getOptUrl().length() > 0) {
-							setUrl.add(privilegeFunction.getOptUrl());
+					List<Map<String, Object>> resourceList=privilegeResourceService.getResourceListByFunIds(functionIds, appId);
+					for (Map<String, Object> map : resourceList) {
+						if (map.get("baseUrl") != null && !("").equals(map.get("baseUrl"))) {
+							setUrl.add((String)map.get("baseUrl"));
 						}
 					}
 				}
 			}
+
 		}
+
 		/* 用户资源 */
 		if (null != privilegeUser.getResourceId() && privilegeUser.getResourceId().length() > 0) {
 			String[] resourceIds = privilegeUser.getResourceId().split(",");
