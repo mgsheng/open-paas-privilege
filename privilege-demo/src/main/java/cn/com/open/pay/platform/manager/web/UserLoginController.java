@@ -215,6 +215,7 @@ public class UserLoginController extends BaseControllerUtil {
 							logoUrl = logoUrl.replaceFirst("I", "i");
 						}
 					}
+					model.addAttribute("userSingleSignOnUrl", oesPrivilegeDev.getUserSingleSignOnUrl());
 					model.addAttribute("logo", logoUrl);
 					model.addAttribute("username", userName);
 					model.addAttribute("appId", appId);
