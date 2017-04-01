@@ -48,11 +48,17 @@ public class OesPrivilegeDev {
 	private String userDataSourceSwitch;
 	private String ivKey;
 	private String passWordCryptKey;
+	private String userSingleSignOnUrl;
 	
 	
 	
 	
-	
+	public String getUserSingleSignOnUrl() {
+		return userSingleSignOnUrl;
+	}
+	public void setUserSingleSignOnUrl(String userSingleSignOnUrl) {
+		this.userSingleSignOnUrl = userSingleSignOnUrl;
+	}
 	public String getIvKey() {
 		return ivKey;
 	}
