@@ -88,6 +88,8 @@ public class GroupDelPrivilegeController extends BaseControllerUtil{
 			paraMandaChkAndReturn(10001, response,"机构删除失败");
             return;
 		}
+		//更新机构版本号
+		privilegeGroupService.updateGroupVersion(groupId, appId);
     	/*List<PrivilegeGroupResource> lists=privilegeGroupResourceService.getPgrs(groupId,appId);
     	if(lists!=null&&lists.size()>0){
     		Boolean df=privilegeGroupResourceService.deleteByGroupId(groupId,appId);
