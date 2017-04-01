@@ -54,4 +54,8 @@ public class RedisConstant {
   * 角色缓存版本key
   */
  public static final String ROLEVERSIONCACHE = "privilegeService_roleVersion_";
+ /**
+  * 组织机构缓存版本key
+  */
+ public static final String GROUPVERSIONCACHE = "privilegeService_groupVersion_";
 }
