@@ -222,12 +222,12 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 			List<PrivilegeRoleResource> rivilegeRoleResources = privilegeRoleResourceService
 					.findUserRoleResources(appId, appUserId);
 			for (PrivilegeRoleResource roleResource : rivilegeRoleResources) {
-				if (roleResource.getPrivilegeFunId() == null || ("").equals(roleResource.getPrivilegeFunId())) {
-					List<Map<String, Object>> functions = privilegeFunctionService
-							.getFunctionByRId(roleResource.getResourceId(), appId);
-					privilegeFunctions.addAll(functions);
-				} else {
-					// roleResource表中functionIds
+				String resourceId = roleResource.getResourceId();
+				if (resourceId != null && !resourceId.isEmpty()) {
+					List<Map<String, Object>> funcList = privilegeFunctionService.getFunctionByRId(roleResource.getResourceId(), appId);
+					privilegeFunctions.addAll(funcList);
+				}
+				if (roleResource.getPrivilegeFunId() != null && !roleResource.getPrivilegeFunId().isEmpty()) {
 					FunIds.add(roleResource.getPrivilegeFunId());
 				}
 			}
