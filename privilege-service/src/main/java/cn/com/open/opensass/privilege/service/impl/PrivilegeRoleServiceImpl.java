@@ -186,7 +186,8 @@ public class PrivilegeRoleServiceImpl implements PrivilegeRoleService {
 	@Override
 	public PrivilegeAjaxMessage updateRoleVersion(String appId,
 			String privilegeRoleId) {
-		
+		log.info("----------updateRoleVersion start------");
+		PrivilegeAjaxMessage message = new PrivilegeAjaxMessage();
 		Integer roleVersion = (Integer) redisClientTemplate.getObject(roleVersionRedisPrefix + appId + SIGN
 						+ privilegeRoleId);
 		if (roleVersion == null) {
@@ -194,8 +195,14 @@ public class PrivilegeRoleServiceImpl implements PrivilegeRoleService {
 		} else {
 			roleVersion += 1;
 		}
-		redisClientTemplate.setObject(roleVersionRedisPrefix + appId + SIGN+ privilegeRoleId, roleVersion);
-		return null;
+		String result = redisClientTemplate.setObject(roleVersionRedisPrefix + appId + SIGN + privilegeRoleId, roleVersion);
+		if ("OK".equals(result)) {
+			message.setCode("1");
+		} else {
+			message.setCode("0");
+		}
+		message.setMessage(result);
+		return message;
 	}
 
 }
