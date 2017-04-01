@@ -39,9 +39,9 @@
 	</body>
 	<script>
 		//取消勾选的ids
-		var unCheckRoleIds=[];
+		var unCheckRoleIds = [];
 		//勾选的ids
-		var onCheckRoleIds=[];
+		var onCheckRoleIds = [];
 		//加载授权角色
 		$(function(){
 			 	$('#loading').hide();
@@ -76,18 +76,18 @@
 						if (data.total<1){
                        		$.messager.alert("系统提示","没有符合查询条件的数据!","info");
                   		}         
-						if(data){
+						if (data) {
 							$.each(data.rows, function(index, item){
-								if(item.checked){
+								if (item.checked) {
 									$('#AuthorizeRole').datagrid('checkRow', index);
 								}
 							});
 						} 
 					 	var rows = $("#AuthorizeRole").datagrid("getRows");
-						if(onCheckRoleIds!=null){
+						if (onCheckRoleIds != null) {
 								$.each(onCheckRoleIds,function(i){
 										$.each(rows,function(n){
-												if(onCheckRoleIds[i]==rows[n].id){
+												if (onCheckRoleIds[i] == rows[n].id) {
 														$('#AuthorizeRole').datagrid('checkRow', n);
 													}
 											});
@@ -97,7 +97,7 @@
 					onUncheck: function(rowIndex,rowData){
 						unCheckRoleIds.push(rowData.privilegeRoleId);
 						$.each(onCheckRoleIds,function(i){
-								if(rowData.privilegeRoleId==onCheckRoleIds[i]){
+								if (rowData.privilegeRoleId == onCheckRoleIds[i]) {
 									onCheckRoleIds.splice(i,1); 
 								}
 							}); 
@@ -105,7 +105,7 @@
 			    	onCheck: function(rowIndex,rowData){
 			    	 	onCheckRoleIds.push(rowData.privilegeRoleId);
 			    		$.each(unCheckRoleIds,function(i){
-							if(rowData.privilegeRoleId==unCheckRoleIds[i]){
+							if (rowData.privilegeRoleId == unCheckRoleIds[i]) {
 								unCheckRoleIds.splice(i,1); 
 							}
 						}); 
@@ -131,27 +131,27 @@
 		function submitAuthorizeRole(){
 			 $('#loading').show();
 			 unCheckRoleIds.join(",");
-			 if(unCheckRoleIds==""){
+			 if (unCheckRoleIds == "") {
 				 unCheckRoleIds = null;
 				}
 			 onCheckRoleIds.join(",");
-			 if(onCheckRoleIds==""){
+			 if (onCheckRoleIds == "") {
 				 onCheckRoleIds = null;
 				}
-			 var url='${pageContext.request.contextPath}/managerUser/authorizeRole?id=${id}&addRoleId='+onCheckRoleIds+'&delRoleId='+unCheckRoleIds+'&userName=${userName}&appId=${appId}';
+			 var url = '${pageContext.request.contextPath}/managerUser/authorizeRole?id=${id}&addRoleId='+onCheckRoleIds+'&delRoleId='+unCheckRoleIds+'&userName=${userName}&appId=${appId}';
             $.post(url, function(data) {
-            	unCheckRoleIds=[];
-                onCheckRoleIds=[];
+            	unCheckRoleIds = [];
+                onCheckRoleIds = [];
                 $('#loading').hide();
-                if(data.result==true){
+                if (data.result == true) {
                  	msgShow('系统提示', '恭喜，授权角色成功！', 'info');
                  	//刷新
-                 	var url='${pageContext.request.contextPath}/managerUser/role?id=${id}&userName=${userName}&appId=${appId}';
+                 	var url = '${pageContext.request.contextPath}/managerUser/role?id=${id}&userName=${userName}&appId=${appId}';
                  	reload();
-                }else{
+                } else {
                   	msgShow('系统提示', '授权角色失败！', 'error');
                   	//刷新
-                 	var url='${pageContext.request.contextPath}/managerUser/role?id=${id}&userName=${userName}&appId=${appId}';
+                 	var url = '${pageContext.request.contextPath}/managerUser/role?id=${id}&userName=${userName}&appId=${appId}';
                  	reload();
                 }
                 
@@ -160,9 +160,9 @@
 		
 		//授权角色窗口取消按钮
 		function cancelAuthorizeRole(){
-			unCheckRoleIds=[];
-            onCheckRoleIds=[];
-			var url='${pageContext.request.contextPath}/managerUser/role?id=${id}&appId=${appId}';
+			unCheckRoleIds = [];
+            onCheckRoleIds = [];
+			var url = '${pageContext.request.contextPath}/managerUser/role?id=${id}&appId=${appId}';
        		reload(url,name);
 		}
 		//弹出信息窗口 title:标题 msgString:提示信息 msgType:信息类型 [error,info,question,warning]
