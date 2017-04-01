@@ -30,6 +30,8 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 	private static final String SIGN = RedisConstant.SIGN;
 	private static final String roleVersionPrifix = RedisConstant.ROLEVERSIONCACHE;
 	private static final String jsonKeyName = "urlList";
+	//应用组织机构版本缓存前缀
+	private static final String groupVersionCachePerfix = RedisConstant.GROUPVERSIONCACHE;
 	@Autowired
 	private RedisDao redisDao;
 	@Autowired
@@ -59,6 +61,11 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 			ajaxMessage.setMessage("User Is Null");
 			return ajaxMessage;
 		}
+		//用户组织机构Id
+		String groupId = privilegeUser.getGroupId();
+		//组织机构版本号
+		Integer groupVersion = (Integer) redisClientTemplate.getObject(groupVersionCachePerfix + appId + SIGN
+						+ groupId);
 		/* 缓存中是否存在 */
 		String key = prifix + appId +SIGN +appUserId; 
 		String urlJedis = redisClientTemplate.getString(key);
@@ -87,6 +94,17 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 				}
 			} else {
 				return updateRedisUrl(appId, appUserId);
+			}
+			//获取组织机构的版本号，与用户缓存的组织机构版本号对比，若不相同则更新用户缓存
+			if (groupVersion != null) {
+				Integer userGroupVersion =  (Integer) object.get("groupVersion");
+				if (userGroupVersion == null) {
+					return updateRedisUrl(appId, appUserId);
+				} else {
+					if (!userGroupVersion.equals(groupVersion)) {
+						return updateRedisUrl(appId, appUserId);
+					}
+				}
 			}
 			//如果用户拥有角色，获取该角色的版本号，与用户缓存的版本号对比，若不相同则更新用户缓存
 			ajaxMessage.setCode("1");
@@ -133,6 +151,10 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("urlList", urlList);
 			map.put("roleList", roleList);
+			//如果用户所在的组织机构版本号不为null,加入用户组织机构版本号
+			if (groupVersion != null) {
+				map.put("groupVersion", groupVersion);
+			}
 			/* 写入redis */
 			log.info("getRedisUrl接口获取数据并写入redis数据开始");
 			redisClientTemplate.setString(key,JSONObject.fromObject(map).toString());
