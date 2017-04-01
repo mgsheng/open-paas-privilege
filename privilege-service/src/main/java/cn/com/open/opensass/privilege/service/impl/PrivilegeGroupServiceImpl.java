@@ -49,6 +49,8 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 	private String groupCachePrefix = RedisConstant.PRIVILEGE_GROUPCACHE;
 	//应用菜单版本缓存前缀
 	private static final String appMenuVersionCache = RedisConstant.APPMENUVERSIONCACHE;
+	//应用组织机构版本缓存前缀
+	private static final String groupVersionCachePerfix = RedisConstant.GROUPVERSIONCACHE;
 	// 缓存间隔符
 	public static final String SIGN = RedisConstant.SIGN;
 	private static final Logger log = LoggerFactory.getLogger(PrivilegeGroupServiceImpl.class);
@@ -212,6 +214,32 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 		}catch(Exception e){
 			return false;
 		}
+	}
+	/**
+	    *	更新组织机构版本号
+	    * @param groupId 机构Id
+	    * @param appId  应用Id
+	    * @return PrivilegeAjaxMessage
+	    */
+	@Override
+	public PrivilegeAjaxMessage updateGroupVersion(String groupId, String appId) {
+		log.info("----------updateGroupVersion start------");
+		PrivilegeAjaxMessage message = new PrivilegeAjaxMessage();
+		Integer groupVersion = (Integer) redisClientTemplate.getObject(groupVersionCachePerfix + appId + SIGN
+				+ groupId);
+		if (groupVersion == null) {
+			groupVersion = 1;
+		} else {
+			groupVersion += 1;
+		}
+		String result = redisClientTemplate.setObject(groupVersionCachePerfix + appId + SIGN + groupId, groupVersion);
+		if ("OK".equals(result)) {
+			message.setCode("1");
+		} else {
+			message.setCode("0");
+		}
+		message.setMessage(result);
+		return message;
 	}
 
 }
