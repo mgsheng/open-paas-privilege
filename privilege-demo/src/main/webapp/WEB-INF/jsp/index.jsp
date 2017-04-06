@@ -98,7 +98,7 @@
 	   						window.location.href="${pageContext.request.contextPath}/user/login";
 	   					}
 	   					else{
-	   						jQuery('#error_code').html(data.errorCode);
+	   						msgShow('系统提示', data.errorCode, 'warning');
 	   					}
 	   				}
    				);
