@@ -25,13 +25,13 @@
 						<input id="queryGroupName" class="easyui-combobox" data-options="valueField:'groupCode',textField:'groupName'" label="机构名称:" style="width:280px;height:24px;padding:5px;">
 					</td>
 					<td>
-						<a href="javascript:void(0)" class="easyui-linkbutton" onclick="loadData();" style="margin-left:3.5%;padding-bottom:0.6%;display:inline;">
+						<a href="javascript:void(0)" class="easyui-linkbutton" onclick="loadData();" style="margin-left:3.5%;padding-bottom:11.6%;display:inline;">
 							<span style="font-weight:bold;">查&nbsp;&nbsp;&nbsp;&nbsp;询</span>
 							<span class="icon-search">&nbsp;&nbsp;&nbsp;&nbsp;</span>
 						</a>
 					</td>
 					<td>
-						<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm();" style="margin-left:2%;padding-bottom:0.6%;display:inline;">
+						<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm();" style="margin-left:2%;padding-bottom:11.6%;display:inline;">
 							<span style="font-weight:bold;">清&nbsp;&nbsp;&nbsp;&nbsp;除</span>
 							<span class="icon-clear">&nbsp;&nbsp;&nbsp;&nbsp;</span>
 						</a>
