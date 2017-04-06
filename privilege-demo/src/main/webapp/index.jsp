@@ -36,6 +36,7 @@
                 <input type="text" id="username" name="username" placeholder="用户名"><br>
                 <input type="password" id="password" name="password" placeholder="密码" >
             </div>
+            
             <a href="#"><button class="l_btn" onclick="btnSubmit()">登录</button></a>
             <p class="fr cz" ><a href="javascript:void(0)" ></a>重置</p>
         </div>
@@ -101,7 +102,7 @@
 	   						window.location.href="${pageContext.request.contextPath}/user/login";
 	   					}
 	   					else{
-	   						jQuery('#error_code').html(data.errorCode);
+	   						msgShow('系统提示', data.errorCode, 'warning');
 	   					}
 	   				}
    				);
