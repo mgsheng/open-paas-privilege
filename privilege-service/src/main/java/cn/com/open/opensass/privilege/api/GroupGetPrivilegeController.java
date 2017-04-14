@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.opensass.privilege.model.App;
 import cn.com.open.opensass.privilege.model.PrivilegeGroupResource;
+import cn.com.open.opensass.privilege.model.PrivilegeResource;
 import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import cn.com.open.opensass.privilege.service.AppService;
@@ -59,7 +60,7 @@ public class GroupGetPrivilegeController extends BaseControllerUtil{
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
               return;	
     	}
-    	App app = (App) redisClient.getObject(RedisConstant.APP_INFO+appId);
+    	/*App app = (App) redisClient.getObject(RedisConstant.APP_INFO+appId);
 	    if(app==null)
 		   {
 			   app=appService.findById(Integer.parseInt(appId));
@@ -71,7 +72,7 @@ public class GroupGetPrivilegeController extends BaseControllerUtil{
 		if(!f){
 			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
 			return;
-		}		
+		}	*/	
 		
 		List<PrivilegeGroupResource> lists = privilegeGroupResourceService.getPgrs(groupId,appId);
     	//List<PrivilegeGroupResource>lists=privilegeGroupResourceService.getPgrs(groupId,start, limit);
@@ -89,7 +90,7 @@ public class GroupGetPrivilegeController extends BaseControllerUtil{
     		if(!nullEmptyBlankJudge(groupPrivilege)){
     			String groupPrivileges[]=groupPrivilege.split(",");
     			groupMap.put("groupPrivilege", groupPrivilege.substring(0, groupPrivilege.length()-1));
-    			List<Map<String, Object>> resourceLists=privilegeResourceService.findResourceMap(groupPrivileges);
+    			List<PrivilegeResource> resourceLists=privilegeResourceService.findResourceLists(groupPrivileges);
     			if(resourceLists!=null&&resourceLists.size()>0){
     				groupMap.put("resourceList", resourceLists);	
         		}
