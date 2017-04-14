@@ -60,7 +60,7 @@ public class GroupGetPrivilegeController extends BaseControllerUtil{
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
               return;	
     	}
-    	/*App app = (App) redisClient.getObject(RedisConstant.APP_INFO+appId);
+    	App app = (App) redisClient.getObject(RedisConstant.APP_INFO+appId);
 	    if(app==null)
 		   {
 			   app=appService.findById(Integer.parseInt(appId));
@@ -72,7 +72,7 @@ public class GroupGetPrivilegeController extends BaseControllerUtil{
 		if(!f){
 			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
 			return;
-		}	*/	
+		}	
 		
 		List<PrivilegeGroupResource> lists = privilegeGroupResourceService.getPgrs(groupId,appId);
     	//List<PrivilegeGroupResource>lists=privilegeGroupResourceService.getPgrs(groupId,start, limit);
