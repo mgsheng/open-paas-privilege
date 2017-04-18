@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSON;
 import net.sf.json.JSONObject;
+import sun.management.snmp.util.SnmpListTableCache;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,9 +74,8 @@ public class GroupGetPrivilegeController extends BaseControllerUtil{
 			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
 			return;
 		}	
-		
-		List<PrivilegeGroupResource> lists = privilegeGroupResourceService.getPgrs(groupId,appId);
-    	//List<PrivilegeGroupResource>lists=privilegeGroupResourceService.getPgrs(groupId,start, limit);
+		//List<PrivilegeGroupResource> lists = privilegeGroupResourceService.getPgrs(groupId,appId);
+    	List<PrivilegeGroupResource>lists=privilegeGroupResourceService.getPgrs(groupId,appId,start, limit);
     	if(lists!=null&&lists.size()>0){
 
     		Map<String, Object> groupMap=new HashMap<String, Object>();
@@ -90,7 +90,7 @@ public class GroupGetPrivilegeController extends BaseControllerUtil{
     		if(!nullEmptyBlankJudge(groupPrivilege)){
     			String groupPrivileges[]=groupPrivilege.split(",");
     			groupMap.put("groupPrivilege", groupPrivilege.substring(0, groupPrivilege.length()-1));
-    			List<PrivilegeResource> resourceLists=privilegeResourceService.findResourceLists(groupPrivileges);
+    			List<Map<String, Object>> resourceLists=privilegeResourceService.findResourceMap(groupPrivileges);
     			if(resourceLists!=null&&resourceLists.size()>0){
     				groupMap.put("resourceList", resourceLists);	
         		}
