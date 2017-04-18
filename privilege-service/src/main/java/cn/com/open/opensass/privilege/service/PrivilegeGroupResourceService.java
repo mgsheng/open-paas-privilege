@@ -16,6 +16,6 @@ public interface PrivilegeGroupResourceService {
 	Boolean deleteByGroupId(String  groupId,String appId);
 	Boolean updatePrivilegeGroupResource(PrivilegeGroupResource privilegeGroupResource);
 	List<String> findResourceIdsByGroupId(String groupId);
-	List<PrivilegeGroupResource> getPgrs(String groupId,String startRow,String pageSize);
+	List<PrivilegeGroupResource> getPgrs(String groupId,String appId,String startRow,String pageSize);
 	List<PrivilegeGroupResource> findByGroupIdAndAppId(String groupId, String appId);
 }
