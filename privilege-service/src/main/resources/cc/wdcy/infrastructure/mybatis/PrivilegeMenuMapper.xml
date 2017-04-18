@@ -58,10 +58,11 @@
          and app_id=#{appId}
 	</select>
 	<select id="findMenuPage" resultMap="privilegeMenuMap" flushCache="true">
-         select * from privilege_menu
-         where  id = #{menuId} 
-         or parent_id=#{menuId}
-         and app_id=#{appId}
+         select * from privilege_menu  where app_id=#{appId}
+         <if test="menuId != null and menuId !=''">
+       	 	and	id = #{menuId} 
+         	or parent_id=#{menuId}
+        </if>
          limit #{startRow},#{pageSize} 
 	</select>
 	<select id="getMenuListByParentId" resultMap="privilegeMenuMap" flushCache="true">
