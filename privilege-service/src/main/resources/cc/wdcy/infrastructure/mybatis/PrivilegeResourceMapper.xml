@@ -66,10 +66,13 @@
          and app_id=#{appId}
 	</select>
     <select id="findResourcePage" resultMap="privilegeResourceMap" flushCache="true">
-         select * from privilege_resource
-         where  menu_id = #{menuId}
-         and app_id=#{appId}
-         and resource_level=#{resourceLevel}
+         select * from privilege_resource where  app_id=#{appId}
+         <if test="menuId != null and menuId !=''">
+         	and  menu_id = #{menuId}
+         </if>
+         <if test="resourceLevel != null and resourceLevel !=''">
+         	and resource_level=#{resourceLevel}
+         </if>
          limit #{startRow},#{pageSize} 
 	</select>
 	<select id="getResourceListByUserId" resultMap="privilegeResourceMap" flushCache="true">
@@ -146,8 +149,8 @@
         </foreach>
     </select>
     
-      <select id="findResourceMap" resultType="java.util.Map" flushCache="true">
-        select app_id as appId,resource_id as resourceId,resource_level as resourceLevel,resource_name as resourceName,resource_rule as resourceRule,display_order as dislayOrder ,menu_id as menuId,base_url as baseUrl,status from privilege_resource where resource_id in
+      <select id="findResourceMap" resultMap="privilegeResourceMap" flushCache="true">
+        select * from privilege_resource where resource_id in
         <foreach item="item" index="index" collection="resourceIds" open="(" separator="," close=")">  
           #{item}  
         </foreach>
