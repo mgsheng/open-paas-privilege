@@ -23,7 +23,7 @@ public interface PrivilegeResourceRepository extends Repository {
 	List<PrivilegeResource> findByGroupIdAndAppId(@Param("groupId")String groupId,@Param("appId")String appId);
 	List<PrivilegeResource> getResourceListByUserId(@Param("appUserId")String appUserId,@Param("appId")String appId);
 	List<PrivilegeResource> findResourceList(@Param("resourceIds")String [] resourceIds);
-	List<Map<String, Object>> findResourceMap(@Param("resourceIds")String [] resourceIds);
+	List<PrivilegeResource> findResourceMap(@Param("resourceIds")String [] resourceIds);
 	List<PrivilegeResource> getResourceListByAppId(@Param("appId")String appId);
 	List<PrivilegeResource> getResourceListByFunIds(@Param("functionIds")String[] functionIds,@Param("appId")String appId);
 	PrivilegeResource getResourceListByMenuId(@Param("menuId")String menuId);
