@@ -316,8 +316,7 @@
 			            		if(data.status=='1'){
 					                  msgShow('系统提示', '恭喜，删除成功！', 'info');
 					                  //刷新
-						              var url='${pageContext.request.contextPath}/managerRole/getRoleMessage';
-						              reload(url,appId);
+					                  loadData();
 					                }else{
 					                  msgShow('系统提示', '删除失败！', 'info');
 					                }
@@ -379,8 +378,7 @@
                 	 }
 	                 close();
 	                 $('#w').window('close');
-				     var url='${pageContext.request.contextPath}/managerRole/getRoleMessage';
-				     reload(url,appId);
+	                 loadData();
                 }else if(data.status=='0'){
                 	if(privilegeRoleId==null || privilegeRoleId==""){
                 		msgShow('系统提示', '添加失败！', 'info');
