@@ -77,8 +77,10 @@
          where  group_id = #{groupId}
 	</select>
 		<select id="findGprPage" resultMap="privilegeGroupResourceMap" flushCache="true">
-         select * from privilege_group_resource
-         where  group_id = #{groupId}
+         select * from privilege_group_resource  where  app_id=#{appId}
+         <if test="groupId != null and groupId !=''" >
+        	and group_id = #{groupId}
+        </if>
          limit #{startRow},#{pageSize} 
 	</select>
 </mapper>
