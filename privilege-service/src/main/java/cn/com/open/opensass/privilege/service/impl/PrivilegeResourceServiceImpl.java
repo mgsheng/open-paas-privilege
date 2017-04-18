@@ -165,8 +165,22 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 
 	@Override
 	public List<Map<String, Object>> findResourceMap(String[] groupIds) {
-		// TODO Auto-generated method stub
-		return privilegeResourceRepository.findResourceMap(groupIds);
+		List<PrivilegeResource> resources = privilegeResourceRepository.findResourceMap(groupIds);
+		List<Map<String, Object>> resourceList = new ArrayList<Map<String,Object>>();
+		for (PrivilegeResource privilegeResource : resources) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("appId", privilegeResource.getAppId());
+			map.put("resourceId", privilegeResource.getResourceId());
+			map.put("resourceLevel", privilegeResource.getResourceLevel() + "");
+			map.put("resourceName", privilegeResource.getResourceName());
+			map.put("resourceRule", privilegeResource.getResourceRule());
+			map.put("dislayOrder ", privilegeResource.getDisplayOrder());
+			map.put("menuId", privilegeResource.getMenuId());
+			map.put("baseUrl", privilegeResource.getBaseUrl());
+			map.put("status", privilegeResource.getStatus());
+			resourceList.add(map);
+		}
+		return resourceList;
 	}
 
 	@Override
