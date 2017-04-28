@@ -42,7 +42,7 @@
 	</select>
 	<select id="getMenuListByResourceId" resultMap="privilegeMenuMap" flushCache="true">
        		SELECT pm.* FROM privilege_menu pm,privilege_resource pr 
-			WHERE pr.resource_id=#{resourceId} AND pr.menu_id=pm.id and pm.app_id=#{appId}
+			WHERE pr.resource_id=#{resourceId} AND pr.menu_id=pm.id and pm.app_id=#{appId} and pm.status=0
     </select>
 	<select id="getMenuListByFunctionId" resultMap="privilegeMenuMap" flushCache="true">
       		 SELECT pm.* FROM privilege_function pf,privilege_resource pr,privilege_menu pm
@@ -112,7 +112,7 @@
          <if test="displayOrder != null and displayOrder !=''" >
         display_order = #{displayOrder},
         </if>
-         <if test="status != null and status !=''" >
+         <if test="status != null " >
         status = #{status},
         </if>
         create_time=#{createTime}
