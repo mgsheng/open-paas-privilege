@@ -61,9 +61,9 @@
        
 	</select>
     <select id="findByResourceId" resultMap="privilegeResourceMap" flushCache="true">
-         select * from privilege_resource
-         where  resource_id = #{resourceId}
-         and app_id=#{appId}
+         select * from privilege_resource pr,privilege_menu pm 
+         where   pr.resource_id = #{resourceId} and pr.menu_id=pm.id and pm.status=0
+         and pr.app_id=#{appId}
 	</select>
     <select id="findResourcePage" resultMap="privilegeResourceMap" flushCache="true">
          select * from privilege_resource where  app_id=#{appId}
