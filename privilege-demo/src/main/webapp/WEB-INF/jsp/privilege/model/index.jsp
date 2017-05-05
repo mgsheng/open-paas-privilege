@@ -360,7 +360,7 @@
         });
         //添加菜单或修改菜单
         function serverLogin() {
-        	var regex_dislayOrder = /^(\d)$/;
+        	var regex_dislayOrder = /^\d{1,}$/;
             var name =  $("#moduleName").textbox("getValue");
             var code = $("#code").textbox("getValue");
             var moduleUrl = $("#moduleUrl").textbox("getValue");
@@ -375,6 +375,7 @@
                 msgShow('系统提示', '请输入名称！', 'warning');
                 return false;
             }
+           	console.log(displayOrder);
             if (displayOrder == '' || regex_dislayOrder.test(displayOrder) != true) {
                 msgShow('系统提示', '请输入正确的排序！', 'warning');
                 return false;
