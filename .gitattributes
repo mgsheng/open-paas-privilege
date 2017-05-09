@@ -289,6 +289,8 @@ doc/02-SystemDesign/一期预报名咨询原型/新增报名-基本信息__编�
 doc/02-SystemDesign/一期预报名咨询原型/查看咨询记录.html -text
 doc/02-SystemDesign/一期预报名咨询原型/查看报名-基本信息.html -text
 doc/02-SystemDesign/一期预报名咨询原型/添加咨询记录.html -text
+doc/02-SystemDesign/招生系统原型/招生系统1.0-20170426.rp -text
+doc/02-SystemDesign/招生系统原型/招生系统1.0-授权部分20170505.rp -text
 privilege-client/.classpath -text
 privilege-client/.mymetadata -text
 privilege-client/.project -text
