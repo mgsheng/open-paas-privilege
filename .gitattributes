@@ -1,4 +1,7 @@
 * text=auto !eol
+doc/01-SystemAnalysis/招生系统需求/招生系统业务流程20170509.vsd -text
+doc/01-SystemAnalysis/招生系统需求/招生系统功能清单20170415.xlsx -text
+doc/01-SystemAnalysis/招生系统需求/招生系统需求说明20170413.docx -text
 doc/02-SystemDesign/一期预报名咨询原型/data/document.js -text
 doc/02-SystemDesign/一期预报名咨询原型/data/styles.css -text
 doc/02-SystemDesign/一期预报名咨询原型/files/入学前学历__编辑）/data.js -text
