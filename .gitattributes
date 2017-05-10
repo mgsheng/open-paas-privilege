@@ -1780,6 +1780,7 @@ privilege-service/.settings/org.eclipse.wst.common.project.facet.core.xml -text
 privilege-service/.settings/org.eclipse.wst.jsdt.ui.superType.container -text
 privilege-service/.settings/org.eclipse.wst.jsdt.ui.superType.name -text
 privilege-service/pom.xml -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/api/ApiCommonController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/AppMenuRedisPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/AppResRedisPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/AppRoleRedisPrivilegeController.java -text
@@ -1810,6 +1811,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/api/RoleModifyPri
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UrlRedisPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UserMenuRedisPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UserRoleAddPrivilegeController.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UserRoleBatchModifyPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UserRoleDelPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UserRoleGetPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UserRoleModifyPrivilegeController.java -text
@@ -1921,6 +1923,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/test.java -
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/test1.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/testDemo.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeAjaxMessage.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeBatchUserVo.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeFunctionVo.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeGroupResourceVo.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeGroupVo.java -text

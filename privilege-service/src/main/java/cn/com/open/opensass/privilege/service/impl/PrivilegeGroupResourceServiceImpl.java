@@ -2,6 +2,7 @@ package cn.com.open.opensass.privilege.service.impl;
 
 import java.util.List;
 
+import cn.com.open.opensass.privilege.vo.PrivilegeBatchUserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -102,6 +103,17 @@ public class PrivilegeGroupResourceServiceImpl implements PrivilegeGroupResource
 	@Override
 	public List<PrivilegeGroupResource> findByGroupIdAndAppId(String groupId, String appId) {
 		return privilegeGroupResourceRepository.findByGroupIdAndAppId(groupId, appId);
+	}
+
+	@Override
+	public Boolean batchUpdateResourceIds(List<PrivilegeBatchUserVo> list) {
+        try{
+            privilegeGroupResourceRepository.batchUpdateResourceIds(list);
+            return true;
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
 	}
 
 }

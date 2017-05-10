@@ -1,8 +1,14 @@
 package cn.com.open.opensass.privilege.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import cn.com.open.opensass.privilege.service.*;
+import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
+import cn.com.open.opensass.privilege.vo.PrivilegeBatchUserVo;
+import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,8 +16,6 @@ import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeRoleRep
 import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeUserRepository;
 import cn.com.open.opensass.privilege.model.PrivilegeRole;
 import cn.com.open.opensass.privilege.model.PrivilegeUser;
-import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
-import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 
 /**
  * 
@@ -21,6 +25,11 @@ public class PrivilegeUserServiceImpl implements PrivilegeUserService {
 
     @Autowired
     private PrivilegeUserRepository privilegeUserRepository;
+
+	@Override
+	public Integer connectionTest() {
+		return privilegeUserRepository.connectionTest();
+	}
 
 	@Override
 	public Boolean savePrivilegeUser(PrivilegeUser privilegeUser) {
@@ -87,4 +96,14 @@ public class PrivilegeUserServiceImpl implements PrivilegeUserService {
 		return privilegeUserRepository.getUserCountByAppId(appId,groupId);
 	}
 
+	@Override
+	public Boolean batchUpdateResourceIds(List<PrivilegeBatchUserVo> list) {
+		try{
+			privilegeUserRepository.batchUpdateResourceIds(list);
+			return true;
+		}catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
+	}
 }

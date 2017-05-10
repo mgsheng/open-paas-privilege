@@ -83,4 +83,19 @@
         </if>
          limit #{startRow},#{pageSize} 
 	</select>
+
+    <insert id="batchUpdateResourceIds"  parameterType="java.util.List">
+
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            INSERT INTO privilege_group_resource (group_id, resource_id, create_user, create_time, create_userid, status, app_id)
+            VALUES ('${item.groupId}',
+                '${item.resourceIds}',
+                '${item.createUser}',
+                 now(),
+                '${item.createUserId}',
+                ${item.status},
+                '${item.appId}')
+            </foreach>
+
+    </insert>
 </mapper>

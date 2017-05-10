@@ -3,6 +3,7 @@ package cn.com.open.opensass.privilege.infrastructure.repository;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.com.open.opensass.privilege.vo.PrivilegeBatchUserVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +14,8 @@ import cn.com.open.opensass.privilege.model.PrivilegeUser;
  * 
  */
 public interface PrivilegeUserRepository extends Repository {
+
+	Integer connectionTest();
 
 	void savePrivilegeUser(PrivilegeUser privilegeUser);
 
@@ -26,4 +29,6 @@ public interface PrivilegeUserRepository extends Repository {
 	ArrayList<String> findUserResources(@Param("appId") String appId, @Param("appUserId") String appUserId);
 	List<PrivilegeUser> findUserListByPage(@Param("appId")String appId,@Param("start") int start,@Param("limit") int limit,@Param("groupId")String groupId);
 	int getUserCountByAppId(@Param("appId")String appId,@Param("groupId")String groupId);
+
+	void batchUpdateResourceIds(@Param("list")List<PrivilegeBatchUserVo> list);
 }

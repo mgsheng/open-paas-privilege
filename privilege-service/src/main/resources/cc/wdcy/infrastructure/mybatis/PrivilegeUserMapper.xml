@@ -25,7 +25,10 @@
 	  create_time,
 	  privilege_funid
 	</sql>
-	
+
+    <select id="connectionTest" resultType="Integer">
+        select 1
+    </select>
 	<select id="findUserListByPage" resultMap="privilegeUserMap" flushCache="true">
          select * from privilege_user
          where  app_id = #{appId} 
@@ -85,4 +88,14 @@
     <delete id="delPrivilegeUserByUid">
         delete from privilege_user where uid=#{uId}
     </delete>
+    <update id="batchUpdateResourceIds"  parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            UPDATE privilege_user
+            <set>
+                resource_id = '${item.resourceIds}'
+            </set>
+               WHERE app_id = '${item.appId}' AND app_userid = '${item.appUserId}'
+        </foreach>
+
+    </update>
 </mapper>

@@ -2,6 +2,7 @@ package cn.com.open.opensass.privilege.infrastructure.repository;
 
 import java.util.List;
 
+import cn.com.open.opensass.privilege.vo.PrivilegeBatchUserVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -22,4 +23,5 @@ public interface PrivilegeGroupResourceRepository extends Repository {
 	void updatePrivilegeGroupResource(PrivilegeGroupResource privilegeGroupResource);
 	List<String> findResourceIdsByGroupId(@Param("groupId")String groupId);
 	List<PrivilegeGroupResource> findGprPage(@Param("groupId")String groupId,@Param("appId")String appId,@Param("startRow")int startRow,@Param("pageSize")int pageSize);
+	void batchUpdateResourceIds(@Param("list")List<PrivilegeBatchUserVo> list);
 }
