@@ -14,6 +14,7 @@
 		<spring.security.version>3.1.0.RELEASE</spring.security.version>
 		<aspectj.version>1.6.10</aspectj.version>
 		<mybatis.version>3.2.1</mybatis.version>
+		<mybatisspring.version>1.1.1</mybatisspring.version>
 		<!--jdbc execute sql config -->
 		<jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
 		<jdbc.url>jdbc:mysql://localhost:3306/wdcy_test?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf8</jdbc.url>
@@ -152,7 +153,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
+			<version>4.10</version>
 			<scope>test</scope>
 		</dependency>
 		<!--mybatis -->
@@ -162,10 +163,11 @@
 			<version>${mybatis.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.mybatis</groupId>
-			<artifactId>mybatis-spring</artifactId>
-			<version>1.1.1</version>
-		</dependency>
+
+				<groupId>org.mybatis</groupId>
+				<artifactId>mybatis-spring</artifactId>
+				<version>${mybatisspring.version}</version>
+	</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
