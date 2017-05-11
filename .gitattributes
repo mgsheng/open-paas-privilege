@@ -1788,6 +1788,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/api/FunctionAddPr
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/FunctionDelPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/FunctionModifyPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/GroupAddPrivilegeController.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/api/GroupBatchModifyPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/GroupDelPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/GroupGetPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/GroupGetPrivilegeControllerTest.java -text
