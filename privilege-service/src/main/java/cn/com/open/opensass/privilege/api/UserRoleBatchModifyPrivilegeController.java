@@ -77,7 +77,6 @@ public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
     Map<String, Object> batchUpdateUserResource(PrivilegeUserVo privilegeUserVo) {
         Map<String, Object> mapData = new HashMap<String, Object>();
         try {
-            PrivilegeUserVo privilegeUserVoEntity;
             /*批量更新resourceid*/
             List<PrivilegeBatchUserVo> privilegeBatchUserVoList = new ArrayList<PrivilegeBatchUserVo>();
             PrivilegeBatchUserVo privilegeBatchUserVo = null;
@@ -101,8 +100,6 @@ public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
                     }
                     privilegeBatchUserVoList.add(privilegeBatchUserVo);
                     stringBuilderUser.append(userData).append(",");
-                    privilegeUserVoEntity = new PrivilegeUserVo();
-                    privilegeUserVoEntity.setAppId(user.getAppId());
                 }
             }
 
