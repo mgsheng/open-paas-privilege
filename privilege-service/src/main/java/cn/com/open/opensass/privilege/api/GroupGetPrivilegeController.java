@@ -68,12 +68,12 @@ public class GroupGetPrivilegeController extends BaseControllerUtil{
 			   redisClient.setObject(RedisConstant.APP_INFO+appId, app);
 		  }
 	     //认证
-    	Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
+    	/*Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
     	
 		if(!f){
 			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
 			return;
-		}	
+		}	*/
 		//List<PrivilegeGroupResource> lists = privilegeGroupResourceService.getPgrs(groupId,appId);
     	List<PrivilegeGroupResource>lists=privilegeGroupResourceService.getPgrs(groupId,appId,start, limit);
     	if(lists!=null&&lists.size()>0){

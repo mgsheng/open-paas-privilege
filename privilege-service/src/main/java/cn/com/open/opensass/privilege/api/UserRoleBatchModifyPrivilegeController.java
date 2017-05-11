@@ -63,7 +63,29 @@ public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
             paraMandaChkAndReturn(10002, response, "认证失败");
             return;
         }
-        Map<String, Object> map = batchUpdateUserResource(privilegeUserVo);
+
+
+        String userData = null;
+        StringBuilder stringBuilderUsers = new StringBuilder();
+        String[] userList = privilegeUserVo.getAppUserId().split(",");
+        for (String user:userList){
+            stringBuilderUsers.append("'").append(user).append("'").append(",");
+        }
+        if(stringBuilderUsers!=null &&stringBuilderUsers.length()>0){
+            userData = stringBuilderUsers.substring(0,stringBuilderUsers.length()-1);
+        }
+        List<PrivilegeUser> users = null;
+        if(userData != null){
+            users = privilegeUserService.findByAppIdAndUserIds(privilegeUserVo.getAppId(), userData);
+        }
+        Map<String, Object> map = new HashMap<String, Object>();
+        if(users == null || users.size()<=0){
+            map.put("status", "0");
+            map.put("error_code", "10008");
+            map.put("message", "无可更新数据");
+        } else {
+            map = batchUpdateUserResource(privilegeUserVo,users);
+        }
         if (map.get("status") == "0") {
             writeErrorJson(response, map);
         } else {
@@ -72,8 +94,18 @@ public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
         return;
     }
 
+    PrivilegeUser getPrivilegeUserByUserId(String userId,List<PrivilegeUser> users){
+        PrivilegeUser privilegeUserReturn = null;
+        for (PrivilegeUser privilegeUser : users){
+            if(privilegeUser.getAppUserId().equals(userId)){
+                privilegeUserReturn = privilegeUser;
+            }
+        }
+        return privilegeUserReturn;
+    }
+
     /*操作数据*/
-    Map<String, Object> batchUpdateUserResource(PrivilegeUserVo privilegeUserVo) {
+    Map<String, Object> batchUpdateUserResource(PrivilegeUserVo privilegeUserVo,List<PrivilegeUser> userListData) {
         Map<String, Object> mapData = new HashMap<String, Object>();
         try {
             /*批量更新resourceid*/
@@ -84,7 +116,8 @@ public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
             String[] users = privilegeUserVo.getAppUserId().split(",");
             for (String userData : users) {
                 mapData = new HashMap<String, Object>();
-                PrivilegeUser user = privilegeUserService.findByAppIdAndUserId(privilegeUserVo.getAppId(), userData);
+                /*PrivilegeUser user = privilegeUserService.findByAppIdAndUserId(privilegeUserVo.getAppId(), userData);*/
+                PrivilegeUser user = getPrivilegeUserByUserId(userData,userListData);
                 if (user == null) {
                     stringBuilderUserError.append(userData).append(",");
                 } else {

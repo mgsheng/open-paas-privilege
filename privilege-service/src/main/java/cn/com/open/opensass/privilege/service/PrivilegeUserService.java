@@ -25,6 +25,8 @@ public interface PrivilegeUserService {
 	
 	PrivilegeUser findByAppIdAndUserId(String appId, String appUserId);
 
+	List<PrivilegeUser> findByAppIdAndUserIds(String appId, String appUserId);
+
 	Boolean updatePrivilegeUser(PrivilegeUser user);
 	ArrayList<String> findUserResources(String appId, String appUserId); 
 	List<PrivilegeUser> findUserListByPage(String appId, int start, int limit,String groupId);

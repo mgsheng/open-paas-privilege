@@ -70,6 +70,12 @@ public class PrivilegeUserServiceImpl implements PrivilegeUserService {
 	}
 
 	@Override
+	public List<PrivilegeUser> findByAppIdAndUserIds(String appId, String appUserId) {
+		return privilegeUserRepository.findByAppIdAndAppUserIds(appId,appUserId);
+	}
+
+
+	@Override
 	public Boolean updatePrivilegeUser(PrivilegeUser user) {
 		try{
 			privilegeUserRepository.updatePrivilegeUser(user);
