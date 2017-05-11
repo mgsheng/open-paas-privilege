@@ -59,7 +59,6 @@ public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
         }
         //认证
         Boolean f = OauthSignatureValidateHandler.validateSignature(request, app);
-
         if (!f) {
             paraMandaChkAndReturn(10002, response, "认证失败");
             return;
