@@ -88,7 +88,7 @@ public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
                 if (user == null) {
                     stringBuilderUserError.append(userData).append(",");
                 } else {
-                	/*生成批量更新语句*/
+                    /*生成批量更新语句*/
                     privilegeBatchUserVo = new PrivilegeBatchUserVo();
                     privilegeBatchUserVo.setAppId(privilegeUserVo.getAppId());
                     privilegeBatchUserVo.setAppUserId(userData);
