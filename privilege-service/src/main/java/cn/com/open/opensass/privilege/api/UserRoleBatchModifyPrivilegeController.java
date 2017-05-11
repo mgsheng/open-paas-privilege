@@ -61,7 +61,7 @@ public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
         Boolean f = OauthSignatureValidateHandler.validateSignature(request, app);
 
         if (!f) {
-            paraMandaChkAndReturn(10003, response, "认证失败");
+            paraMandaChkAndReturn(10002, response, "认证失败");
             return;
         }
         Map<String, Object> map = batchUpdateUserResource(privilegeUserVo);

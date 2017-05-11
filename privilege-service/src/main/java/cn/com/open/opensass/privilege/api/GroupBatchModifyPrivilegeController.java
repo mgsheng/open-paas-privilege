@@ -64,13 +64,13 @@ public class GroupBatchModifyPrivilegeController extends BaseControllerUtil {
             app=appService.findById(Integer.parseInt(appId));
             redisClient.setObject(RedisConstant.APP_INFO+appId, app);
         }
-        /*//认证
+        //认证
         Boolean f= OauthSignatureValidateHandler.validateSignature(request,app);
 
         if(!f){
-            WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
+            WebUtils.paraMandaChkAndReturn(10002, response,"认证失败");
             return;
-        }*/
+        }
         Map<String, Object> map = batchUpdateUserGroupResource(appId,groupId,resourceId,createUser,createUserid,status);
         if (map.get("status") == "0") {
             writeSuccessJson(response,map);
@@ -103,7 +103,7 @@ public class GroupBatchModifyPrivilegeController extends BaseControllerUtil {
                             if(!nullEmptyBlankJudge(status)){
                                 privilegeBatchUserVo.setStatus(Integer.parseInt(status));
                             }else{
-                                privilegeBatchUserVo.setStatus(1);
+                                privilegeBatchUserVo.setStatus(0);
                             }
                             privilegeBatchUserVoList.add(privilegeBatchUserVo);
                         }
