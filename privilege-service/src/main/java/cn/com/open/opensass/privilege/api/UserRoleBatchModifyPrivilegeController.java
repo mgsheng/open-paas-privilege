@@ -191,12 +191,12 @@ public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
     PrivilegeAjaxMessage updateRedisCache(final PrivilegeUserVo privilegeUserVo, final String[] users) {
         final PrivilegeAjaxMessage[] message = {null};
         try {
-            ExecutorService threadPool = Executors.newCachedThreadPool();//线程池里面的线程数会动态变化
+            final ExecutorService threadPool = Executors.newCachedThreadPool();//线程池里面的线程数会动态变化
             for (final String userRedis : users) {
-                synchronized (threadPool) {
-                    threadPool.execute(new Runnable() {
-                        @Override
-                        public void run() {
+                threadPool.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        synchronized (threadPool) {
                             if (userRedis != null && userRedis != "") {
                                 log.debug("Thread Name is" + Thread.currentThread().getName() + ",userId:" + userRedis);
                                 message[0] = privilegeUserRedisService.updateUserRoleRedis(privilegeUserVo.getAppId(), userRedis);
@@ -204,8 +204,8 @@ public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
                                 privilegeUrlService.updateRedisUrl(privilegeUserVo.getAppId(), userRedis);
                             }
                         }
-                    });
-                }
+                    }
+                });
             }
         } catch (Exception e) {
             message[0] = null;

@@ -113,7 +113,7 @@ public class GroupBatchModifyPrivilegeController extends BaseControllerUtil {
             if (null != privilegeBatchUserVoList && privilegeBatchUserVoList.size() > 0) {
                 if (privilegeGroupResourceService.batchUpdateResourceIds(privilegeBatchUserVoList)) {
                     /*更新缓存*/
-                    updateRedisCache(appId, groupIdList);
+                    updateRedisCache(appId,groupIdList);
                     map.put("status", "1");
                     map.put("message", "更新成功:!");
                 } else {
@@ -134,18 +134,17 @@ public class GroupBatchModifyPrivilegeController extends BaseControllerUtil {
         }
         return map;
     }
-
     /*更新redis缓存*/
-    PrivilegeAjaxMessage updateRedisCache(final String appId, final String[] groupIdList) {
+    PrivilegeAjaxMessage updateRedisCache(final String appId, final String[] groupIdList){
         final PrivilegeAjaxMessage[] message = {null};
-        try {
+        try{
             final ExecutorService threadPool = Executors.newCachedThreadPool();//线程池里面的线程数会动态变化
 
             for (final String groupId : groupIdList) {
-                synchronized (threadPool) {
-                    threadPool.execute(new Runnable() {
-                        @Override
-                        public void run() {
+                threadPool.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        synchronized (threadPool) {
                             if (groupId != null && groupId != "") {
                                 log.debug("Thread Name is" + Thread.currentThread().getName() + ",groupId:" + groupId);
                                 //更新缓存
@@ -154,10 +153,11 @@ public class GroupBatchModifyPrivilegeController extends BaseControllerUtil {
                                 privilegeGroupService.updateGroupVersion(groupId, appId);
                             }
                         }
-                    });
-                }
+                    }
+                });
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e){
             message[0] = null;
             e.printStackTrace();
         }
