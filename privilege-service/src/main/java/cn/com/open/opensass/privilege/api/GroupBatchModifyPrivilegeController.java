@@ -12,6 +12,7 @@ import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
 import cn.com.open.opensass.privilege.tools.WebUtils;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 import cn.com.open.opensass.privilege.vo.PrivilegeBatchUserVo;
+import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * 权限资源修改接口
@@ -109,23 +112,10 @@ public class GroupBatchModifyPrivilegeController extends BaseControllerUtil {
             }
             if (null != privilegeBatchUserVoList && privilegeBatchUserVoList.size() > 0) {
                 if (privilegeGroupResourceService.batchUpdateResourceIds(privilegeBatchUserVoList)) {
-                    PrivilegeAjaxMessage message = null;
-                    for (String groupId : groupIdList) {
-                        if (groupId != null && groupId != "") {
-                            //更新缓存
-                            message = privilegeGroupService.updateGroupPrivilegeCache(groupId, appId);
-                            //更新机构版本号
-                            privilegeGroupService.updateGroupVersion(groupId, appId);
-                        }
-                    }
-                    if (message.getCode().equals("1")) {
-                        map.put("status", "1");
-                        map.put("message", "更新成功:!");
-                    } else {
-                        map.put("status", "0");
-                        map.put("error_code", "10004");
-                        map.put("message", "更新redis缓存失败");
-                    }
+                    /*更新缓存*/
+                    updateRedisCache(appId, groupIdList);
+                    map.put("status", "1");
+                    map.put("message", "更新成功:!");
                 } else {
                     map.put("status", "0");
                     map.put("error_code", "10005");
@@ -143,5 +133,34 @@ public class GroupBatchModifyPrivilegeController extends BaseControllerUtil {
             map.put("message", "系统错误");
         }
         return map;
+    }
+
+    /*更新redis缓存*/
+    PrivilegeAjaxMessage updateRedisCache(final String appId, final String[] groupIdList) {
+        final PrivilegeAjaxMessage[] message = {null};
+        try {
+            final ExecutorService threadPool = Executors.newCachedThreadPool();//线程池里面的线程数会动态变化
+
+            for (final String groupId : groupIdList) {
+                synchronized (threadPool) {
+                    threadPool.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (groupId != null && groupId != "") {
+                                log.debug("Thread Name is" + Thread.currentThread().getName() + ",groupId:" + groupId);
+                                //更新缓存
+                                message[0] = privilegeGroupService.updateGroupPrivilegeCache(groupId, appId);
+                                //更新机构版本号
+                                privilegeGroupService.updateGroupVersion(groupId, appId);
+                            }
+                        }
+                    });
+                }
+            }
+        } catch (Exception e) {
+            message[0] = null;
+            e.printStackTrace();
+        }
+        return message[0];
     }
 }

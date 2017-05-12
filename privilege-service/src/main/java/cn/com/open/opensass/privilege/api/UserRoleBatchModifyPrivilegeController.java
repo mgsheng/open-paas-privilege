@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * 项目名称 : 角色批量更新，在原有基础上新增角色.
@@ -68,23 +70,23 @@ public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
         String userData = null;
         StringBuilder stringBuilderUsers = new StringBuilder();
         String[] userList = privilegeUserVo.getAppUserId().split(",");
-        for (String user:userList){
+        for (String user : userList) {
             stringBuilderUsers.append("'").append(user).append("'").append(",");
         }
-        if(stringBuilderUsers!=null &&stringBuilderUsers.length()>0){
-            userData = stringBuilderUsers.substring(0,stringBuilderUsers.length()-1);
+        if (stringBuilderUsers != null && stringBuilderUsers.length() > 0) {
+            userData = stringBuilderUsers.substring(0, stringBuilderUsers.length() - 1);
         }
         List<PrivilegeUser> users = null;
-        if(userData != null){
+        if (userData != null) {
             users = privilegeUserService.findByAppIdAndUserIds(privilegeUserVo.getAppId(), userData);
         }
         Map<String, Object> map = new HashMap<String, Object>();
-        if(users == null || users.size()<=0){
+        if (users == null || users.size() <= 0) {
             map.put("status", "0");
             map.put("error_code", "10008");
             map.put("message", "无可更新数据");
         } else {
-            map = batchUpdateUserResource(privilegeUserVo,users);
+            map = batchUpdateUserResource(privilegeUserVo, users);
         }
         if (map.get("status") == "0") {
             writeErrorJson(response, map);
@@ -94,10 +96,10 @@ public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
         return;
     }
 
-    PrivilegeUser getPrivilegeUserByUserId(String userId,List<PrivilegeUser> users){
+    PrivilegeUser getPrivilegeUserByUserId(String userId, List<PrivilegeUser> users) {
         PrivilegeUser privilegeUserReturn = null;
-        for (PrivilegeUser privilegeUser : users){
-            if(privilegeUser.getAppUserId().equals(userId)){
+        for (PrivilegeUser privilegeUser : users) {
+            if (privilegeUser.getAppUserId().equals(userId)) {
                 privilegeUserReturn = privilegeUser;
             }
         }
@@ -105,7 +107,7 @@ public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
     }
 
     /*操作数据*/
-    Map<String, Object> batchUpdateUserResource(PrivilegeUserVo privilegeUserVo,List<PrivilegeUser> userListData) {
+    Map<String, Object> batchUpdateUserResource(PrivilegeUserVo privilegeUserVo, List<PrivilegeUser> userListData) {
         Map<String, Object> mapData = new HashMap<String, Object>();
         try {
             /*批量更新resourceid*/
@@ -117,7 +119,7 @@ public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
             for (String userData : users) {
                 mapData = new HashMap<String, Object>();
                 /*PrivilegeUser user = privilegeUserService.findByAppIdAndUserId(privilegeUserVo.getAppId(), userData);*/
-                PrivilegeUser user = getPrivilegeUserByUserId(userData,userListData);
+                PrivilegeUser user = getPrivilegeUserByUserId(userData, userListData);
                 if (user == null) {
                     stringBuilderUserError.append(userData).append(",");
                 } else {
@@ -147,27 +149,14 @@ public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
                     if (userList != null && userList != "") {
                         Boolean batchUpdate = privilegeUserService.batchUpdateResourceIds(privilegeBatchUserVoList);
                         if (batchUpdate) {
-                            PrivilegeAjaxMessage message = null;
                             String[] strUserRedisUpdate = userList.split(",");
-                            //更新缓存
-                            for (String userRedis : strUserRedisUpdate) {
-                                if (userRedis != null && userRedis != "") {
-                                    message = privilegeUserRedisService.updateUserRoleRedis(privilegeUserVo.getAppId(), userRedis);
-                                    privilegeMenuService.updateMenuRedis(privilegeUserVo.getAppId(), userRedis);
-                                    privilegeUrlService.updateRedisUrl(privilegeUserVo.getAppId(), userRedis);
-                                }
-                            }
-                            if (message != null && message.getCode().equals("1")) {
-                                mapData.put("status", "1");
-                                if (userListError != null && userListError != "") {
-                                    mapData.put("message", "更新成功:" + userList + "!失败数据:" + userListError);
-                                } else {
-                                    mapData.put("message", "更新成功:" + userList + "!");
-                                }
+                            /*更新redis缓存*/
+                            updateRedisCache(privilegeUserVo, strUserRedisUpdate);
+                            mapData.put("status", "1");
+                            if (userListError != null && userListError != "") {
+                                mapData.put("message", "更新成功:" + userList + "!失败数据:" + userListError);
                             } else {
-                                mapData.put("status", "0");
-                                mapData.put("error_code", "10004");
-                                mapData.put("message", "更新redis缓存失败");/* 数据不存在 */
+                                mapData.put("message", "更新成功:" + userList + "!");
                             }
                         } else {
                             mapData.put("status", "0");
@@ -197,4 +186,32 @@ public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
         }
         return mapData;
     }
+
+    /*更新redis缓存*/
+    PrivilegeAjaxMessage updateRedisCache(final PrivilegeUserVo privilegeUserVo, final String[] users) {
+        final PrivilegeAjaxMessage[] message = {null};
+        try {
+            ExecutorService threadPool = Executors.newCachedThreadPool();//线程池里面的线程数会动态变化
+            for (final String userRedis : users) {
+                synchronized (threadPool) {
+                    threadPool.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (userRedis != null && userRedis != "") {
+                                log.debug("Thread Name is" + Thread.currentThread().getName() + ",userId:" + userRedis);
+                                message[0] = privilegeUserRedisService.updateUserRoleRedis(privilegeUserVo.getAppId(), userRedis);
+                                privilegeMenuService.updateMenuRedis(privilegeUserVo.getAppId(), userRedis);
+                                privilegeUrlService.updateRedisUrl(privilegeUserVo.getAppId(), userRedis);
+                            }
+                        }
+                    });
+                }
+            }
+        } catch (Exception e) {
+            message[0] = null;
+            e.printStackTrace();
+        }
+        return message[0];
+    }
+
 }
