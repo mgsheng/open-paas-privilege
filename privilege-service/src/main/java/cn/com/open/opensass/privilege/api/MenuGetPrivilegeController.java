@@ -62,7 +62,8 @@ public class MenuGetPrivilegeController extends BaseControllerUtil{
 			   app=appService.findById(Integer.parseInt(appId));
 			   redisClient.setObject(RedisConstant.APP_INFO+appId, app);
 		  }
-    	Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
+		boolean b = OauthSignatureValidateHandler.validateSignature(request, app);
+		Boolean f= b;
 		if(!f){
 			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
 			return;
@@ -74,8 +75,8 @@ public class MenuGetPrivilegeController extends BaseControllerUtil{
     			PrivilegeMenu m = new PrivilegeMenu();
     			m.setMenuId(menu.id());
     			m.setParentId(menu.getParentId());
-    			m.setMenuName(m.getMenuName());
-    			m.setMenuRule(m.getMenuRule());
+    			m.setMenuName(menu.getMenuName());
+    			m.setMenuRule(menu.getMenuRule());
     			m.setMenuLevel(menu.getMenuLevel());
     			m.setResourceType(menu.getResourceType());
     			m.setMenuCode(menu.getMenuCode());
