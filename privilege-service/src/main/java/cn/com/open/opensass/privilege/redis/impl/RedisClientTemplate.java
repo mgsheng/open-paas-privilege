@@ -7,9 +7,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Repository;
 
-import redis.clients.jedis.ShardedJedis;
 import cn.com.open.opensass.privilege.redis.RedisDataSource;
 import cn.com.open.opensass.privilege.tools.SerializeUtil;
+import redis.clients.jedis.Jedis;
 
 @Repository("redisClientTemplate")
 /**
@@ -43,14 +43,14 @@ public class RedisClientTemplate {
 	private RedisDataSource redisDataSource;
 
 	public void disconnect() {
-		ShardedJedis shardedJedis = redisDataSource.getRedisClient();
+		Jedis shardedJedis = redisDataSource.getRedisClient();
 		shardedJedis.disconnect();
 	}
 
 	/** set Object */
 	public String setObject(String key, Object object) {
 		String result = null;
-		ShardedJedis shardedJedis = redisDataSource.getRedisClient();
+		Jedis shardedJedis = redisDataSource.getRedisClient();
 		if (shardedJedis == null) {
 			return result;
 		}
@@ -71,7 +71,7 @@ public class RedisClientTemplate {
 	/** set Object */
 	public String setObjectByTime(String key, Object object, int time) {
 		String result = null;
-		ShardedJedis shardedJedis = redisDataSource.getRedisClient();
+		Jedis shardedJedis = redisDataSource.getRedisClient();
 		if (shardedJedis == null) {
 			return result;
 		}
@@ -92,7 +92,7 @@ public class RedisClientTemplate {
 	/** get Object */
 	public Object getObject(String key) {
 		Object obj = null;
-		ShardedJedis shardedJedis = redisDataSource.getRedisClient();
+		Jedis shardedJedis = redisDataSource.getRedisClient();
 		if (shardedJedis == null) {
 			return obj;
 		}
@@ -113,7 +113,7 @@ public class RedisClientTemplate {
 	/** delete a key **/
 	public boolean del(String key) {
 		boolean broken = false;
-		ShardedJedis shardedJedis = null;
+		Jedis shardedJedis = null;
 		try {
 			shardedJedis = redisDataSource.getRedisClient();
 			return shardedJedis.del(key) > 0;
@@ -136,7 +136,7 @@ public class RedisClientTemplate {
 	public String setString(String key, String value) {
 		String result = null;
 
-		ShardedJedis shardedJedis = redisDataSource.getRedisClient();
+		Jedis shardedJedis = redisDataSource.getRedisClient();
 		if (shardedJedis == null) {
 			return result;
 		}
@@ -160,7 +160,7 @@ public class RedisClientTemplate {
 	 */
 	public String getString(String key) {
 		String result = null;
-		ShardedJedis shardedJedis = redisDataSource.getRedisClient();
+		Jedis shardedJedis = redisDataSource.getRedisClient();
 		if (shardedJedis == null) {
 			return result;
 		}

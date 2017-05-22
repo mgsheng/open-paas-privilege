@@ -45,6 +45,7 @@ public abstract class WebUtils {
     
     public static void writeJson(HttpServletResponse response,String str) {
     	try {
+    		response.setCharacterEncoding("UTF-8");
 			response.getWriter().write(str);
 			response.getWriter().flush();
 			response.getWriter().close();

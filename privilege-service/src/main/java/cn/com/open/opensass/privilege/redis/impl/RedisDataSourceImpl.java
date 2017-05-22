@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import cn.com.open.opensass.privilege.redis.RedisDataSource;
-
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.ShardedJedis;
-import redis.clients.jedis.ShardedJedisPool;
 
 @Repository("redisDataSource")
 /**
@@ -21,11 +21,11 @@ public class RedisDataSourceImpl implements RedisDataSource {
     private static final Logger log = LoggerFactory.getLogger(RedisDataSourceImpl.class);
 
     @Autowired
-    private ShardedJedisPool    shardedJedisPool;
+    private JedisPool    shardedJedisPool;
 
-    public ShardedJedis getRedisClient() {
+    public Jedis getRedisClient() {
         try {
-            ShardedJedis shardJedis = shardedJedisPool.getResource();
+        	Jedis shardJedis = shardedJedisPool.getResource();
             return shardJedis;
         } catch (Exception e) {
             log.error("getRedisClent error", e);
@@ -33,11 +33,11 @@ public class RedisDataSourceImpl implements RedisDataSource {
         return null;
     }
 
-    public void returnResource(ShardedJedis shardedJedis) {
+    public void returnResource(Jedis shardedJedis) {
         shardedJedisPool.returnResource(shardedJedis);
     }
 
-    public void returnResource(ShardedJedis shardedJedis, boolean broken) {
+    public void returnResource(Jedis shardedJedis, boolean broken) {
         if (broken) {
             shardedJedisPool.returnBrokenResource(shardedJedis);
         } else {
