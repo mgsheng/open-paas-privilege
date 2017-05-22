@@ -1849,8 +1849,6 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/re
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/repository/PrivilegeRoleResourceRepository.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/repository/PrivilegeUserRepository.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/repository/PrivilegeUserRoleRepository.java -text
-privilege-service/src/main/java/cn/com/open/opensass/privilege/kafka/KafkaConsumer.java -text
-privilege-service/src/main/java/cn/com/open/opensass/privilege/kafka/KafkaProducer.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/model/AbstractDomain.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/model/App.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/model/GuidGenerator.java -text
