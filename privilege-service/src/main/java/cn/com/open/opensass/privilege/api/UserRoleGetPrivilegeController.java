@@ -228,10 +228,13 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 				}
 				if (privilegeResourceIds != null && !("").equals(privilegeResourceIds)) {
 					String[] resIds = privilegeResourceIds.split(",");
-					for (String id : resIds) {
-						List<PrivilegeMenu> menus = privilegeMenuService.getMenuListByResourceId(id, user.getAppId());
-						privilegeMenuList.addAll(menus);
-					}
+					List<PrivilegeMenu> menus2 = privilegeMenuService.getMenuListByResourceId2(resIds, user.getAppId());
+					privilegeMenuList.addAll(menus2);
+					//System.out.println(menus2.size());
+//					for (String id : resIds) {
+//						List<PrivilegeMenu> menus = privilegeMenuService.getMenuListByResourceId(id, user.getAppId());
+//						privilegeMenuList.addAll(menus);
+//					}
 				}
 				Set<PrivilegeMenuVo> privilegeMenuListReturn = new HashSet<PrivilegeMenuVo>();
 				Set<PrivilegeMenuVo> privilegeMenuListData = privilegeMenuService.getAllMenuByUserId(privilegeMenuList,

@@ -113,7 +113,7 @@ public class VerifyUserPrivilegeController extends BaseControllerUtil {
 				String.class);
 		// 验证是否有权限
 		for (String url : urlList) {
-			if (url.indexOf(optUrl) > -1) {
+			if (url.toLowerCase().indexOf(optUrl.toLowerCase()) > -1) {
 				states = true;
 			}
 		}
