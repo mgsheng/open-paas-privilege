@@ -304,4 +304,9 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 		return privilegeResourceRepository.getResourceListByFunId(functionId,appId);
 	}
 
+	@Override
+	public List<PrivilegeResource> findByResourceIds(String[] resourceId, String appId) {
+		return privilegeResourceRepository.findByResourceIds(resourceId, appId);
+	}
+
 }

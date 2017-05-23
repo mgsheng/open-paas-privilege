@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import cn.com.open.opensass.privilege.dao.cache.RedisDao;
+import cn.com.open.opensass.privilege.model.PrivilegeResource;
 import cn.com.open.opensass.privilege.model.PrivilegeRole;
 import cn.com.open.opensass.privilege.model.PrivilegeRoleResource;
 import cn.com.open.opensass.privilege.model.PrivilegeUser;
@@ -184,6 +185,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 			}
 			resourceList = privilegeResourceService.getResourceListByUserId(
 					appUserId, appId);
+			
 			if (FunIds != null && !("").equals(FunIds)
 					&& !("null").equals(FunIds)) {
 				for (String string : FunIds) {
@@ -207,30 +209,53 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 				List<String> resourceIdList = new ArrayList<String>();
 				Collections.addAll(resourceIdList, resourceIds1);
 				PrivilegeResourceVo resource = null;
-				for (String resourceId : resourceIdList) {
-					resource = privilegeResourceService.findByResource_Id(
-							resourceId, appId);
-					if (resource.getResourceId() != null
-							&& !("").equals(resource.getResourceId())) {
+				List<PrivilegeResource> privilegeResourceList=privilegeResourceService.findByResourceIds(resourceIds1, appId);
+				for(PrivilegeResource res:privilegeResourceList)
+				{
+					if (res.getResourceId() != null
+							&& !("").equals(res.getResourceId())) {
 						Map<String, Object> map2 = new HashMap<String, Object>();
-						map2.put("appId", resource.getAppId());
-						map2.put("resourceId", resource.getResourceId());
-						map2.put("resourceLevel", resource.getResourceLevel());
-						map2.put("resourceName", resource.getResourceName());
-						map2.put("resourceRule", resource.getResourceRule());
-						map2.put("dislayOrder ", resource.getDisplayOrder());
-						map2.put("menuId", resource.getMenuId());
-						map2.put("baseUrl", resource.getBaseUrl());
-						map2.put("status", resource.getStatus());
+						map2.put("appId", res.getAppId());
+						map2.put("resourceId", res.getResourceId());
+						map2.put("resourceLevel", res.getResourceLevel());
+						map2.put("resourceName", res.getResourceName());
+						map2.put("resourceRule", res.getResourceRule());
+						map2.put("dislayOrder ", res.getDisplayOrder());
+						map2.put("menuId", res.getMenuId());
+						map2.put("baseUrl", res.getBaseUrl());
+						map2.put("status", res.getStatus());
 						// 通过查roleResource表 user表中functionId 获取的resource 是否包含
 						// user表中resource
 						if (!resourceList.contains(map2)) {
-							resourceIds.add(resourceId);
+							resourceIds.add(res.getResourceId());
 						}
 						resourceList.add(map2);
-					}
-
 				}
+				}
+//				for (String resourceId : resourceIdList) {
+//					resource = privilegeResourceService.findByResource_Id(
+//							resourceId, appId);
+//					if (resource.getResourceId() != null
+//							&& !("").equals(resource.getResourceId())) {
+//						Map<String, Object> map2 = new HashMap<String, Object>();
+//						map2.put("appId", resource.getAppId());
+//						map2.put("resourceId", resource.getResourceId());
+//						map2.put("resourceLevel", resource.getResourceLevel());
+//						map2.put("resourceName", resource.getResourceName());
+//						map2.put("resourceRule", resource.getResourceRule());
+//						map2.put("dislayOrder ", resource.getDisplayOrder());
+//						map2.put("menuId", resource.getMenuId());
+//						map2.put("baseUrl", resource.getBaseUrl());
+//						map2.put("status", resource.getStatus());
+//						// 通过查roleResource表 user表中functionId 获取的resource 是否包含
+//						// user表中resource
+//						if (!resourceList.contains(map2)) {
+//							resourceIds.add(resourceId);
+//						}
+//						resourceList.add(map2);
+//					}
+//
+//				}
 			}
 			resourceSet.addAll(resourceList);
 			if (Type == 3) {

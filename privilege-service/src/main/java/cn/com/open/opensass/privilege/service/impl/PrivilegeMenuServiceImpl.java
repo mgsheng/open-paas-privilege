@@ -165,10 +165,14 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 			
 			if (resourceIds != null && !("").equals(resourceIds)) {
 				String[] resIds = resourceIds.split(",");
-				for (String id : resIds) {
-					List<PrivilegeMenu> menus = getMenuListByResourceId(id,appId);
-					privilegeMenuList.addAll(menus);
-				}
+//				for (String id : resIds) {
+//					List<PrivilegeMenu> menus = getMenuListByResourceId(id,appId);
+//					privilegeMenuList.addAll(menus);
+//					System.out.println(menus.size());
+//				}
+				List<PrivilegeMenu> menus = getMenuListByResourceId2(resIds,appId);
+				privilegeMenuList.addAll(menus);
+				//System.out.println(menus.size());
 			}
 			if (privilegeMenuList.size() <= 0) {
 				ajaxMessage.setCode("0");
@@ -398,7 +402,10 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 	public List<PrivilegeMenu> getMenuListByResourceId(String resourceId,String appId) {
 		return privilegeMenuRepository.getMenuListByResourceId(resourceId,appId);
 	}
-
+	@Override
+	public List<PrivilegeMenu> getMenuListByResourceId2(String resourceId[],String appId) {
+		return privilegeMenuRepository.getMenuListByResourceId2(resourceId,appId);
+	}
 	@Override
 	public List<PrivilegeMenu> getMenuListByFunctionId(String[] functionIds,String appId) {
 		return privilegeMenuRepository.getMenuListByFunctionId(functionIds,appId);
