@@ -18,6 +18,7 @@ public interface PrivilegeMenuService {
 	Boolean updatePrivilegeMenu(PrivilegeMenu privilegeMenu);
 	Boolean deleteByMenuId(String[]  menuIds);
 	List<PrivilegeMenu> getMenuListByResourceId(String resourceId,String appId);
+	List<PrivilegeMenu> getMenuListByResourceId2(String resourceIds[],String appId);
 	List<PrivilegeMenuVo> findMenuByResourceType(Integer resourceType);
 	/**
 	 * 根据用户ID获取菜单列表

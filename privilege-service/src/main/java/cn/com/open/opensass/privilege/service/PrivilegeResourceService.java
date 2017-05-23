@@ -17,6 +17,7 @@ public interface PrivilegeResourceService {
 	Boolean savePrivilegeResource(PrivilegeResource privilegeResource);
 	PrivilegeResource findByResourceId(String resourceId,String appId);
 	PrivilegeResourceVo findByResource_Id(String resourceId,String appId);
+	List<PrivilegeResource> findByResourceIds(String resourceId[],String appId);
 	PrivilegeResource findByResourceCode(String resourceId,String appId);
 	List<PrivilegeResource>findResourcePage(String menuId,String appId,int startRow,int pageSize,String resourceLevel);
 	Boolean updatePrivilegeResource(PrivilegeResource privilegeResource);
