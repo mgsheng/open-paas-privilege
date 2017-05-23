@@ -128,10 +128,10 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 						}
 					}
 				}
+				ajaxMessage.setCode("1");
+				ajaxMessage.setMessage(jsonString);
+				return ajaxMessage;
 			}
-			ajaxMessage.setCode("1");
-			ajaxMessage.setMessage(jsonString);
-			return ajaxMessage;
 		}
 		log.info("从数据库获取数据");
 		List<Map<String, Object>> roles = privilegeRoleService
