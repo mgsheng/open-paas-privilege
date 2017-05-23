@@ -7,7 +7,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Repository;
 
-import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.Jedis;
 import cn.com.open.pay.platform.manager.redis.RedisDataSource;
 import cn.com.open.pay.platform.manager.tools.SerializeUtil;
 @Repository("redisClientTemplate")
@@ -36,152 +36,139 @@ public class RedisClientTemplate {
 	 private static final Logger log = LoggerFactory.getLogger(RedisClientTemplate.class);
 	    @Autowired
 	    private RedisDataSource     redisDataSource;
-	    public void disconnect() {
-	        ShardedJedis shardedJedis = redisDataSource.getRedisClient();
-	        shardedJedis.disconnect();
-	    }
-	    /**set Object*/
-	      public String setObject(String key,Object object)
-	     {
-	    	     String result = null;
-	    	     ShardedJedis shardedJedis = redisDataSource.getRedisClient();
-	 	        if (shardedJedis == null) {
-	 	            return result;
-	 	        }
-	 	       boolean broken = false;
-	 	       try {
-		            result =  shardedJedis.set(key.getBytes(), SerializeUtil.serialize(object));
-		        } catch (Exception e) {
-		            log.error(e.getMessage(), e);
-		            broken = true;
-		        } finally {
-		            redisDataSource.returnResource(shardedJedis, broken);
-		        }
-	          
-	            return result;
-	     }
-	      /**set Object*/
-	      public String setObjectByTime(String key,Object object,int time)
-	     {
-	    	     String result = null;
-	    	     ShardedJedis shardedJedis = redisDataSource.getRedisClient();
-	 	        if (shardedJedis == null) {
-	 	            return result;
-	 	        }
-	 	       boolean broken = false;
-	 	       try {
-	 	    	  shardedJedis.setex(key.getBytes(), time, SerializeUtil.serialize(object));
-		        } catch (Exception e) {
-		            log.error(e.getMessage(), e);
-		            broken = true;
-		        } finally {
-		            redisDataSource.returnResource(shardedJedis, broken);
-		        }
-	          
-	            return result;
-	     }
-	      /**get Object*/
-	      public Object getObject(String key)
-	     {
-	    	  Object obj=null;
-	          ShardedJedis shardedJedis = redisDataSource.getRedisClient();
-	          if (shardedJedis == null) {
-	 	            return obj;
-	 	        }
-	          boolean broken = false;
-	          try {
-	        	  byte[] value = shardedJedis.get(key.getBytes());
-		            obj =  SerializeUtil.unserialize(value);
 
-		        } catch (Exception e) {
-		            log.error(e.getMessage(), e);
-		            broken = true;
-		        } finally {
-		            redisDataSource.returnResource(shardedJedis, broken);
-		        }
-	            return obj;
-	     }
-	     
-	      /* 是否存在key键 */
-		  	public boolean existKey(String key) {
-		  		boolean broken = false;
-		  		ShardedJedis shardedJedis = null;
-		  		try {
-		  			shardedJedis = redisDataSource.getRedisClient();
-		  			return shardedJedis.exists(key);
-		  		} catch (Exception e) {
-		  			broken = true;
-		  		} finally {
-		  			redisDataSource.returnResource(shardedJedis, broken);
-		  		}
-		  		return false;
-		  	}
+		public void disconnect() {
+			Jedis shardedJedis = redisDataSource.getRedisClient();
+			shardedJedis.disconnect();
+		}
 
-		  	/** delete a key **/
-		  	public boolean del(String key) {
-		  		boolean broken = false;
-		  		ShardedJedis shardedJedis = null;
-		  		try {
-		  			shardedJedis = redisDataSource.getRedisClient();
-		  			return shardedJedis.del(key) > 0;
-		  		} catch (Exception e) {
-		  			broken = true;
+		/** set Object */
+		public String setObject(String key, Object object) {
+			String result = null;
+			Jedis shardedJedis = redisDataSource.getRedisClient();
+			if (shardedJedis == null) {
+				return result;
+			}
+			boolean broken = false;
+			try {
+				result = shardedJedis.set(key.getBytes(),
+						SerializeUtil.serialize(object));
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+				broken = true;
+			} finally {
+				redisDataSource.returnResource(shardedJedis, broken);
+			}
 
-		  		} finally {
-		  			redisDataSource.returnResource(shardedJedis, broken);
-		  		}
-		  		return false;
-		  	}
+			return result;
+		}
 
+		/** set Object */
+		public String setObjectByTime(String key, Object object, int time) {
+			String result = null;
+			Jedis shardedJedis = redisDataSource.getRedisClient();
+			if (shardedJedis == null) {
+				return result;
+			}
+			boolean broken = false;
+			try {
+				shardedJedis.setex(key.getBytes(), time,
+						SerializeUtil.serialize(object));
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+				broken = true;
+			} finally {
+				redisDataSource.returnResource(shardedJedis, broken);
+			}
 
-	    /**
-	     * 设置单个值
-	     * 
-	     * @param key
-	     * @param value
-	     * @return
-	     */
-	    public String setString(String key, String value) {
-	        String result = null;
+			return result;
+		}
 
-	        ShardedJedis shardedJedis = redisDataSource.getRedisClient();
-	        if (shardedJedis == null) {
-	            return result;
-	        }
-	        boolean broken = false;
-	        try {
-	            result = shardedJedis.set(key, value);
-	        } catch (Exception e) {
-	            log.error(e.getMessage(), e);
-	            broken = true;
-	        } finally {
-	            redisDataSource.returnResource(shardedJedis, broken);
-	        }
-	        return result;
-	    }
+		/** get Object */
+		public Object getObject(String key) {
+			Object obj = null;
+			Jedis shardedJedis = redisDataSource.getRedisClient();
+			if (shardedJedis == null) {
+				return obj;
+			}
+			boolean broken = false;
+			try {
+				byte[] value = shardedJedis.get(key.getBytes());
+				obj = SerializeUtil.unserialize(value);
 
-	    /**
-	     * 获取单个值
-	     * 
-	     * @param key
-	     * @return
-	     */
-	    public String getString(String key) {
-	        String result = null;
-	        ShardedJedis shardedJedis = redisDataSource.getRedisClient();
-	        if (shardedJedis == null) {
-	            return result;
-	        }
-	        boolean broken = false;
-	        try {
-	            result = shardedJedis.get(key);
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+				broken = true;
+			} finally {
+				redisDataSource.returnResource(shardedJedis, broken);
+			}
+			return obj;
+		}
 
-	        } catch (Exception e) {
-	            log.error(e.getMessage(), e);
-	            broken = true;
-	        } finally {
-	            redisDataSource.returnResource(shardedJedis, broken);
-	        }
-	        return result;
-	    }
+		/** delete a key **/
+		public boolean del(String key) {
+			boolean broken = false;
+			Jedis shardedJedis = null;
+			try {
+				shardedJedis = redisDataSource.getRedisClient();
+				return shardedJedis.del(key) > 0;
+			} catch (Exception e) {
+				broken = true;
+
+			} finally {
+				redisDataSource.returnResource(shardedJedis, broken);
+			}
+			return false;
+		}
+
+		/**
+		 * 设置单个值
+		 * 
+		 * @param key
+		 * @param value
+		 * @return
+		 */
+		public String setString(String key, String value) {
+			String result = null;
+
+			Jedis shardedJedis = redisDataSource.getRedisClient();
+			if (shardedJedis == null) {
+				return result;
+			}
+			boolean broken = false;
+			try {
+				result = shardedJedis.set(key, value);
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+				broken = true;
+			} finally {
+				redisDataSource.returnResource(shardedJedis, broken);
+			}
+			return result;
+		}
+
+		/**
+		 * 获取单个值
+		 * 
+		 * @param key
+		 * @return
+		 */
+		public String getString(String key) {
+			String result = null;
+			Jedis shardedJedis = redisDataSource.getRedisClient();
+			if (shardedJedis == null) {
+				return result;
+			}
+			boolean broken = false;
+			try {
+				result = shardedJedis.get(key);
+
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+				broken = true;
+			} finally {
+				redisDataSource.returnResource(shardedJedis, broken);
+			}
+			return result;
+		}
 }

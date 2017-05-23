@@ -144,20 +144,14 @@
         </bean>-->
    <!--  final String host, int port,
             int timeout, final String password-->
-    <bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool"  scope="singleton">
-        <constructor-arg index="0" ref="jedisPoolConfig" />
-        <constructor-arg index="1">
-            <list>
-                <bean class="redis.clients.jedis.JedisShardInfo">
-                    <constructor-arg name="host" value="${redis.host}" />
-                    <constructor-arg name="port" value="${redis.port}" />
-                    <constructor-arg name="timeout" value="${redis.timeout}" />
-                    <constructor-arg name="weight" value="1" />
-                     <property  name="password" value="${redis.password}"></property>
-                </bean>
-            </list>
-        </constructor-arg>
-    </bean>
+       <bean id="shardedJedisPool" class="redis.clients.jedis.JedisPool"  scope="singleton">
+	        <constructor-arg index="0" ref="jedisPoolConfig" />
+	        <constructor-arg index="1" value="${redis.host}"/>
+	        <constructor-arg index="2" value="${redis.port}"/>
+	        <constructor-arg index="3" value="${redis.timeout}"/>
+	        <constructor-arg index="4" value="${redis.password}"/>
+	        <constructor-arg index="5" value="${redis.database}"/>
+	    </bean>
        <bean id="payserviceDev" class="cn.com.open.pay.platform.manager.dev.PayManagerDev">
             <property name="server_host" value="${server_host}"></property>
        </bean>
