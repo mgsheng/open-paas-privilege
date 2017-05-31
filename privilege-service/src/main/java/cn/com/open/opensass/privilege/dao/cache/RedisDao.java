@@ -28,9 +28,9 @@ public class RedisDao {
     /*redis连接池*/
     private JedisPool jedisPool;
     /*构造函数初始化 不过期需要设置 privilege-service.properties redis.timeout=0 即可*/
-    public RedisDao(JedisPoolConfig poolConfig, String host, int port, int timeout, String password)
+    public RedisDao(JedisPoolConfig poolConfig, String host, int port, int timeout, String password,int database)
     {
-        jedisPool = new JedisPool(poolConfig, host, port, timeout, password);
+        jedisPool = new JedisPool(poolConfig, host, port, timeout, password,database);
     }
     private Schema schema  = RuntimeSchema.getSchema(PrivilegeUrl.class);
 
