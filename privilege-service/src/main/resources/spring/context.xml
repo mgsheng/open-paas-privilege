@@ -171,6 +171,7 @@
         <constructor-arg index="2" value="${redis.port}"/>
         <constructor-arg index="3" value="${redis.timeout}"/>
         <constructor-arg index="4" value="${redis.password}"/>
+        <constructor-arg index="5" value="${redis.database}"/>
     </bean>
        <bean id="privilegeserviceDev" class="cn.com.open.opensass.privilege.dev.PrivilegeServiceDev">
             <property name="server_host" value="${server_host}"></property>
