@@ -43,6 +43,8 @@ public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
     private PrivilegeMenuService privilegeMenuService;
     @Autowired
     private PrivilegeUrlService privilegeUrlService;
+    @Autowired
+    private PrivilegeResourceService privilegeResourceService;
 
     /**
      * 用户角色修改接口
@@ -50,7 +52,7 @@ public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
     @RequestMapping(value = "batchModifyPrivilege")
     public void modifyPrivilege(HttpServletRequest request, HttpServletResponse response, PrivilegeUserVo privilegeUserVo) {
         log.info("====================batch modify user resource start======================");
-        if (!paraMandatoryCheck(Arrays.asList(privilegeUserVo.getAppId(), privilegeUserVo.getAppUserId(), privilegeUserVo.getResourceId()))) {
+        if (!paraMandatoryCheck(Arrays.asList(privilegeUserVo.getAppId(), privilegeUserVo.getAppUserId(), privilegeUserVo.getResourceId(),privilegeUserVo.getFunctionId()))) {
             paraMandaChkAndReturn(10000, response, "必传参数中有空值");
             return;
         }
@@ -65,7 +67,6 @@ public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
             paraMandaChkAndReturn(10002, response, "认证失败");
             return;
         }
-
 
         String userData = null;
         StringBuilder stringBuilderUsers = new StringBuilder();
@@ -132,6 +133,11 @@ public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
                     } else {
                         privilegeBatchUserVo.setResourceIds(privilegeUserVo.getResourceId());
                     }
+                    if (user.getPrivilegeFunId() != null && user.getPrivilegeFunId() != "") {
+                        privilegeBatchUserVo.setFunctionIds(user.getPrivilegeFunId() + "," + privilegeUserVo.getResourceId());
+                    } else {
+                        privilegeBatchUserVo.setFunctionIds(privilegeUserVo.getResourceId());
+                    }
                     privilegeBatchUserVoList.add(privilegeBatchUserVo);
                     stringBuilderUser.append(userData).append(",");
                 }
@@ -189,6 +195,9 @@ public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
 
     /*更新redis缓存*/
     PrivilegeAjaxMessage updateRedisCache(final PrivilegeUserVo privilegeUserVo, final String[] users) {
+        log.info("====================batch modify functionIds start======================");
+        privilegeResourceService.updateAppResRedis(privilegeUserVo.getAppId());
+        log.info("====================batch modify resourceIds start======================");
         final PrivilegeAjaxMessage[] message = {null};
         try {
             final ExecutorService threadPool = Executors.newCachedThreadPool();//线程池里面的线程数会动态变化

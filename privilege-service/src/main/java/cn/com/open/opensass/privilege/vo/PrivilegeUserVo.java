@@ -11,7 +11,9 @@ public class PrivilegeUserVo {
 	private String resourceId;
 	private String createUser;
 	private String createUserId;
-	
+	private String functionId;
+
+
 	private String method;
 
 	public String getAppId() {
@@ -79,5 +81,13 @@ public class PrivilegeUserVo {
 	}
 	public void setMethod(String method) {
 		this.method = method;
+	}
+
+	public String getFunctionId() {
+		return functionId;
+	}
+
+	public void setFunctionId(String functionId) {
+		this.functionId = functionId;
 	}
 }

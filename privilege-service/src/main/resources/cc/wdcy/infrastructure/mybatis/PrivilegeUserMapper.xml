@@ -95,7 +95,7 @@
         <foreach collection="list" item="item" index="index" open="" close="" separator=";">
             UPDATE privilege_user
             <set>
-                resource_id = '${item.resourceIds}'
+                resource_id = '${item.resourceIds}',privilege_funid = '${item.functionIds}'
             </set>
                WHERE app_id = '${item.appId}' AND app_userid = '${item.appUserId}'
         </foreach>

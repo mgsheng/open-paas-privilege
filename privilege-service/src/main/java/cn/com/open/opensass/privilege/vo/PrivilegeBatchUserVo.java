@@ -7,6 +7,7 @@ package cn.com.open.opensass.privilege.vo;
  */
 public class PrivilegeBatchUserVo {
     private String resourceIds;
+    private String functionIds;
     private String roles;
     private String appId;
     private String appUserId;
@@ -21,6 +22,14 @@ public class PrivilegeBatchUserVo {
 
     public void setResourceIds(String resourceIds) {
         this.resourceIds = resourceIds;
+    }
+
+    public String getFunctionIds() {
+        return functionIds;
+    }
+
+    public void setFunctionIds(String functionIds) {
+        this.functionIds = functionIds;
     }
 
     public String getRoles() {
