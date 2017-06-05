@@ -31,4 +31,5 @@ public interface PrivilegeRoleResourceRepository extends Repository {
 	List<PrivilegeRoleResource> findUserRoleResources(@Param("appId") String appId, @Param("appUserId") String appUserId);
 
 	List<String> findUserResourcesFunIdByResIsNull(@Param("appId") String appId, @Param("appUserId") String appUserId);
+	List<PrivilegeRoleResource> findFunctionIds(@Param("appId") String appId,@Param("resourceIds")String[] resourceIds,@Param("userId")String userId);
 }

@@ -88,6 +88,11 @@ public class PrivilegeRoleResourceServiceImpl implements PrivilegeRoleResourceSe
 	}
 
 	@Override
+	public List<PrivilegeRoleResource> findFunctionIds(String appId,String[] resourceIds, String userId) {
+		return privilegeRoleResourceRepository.findFunctionIds(appId,resourceIds,userId);
+	}
+
+	@Override
 	public List<PrivilegeRoleResource> findUserRoleResources(String appId, String appUserId) {
 		return privilegeRoleResourceRepository.findUserRoleResources(appId, appUserId);
 	}

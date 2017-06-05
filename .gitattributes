@@ -1786,6 +1786,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/api/AppResRedisPr
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/AppRoleRedisPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/FunctionAddPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/FunctionDelPrivilegeController.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/api/FunctionGetPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/FunctionModifyPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/GroupAddPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/GroupBatchModifyPrivilegeController.java -text
