@@ -108,6 +108,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 			ajaxMessage.setMessage("User Is Null");
 			return ajaxMessage;
 		}
+		Integer version = (Integer) redisClientTemplate.getObject(appMenuVersionCache+appId);
 		int Type=1; // 角色类型，1-普通用户，2-系统管理员，3-组织机构管理员
 		//判断用户角色是否是系统管理员  
 		List<PrivilegeRole> roles = privilegeRoleService.getRoleListByUserIdAndAppId(appUserId, appId);
@@ -120,7 +121,9 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 						PrivilegeAjaxMessage message = getAppMenuRedis(appId);
 						if ("1".equals(message.getCode())) {
 							String redisJson = message.getMessage();
-							redisClientTemplate.setString(prefix + appId + SIGN + appUserId, redisJson);
+							JSONObject json=	JSONObject.fromObject(redisJson);
+							json.put("version", version);
+							redisClientTemplate.setString(prefix + appId + SIGN + appUserId, json.toString());
 						}
 						return message;
 					}
@@ -129,7 +132,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 			
 		}
 		//应用菜单版本号
-		Integer version = (Integer) redisClientTemplate.getObject(appMenuVersionCache+appId);
+		
 //		String menuJedis = redisDao.getUrlRedis(prefix, appId, appUserId);
 		String menuJedis = redisClientTemplate.getString(prefix+appId+  SIGN+appUserId);
 		if (null == menuJedis || menuJedis.length() <= 0)

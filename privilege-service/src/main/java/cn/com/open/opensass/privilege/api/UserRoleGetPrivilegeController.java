@@ -162,12 +162,9 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 		if(processRedis)
 		{
 		String res=	redisClient.getString(redisUserPrivilegeKey.toString());
-		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+redisClient.existKey(redisUserPrivilegeKey.toString()));
-		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+redisClient.getString(redisUserPrivilegeKey.toString()));
 		if(res!=null&&res.length()>0)
 		{
 			writeJsonString(response, res);
-			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 			return;
 		}
 		}
