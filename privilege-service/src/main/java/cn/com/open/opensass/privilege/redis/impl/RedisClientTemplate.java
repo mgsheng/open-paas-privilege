@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import cn.com.open.opensass.privilege.redis.RedisDataSource;
 import cn.com.open.opensass.privilege.tools.SerializeUtil;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.ShardedJedis;
 
 @Repository("redisClientTemplate")
 /**
@@ -175,5 +176,20 @@ public class RedisClientTemplate {
 			redisDataSource.returnResource(shardedJedis, broken);
 		}
 		return result;
+	}
+    
+    /* 是否存在key键 */
+	public boolean existKey(String key) {
+		boolean broken = false;
+		Jedis shardedJedis = null;
+		try {
+			shardedJedis = redisDataSource.getRedisClient();
+			return shardedJedis.exists(key);
+		} catch (Exception e) {
+			broken = true;
+		} finally {
+			redisDataSource.returnResource(shardedJedis, broken);
+		}
+		return false;
 	}
 }

@@ -45,10 +45,11 @@ public abstract class WebUtils {
     
     public static void writeJson(HttpServletResponse response,String str) {
     	try {
-    		response.setCharacterEncoding("UTF-8");
-			response.getWriter().write(str);
-			response.getWriter().flush();
-			response.getWriter().close();
+    		  response.setContentType("application/json;charset=UTF-8");
+    		  PrintWriter writer = response.getWriter();
+    		  writer.write(str);
+    		  writer.flush();
+    		  writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

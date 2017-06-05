@@ -130,7 +130,8 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 		}
 		//应用菜单版本号
 		Integer version = (Integer) redisClientTemplate.getObject(appMenuVersionCache+appId);
-		String menuJedis = redisDao.getUrlRedis(prefix, appId, appUserId);
+//		String menuJedis = redisDao.getUrlRedis(prefix, appId, appUserId);
+		String menuJedis = redisClientTemplate.getString(prefix+appId+  SIGN+appUserId);
 		if (null == menuJedis || menuJedis.length() <= 0)
 
 		{	
@@ -200,20 +201,21 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 				return ajaxMessage;
 			}
 
-			PrivilegeUrl privilegeUrl = new PrivilegeUrl();
+//			PrivilegeUrl privilegeUrl = new PrivilegeUrl();
 			Map<Object, Object> map = new HashMap<Object, Object>();
 			map.put("menuList", privilegeMenuListData);
 			if (version != null) {
 				map.put("version", version);
 			}
-			String json = new JSONObject().fromObject(map).toString();
+			menuJedis = new JSONObject().fromObject(map).toString();
 
-			privilegeUrl.setPrivilegeUrl(json);
+//			privilegeUrl.setPrivilegeUrl(json);
 			/* 写入redis */
 			log.info("getMenu接口获取数据并写入redis数据开始");
-			redisDao.putUrlRedis(prefix, privilegeUrl, appId, appUserId);
+			 redisClientTemplate.setString(prefix+appId+  SIGN+appUserId,menuJedis);
+			//redisDao.putUrlRedis(prefix, privilegeUrl, appId, appUserId);
 			/* 读取redis */
-			menuJedis = redisDao.getUrlRedis(prefix, appId, appUserId);
+//			menuJedis = redisDao.getUrlRedis(prefix, appId, appUserId);
 			log.info("getMenu接口获取数据并写入，读取redis数据开始：" + menuJedis);
 		}
 		if (null != menuJedis && menuJedis.length() > 0) {

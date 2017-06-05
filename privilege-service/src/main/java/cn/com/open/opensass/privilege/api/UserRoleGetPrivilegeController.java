@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.opensass.privilege.dao.cache.RedisDao;
 import cn.com.open.opensass.privilege.model.App;
 import cn.com.open.opensass.privilege.model.PrivilegeMenu;
 import cn.com.open.opensass.privilege.model.PrivilegeRole;
@@ -66,6 +67,8 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 	private RedisClientTemplate redisClient;
 	@Autowired
 	private PrivilegeGroupService privilegeGroupService;
+	@Autowired
+	private RedisDao redisDao;
 
 	/**
 	 * 用户角色权限获取接口
@@ -108,6 +111,74 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 			map.put("resourceId", user.getResourceId());
 
 		}
+		Integer menuVersion = (Integer) redisClient.getObject(RedisConstant.APPMENUVERSIONCACHE+ user.getAppId());
+		String menuJedis = redisClient.getString(RedisConstant.USERMENU_CACHE+user.getAppId()+SIGN +user.getAppUserId());
+			//	redisDao.getUrlRedis(RedisConstant.USERMENU_CACHE,  user.getAppId(), user.getAppUserId());
+		boolean processRedis=false;
+		// 缓存中是否存在菜单
+		if (null != menuJedis && menuJedis.length() > 0) {
+			processRedis=true;
+			//从缓存中获取应用菜单版本，与用户菜单缓存版本号对比，若版本号不相同，更新用户菜单缓存
+			if (menuVersion != null) {
+				JSONObject object = JSONObject.fromObject(menuJedis);
+				Integer userMenuCacheVersions = (Integer) object.get("version");
+				if (userMenuCacheVersions == null||!menuVersion.equals(userMenuCacheVersions)) {
+					processRedis=false;
+				} 
+			}
+		}
+		// 缓存中是否存在 角色以及url
+		String userUrlkey =  RedisConstant.USERPRIVILEGES_CACHE + user.getAppId() +SIGN +user.getAppUserId(); 
+		String urlJedis = redisClient.getString(userUrlkey);
+		if (urlJedis != null ) {
+			processRedis=true;
+			//如果用户拥有角色，获取该角色的版本号，与用户缓存的版本号对比，若不相同则更新用户url缓存
+			JSONObject object = JSONObject.fromObject(urlJedis);
+			JSONArray roleArray = object.getJSONArray("roleList");
+			if (roleArray != null) {
+				List<Map<String, Object>> roles = JSONArray.toList(roleArray,Map.class);
+				if (roles.size()>0) {
+					for (Map<String, Object> role : roles) {
+						String privilegeRoleId = (String) role.get("privilegeRoleId");
+						Integer roleVersion = (Integer) redisClient.getObject(RedisConstant.ROLEVERSIONCACHE+ user.getAppId()+SIGN+privilegeRoleId);
+						if (roleVersion != null) {
+							Integer userRoleVersion = (Integer) role.get("version");
+							if (userRoleVersion == null||!userRoleVersion.equals(roleVersion)) {
+								processRedis=false;
+								break;
+							}
+							
+						}
+					}
+				}
+			}}
+		//用户资源大缓存
+		StringBuilder redisUserPrivilegeKey=new StringBuilder(RedisConstant.PUBLICSERVICE_CACHE);
+		redisUserPrivilegeKey.append(RedisConstant.USER_CACHE_INFO);
+		redisUserPrivilegeKey.append(user.getAppId());
+		redisUserPrivilegeKey.append(SIGN);
+		redisUserPrivilegeKey.append(user.getAppUserId());
+	   //直接走缓存，返回数据
+		if(processRedis)
+		{
+		String res=	redisClient.getString(redisUserPrivilegeKey.toString());
+		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+redisClient.existKey(redisUserPrivilegeKey.toString()));
+		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+redisClient.getString(redisUserPrivilegeKey.toString()));
+		if(res!=null&&res.length()>0)
+		{
+			writeJsonString(response, res);
+			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			return;
+		}
+		}
+		else
+		{
+			if(redisClient.existKey(redisUserPrivilegeKey.toString()))
+			{
+				redisClient.del(redisUserPrivilegeKey.toString());
+			}
+		}
+		
 		//用户资源缓存
 		PrivilegeAjaxMessage roleMessage = privilegeUserRedisService.getRedisUserRole(privilegeUserVo.getAppId(),
 				privilegeUserVo.getAppUserId());
@@ -269,6 +340,7 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 		if (map.get("status") == "0") {
 			writeErrorJson(response, map);
 		} else {
+			redisClient.setString(redisUserPrivilegeKey.toString(), JSONObject.fromObject(map).toString());
 			writeSuccessJson(response, map);
 		}
 		return;
