@@ -52,7 +52,7 @@ public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
     @RequestMapping(value = "batchModifyPrivilege")
     public void modifyPrivilege(HttpServletRequest request, HttpServletResponse response, PrivilegeUserVo privilegeUserVo) {
         log.info("====================batch modify user resource start======================");
-        if (!paraMandatoryCheck(Arrays.asList(privilegeUserVo.getAppId(), privilegeUserVo.getAppUserId(), privilegeUserVo.getResourceId(),privilegeUserVo.getFunctionId()))) {
+        if (!paraMandatoryCheck(Arrays.asList(privilegeUserVo.getAppId(), privilegeUserVo.getAppUserId(), privilegeUserVo.getResourceId(),privilegeUserVo.getFunctionId(),privilegeUserVo.getOperationType()))) {
             paraMandaChkAndReturn(10000, response, "必传参数中有空值");
             return;
         }
@@ -68,6 +68,9 @@ public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
             return;
         }
 
+        Map<String, Object> map = new HashMap<String, Object>();
+
+
         String userData = null;
         StringBuilder stringBuilderUsers = new StringBuilder();
         String[] userList = privilegeUserVo.getAppUserId().split(",");
@@ -81,7 +84,6 @@ public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
         if (userData != null) {
             users = privilegeUserService.findByAppIdAndUserIds(privilegeUserVo.getAppId(), userData);
         }
-        Map<String, Object> map = new HashMap<String, Object>();
         if (users == null || users.size() <= 0) {
             map.put("status", "0");
             map.put("error_code", "10008");
@@ -107,7 +109,35 @@ public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
         return privilegeUserReturn;
     }
 
-    /*操作数据*/
+    String getReplaceLaterString(String oldString,String replaceString){
+        String[] replaceStrings = replaceString.split(",");
+        oldString = ","+oldString+","; //两边加上逗号不至于替换出错
+        for (String replaceStr : replaceStrings){
+            if(oldString.indexOf(","+replaceStr+",")>=0){
+                oldString = oldString.replace(","+replaceStr+",",",");
+            }
+        }
+        if(oldString.equals(",")){
+            oldString = "";
+        } else {
+            oldString = oldString.substring(1,oldString.length()-1);
+        }
+        return oldString;
+    }
+
+    /**
+     * 添加数据
+     * 1. 在现有的resourceIds后加上传值resourceIds，生成需要新增之后的resourceIds.
+     * 2. 在现有的functionIds后加上传值functionIds，生成需要新增之后的functionIds.
+     * 3. 生成批量更新sql.
+     * 删除数据.
+     * 1. 替换现有的resourceIds，生成删除之后的resourceIds.
+     * 2. 替换现有的functionIds，生成删除之后的functionIds.
+     * 3. 生成批量更新sql.
+     * @param privilegeUserVo
+     * @param userListData
+     * @return
+     */
     Map<String, Object> batchUpdateUserResource(PrivilegeUserVo privilegeUserVo, List<PrivilegeUser> userListData) {
         Map<String, Object> mapData = new HashMap<String, Object>();
         try {
@@ -128,15 +158,30 @@ public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
                     privilegeBatchUserVo = new PrivilegeBatchUserVo();
                     privilegeBatchUserVo.setAppId(privilegeUserVo.getAppId());
                     privilegeBatchUserVo.setAppUserId(userData);
-                    if (user.getResourceId() != null && user.getResourceId() != "") {
-                        privilegeBatchUserVo.setResourceIds(user.getResourceId() + "," + privilegeUserVo.getResourceId());
-                    } else {
-                        privilegeBatchUserVo.setResourceIds(privilegeUserVo.getResourceId());
-                    }
-                    if (user.getPrivilegeFunId() != null && user.getPrivilegeFunId() != "") {
-                        privilegeBatchUserVo.setFunctionIds(user.getPrivilegeFunId() + "," + privilegeUserVo.getResourceId());
-                    } else {
-                        privilegeBatchUserVo.setFunctionIds(privilegeUserVo.getResourceId());
+                    //0是添加1是删除
+                    if(privilegeUserVo.getOperationType().equals("0")){
+                        if (user.getResourceId() != null && user.getResourceId() != "") {
+                            privilegeBatchUserVo.setResourceIds(user.getResourceId() + "," + privilegeUserVo.getResourceId());
+                        } else {
+                            privilegeBatchUserVo.setResourceIds(privilegeUserVo.getResourceId());
+                        }
+                        if (user.getPrivilegeFunId() != null && user.getPrivilegeFunId() != "") {
+                            privilegeBatchUserVo.setFunctionIds(user.getPrivilegeFunId() + "," + privilegeUserVo.getFunctionId());
+                        } else {
+                            privilegeBatchUserVo.setFunctionIds(privilegeUserVo.getResourceId());
+                        }
+                    } else if(privilegeUserVo.getOperationType().equals("1")){
+                        if (user.getResourceId() != null && user.getResourceId() != "") {
+                            privilegeBatchUserVo.setResourceIds(getReplaceLaterString(user.getResourceId(),privilegeUserVo.getResourceId()));
+                        } else {
+                            privilegeBatchUserVo.setResourceIds("");
+                        }
+                        if (user.getPrivilegeFunId() != null && user.getPrivilegeFunId() != "") {
+
+                            privilegeBatchUserVo.setFunctionIds(getReplaceLaterString(user.getPrivilegeFunId(),privilegeUserVo.getFunctionId()));
+                        } else {
+                            privilegeBatchUserVo.setFunctionIds("");
+                        }
                     }
                     privilegeBatchUserVoList.add(privilegeBatchUserVo);
                     stringBuilderUser.append(userData).append(",");
@@ -192,7 +237,6 @@ public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
         }
         return mapData;
     }
-
     /*更新redis缓存*/
     PrivilegeAjaxMessage updateRedisCache(final PrivilegeUserVo privilegeUserVo, final String[] users) {
         log.info("====================batch modify functionIds start======================");
