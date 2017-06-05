@@ -178,7 +178,14 @@ public class BaseControllerUtil {
 	    public void writeSuccessJson(HttpServletResponse response, Map map){
 	    	WebUtils.writeJson(response, JSONObject.fromObject(map));
 	    }
-	    
+	    /**
+	     * 返回成功json
+	     * @param response
+	     * @param obj 数据集
+	     */
+	    public void writeJsonString(HttpServletResponse response, String json){
+	    	WebUtils.writeJson(response, json);
+	    }
 	    /**
 	     * 返回失败json
 	     * @param response
