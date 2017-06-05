@@ -22,7 +22,7 @@ public class RedisConstant {
  /**
   * userCacheMenu_appid_userid
   */
- public static final String USERMENU_CACHE=PUBLICSERVICE_CACHE+"userCacheMenu_";
+ public static final String USERMENU_CACHE=PUBLICSERVICE_CACHE+"userCacheMenus_";
  /**
   * userCacheRole_appid_userid
   */
