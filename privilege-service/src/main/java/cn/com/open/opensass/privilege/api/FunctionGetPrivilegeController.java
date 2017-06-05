@@ -44,7 +44,7 @@ public class FunctionGetPrivilegeController extends BaseControllerUtil {
     private PrivilegeRoleResourceService privilegeRoleResourceService;
 
     /**
-     * 根据resourceId和appUserId获取functionid列表.
+     * 根据resourceId和appUserId获取functionIds列表.
      *
      * @param request  获取请求.
      * @param response 输出数据.
