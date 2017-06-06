@@ -133,16 +133,7 @@ public class UserRoleModifyPrivilegeController extends BaseControllerUtil{
         	//更新用户信息
         	boolean uf = privilegeUserService.updatePrivilegeUser(user);
 
-			//清空大缓存
-			StringBuilder redisUserPrivilegeKey=new StringBuilder(RedisConstant.PUBLICSERVICE_CACHE);
-			redisUserPrivilegeKey.append(RedisConstant.USER_CACHE_INFO);
-			redisUserPrivilegeKey.append(privilegeUserVo.getAppId());
-			redisUserPrivilegeKey.append(SIGN);
-			redisUserPrivilegeKey.append(privilegeUserVo.getAppUserId());
-			if(redisClient.existKey(redisUserPrivilegeKey.toString()))
-			{
-				redisClient.del(redisUserPrivilegeKey.toString());
-			}
+		
         	if(uf){
         		//更新缓存
     			PrivilegeAjaxMessage message=privilegeUserRedisService.updateUserRoleRedis(privilegeUserVo.getAppId(), privilegeUserVo.getAppUserId());
@@ -181,6 +172,16 @@ public class UserRoleModifyPrivilegeController extends BaseControllerUtil{
     	if(map.get("status")=="0"){
     		writeErrorJson(response,map);
     	}else{
+    		//清空大缓存
+			StringBuilder redisUserPrivilegeKey=new StringBuilder(RedisConstant.PUBLICSERVICE_CACHE);
+			redisUserPrivilegeKey.append(RedisConstant.USER_CACHE_INFO);
+			redisUserPrivilegeKey.append(privilegeUserVo.getAppId());
+			redisUserPrivilegeKey.append(SIGN);
+			redisUserPrivilegeKey.append(privilegeUserVo.getAppUserId());
+			if(redisClient.existKey(redisUserPrivilegeKey.toString()))
+			{
+				redisClient.del(redisUserPrivilegeKey.toString());
+			}
     		writeSuccessJson(response,map);
     	}
         return;
