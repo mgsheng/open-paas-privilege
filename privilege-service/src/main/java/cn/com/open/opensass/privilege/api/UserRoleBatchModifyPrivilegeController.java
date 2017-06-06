@@ -31,6 +31,7 @@ import java.util.concurrent.Executors;
 @RequestMapping("/userRole/")
 public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
     private static final Logger log = LoggerFactory.getLogger(UserRoleModifyPrivilegeController.class);
+    public static final String SIGN = RedisConstant.SIGN;
     @Autowired
     private PrivilegeUserService privilegeUserService;
     @Autowired
@@ -239,6 +240,16 @@ public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
     }
     /*更新redis缓存*/
     PrivilegeAjaxMessage updateRedisCache(final PrivilegeUserVo privilegeUserVo, final String[] users) {
+        log.info("====================batch modify big cache start======================");
+        StringBuilder redisUserPrivilegeKey=new StringBuilder(RedisConstant.PUBLICSERVICE_CACHE);
+        redisUserPrivilegeKey.append(RedisConstant.USER_CACHE_INFO);
+        redisUserPrivilegeKey.append(privilegeUserVo.getAppId());
+        redisUserPrivilegeKey.append(SIGN);
+        redisUserPrivilegeKey.append(privilegeUserVo.getAppUserId());
+        if(redisClient.existKey(redisUserPrivilegeKey.toString()))
+        {
+            redisClient.del(redisUserPrivilegeKey.toString());
+        }
         log.info("====================batch modify functionIds start======================");
         privilegeResourceService.updateAppResRedis(privilegeUserVo.getAppId());
         log.info("====================batch modify resourceIds start======================");

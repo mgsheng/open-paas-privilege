@@ -39,6 +39,7 @@ import net.sf.json.JSONObject;
 public class VerifyUserPrivilegeController extends BaseControllerUtil {
 	private static final Logger log = LoggerFactory
 			.getLogger(VerifyUserPrivilegeController.class);
+	public static final String SIGN = RedisConstant.SIGN;
 	@Autowired
 	private AppService appService;
 	@Autowired
@@ -103,6 +104,17 @@ public class VerifyUserPrivilegeController extends BaseControllerUtil {
 				}
 
 			}
+		}
+
+		//清空大缓存
+		StringBuilder redisUserPrivilegeKey=new StringBuilder(RedisConstant.PUBLICSERVICE_CACHE);
+		redisUserPrivilegeKey.append(RedisConstant.USER_CACHE_INFO);
+		redisUserPrivilegeKey.append(appId);
+		redisUserPrivilegeKey.append(SIGN);
+		redisUserPrivilegeKey.append(appUserId);
+		if(redisClient.existKey(redisUserPrivilegeKey.toString()))
+		{
+			redisClient.del(redisUserPrivilegeKey.toString());
 		}
 		// 获取用户url缓存
 		PrivilegeAjaxMessage message = privilegeUrlService.getRedisUrl(appId,

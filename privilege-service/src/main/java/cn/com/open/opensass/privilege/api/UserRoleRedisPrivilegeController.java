@@ -7,6 +7,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
+import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +30,11 @@ import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 @RequestMapping("/userRole/")
 public class UserRoleRedisPrivilegeController extends BaseControllerUtil {
 	private static final Logger log = LoggerFactory.getLogger(UserRoleRedisPrivilegeController.class);
+	public static final String SIGN = RedisConstant.SIGN;
 	@Autowired
 	private PrivilegeUserRedisService privilegeUserRedisService;
+	@Autowired
+	private RedisClientTemplate redisClient;
 
 	/**
 	 * 用户角色缓存接口
@@ -67,6 +72,16 @@ public class UserRoleRedisPrivilegeController extends BaseControllerUtil {
 			paraMandaChkAndReturn(10000, response, "必传参数中有空值");
 			return;
 		}
+		//清空大缓存
+		StringBuilder redisUserPrivilegeKey=new StringBuilder(RedisConstant.PUBLICSERVICE_CACHE);
+		redisUserPrivilegeKey.append(RedisConstant.USER_CACHE_INFO);
+		redisUserPrivilegeKey.append(appId);
+		redisUserPrivilegeKey.append(SIGN);
+		redisUserPrivilegeKey.append(appUserId);
+		if(redisClient.existKey(redisUserPrivilegeKey.toString()))
+		{
+			redisClient.del(redisUserPrivilegeKey.toString());
+		}
 		PrivilegeAjaxMessage ajaxMessage=privilegeUserRedisService.updateUserRoleRedis(appId, appUserId);
 		if (ajaxMessage.getCode().equals("1")) {
 			WebUtils.writeJson(response, ajaxMessage.getMessage());
@@ -87,6 +102,16 @@ public class UserRoleRedisPrivilegeController extends BaseControllerUtil {
 		if (!paraMandatoryCheck(Arrays.asList(appId, appUserId))) {
 			paraMandaChkAndReturn(10000, response, "必传参数中有空值");
 			return;
+		}
+		//清空大缓存
+		StringBuilder redisUserPrivilegeKey=new StringBuilder(RedisConstant.PUBLICSERVICE_CACHE);
+		redisUserPrivilegeKey.append(RedisConstant.USER_CACHE_INFO);
+		redisUserPrivilegeKey.append(appId);
+		redisUserPrivilegeKey.append(SIGN);
+		redisUserPrivilegeKey.append(appUserId);
+		if(redisClient.existKey(redisUserPrivilegeKey.toString()))
+		{
+			redisClient.del(redisUserPrivilegeKey.toString());
 		}
 		PrivilegeAjaxMessage ajaxMessage=privilegeUserRedisService.delUserRoleRedis(appId, appUserId);
 		if (ajaxMessage.getCode().equals("1")) {

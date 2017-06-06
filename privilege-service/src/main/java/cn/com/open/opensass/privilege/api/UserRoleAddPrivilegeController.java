@@ -33,6 +33,7 @@ import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
 @RequestMapping("/userRole/")
 public class UserRoleAddPrivilegeController extends BaseControllerUtil {
 	private static final Logger log = LoggerFactory.getLogger(UserRoleAddPrivilegeController.class);
+	public static final String SIGN = RedisConstant.SIGN;
 	@Autowired
 	private PrivilegeUserService privilegeUserService;
 	@Autowired
@@ -90,6 +91,16 @@ public class UserRoleAddPrivilegeController extends BaseControllerUtil {
 		user.setPrivilegeFunId(privilegeUserVo.getPrivilegeFunId());
 
 		Boolean sf = privilegeUserService.savePrivilegeUser(user);
+		//清空大缓存
+		StringBuilder redisUserPrivilegeKey=new StringBuilder(RedisConstant.PUBLICSERVICE_CACHE);
+		redisUserPrivilegeKey.append(RedisConstant.USER_CACHE_INFO);
+		redisUserPrivilegeKey.append(privilegeUserVo.getAppId());
+		redisUserPrivilegeKey.append(SIGN);
+		redisUserPrivilegeKey.append(privilegeUserVo.getAppUserId());
+		if(redisClient.existKey(redisUserPrivilegeKey.toString()))
+		{
+			redisClient.del(redisUserPrivilegeKey.toString());
+		}
 		if (privilegeUserVo.getPrivilegeRoleId() != null && !("").equals(privilegeUserVo.getPrivilegeRoleId())) {
 			if (sf) {
 				// 存储用户角色关系

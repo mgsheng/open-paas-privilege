@@ -31,7 +31,8 @@ import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
 @Controller
 @RequestMapping("/userRole/")
 public class UserRoleDelPrivilegeController extends BaseControllerUtil{
-	private static final Logger log = LoggerFactory.getLogger(UserRoleDelPrivilegeController.class); 
+	private static final Logger log = LoggerFactory.getLogger(UserRoleDelPrivilegeController.class);
+	public static final String SIGN = RedisConstant.SIGN;
 	@Autowired
 	private PrivilegeUserService privilegeUserService;
 	@Autowired 
@@ -81,6 +82,17 @@ public class UserRoleDelPrivilegeController extends BaseControllerUtil{
     			paraMandaChkAndReturn(10003, response,"删除用户角色关系失败");
                 return;
     		}
+
+			//清空大缓存
+			StringBuilder redisUserPrivilegeKey=new StringBuilder(RedisConstant.PUBLICSERVICE_CACHE);
+			redisUserPrivilegeKey.append(RedisConstant.USER_CACHE_INFO);
+			redisUserPrivilegeKey.append(privilegeUserVo.getAppId());
+			redisUserPrivilegeKey.append(SIGN);
+			redisUserPrivilegeKey.append(privilegeUserVo.getAppUserId());
+			if(redisClient.existKey(redisUserPrivilegeKey.toString()))
+			{
+				redisClient.del(redisUserPrivilegeKey.toString());
+			}
     		//删除缓存
 			PrivilegeAjaxMessage message=privilegeUserRedisService.delUserRoleRedis(privilegeUserVo.getAppId(), privilegeUserVo.getAppUserId());
 			privilegeMenuService.delMenuRedis(privilegeUserVo.getAppId(),
