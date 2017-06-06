@@ -131,7 +131,6 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 		String userUrlkey =  RedisConstant.USERPRIVILEGES_CACHE + user.getAppId() +SIGN +user.getAppUserId(); 
 		String urlJedis = redisClient.getString(userUrlkey);
 		if (urlJedis != null ) {
-			processRedis=true;
 			//如果用户拥有角色，获取该角色的版本号，与用户缓存的版本号对比，若不相同则更新用户url缓存
 			JSONObject object = JSONObject.fromObject(urlJedis);
 			JSONArray roleArray = object.getJSONArray("roleList");
