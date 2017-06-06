@@ -148,14 +148,24 @@ public class RoleModifyPrivilegeController extends BaseControllerUtil{
 			if(rolePrivilege!=null && !("").equals(rolePrivilege)){
 				String[] roleResources = rolePrivilege.split(",");
 				for(String roleResId : roleResources){
-					roleResource = privilegeRoleResourceService.findByRoleIdAndResourceId(privilegeRoleId, roleResId);
-					if(roleResource.getPrivilegeFunId()!=null && !("").equals(roleResource.getPrivilegeFunId())){
-						tFuncIds=roleResource.getPrivilegeFunId();
-					}
-					Boolean df = privilegeRoleResourceService.delPrivilegeRoleResource(roleResource);
-					if(!df){
-						paraMandaChkAndReturn(10005, response,"删除权限失败");
-			            return;
+					try {
+						roleResource = privilegeRoleResourceService.findByRoleIdAndResourceId(privilegeRoleId, roleResId);
+						if(roleResource != null) {
+							if(roleResource.getPrivilegeFunId()!=null && !("").equals(roleResource.getPrivilegeFunId())){
+								tFuncIds=roleResource.getPrivilegeFunId();
+							}
+							Boolean df = privilegeRoleResourceService.delPrivilegeRoleResource(roleResource);
+							if(!df){
+								paraMandaChkAndReturn(10005, response,"删除权限失败");
+								return;
+							}
+						} else {
+							paraMandaChkAndReturn(10006, response,"此权限不存在，请核实！");
+							return;
+						}
+					} catch (Exception e){
+						paraMandaChkAndReturn(10007, response,"请核实数据是否正确！");
+						return;
 					}
 				}
 			}

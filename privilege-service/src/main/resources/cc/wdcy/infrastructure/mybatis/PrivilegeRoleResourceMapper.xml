@@ -68,7 +68,7 @@
     
     <select id="findByRoleIdAndResourceId" resultMap="privilegeRoleResourceMap" flushCache="true">
     	select * from privilege_role_resource 
-    	where privilege_roleid = #{0} and resource_id = #{1}
+    	where privilege_roleid = #{0} and resource_id = #{1} LIMIT 1
     </select>
 
 	<select id="findFunctionIds" resultMap="privilegeRoleResourceMap" flushCache="true">
