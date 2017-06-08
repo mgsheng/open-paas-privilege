@@ -25,6 +25,8 @@ public interface PrivilegeUserRepository extends Repository {
 
 	List<PrivilegeUser> findByAppIdAndAppUserIds(@Param("appId") String appId, @Param("appUserId") String appUserId);
 
+	List<PrivilegeUser> findByGroupIdAndAppId(@Param("appId") String appId, @Param("groupIds") String[] groupIds);
+
 	void delUserByAppIdAndAppUserId(@Param("appId") String appId, @Param("appUserId") String appUserId);
 
 	void updatePrivilegeUser(PrivilegeUser user);

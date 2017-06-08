@@ -33,4 +33,23 @@ public interface PrivilegeUserService {
 	int getUserCountByAppId(String appId,String groupId);
 
 	Boolean batchUpdateResourceIds(List<PrivilegeBatchUserVo> list);
+
+	/**
+	 * 根据groupid列表更新resourceid, functionid数据
+	 * @param appId
+	 * @param groupId
+	 * @param resourceId
+	 * @param functionId
+	 * @return
+	 */
+	Map<String, Object> batchUpdateGroupResourceFunction(String appId, String groupId, String resourceId, String functionId);
+
+	/**
+	 * 根据appId和groupId列表获取用户数据.
+	 * @param appId
+	 * @param groupId
+	 * @return
+	 */
+	List<PrivilegeUser> findByGroupIdAndAppId(String appId, String[] groupId);
+
 }

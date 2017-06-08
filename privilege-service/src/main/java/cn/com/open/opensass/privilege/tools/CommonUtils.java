@@ -358,4 +358,26 @@ public class CommonUtils  extends FatherCommon{
         return sb.toString();
     }
 
+    /**
+     * 替换原字符串中的某几个字符.
+     * @param oldString
+     * @param replaceString
+     * @return
+     */
+    public static String getReplaceLaterString(String oldString,String replaceString){
+        String[] replaceStrings = replaceString.split(",");
+        oldString = ","+oldString+","; //两边加上逗号不至于替换出错
+        for (String replaceStr : replaceStrings){
+            if(oldString.indexOf(","+replaceStr+",")>=0){
+                oldString = oldString.replace(","+replaceStr+",",",");
+            }
+        }
+        if(oldString.equals(",")){
+            oldString = "";
+        } else {
+            oldString = oldString.substring(1,oldString.length()-1);
+        }
+        return oldString;
+    }
+
 }

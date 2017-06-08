@@ -101,4 +101,10 @@
         </foreach>
 
     </update>
+    <select id="findByGroupIdAndAppId" resultMap="privilegeUserMap" flushCache="true">
+        select * from privilege_user where app_id=#{appId} and group_id IN
+        <foreach item="groupId" collection="groupIds" open="(" separator="," close=")">
+            #{groupId}
+        </foreach>
+    </select>
 </mapper>
