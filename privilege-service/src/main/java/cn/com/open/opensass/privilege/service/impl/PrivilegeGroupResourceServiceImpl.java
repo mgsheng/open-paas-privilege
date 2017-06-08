@@ -1,18 +1,13 @@
 package cn.com.open.opensass.privilege.service.impl;
 
-import java.util.List;
-
-import cn.com.open.opensass.privilege.vo.PrivilegeBatchUserVo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeGroupResourceRepository;
 import cn.com.open.opensass.privilege.model.PrivilegeGroupResource;
-import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.service.PrivilegeGroupResourceService;
-import net.sf.json.JSONObject;
-import redis.clients.jedis.Jedis;
+import cn.com.open.opensass.privilege.vo.PrivilegeBatchUserVo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 
@@ -114,6 +109,17 @@ public class PrivilegeGroupResourceServiceImpl implements PrivilegeGroupResource
             e.printStackTrace();
             return false;
         }
+	}
+
+	@Override
+	public Boolean batchDeleteResourceIdsByGroupIds(List<PrivilegeBatchUserVo> list) {
+		try{
+			privilegeGroupResourceRepository.batchDeleteResourceIdsByGroupIds(list);
+			return true;
+		}catch (Exception e){
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 }

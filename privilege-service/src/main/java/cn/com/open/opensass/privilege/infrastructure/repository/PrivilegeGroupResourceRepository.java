@@ -24,4 +24,5 @@ public interface PrivilegeGroupResourceRepository extends Repository {
 	List<String> findResourceIdsByGroupId(@Param("groupId")String groupId);
 	List<PrivilegeGroupResource> findGprPage(@Param("groupId")String groupId,@Param("appId")String appId,@Param("startRow")int startRow,@Param("pageSize")int pageSize);
 	void batchUpdateResourceIds(@Param("list")List<PrivilegeBatchUserVo> list);
+	void batchDeleteResourceIdsByGroupIds(@Param("list")List<PrivilegeBatchUserVo> list);
 }

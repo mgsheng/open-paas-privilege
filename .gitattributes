@@ -1795,6 +1795,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/api/GroupDelPrivi
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/GroupGetPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/GroupGetPrivilegeControllerTest.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/GroupModifyPrivilegeController.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/api/GroupResourceBatchModifyPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/MenuAddPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/MenuDelPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/MenuGetPrivilegeController.java -text

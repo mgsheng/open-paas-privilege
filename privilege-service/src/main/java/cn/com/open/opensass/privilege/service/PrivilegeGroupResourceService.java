@@ -1,10 +1,9 @@
 package cn.com.open.opensass.privilege.service;
 
-import java.util.List;
-
-
 import cn.com.open.opensass.privilege.model.PrivilegeGroupResource;
 import cn.com.open.opensass.privilege.vo.PrivilegeBatchUserVo;
+
+import java.util.List;
 
 /**
  * 
@@ -20,4 +19,5 @@ public interface PrivilegeGroupResourceService {
 	List<PrivilegeGroupResource> getPgrs(String groupId,String appId,String startRow,String pageSize);
 	List<PrivilegeGroupResource> findByGroupIdAndAppId(String groupId, String appId);
 	Boolean batchUpdateResourceIds(List<PrivilegeBatchUserVo> list);
+	Boolean batchDeleteResourceIdsByGroupIds(List<PrivilegeBatchUserVo> list);
 }
