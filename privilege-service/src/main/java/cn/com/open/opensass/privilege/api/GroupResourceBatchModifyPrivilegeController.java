@@ -14,6 +14,7 @@ import cn.com.open.opensass.privilege.vo.PrivilegeBatchUserVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +28,8 @@ import java.util.concurrent.Executors;
  * 创建日期 : 2017/6/8.
  * 创建时间 : 11:31.
  */
+@Controller
+@RequestMapping("/group/")
 public class GroupResourceBatchModifyPrivilegeController extends BaseControllerUtil {
     private static final Logger log = LoggerFactory.getLogger(GroupResourceBatchModifyPrivilegeController.class);
     @Autowired
@@ -45,10 +48,10 @@ public class GroupResourceBatchModifyPrivilegeController extends BaseControllerU
      */
     @RequestMapping("batchGrModifyPrivilege")
     public void modifyPrivilege(HttpServletRequest request, HttpServletResponse response) {
-        String groupId = request.getParameter("groupId"); //组织机构id(多个用“,”分隔）
-        String appId = request.getParameter("appId");
-        String resourceId = request.getParameter("resourceId"); //添加或删除的权限（多个权限用“,”分隔）
-        String operationType = request.getParameter("operationType"); //操作类型( 0是添加1是删除)
+        String groupId = request.getParameter("groupId"); //组织机构id(多个用“,”分隔）（必传）
+        String appId = request.getParameter("appId"); //（必传）
+        String resourceId = request.getParameter("resourceId"); //添加或删除的权限（多个权限用“,”分隔） （必传）
+        String operationType = request.getParameter("operationType"); //操作类型( 0是添加1是删除) （必传）
         String createUser = request.getParameter("createUser");
         String createUserid = request.getParameter("createUserid");
         String status = request.getParameter("status");
@@ -69,6 +72,7 @@ public class GroupResourceBatchModifyPrivilegeController extends BaseControllerU
             return;
         }
         Map<String, Object> map = batchUpdateUserGroupResource(appId, groupId, resourceId, createUser, createUserid, status,operationType);
+
         if (map.get("status") == "0") {
             writeSuccessJson(response, map);
         } else {
