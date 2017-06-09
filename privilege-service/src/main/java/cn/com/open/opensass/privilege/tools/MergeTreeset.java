@@ -15,10 +15,10 @@ import cn.com.open.opensass.privilege.vo.UserMenuVo;
  */
 public class MergeTreeset {
 
-    private static Set<PrivilegeMenuVo> menuSet;
-    private static List<PrivilegeResourceVo> privilegeResourceList;
-    private static Set<PrivilegeResourceVo> privilegeResourceSet;
-    private static Set<UserMenuVo>  _userMenuVos = new TreeSet<UserMenuVo>();
+    private  Set<PrivilegeMenuVo> menuSet;
+    private  List<PrivilegeResourceVo> privilegeResourceList;
+    private  Set<PrivilegeResourceVo> privilegeResourceSet;
+    private  Set<UserMenuVo>  _userMenuVos = new TreeSet<UserMenuVo>();
 
     public MergeTreeset(Set<PrivilegeMenuVo> menuSet , List<PrivilegeResourceVo> privilegeResourceList){
         this.menuSet = menuSet;
@@ -36,6 +36,7 @@ public class MergeTreeset {
         userMenuVo.setParentId(privilegeMenuVo.getParentId());
         userMenuVo.setDisplayOrder(privilegeMenuVo.getDisplayOrder());
         userMenuVo.setChildMenus(new TreeSet<UserMenuVo>());
+        userMenuVo.setMenuCode(privilegeMenuVo.getMenuCode());
         for (PrivilegeResourceVo privilegeResourceVo : privilegeResourceSet) {
             if (privilegeMenuVo.getMenuId().equals(privilegeResourceVo.getMenuId())) {
                 userMenuVo.setBaseUrl(privilegeResourceVo.getBaseUrl());
@@ -70,7 +71,7 @@ public class MergeTreeset {
 
 
 
-    public static Set<UserMenuVo> get_userMenuVos() {
+    public  Set<UserMenuVo> get_userMenuVos() {
 		return _userMenuVos;
 	}
 	public void getMergetResult(){

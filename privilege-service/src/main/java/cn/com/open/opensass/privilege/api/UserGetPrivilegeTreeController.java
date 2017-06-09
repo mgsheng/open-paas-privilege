@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.opensass.privilege.model.App;
@@ -41,11 +42,12 @@ import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
 import cn.com.open.opensass.privilege.vo.UserMenuVo;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-
+@Controller
+@RequestMapping("/userRole/")
 public class UserGetPrivilegeTreeController extends BaseControllerUtil {
 	public static final String SIGN = RedisConstant.SIGN;
 
-	private static final Logger log = LoggerFactory.getLogger(UserGetMenusController.class);
+	private static final Logger log = LoggerFactory.getLogger(UserGetPrivilegeTreeController.class);
 	@Autowired
 	private PrivilegeUserService privilegeUserService;
 	@Autowired
@@ -68,7 +70,7 @@ public class UserGetPrivilegeTreeController extends BaseControllerUtil {
 	/**
 	 * 用户角色权限获取接口
 	 */
-	@RequestMapping(value = "getUserPrivilegeMenus")
+	@RequestMapping(value = "getUserTreeMenus")
 	public void getPrivilege(HttpServletRequest request, HttpServletResponse response,
 			PrivilegeUserVo privilegeUserVo) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -184,7 +186,7 @@ public class UserGetPrivilegeTreeController extends BaseControllerUtil {
 			List<PrivilegeMenu> privilegeMenuList = new ArrayList<PrivilegeMenu>();
 			if (boo) {// 有管理员角色获取所有应用下菜单
 				JSONObject obj1 = new JSONObject();
-				JSONArray objArray = new JSONArray();
+				Set<PrivilegeMenuVo> menuSet = new HashSet<PrivilegeMenuVo>();
 				if (Type == 2) {
 					// 如果为管理员 返回应用所有菜单
 					PrivilegeAjaxMessage message = new PrivilegeAjaxMessage();
@@ -204,25 +206,23 @@ public class UserGetPrivilegeTreeController extends BaseControllerUtil {
 						JSONArray menuArray = obj1.getJSONArray("menuList");
 //						List<PrivilegeMenuVo> menuVos = privilegeMenuService.findMenuByResourceType(0);
 						List<PrivilegeMenuVo> menuList = JSONArray.toList(menuArray, PrivilegeMenuVo.class);
-						Set<PrivilegeMenuVo> set = new HashSet<PrivilegeMenuVo>();
-//						set.addAll(menuVos);
-						set.addAll(menuList);
-						objArray = JSONArray.fromObject(set);
+						menuSet = new HashSet<PrivilegeMenuVo>();
+						menuSet.addAll(menuList);
 					}
 			
 				} else {
 					PrivilegeAjaxMessage message = privilegeGroupService.findGroupPrivilege(user.getGroupId(),
 							user.getAppId());
-					Set<PrivilegeMenuVo> menuSet = new HashSet<PrivilegeMenuVo>();
+					
 					if (message.getCode().equals("1")) {
 						obj1 = JSONObject.fromObject(message.getMessage());
 						JSONArray menuArray = obj1.getJSONArray("menuList");
 						List<PrivilegeMenuVo> menuList = JSONArray.toList(menuArray, PrivilegeMenuVo.class);
+						menuSet = new HashSet<PrivilegeMenuVo>();
 						menuSet.addAll(menuList);
 					}
-					objArray = JSONArray.fromObject(menuSet);
 				}
-				menuMap.put("menuList", objArray);
+				menuMap.put("menuList", menuSet);
 			} else {// 无管理员角色获取相应权限菜单
 				privilegeMenuList = privilegeMenuService.getMenuListByUserId(user.getAppUserId(), user.getAppId());
 				// 根据roleResource表中functionId无resourceId 查询菜单
@@ -254,9 +254,8 @@ public class UserGetPrivilegeTreeController extends BaseControllerUtil {
 						privilegeMenuListReturn); /* 缓存中是否存在 */
 				menuMap.put("menuList", privilegeMenuListData);
 			}
-			map.putAll(menuMap);
-		
-		Set<PrivilegeMenuVo> menuSet=(Set<PrivilegeMenuVo>) map.get("menuList");
+//			map.putAll(menuMap);
+     	Set<PrivilegeMenuVo> menuSet=(Set<PrivilegeMenuVo>) menuMap.get("menuList");
 		Set<PrivilegeResourceVo> resList =(Set<PrivilegeResourceVo>) map.get("resourceList");
 		
 		MergeTreeset  menuList= new MergeTreeset(menuSet,resList);
