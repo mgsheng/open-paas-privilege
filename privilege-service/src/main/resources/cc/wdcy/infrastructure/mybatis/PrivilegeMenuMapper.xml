@@ -96,10 +96,19 @@
 		AND c.resource_id=d.resource_id
 	    AND d.menu_id=e.id and e.app_id=#{appId}
 	    AND e.status=0
+	    
     </select>
       <select id="getMenuListByAppId" resultMap="privilegeMenuMap" flushCache="true">
-       	select * from privilege_menu where app_id=#{appId}
+       	select * from privilege_menu where app_id=#{appId} 
        </select>
+       
+       <select id="getMenusByAppId"   resultMap="privilegeMenuMap" flushCache="true">
+       	select * from privilege_menu where app_id=#{appId} 
+       	  <if test="menuCode !=''">
+         and   menu_code = #{menuCode}
+        </if>
+       </select>
+       
     <update id="updatePrivilegeMenu" parameterType="PrivilegeMenu" flushCache="true">
         update privilege_menu set
         <if test="menuCode !=''">
