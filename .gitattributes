@@ -1815,6 +1815,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/api/RoleModifyPri
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UrlRedisPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UserGetMenusController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UserGetPrivilegeController.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UserGetPrivilegeTreeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UserMenuRedisPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UserRoleAddPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UserRoleBatchModifyPrivilegeController.java -text

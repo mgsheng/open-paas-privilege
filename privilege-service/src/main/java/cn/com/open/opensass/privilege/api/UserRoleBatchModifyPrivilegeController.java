@@ -250,6 +250,15 @@ public class UserRoleBatchModifyPrivilegeController extends BaseControllerUtil {
         {
             redisClient.del(redisUserPrivilegeKey.toString());
         }
+        StringBuilder redisUserAllPrivilegeKey=new StringBuilder(RedisConstant.PUBLICSERVICE_CACHE);
+		redisUserAllPrivilegeKey.append(RedisConstant.USER_ALL_CACHE_INFO);
+		redisUserAllPrivilegeKey.append(privilegeUserVo.getAppUserId());
+		redisUserAllPrivilegeKey.append(SIGN);
+		redisUserAllPrivilegeKey.append(privilegeUserVo.getAppUserId());
+		if(redisClient.existKey(redisUserAllPrivilegeKey.toString()))
+		{
+			redisClient.del(redisUserAllPrivilegeKey.toString());
+		}
         log.info("====================batch modify functionIds start======================");
         privilegeResourceService.updateAppResRedis(privilegeUserVo.getAppId());
         log.info("====================batch modify resourceIds start======================");

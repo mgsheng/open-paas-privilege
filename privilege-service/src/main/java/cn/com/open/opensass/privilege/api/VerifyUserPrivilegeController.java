@@ -116,6 +116,15 @@ public class VerifyUserPrivilegeController extends BaseControllerUtil {
 		{
 			redisClient.del(redisUserPrivilegeKey.toString());
 		}
+		 StringBuilder redisUserAllPrivilegeKey=new StringBuilder(RedisConstant.PUBLICSERVICE_CACHE);
+			redisUserAllPrivilegeKey.append(RedisConstant.USER_ALL_CACHE_INFO);
+			redisUserAllPrivilegeKey.append(appId);
+			redisUserAllPrivilegeKey.append(SIGN);
+			redisUserAllPrivilegeKey.append(appUserId);
+			if(redisClient.existKey(redisUserAllPrivilegeKey.toString()))
+			{
+				redisClient.del(redisUserAllPrivilegeKey.toString());
+			}
 		// 获取用户url缓存
 		PrivilegeAjaxMessage message = privilegeUrlService.getRedisUrl(appId,
 				appUserId);

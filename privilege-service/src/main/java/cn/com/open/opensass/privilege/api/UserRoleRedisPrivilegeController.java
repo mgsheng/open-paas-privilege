@@ -82,6 +82,15 @@ public class UserRoleRedisPrivilegeController extends BaseControllerUtil {
 		{
 			redisClient.del(redisUserPrivilegeKey.toString());
 		}
+		 StringBuilder redisUserAllPrivilegeKey=new StringBuilder(RedisConstant.PUBLICSERVICE_CACHE);
+			redisUserAllPrivilegeKey.append(RedisConstant.USER_ALL_CACHE_INFO);
+			redisUserAllPrivilegeKey.append(appId);
+			redisUserAllPrivilegeKey.append(SIGN);
+			redisUserAllPrivilegeKey.append(appUserId);
+			if(redisClient.existKey(redisUserAllPrivilegeKey.toString()))
+			{
+				redisClient.del(redisUserAllPrivilegeKey.toString());
+			}
 		PrivilegeAjaxMessage ajaxMessage=privilegeUserRedisService.updateUserRoleRedis(appId, appUserId);
 		if (ajaxMessage.getCode().equals("1")) {
 			WebUtils.writeJson(response, ajaxMessage.getMessage());
@@ -112,6 +121,16 @@ public class UserRoleRedisPrivilegeController extends BaseControllerUtil {
 		if(redisClient.existKey(redisUserPrivilegeKey.toString()))
 		{
 			redisClient.del(redisUserPrivilegeKey.toString());
+		}
+		StringBuilder redisUserAllPrivilegeKey=new StringBuilder(RedisConstant.PUBLICSERVICE_CACHE);
+		redisUserAllPrivilegeKey.append(RedisConstant.USER_ALL_CACHE_INFO);
+		redisUserAllPrivilegeKey.append(appId);
+		redisUserAllPrivilegeKey.append(SIGN);
+		redisUserAllPrivilegeKey.append(appUserId);
+		
+		if(redisClient.existKey(redisUserAllPrivilegeKey.toString()))
+		{
+			redisClient.del(redisUserAllPrivilegeKey.toString());
 		}
 		PrivilegeAjaxMessage ajaxMessage=privilegeUserRedisService.delUserRoleRedis(appId, appUserId);
 		if (ajaxMessage.getCode().equals("1")) {

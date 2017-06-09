@@ -182,6 +182,16 @@ public class UserRoleModifyPrivilegeController extends BaseControllerUtil{
 			{
 				redisClient.del(redisUserPrivilegeKey.toString());
 			}
+			StringBuilder redisUserAllPrivilegeKey=new StringBuilder(RedisConstant.PUBLICSERVICE_CACHE);
+			redisUserAllPrivilegeKey.append(RedisConstant.USER_ALL_CACHE_INFO);
+			redisUserAllPrivilegeKey.append(privilegeUserVo.getAppId());
+			redisUserAllPrivilegeKey.append(SIGN);
+			redisUserAllPrivilegeKey.append(privilegeUserVo.getAppUserId());
+			
+			if(redisClient.existKey(redisUserAllPrivilegeKey.toString()))
+			{
+				redisClient.del(redisUserAllPrivilegeKey.toString());
+			}
     		writeSuccessJson(response,map);
     	}
         return;

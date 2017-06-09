@@ -66,8 +66,6 @@ public class UserGetMenusController extends BaseControllerUtil {
 	private RedisClientTemplate redisClient;
 	@Autowired
 	private PrivilegeGroupService privilegeGroupService;
-	@Autowired
-	private RedisDao redisDao;
 
 	/**
 	 * 用户角色权限获取接口
@@ -87,11 +85,11 @@ public class UserGetMenusController extends BaseControllerUtil {
 			redisClient.setObject(RedisConstant.APP_INFO + privilegeUserVo.getAppId(), app);
 		}
 		// 认证
-//		Boolean f = OauthSignatureValidateHandler.validateSignature(request, app);
-//		if (!f) {
-//			paraMandaChkAndReturn(10001, response, "认证失败");
-//			return;
-//		}
+		Boolean f = OauthSignatureValidateHandler.validateSignature(request, app);
+		if (!f) {
+			paraMandaChkAndReturn(10001, response, "认证失败");
+			return;
+		}
 
 		// 获取当前用户信息
 		PrivilegeUser user = privilegeUserService.findByAppIdAndUserId(privilegeUserVo.getAppId(),
