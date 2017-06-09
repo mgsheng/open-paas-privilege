@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,7 +47,7 @@ public class GroupResourceBatchModifyPrivilegeController extends BaseControllerU
      *
      * @return Json
      */
-    @RequestMapping("batchGrModifyPrivilege")
+    @RequestMapping(value = "batchGrModifyPrivilege",method = RequestMethod.POST)
     public void modifyPrivilege(HttpServletRequest request, HttpServletResponse response) {
         String groupId = request.getParameter("groupId"); //组织机构id(多个用“,”分隔）（必传）
         String appId = request.getParameter("appId"); //（必传）

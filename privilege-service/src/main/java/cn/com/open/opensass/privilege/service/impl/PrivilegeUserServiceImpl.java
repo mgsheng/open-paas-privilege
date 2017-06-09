@@ -131,7 +131,6 @@ public class PrivilegeUserServiceImpl implements PrivilegeUserService {
 			privilegeBatchUserVo = new PrivilegeBatchUserVo();
 			privilegeBatchUserVo.setAppId(appId);
 			privilegeBatchUserVo.setAppUserId(privilegeUser.getAppUserId());
-			//0是添加1是删除
 			if (privilegeUser.getResourceId() != null && privilegeUser.getResourceId() != "" && resourceId != null && resourceId != "") {
 				privilegeBatchUserVo.setFunctionIds(CommonUtils.getReplaceLaterString(privilegeUser.getResourceId(), resourceId));
 			} else {

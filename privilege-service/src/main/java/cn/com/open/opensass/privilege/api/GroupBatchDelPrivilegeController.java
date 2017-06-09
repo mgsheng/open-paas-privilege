@@ -11,7 +11,9 @@ import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,6 +31,8 @@ import java.util.concurrent.Executors;
  * 修改历史 :
  * 1. [2017/6/7][17:43]创建文件 by JACKIE.
  */
+@Controller
+@RequestMapping("/group/")
 public class GroupBatchDelPrivilegeController extends BaseControllerUtil {
     private static final Logger log = LoggerFactory.getLogger(GroupBatchDelPrivilegeController.class);
     public static final String SIGN = RedisConstant.SIGN;
@@ -52,7 +56,7 @@ public class GroupBatchDelPrivilegeController extends BaseControllerUtil {
      * @param request
      * @param response
      */
-    @RequestMapping("batchModifyPrivilege")
+    @RequestMapping(value = "batchDelModifyPrivilege",method = RequestMethod.POST)
     public void modifyPrivilege(HttpServletRequest request, HttpServletResponse response) {
         String groupId = request.getParameter("groupId");
         String appId = request.getParameter("appId");
