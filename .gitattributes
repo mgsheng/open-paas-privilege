@@ -1813,6 +1813,8 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/api/RoleDelPrivil
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/RoleGetPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/RoleModifyPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UrlRedisPrivilegeController.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UserGetMenusController.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UserGetPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UserMenuRedisPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UserRoleAddPrivilegeController.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/api/UserRoleBatchModifyPrivilegeController.java -text
@@ -1912,6 +1914,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/HMacSha1.ja
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/Help_Encrypt.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/HttpTools.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/MD5.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/MergeTreeset.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/MonitorInfo.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/MonitorTools.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/NetworkUtil.java -text
@@ -1922,7 +1925,6 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/StringTool.
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/ValidateUtil.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/WebUtils.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/test.java -text
-privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/test1.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/testDemo.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeAjaxMessage.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeBatchUserVo.java -text
@@ -1934,6 +1936,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeResou
 privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeRoleVo.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/PrivilegeUserVo.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/TestPrivilege.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/vo/UserMenuVo.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/web/InitJob.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/web/InitKafkaMessage.java -text
 privilege-service/src/main/resources/cc/wdcy/infrastructure/mybatis/AppMapper.xml -text

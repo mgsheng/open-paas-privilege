@@ -13,6 +13,7 @@ public class PrivilegeUserVo {
     private String createUserId;
     private String functionId;
     private String method;
+    private String menuCode;
     /*0是添加1是删除*/
     private String operationType;
 
@@ -119,4 +120,13 @@ public class PrivilegeUserVo {
     public void setOperationType(String operationType) {
         this.operationType = operationType;
     }
+
+	public String getMenuCode() {
+		return menuCode;
+	}
+
+	public void setMenuCode(String menuCode) {
+		this.menuCode = menuCode;
+	}
+    
 }

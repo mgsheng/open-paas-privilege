@@ -176,7 +176,8 @@ public class BaseControllerUtil {
 	     * @param obj 数据集
 	     */
 	    public void writeSuccessJson(HttpServletResponse response, Map map){
-	    	WebUtils.writeJson(response, JSONObject.fromObject(map));
+	    	
+	    	WebUtils.writeJson(response, com.alibaba.fastjson.JSONObject.toJSONString(map));
 	    }
 	    /**
 	     * 返回成功json

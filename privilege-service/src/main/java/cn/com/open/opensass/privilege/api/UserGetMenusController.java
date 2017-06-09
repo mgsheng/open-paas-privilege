@@ -44,10 +44,10 @@ import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping("/userRole/")
-public class UserRoleGetPrivilegeController extends BaseControllerUtil {
+public class UserGetMenusController extends BaseControllerUtil {
 	public static final String SIGN = RedisConstant.SIGN;
 
-	private static final Logger log = LoggerFactory.getLogger(UserRoleGetPrivilegeController.class);
+	private static final Logger log = LoggerFactory.getLogger(UserGetMenusController.class);
 	@Autowired
 	private PrivilegeUserService privilegeUserService;
 	@Autowired
@@ -72,7 +72,7 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 	/**
 	 * 用户角色权限获取接口
 	 */
-	@RequestMapping(value = "getUserPrivilege")
+	@RequestMapping(value = "getUserPrivilegeMenus")
 	public void getPrivilege(HttpServletRequest request, HttpServletResponse response,
 			PrivilegeUserVo privilegeUserVo) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -87,11 +87,11 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 			redisClient.setObject(RedisConstant.APP_INFO + privilegeUserVo.getAppId(), app);
 		}
 		// 认证
-		Boolean f = OauthSignatureValidateHandler.validateSignature(request, app);
-		if (!f) {
-			paraMandaChkAndReturn(10001, response, "认证失败");
-			return;
-		}
+//		Boolean f = OauthSignatureValidateHandler.validateSignature(request, app);
+//		if (!f) {
+//			paraMandaChkAndReturn(10001, response, "认证失败");
+//			return;
+//		}
 
 		// 获取当前用户信息
 		PrivilegeUser user = privilegeUserService.findByAppIdAndUserId(privilegeUserVo.getAppId(),
@@ -111,109 +111,10 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 
 		}
 	
-
-			//	redisDao.getUrlRedis(RedisConstant.USERMENU_CACHE,  user.getAppId(), user.getAppUserId());
-		boolean processRedis=false;
-		Integer groupVersion =0;
-		if(redisClient.existKey(RedisConstant.GROUPVERSIONCACHE +  user.getAppId() + SIGN + user.getGroupId()))
-		{
-			 groupVersion = (Integer) redisClient.getObject(RedisConstant.GROUPVERSIONCACHE +  user.getAppId() + SIGN + user.getGroupId());
-			map.put("groupVersion",groupVersion);
-		}
-		Integer menuVersion = (Integer) redisClient.getObject(RedisConstant.APPMENUVERSIONCACHE+ user.getAppId());
-		String menuJedis = redisClient.getString(RedisConstant.USERMENU_CACHE+user.getAppId()+SIGN +user.getAppUserId());
-		// 缓存中是否存在菜单
-		if (null != menuJedis && menuJedis.length() > 0) {
-			processRedis=true;
-			//从缓存中获取应用菜单版本，与用户菜单缓存版本号对比，若版本号不相同，更新用户菜单缓存
-			if (menuVersion != null) {
-				JSONObject object = JSONObject.fromObject(menuJedis);
-				Integer userMenuCacheVersions = (Integer) object.get("version");
-				if (userMenuCacheVersions == null||!menuVersion.equals(userMenuCacheVersions)) {
-					processRedis=false;
-				} 
-			}
-		}
-		// 缓存中是否存在 角色以及url
-		String userUrlkey =  RedisConstant.USERPRIVILEGES_CACHE + user.getAppId() +SIGN +user.getAppUserId(); 
-		String urlJedis = redisClient.getString(userUrlkey);
-		if (urlJedis != null ) {
-			//如果用户拥有角色，获取该角色的版本号，与用户缓存的版本号对比，若不相同则更新用户url缓存
-			JSONObject object = JSONObject.fromObject(urlJedis);
-			JSONArray roleArray = object.getJSONArray("roleList");
-			if (roleArray != null) {
-				List<Map<String, Object>> roles = JSONArray.toList(roleArray,Map.class);
-				if (roles.size()>0) {
-					for (Map<String, Object> role : roles) {
-						String privilegeRoleId = (String) role.get("privilegeRoleId");
-						Integer roleVersion = (Integer) redisClient.getObject(RedisConstant.ROLEVERSIONCACHE+ user.getAppId()+SIGN+privilegeRoleId);
-						if (roleVersion != null) {
-							Integer userRoleVersion = (Integer) role.get("version");
-							if (userRoleVersion == null||!userRoleVersion.equals(roleVersion)) {
-								processRedis=false;
-								break;
-							}
-							
-						}
-					}
-				}
-			}}
-		//用户资源大缓存
-		StringBuilder redisUserPrivilegeKey=new StringBuilder(RedisConstant.PUBLICSERVICE_CACHE);
-		redisUserPrivilegeKey.append(RedisConstant.USER_CACHE_INFO);
-		redisUserPrivilegeKey.append(user.getAppId());
-		redisUserPrivilegeKey.append(SIGN);
-		redisUserPrivilegeKey.append(user.getAppUserId());
-	   //直接走缓存，返回数据
-		if(processRedis)
-		{
-		String res=	redisClient.getString(redisUserPrivilegeKey.toString());
-		if(res!=null&&res.length()>0)
-		{
-			if(groupVersion==0)
-			{
-				writeJsonString(response, res);
-				return;	
-			}
-			else
-			{
-				//组织机构版本相同，则走缓存
-				JSONObject userData=JSONObject.fromObject(res);
-				Integer version=(Integer) userData.get("groupVersion");
-				if(version!=null||version==groupVersion)
-				{
-					writeJsonString(response, res);
-					return;	
-				}
-			}
-		
-		}
-		}
-		else
-		{
-			if(redisClient.existKey(redisUserPrivilegeKey.toString()))
-			{
-				redisClient.del(redisUserPrivilegeKey.toString());
-			}
-		}
 		
 		//用户资源缓存
 		PrivilegeAjaxMessage roleMessage = privilegeUserRedisService.getRedisUserRole(privilegeUserVo.getAppId(),
 				privilegeUserVo.getAppUserId());
-		PrivilegeAjaxMessage menuMessage = new PrivilegeAjaxMessage();
-		if(privilegeUserVo.getMenuCode()!=null&&privilegeUserVo.getMenuCode().length()>0)
-		{
-			Map<String,String> userMap=new HashMap();
-			userMap.put("appId", user.getAppId());
-			userMap.put("appUserId", user.getAppUserId());
-			userMap.put("menuCode", privilegeUserVo.getMenuCode());
-			menuMessage=privilegeMenuService.getMenuRedisByMap(userMap);
-		}
-		else
-		{
-			menuMessage=privilegeMenuService.getMenuRedis(privilegeUserVo.getAppId(),
-					privilegeUserVo.getAppUserId());
-		}
 		//用户菜单缓存
 	
 		
@@ -284,7 +185,6 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 
 		// redis中没有menuMap，从数据库中查询并存入redis
 		Map<String, Object> menuMap = new HashMap<String, Object>();
-		if (menuMessage.getCode().equals("0")) {
 			List<PrivilegeMenu> privilegeMenuList = new ArrayList<PrivilegeMenu>();
 			if (boo) {// 有管理员角色获取所有应用下菜单
 				JSONObject obj1 = new JSONObject();
@@ -303,15 +203,17 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 					{
 						message=privilegeMenuService.getAppMenuRedis(user.getAppId());
 					}
-					
-					obj1 = JSONObject.fromObject(message.getMessage());
-					JSONArray menuArray = obj1.getJSONArray("menuList");
-//					List<PrivilegeMenuVo> menuVos = privilegeMenuService.findMenuByResourceType(0);
-					List<PrivilegeMenuVo> menuList = JSONArray.toList(menuArray, PrivilegeMenuVo.class);
-					Set<PrivilegeMenuVo> set = new HashSet<PrivilegeMenuVo>();
-//					set.addAll(menuVos);
-					set.addAll(menuList);
-					objArray = JSONArray.fromObject(set);
+					if (message.getCode().equals("1")) {
+						obj1 = JSONObject.fromObject(message.getMessage());
+						JSONArray menuArray = obj1.getJSONArray("menuList");
+//						List<PrivilegeMenuVo> menuVos = privilegeMenuService.findMenuByResourceType(0);
+						List<PrivilegeMenuVo> menuList = JSONArray.toList(menuArray, PrivilegeMenuVo.class);
+						Set<PrivilegeMenuVo> set = new HashSet<PrivilegeMenuVo>();
+//						set.addAll(menuVos);
+						set.addAll(menuList);
+						objArray = JSONArray.fromObject(set);
+					}
+			
 				} else {
 					PrivilegeAjaxMessage message = privilegeGroupService.findGroupPrivilege(user.getGroupId(),
 							user.getAppId());
@@ -357,41 +259,6 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 				menuMap.put("menuList", privilegeMenuListData);
 			}
 			map.putAll(menuMap);
-		} else {
-			JSONObject obj1 = JSONObject.fromObject(menuMessage.getMessage());// 将json字符串转换为json对象
-			JSONArray objArray = null;
-			// 去重处理
-			Set<PrivilegeMenuVo> menuSet = new HashSet<PrivilegeMenuVo>();
-			if (Type == 2) {
-				// 如果为管理员 返回应用所有菜单
-				PrivilegeAjaxMessage message = new PrivilegeAjaxMessage() ;
-				if(privilegeUserVo.getMenuCode()!=null&&privilegeUserVo.getMenuCode().length()>0)
-				{
-					Map<String,String> userMap=new HashMap();
-					userMap.put("appId", user.getAppId());
-					userMap.put("menuCode", privilegeUserVo.getMenuCode());
-					message=privilegeMenuService.getManagerMenuRedis(userMap);
-				}
-				else
-				{
-					message=privilegeMenuService.getAppMenuRedis(user.getAppId());
-				}
-				
-				obj1 = JSONObject.fromObject(message.getMessage());
-				JSONArray menuArray = obj1.getJSONArray("menuList");
-				List<PrivilegeMenuVo> menuList = JSONArray.toList(menuArray, PrivilegeMenuVo.class);
-				// 公共的菜单
-//				List<PrivilegeMenuVo> menuVos = privilegeMenuService.findMenuByResourceType(0);
-//				menuSet.addAll(menuVos);
-				menuSet.addAll(menuList);
-			} else {
-				objArray = (JSONArray) obj1.get("menuList");
-				List<PrivilegeMenuVo> userMenuList=JSONArray.toList(objArray, PrivilegeMenuVo.class);
-				menuSet.addAll(userMenuList);
-			}
-			menuMap.put("menuList", menuSet);
-			map.putAll(menuMap);
-		}
 		
 /*		Set<PrivilegeMenuVo> menuSet=(Set<PrivilegeMenuVo>) map.get("menuList");
 		Set<PrivilegeResourceVo> resList =(Set<PrivilegeResourceVo>) map.get("resourceList");
@@ -404,7 +271,6 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 		if (map.get("status") == "0") {
 			writeErrorJson(response, map);
 		} else {
-			redisClient.setString(redisUserPrivilegeKey.toString(), JSONObject.fromObject(map).toString());
 			writeSuccessJson(response, map);
 		}
 		return;

@@ -33,21 +33,23 @@ import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserRedisService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
+import cn.com.open.opensass.privilege.tools.MergeTreeset;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
 import cn.com.open.opensass.privilege.tools.StringTool;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
 import cn.com.open.opensass.privilege.vo.PrivilegeResourceVo;
 import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
+import cn.com.open.opensass.privilege.vo.UserMenuVo;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping("/userRole/")
-public class UserRoleGetPrivilegeController extends BaseControllerUtil {
+public class UserGetPrivilegeController extends BaseControllerUtil {
 	public static final String SIGN = RedisConstant.SIGN;
 
-	private static final Logger log = LoggerFactory.getLogger(UserRoleGetPrivilegeController.class);
+	private static final Logger log = LoggerFactory.getLogger(UserGetPrivilegeController.class);
 	@Autowired
 	private PrivilegeUserService privilegeUserService;
 	@Autowired
@@ -72,7 +74,7 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 	/**
 	 * 用户角色权限获取接口
 	 */
-	@RequestMapping(value = "getUserPrivilege")
+	@RequestMapping(value = "getUserMenus")
 	public void getPrivilege(HttpServletRequest request, HttpServletResponse response,
 			PrivilegeUserVo privilegeUserVo) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -160,7 +162,7 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 			}}
 		//用户资源大缓存
 		StringBuilder redisUserPrivilegeKey=new StringBuilder(RedisConstant.PUBLICSERVICE_CACHE);
-		redisUserPrivilegeKey.append(RedisConstant.USER_CACHE_INFO);
+		redisUserPrivilegeKey.append(RedisConstant.USER_ALL_CACHE_INFO);
 		redisUserPrivilegeKey.append(user.getAppId());
 		redisUserPrivilegeKey.append(SIGN);
 		redisUserPrivilegeKey.append(user.getAppUserId());
@@ -393,14 +395,13 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 			map.putAll(menuMap);
 		}
 		
-/*		Set<PrivilegeMenuVo> menuSet=(Set<PrivilegeMenuVo>) map.get("menuList");
+	    Set<PrivilegeMenuVo> menuSet=(Set<PrivilegeMenuVo>) map.get("menuList");
 		Set<PrivilegeResourceVo> resList =(Set<PrivilegeResourceVo>) map.get("resourceList");
-		
 		MergeTreeset  menuList= new MergeTreeset(menuSet,resList);
 		menuList.merge("0");
 		Set<UserMenuVo> menuVo=menuList.get_userMenuVos();
 		menuMap.put("menuList", menuVo);
-		map.putAll(menuMap);*/
+		map.putAll(menuMap);
 		if (map.get("status") == "0") {
 			writeErrorJson(response, map);
 		} else {
