@@ -14,7 +14,6 @@
 		<spring.security.version>3.1.0.RELEASE</spring.security.version>
 		<aspectj.version>1.6.10</aspectj.version>
 		<mybatis.version>3.2.1</mybatis.version>
-		<mybatisspring.version>1.1.1</mybatisspring.version>
 		<!--jdbc execute sql config -->
 		<jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
 		<jdbc.url>jdbc:mysql://localhost:3306/wdcy_test?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf8</jdbc.url>
@@ -26,8 +25,7 @@
 	</properties>
 	<build>
 		<finalName>privilege-service</finalName>
-	
-	<pluginManagement>
+
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -60,7 +58,7 @@
 					</archive>
 				</configuration>
 			</plugin>
-	
+
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>sql-maven-plugin</artifactId>
@@ -81,26 +79,7 @@
 					<skip>${jdbc.execute.skip}</skip>
 				</configuration>
 
-				<executions>
-					<execution>
-						<id>init db</id>
-						<phase>initialize</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<url>${jdbc.url}</url>
-							<autocommit>true</autocommit>
-							<srcFiles>
-								<srcFile>others/database/initial_db.ddl</srcFile>
-								<srcFile>others/database/oauth.ddl</srcFile>
-							</srcFiles>
-							<onError>continue</onError>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
-	
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.4</version>
@@ -127,7 +106,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
-	</pluginManagement>
+
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
@@ -153,7 +132,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.10</version>
+			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
 		<!--mybatis -->
@@ -163,11 +142,10 @@
 			<version>${mybatis.version}</version>
 		</dependency>
 		<dependency>
-
-				<groupId>org.mybatis</groupId>
-				<artifactId>mybatis-spring</artifactId>
-				<version>${mybatisspring.version}</version>
-	</dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+			<version>1.1.1</version>
+		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
@@ -346,11 +324,6 @@
 			<version>1.4.1</version>
 		</dependency> -->
 		<!-- kafka -->
- 		<dependency>
-			<groupId>org.apache.kafka</groupId>
-			<artifactId>kafka_2.10</artifactId>
-			<version>0.8.0</version>
-		</dependency>
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-jdk16</artifactId>
@@ -461,6 +434,10 @@
 			<artifactId>geronimo-jaxws_2.1_spec</artifactId>
 			<version>1.0</version>
 		</dependency> -->
-	
+	<dependency>
+    <groupId>com.alibaba</groupId>
+    <artifactId>fastjson</artifactId>
+    <version>1.2.31</version>
+</dependency>
 	</dependencies>
 </project>
