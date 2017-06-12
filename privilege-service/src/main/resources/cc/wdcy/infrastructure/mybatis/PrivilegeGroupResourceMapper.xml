@@ -92,13 +92,14 @@
         <foreach collection="list" item="item" index="index" open="" close="" separator=";">
             INSERT INTO privilege_group_resource (group_id, resource_id, create_user, create_time, create_userid,
             status, app_id)
-            VALUES ('${item.groupId}',
+            SELECT '${item.groupId}',
             '${item.resourceIds}',
             '${item.createUser}',
             now(),
             '${item.createUserId}',
             ${item.status},
-            '${item.appId}')
+            '${item.appId}' FROM privilege_group_resource
+            WHERE NOT EXISTS (SELECT group_id, resource_id FROM privilege_group_resource WHERE group_id='${item.groupId}' AND resource_id = '${item.resourceIds}' AND app_id = '${item.appId}') LIMIT 1
         </foreach>
 
     </insert>
