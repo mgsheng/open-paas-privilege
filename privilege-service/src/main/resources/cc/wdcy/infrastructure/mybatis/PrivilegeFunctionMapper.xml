@@ -21,7 +21,7 @@
     </sql>
     <select id="findByFunctionId" resultMap="privilegeFunctionMap" flushCache="true">
     	SELECT pf.* FROM privilege_function pf ,privilege_resource pr WHERE pf.id=#{functionId} 
-    	AND pf.resource_id=pr.resource_id AND pr.app_id=#{appId}
+    	AND pf.resource_id=pr.resource_id AND pr.app_id=#{appId} limit 1
     </select>
     <select id="findAppFunction" resultType="java.lang.String" flushCache="true">
         SELECT opt_url FROM privilege_function pf,privilege_resource pr WHERE pr.app_id=#{appId} AND pf.resource_id=pr.resource_id

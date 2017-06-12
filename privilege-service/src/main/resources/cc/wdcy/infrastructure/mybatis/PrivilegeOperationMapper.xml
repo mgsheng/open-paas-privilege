@@ -17,7 +17,7 @@
     </sql>
     <select id="findById" resultMap="privilegeOperationMap" flushCache="true">
         SELECT * FROM  privilege_operation
-        where  id = #{id}
+        where  id = #{id} limit 1
     </select>
     <select id="findAllOper" resultMap="privilegeOperationMap" flushCache="true">
         SELECT * FROM privilege_operation WHERE STATUS='1'

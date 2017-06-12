@@ -38,7 +38,7 @@
 	
 	<select id="findByRoleId" resultMap="privilegeRoleMap" flushCache="true">
          select * from privilege_role
-         where  privilege_roleid = #{privilegeRoleId}
+         where  privilege_roleid = #{privilegeRoleId} limit 1
 	</select>
 	<select id="getRoleListByUserId" resultType="java.util.HashMap" flushCache="true">
 		SELECT c.app_id as appId,c.dept_id  as deptId,c.dept_name as deptName,c.group_id as groupId,

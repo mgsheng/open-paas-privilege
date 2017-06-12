@@ -24,7 +24,7 @@
 	<select id="findByGroupId" resultMap="privilegeGroupMap" flushCache="true">
          select * from privilege_group
          where  group_id = #{groupId}
-         and app_id=#{appId}
+         and app_id=#{appId} limit 1
 	</select>
 	<select id="findByAppId" resultMap="privilegeGroupMap" flushCache="true">
          select * from privilege_group

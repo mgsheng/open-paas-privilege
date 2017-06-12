@@ -25,7 +25,7 @@
          where  id = #{id}
 	</select>
 	<select id="findByUidAndRoleId" resultMap="privilegeUserRoleMap" flushCache="true">
-		select * from privilege_user_role where privilege_roleid = #{privilegeRoleId} and user_id = #{userId} 
+		select * from privilege_user_role where privilege_roleid = #{privilegeRoleId} and user_id = #{userId} limit 1
 	</select>
 	<insert id="savePrivilegeUserRole" parameterType="PrivilegeUserRole" useGeneratedKeys="true" keyProperty="id">
         insert into privilege_user_role (user_id,privilege_roleid,create_userid,create_user,create_time,status)

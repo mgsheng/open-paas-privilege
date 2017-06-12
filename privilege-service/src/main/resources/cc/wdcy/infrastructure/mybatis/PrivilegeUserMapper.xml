@@ -48,10 +48,10 @@
         </if>
 	</select>
  	<select id="findByAppIdAndAppUserId" resultMap="privilegeUserMap" flushCache="true">
- 		select * from privilege_user where app_id=#{appId} and app_userid=#{appUserId}
+ 		select * from privilege_user where app_id=#{appId} and app_userid=#{appUserId} limit 1
  	</select>
     <select id="findByAppIdAndAppUserIds" resultMap="privilegeUserMap" flushCache="true">
-        select * from privilege_user where app_id=#{appId} and app_userid IN (${appUserId})
+        select * from privilege_user where app_id=#{appId} and app_userid IN (${appUserId}) 
     </select>
    <select id="findUserResources"  resultType="java.lang.String" flushCache="true">
    SELECT d.base_url from privilege_user a,privilege_user_role b,privilege_role_resource c,privilege_resource d

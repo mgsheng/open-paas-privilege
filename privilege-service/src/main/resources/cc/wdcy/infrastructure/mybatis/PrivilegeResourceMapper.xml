@@ -36,7 +36,7 @@
 	</select>
 	<select id="getResourceListByMenuId" resultMap="privilegeResourceMap" flushCache="true">
          select * from privilege_resource
-         where menu_id = #{menuId}
+         where menu_id = #{menuId} limit 1
 	</select>
 	<select id="getResourceListByFunIds" resultMap="privilegeResourceMap" flushCache="true">
          SELECT pr.* FROM privilege_resource pr,privilege_function pf,privilege_menu pm
@@ -49,7 +49,7 @@
 	<select id="getResourceListByFunId" resultMap="privilegeResourceMap" flushCache="true">
          SELECT pr.* FROM privilege_resource pr,privilege_function pf
 		WHERE pf.id =#{functionId}
-		AND pf.resource_id=pr.resource_id and pr.app_id=#{appId}
+		AND pf.resource_id=pr.resource_id and pr.app_id=#{appId} limit 1
 	</select>
 	<select id="findAppResources"  resultType="java.lang.String" flushCache="true">
   		 SELECT base_url FROM privilege_resource WHERE app_id =#{appId} AND NOT(base_url IS NULL OR base_url='')
@@ -57,7 +57,7 @@
 	<select id="findByResource_Id" resultMap="privilegeResourceMap" flushCache="true">
          select pr.* from privilege_resource pr,privilege_menu pm 
          where  pr.resource_id = #{resourceId} and pr.menu_id=pm.id and pm.status=0
-         and pr.app_id=#{appId}
+         and pr.app_id=#{appId} limit 1
        
 	</select>
 	<select id="findByResourceIds" resultMap="privilegeResourceMap" flushCache="true">
@@ -73,7 +73,7 @@
     <select id="findByResourceId" resultMap="privilegeResourceMap" flushCache="true">
          select * from privilege_resource pr,privilege_menu pm 
          where   pr.resource_id = #{resourceId} and pr.menu_id=pm.id and pm.status=0
-         and pr.app_id=#{appId}
+         and pr.app_id=#{appId} limit 1
 	</select>
     <select id="findResourcePage" resultMap="privilegeResourceMap" flushCache="true">
          select * from privilege_resource where  app_id=#{appId}
