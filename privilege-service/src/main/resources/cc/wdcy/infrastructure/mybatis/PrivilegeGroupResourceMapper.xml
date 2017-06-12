@@ -33,6 +33,7 @@
         <if test="resourceId != null and resourceId !=''">
             and resource_id=#{resourceId}
         </if>
+        limit 1
     </select>
     <update id="updatePrivilegeGroupResource"
             parameterType="cn.com.open.opensass.privilege.model.PrivilegeGroupResource" flushCache="true">
