@@ -132,9 +132,9 @@ public class PrivilegeUserServiceImpl implements PrivilegeUserService {
 			privilegeBatchUserVo.setAppId(appId);
 			privilegeBatchUserVo.setAppUserId(privilegeUser.getAppUserId());
 			if (privilegeUser.getResourceId() != null && privilegeUser.getResourceId() != "" && resourceId != null && resourceId != "") {
-				privilegeBatchUserVo.setFunctionIds(CommonUtils.getReplaceLaterString(privilegeUser.getResourceId(), resourceId));
+				privilegeBatchUserVo.setResourceIds(CommonUtils.getReplaceLaterString(privilegeUser.getResourceId(), resourceId));
 			} else {
-				privilegeBatchUserVo.setFunctionIds(privilegeUser.getResourceId());
+				privilegeBatchUserVo.setResourceIds(privilegeUser.getResourceId());
 			}
 			if (privilegeUser.getPrivilegeFunId() != null && privilegeUser.getPrivilegeFunId() != "" && functionId != null && functionId != "") {
 
