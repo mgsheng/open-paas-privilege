@@ -324,18 +324,19 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 					privilegeFunctions.addAll(functions);
 				}
 			}
-			// 查询单独的resource 包含的function
-			if (resourceIds.size() > 0) {
-				for (String resourceId : resourceIds) {
-					List<Map<String, Object>> list = privilegeFunctionService
-							.getFunctionMap(resourceId, appId);
-					privilegeFunctions.addAll(list);
-				}
-			}
 			Set<Map<String, Object>> functionSet = new HashSet<Map<String, Object>>();
 			functionSet.addAll(privilegeFunctions);
 			// 如果为机构管理员，返回该组织机构功能
 			if (Type == 3) {
+				// 查询单独的resource 包含的function
+				if (resourceIds.size() > 0) {
+					for (String resourceId : resourceIds) {
+						List<Map<String, Object>> list = privilegeFunctionService
+								.getFunctionMap(resourceId, appId);
+						privilegeFunctions.addAll(list);
+					}
+				}
+				functionSet.addAll(privilegeFunctions);
 				// 该应用的资源的缓存
 				PrivilegeAjaxMessage appMessage = privilegeResourceService
 						.getAppResRedis(appId);
