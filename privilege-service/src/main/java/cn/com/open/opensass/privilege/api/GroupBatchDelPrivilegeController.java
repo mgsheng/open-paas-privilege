@@ -74,11 +74,11 @@ public class GroupBatchDelPrivilegeController extends BaseControllerUtil {
             redisClient.setObject(RedisConstant.APP_INFO + appId, app);
         }
         //认证
-       /* Boolean f = OauthSignatureValidateHandler.validateSignature(request, app);
+        Boolean f = OauthSignatureValidateHandler.validateSignature(request, app);
         if (!f) {
             WebUtils.paraMandaChkAndReturn(10002, response, "认证失败");
             return;
-        }*/
+        }
         //批量更新语句
         Map<String,Object> map = privilegeUserService.batchUpdateGroupResourceFunction(appId,groupId,resourceId,functionId);
 
