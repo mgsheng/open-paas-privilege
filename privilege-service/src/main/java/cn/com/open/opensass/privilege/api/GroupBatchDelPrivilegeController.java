@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * TODO .
@@ -105,13 +106,13 @@ public class GroupBatchDelPrivilegeController extends BaseControllerUtil {
         privilegeResourceService.updateAppResRedis(appId);
         log.info("====================batch modify resourceIds start======================");
         final PrivilegeAjaxMessage[] message = {null};
+
         try {
-            final ExecutorService threadPool = Executors.newCachedThreadPool();//线程池里面的线程数会动态变化
+            final ExecutorService threadPool = Executors.newFixedThreadPool(users.length/4);//线程池里面有10个线程
             for (final String userId : users) {
                 threadPool.execute(new Runnable() {
                     @Override
                     public void run() {
-                        synchronized (threadPool) {
                             if (userId != null && userId != "") {
                                 log.debug("Thread Delete Name is" + Thread.currentThread().getName() + ",userId:" + userId);
                                 log.info("====================batch modify big cache start======================");
@@ -136,10 +137,13 @@ public class GroupBatchDelPrivilegeController extends BaseControllerUtil {
                                 message[0] = privilegeUserRedisService.updateUserRoleRedis(appId, userId);
                                 privilegeMenuService.updateMenuRedis(appId, userId);
                                 privilegeUrlService.updateRedisUrl(appId, userId);
-                            }
                         }
                     }
                 });
+            }
+            threadPool.shutdown();
+            while (!threadPool.awaitTermination(1, TimeUnit.SECONDS)) {
+                //等待线程池执行完毕
             }
         } catch (Exception e) {
             message[0] = null;
