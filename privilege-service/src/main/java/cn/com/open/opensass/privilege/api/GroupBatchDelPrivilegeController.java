@@ -74,11 +74,11 @@ public class GroupBatchDelPrivilegeController extends BaseControllerUtil {
             redisClient.setObject(RedisConstant.APP_INFO + appId, app);
         }
         //认证
-        Boolean f = OauthSignatureValidateHandler.validateSignature(request, app);
+       /* Boolean f = OauthSignatureValidateHandler.validateSignature(request, app);
         if (!f) {
             WebUtils.paraMandaChkAndReturn(10002, response, "认证失败");
             return;
-        }
+        }*/
         //批量更新语句
         Map<String,Object> map = privilegeUserService.batchUpdateGroupResourceFunction(appId,groupId,resourceId,functionId);
 
@@ -108,7 +108,11 @@ public class GroupBatchDelPrivilegeController extends BaseControllerUtil {
         final PrivilegeAjaxMessage[] message = {null};
 
         try {
-            final ExecutorService threadPool = Executors.newFixedThreadPool(users.length/4);//线程池里面有10个线程
+            int count = users.length/4;
+            if(count == 0){
+                count = Runtime.getRuntime().availableProcessors();
+            }
+            final ExecutorService threadPool = Executors.newFixedThreadPool(count);//线程池里面有10个线程
             for (final String userId : users) {
                 threadPool.execute(new Runnable() {
                     @Override
