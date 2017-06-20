@@ -73,6 +73,7 @@ public class UserGetMenusController extends BaseControllerUtil {
 	@RequestMapping(value = "getUserPrivilegeMenus")
 	public void getPrivilege(HttpServletRequest request, HttpServletResponse response,
 			PrivilegeUserVo privilegeUserVo) {
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		log.info("====================get user privilege start======================");
 		if (!paraMandatoryCheck(Arrays.asList(privilegeUserVo.getAppId(), privilegeUserVo.getAppUserId()))) {
@@ -109,10 +110,25 @@ public class UserGetMenusController extends BaseControllerUtil {
 
 		}
 	
+
 		
 		//用户资源缓存
 		PrivilegeAjaxMessage roleMessage = privilegeUserRedisService.getRedisUserRole(privilegeUserVo.getAppId(),
 				privilegeUserVo.getAppUserId());
+		PrivilegeAjaxMessage menuMessage = new PrivilegeAjaxMessage();
+		if(privilegeUserVo.getMenuCode()!=null&&privilegeUserVo.getMenuCode().length()>0)
+		{
+			Map<String,String> userMap=new HashMap();
+			userMap.put("appId", user.getAppId());
+			userMap.put("appUserId", user.getAppUserId());
+			userMap.put("menuCode", privilegeUserVo.getMenuCode());
+			menuMessage=privilegeMenuService.getMenuRedisByMap(userMap);
+		}
+		else
+		{
+			menuMessage=privilegeMenuService.getMenuRedis(privilegeUserVo.getAppId(),
+					privilegeUserVo.getAppUserId());
+		}
 		//用户菜单缓存
 	
 		
@@ -183,6 +199,7 @@ public class UserGetMenusController extends BaseControllerUtil {
 
 		// redis中没有menuMap，从数据库中查询并存入redis
 		Map<String, Object> menuMap = new HashMap<String, Object>();
+		if (menuMessage.getCode().equals("0")) {
 			List<PrivilegeMenu> privilegeMenuList = new ArrayList<PrivilegeMenu>();
 			if (boo) {// 有管理员角色获取所有应用下菜单
 				JSONObject obj1 = new JSONObject();
@@ -201,17 +218,15 @@ public class UserGetMenusController extends BaseControllerUtil {
 					{
 						message=privilegeMenuService.getAppMenuRedis(user.getAppId());
 					}
-					if (message.getCode().equals("1")) {
-						obj1 = JSONObject.fromObject(message.getMessage());
-						JSONArray menuArray = obj1.getJSONArray("menuList");
-//						List<PrivilegeMenuVo> menuVos = privilegeMenuService.findMenuByResourceType(0);
-						List<PrivilegeMenuVo> menuList = JSONArray.toList(menuArray, PrivilegeMenuVo.class);
-						Set<PrivilegeMenuVo> set = new HashSet<PrivilegeMenuVo>();
-//						set.addAll(menuVos);
-						set.addAll(menuList);
-						objArray = JSONArray.fromObject(set);
-					}
-			
+					
+					obj1 = JSONObject.fromObject(message.getMessage());
+					JSONArray menuArray = obj1.getJSONArray("menuList");
+//					List<PrivilegeMenuVo> menuVos = privilegeMenuService.findMenuByResourceType(0);
+					List<PrivilegeMenuVo> menuList = JSONArray.toList(menuArray, PrivilegeMenuVo.class);
+					Set<PrivilegeMenuVo> set = new HashSet<PrivilegeMenuVo>();
+//					set.addAll(menuVos);
+					set.addAll(menuList);
+					objArray = JSONArray.fromObject(set);
 				} else {
 					PrivilegeAjaxMessage message = privilegeGroupService.findGroupPrivilege(user.getGroupId(),
 							user.getAppId());
@@ -257,6 +272,41 @@ public class UserGetMenusController extends BaseControllerUtil {
 				menuMap.put("menuList", privilegeMenuListData);
 			}
 			map.putAll(menuMap);
+		} else {
+			JSONObject obj1 = JSONObject.fromObject(menuMessage.getMessage());// 将json字符串转换为json对象
+			JSONArray objArray = null;
+			// 去重处理
+			Set<PrivilegeMenuVo> menuSet = new HashSet<PrivilegeMenuVo>();
+			if (Type == 2) {
+				// 如果为管理员 返回应用所有菜单
+				PrivilegeAjaxMessage message = new PrivilegeAjaxMessage() ;
+				if(privilegeUserVo.getMenuCode()!=null&&privilegeUserVo.getMenuCode().length()>0)
+				{
+					Map<String,String> userMap=new HashMap();
+					userMap.put("appId", user.getAppId());
+					userMap.put("menuCode", privilegeUserVo.getMenuCode());
+					message=privilegeMenuService.getManagerMenuRedis(userMap);
+				}
+				else
+				{
+					message=privilegeMenuService.getAppMenuRedis(user.getAppId());
+				}
+				
+				obj1 = JSONObject.fromObject(message.getMessage());
+				JSONArray menuArray = obj1.getJSONArray("menuList");
+				List<PrivilegeMenuVo> menuList = JSONArray.toList(menuArray, PrivilegeMenuVo.class);
+				// 公共的菜单
+//				List<PrivilegeMenuVo> menuVos = privilegeMenuService.findMenuByResourceType(0);
+//				menuSet.addAll(menuVos);
+				menuSet.addAll(menuList);
+			} else {
+				objArray = (JSONArray) obj1.get("menuList");
+				List<PrivilegeMenuVo> userMenuList=JSONArray.toList(objArray, PrivilegeMenuVo.class);
+				menuSet.addAll(userMenuList);
+			}
+			menuMap.put("menuList", menuSet);
+			map.putAll(menuMap);
+		}
 		
 /*		Set<PrivilegeMenuVo> menuSet=(Set<PrivilegeMenuVo>) map.get("menuList");
 		Set<PrivilegeResourceVo> resList =(Set<PrivilegeResourceVo>) map.get("resourceList");
@@ -272,5 +322,6 @@ public class UserGetMenusController extends BaseControllerUtil {
 			writeSuccessJson(response, map);
 		}
 		return;
+	
 	}
 }
