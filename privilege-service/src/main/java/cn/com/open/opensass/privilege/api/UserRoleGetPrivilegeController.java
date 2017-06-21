@@ -77,7 +77,7 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 			PrivilegeUserVo privilegeUserVo) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		log.info("====================get user privilege start======================");
-		if (!paraMandatoryCheck(Arrays.asList(privilegeUserVo.getAppId(), privilegeUserVo.getAppUserId()))) {
+		if (!paraMandatoryCheck(Arrays.asList(privilegeUserVo.getAppId(), privilegeUserVo.getAppUserId(),privilegeUserVo.getMenuCode()))) {
 			paraMandaChkAndReturn(10000, response, "必传参数中有空值");
 			return;
 		}
