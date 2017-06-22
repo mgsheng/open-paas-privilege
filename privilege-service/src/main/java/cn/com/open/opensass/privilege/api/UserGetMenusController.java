@@ -204,6 +204,7 @@ public class UserGetMenusController extends BaseControllerUtil {
 			if (boo) {// 有管理员角色获取所有应用下菜单
 				JSONObject obj1 = new JSONObject();
 				JSONArray objArray = new JSONArray();
+				Set<PrivilegeMenuVo> menuSet = new HashSet<PrivilegeMenuVo>();
 				if (Type == 2) {
 					// 如果为管理员 返回应用所有菜单
 					PrivilegeAjaxMessage message = new PrivilegeAjaxMessage();
@@ -225,21 +226,18 @@ public class UserGetMenusController extends BaseControllerUtil {
 					List<PrivilegeMenuVo> menuList = JSONArray.toList(menuArray, PrivilegeMenuVo.class);
 					Set<PrivilegeMenuVo> set = new HashSet<PrivilegeMenuVo>();
 //					set.addAll(menuVos);
-					set.addAll(menuList);
-					objArray = JSONArray.fromObject(set);
+					menuSet.addAll(menuList);
 				} else {
 					PrivilegeAjaxMessage message = privilegeGroupService.findGroupPrivilege(user.getGroupId(),
 							user.getAppId());
-					Set<PrivilegeMenuVo> menuSet = new HashSet<PrivilegeMenuVo>();
 					if (message.getCode().equals("1")) {
 						obj1 = JSONObject.fromObject(message.getMessage());
 						JSONArray menuArray = obj1.getJSONArray("menuList");
 						List<PrivilegeMenuVo> menuList = JSONArray.toList(menuArray, PrivilegeMenuVo.class);
 						menuSet.addAll(menuList);
 					}
-					objArray = JSONArray.fromObject(menuSet);
 				}
-				menuMap.put("menuList", objArray);
+				menuMap.put("menuList", menuSet);
 			} else {// 无管理员角色获取相应权限菜单
 				privilegeMenuList = privilegeMenuService.getMenuListByUserId(user.getAppUserId(), user.getAppId());
 				// 根据roleResource表中functionId无resourceId 查询菜单
