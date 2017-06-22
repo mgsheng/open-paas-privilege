@@ -179,7 +179,7 @@
             <property name="kafka_group" value="${kafka_group}"></property>
             <property name="zookeeper_connect" value="${zookeeper_connect}"></property>
             <property name="metadata_broker_list" value="${metadata_broker_list}"></property>
-            
+             <property name="kong_log_url" value="${kong_log_url}"></property>
         </bean>
         
        <bean id="redisClientTemplate" class="cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate"></bean>
