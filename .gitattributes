@@ -1915,6 +1915,7 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/HMacSha1.ja
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/Help_Encrypt.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/HttpTools.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/MD5.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/MenuProcessUtil.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/MergeTreeset.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/MonitorInfo.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/tools/MonitorTools.java -text
