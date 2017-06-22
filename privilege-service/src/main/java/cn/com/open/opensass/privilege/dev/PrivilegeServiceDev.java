@@ -7,8 +7,16 @@ public class PrivilegeServiceDev {
 	public String zookeeper_connect;
 	public String metadata_broker_list;
 	
+	public String kong_log_url;
 	
-	
+	public String getKong_log_url() {
+		return kong_log_url;
+	}
+
+	public void setKong_log_url(String kong_log_url) {
+		this.kong_log_url = kong_log_url;
+	}
+
 	public String getZookeeper_connect() {
 		return zookeeper_connect;
 	}
