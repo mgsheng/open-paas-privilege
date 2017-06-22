@@ -32,6 +32,7 @@ import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserRedisService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
+import cn.com.open.opensass.privilege.tools.MenuProcessUtil;
 import cn.com.open.opensass.privilege.tools.MergeTreeset;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
 import cn.com.open.opensass.privilege.tools.StringTool;
@@ -305,6 +306,7 @@ public class UserGetPrivilegeTreeController extends BaseControllerUtil {
 		
 	    Set<PrivilegeMenuVo> menuSet=(Set<PrivilegeMenuVo>) map.get("menuList");
 		Set<PrivilegeResourceVo> resList =(Set<PrivilegeResourceVo>) map.get("resourceList");
+		  menuSet=MenuProcessUtil.processMenuCode(menuSet, privilegeUserVo.getMenuCode());
 		MergeTreeset  menuList= new MergeTreeset(menuSet,resList);
 		menuList.merge("0");
 		Set<UserMenuVo> menuVo=menuList.get_userMenuVos();

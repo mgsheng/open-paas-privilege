@@ -33,6 +33,7 @@ import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserRedisService;
 import cn.com.open.opensass.privilege.service.PrivilegeUserService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
+import cn.com.open.opensass.privilege.tools.MenuProcessUtil;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
 import cn.com.open.opensass.privilege.tools.StringTool;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
@@ -305,7 +306,10 @@ public class UserGetMenusController extends BaseControllerUtil {
 			menuMap.put("menuList", menuSet);
 			map.putAll(menuMap);
 		}
-		
+		  Set<PrivilegeMenuVo> menuSet=(Set<PrivilegeMenuVo>) map.get("menuList");
+		    menuSet=MenuProcessUtil.processMenuCode(menuSet, privilegeUserVo.getMenuCode());
+			menuMap.put("menuList", menuSet);
+			map.putAll(menuMap);
 /*		Set<PrivilegeMenuVo> menuSet=(Set<PrivilegeMenuVo>) map.get("menuList");
 		Set<PrivilegeResourceVo> resList =(Set<PrivilegeResourceVo>) map.get("resourceList");
 		
