@@ -151,6 +151,7 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 					menu.setMenuName((String)privilegeMenu.get("menuName"));
 					menu.setParentId((String)privilegeMenu.get("parentId"));
 					menu.setMenuRule((String)privilegeMenu.get("menuRule"));
+					menu.setMenuCode((String)privilegeMenu.get("menuCode"));
 					menu.setDisplayOrder((Integer)privilegeMenu.get("displayOrder"));
 					menu.setMenuLevel((Integer)privilegeMenu.get("menuLevel"));
 					menuList.add(menu);

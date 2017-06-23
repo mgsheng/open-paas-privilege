@@ -291,6 +291,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 				privilegeMenuVo.setMenuRule(privilegeMenu.getMenuRule());
 				privilegeMenuVo.setMenuLevel(privilegeMenu.getMenuLevel());
 				privilegeMenuVo.setDisplayOrder(privilegeMenu.getDisplayOrder());
+				privilegeMenuVo.setMenuCode(privilegeMenu.getMenuCode());
 				/* 如果是最父级目录，则添加到返回列表中，否则递归获取数据 */
 				if (privilegeMenu.getParentId().equals("0")) {
 					privilegeMenuVoSet.add(privilegeMenuVo);
