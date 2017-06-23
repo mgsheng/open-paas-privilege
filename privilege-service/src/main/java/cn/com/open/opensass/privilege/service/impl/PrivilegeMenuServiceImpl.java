@@ -84,9 +84,9 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 	}
 
 	@Override
-	public Boolean deleteByMenuId(String[] menuIds) {
+	public Boolean deleteByMenuId(String[] menuIds,String appId) {
 		try {
-			privilegeMenuRepository.deleteByMenuId(menuIds);
+			privilegeMenuRepository.deleteByMenuId(menuIds,appId);
 			return true;
 		} catch (Exception e) {
 			return false;

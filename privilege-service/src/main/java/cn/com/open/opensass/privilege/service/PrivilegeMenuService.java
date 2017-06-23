@@ -17,7 +17,7 @@ public interface PrivilegeMenuService {
 	List<PrivilegeMenu>findMenuPage(String menuId,String appId,int startRow,int pageSize);
 	//Map<String, Object> findByMenuId(String menuId);
 	Boolean updatePrivilegeMenu(PrivilegeMenu privilegeMenu);
-	Boolean deleteByMenuId(String[]  menuIds);
+	Boolean deleteByMenuId(String[]  menuIds,String appId);
 	List<PrivilegeMenu> getMenuListByResourceId(String resourceId,String appId);
 	List<PrivilegeMenu> getMenuListByResourceId2(String resourceIds[],String appId);
 	List<PrivilegeMenuVo> findMenuByResourceType(Integer resourceType);

@@ -66,7 +66,7 @@ public class MenuDelPrivilegeController extends BaseControllerUtil{
     	//if(pm!=null){
     		String menuIds[]=menuId.split(",");
     		if(menuIds!=null&&menuIds.length>0){
-    			Boolean df= privilegeMenuService.deleteByMenuId(menuIds);
+    			Boolean df= privilegeMenuService.deleteByMenuId(menuIds,appId);
     			if(df){
         			//更新缓存
         			PrivilegeAjaxMessage message=privilegeMenuService.updateAppMenuRedis(appId);
