@@ -1855,6 +1855,12 @@ privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/re
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/repository/PrivilegeRoleResourceRepository.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/repository/PrivilegeUserRepository.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/infrastructure/repository/PrivilegeUserRoleRepository.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/log/HttpServletResponseCopier.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/log/LogFilter.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/log/PrivilegeServiceLog.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/log/PrivilegeServiceLogUtil.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/log/SendLogToServerThread.java -text
+privilege-service/src/main/java/cn/com/open/opensass/privilege/log/ServletOutputStreamCopier.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/model/AbstractDomain.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/model/App.java -text
 privilege-service/src/main/java/cn/com/open/opensass/privilege/model/GuidGenerator.java -text
