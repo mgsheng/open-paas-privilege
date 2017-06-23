@@ -55,7 +55,7 @@ public class RoleAddPrivilegeController extends BaseControllerUtil{
     	String groupName=request.getParameter("groupName");
     	String deptId=request.getParameter("deptId");
     	String deptName=request.getParameter("deptName");
-    	String roleLevel=request.getParameter("roelLevel");
+    	String roleLevel=request.getParameter("roleLevel");
     	String roleType=request.getParameter("roleType");
     	String parentRoleId=request.getParameter("parentRoleId");
     	String remark=request.getParameter("remark");
