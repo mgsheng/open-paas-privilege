@@ -81,10 +81,10 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 	}
 
 	@Override
-	public Boolean deleteByResourceId(String[] resourceIds) {
+	public Boolean deleteByResourceId(String[] resourceIds,String appId) {
 		// TODO Auto-generated method stub
 		try {
-			privilegeResourceRepository.deleteByResourceId(resourceIds);
+			privilegeResourceRepository.deleteByResourceId(resourceIds,appId);
 			return true;
 
 		} catch (Exception e) {

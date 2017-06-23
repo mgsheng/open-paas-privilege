@@ -82,7 +82,7 @@ public class ResourceModifyPrivilegeController extends BaseControllerUtil{
 			WebUtils.paraMandaChkAndReturn(5, response,"认证失败");
 			return;
 		}
-    	PrivilegeResource pr=privilegeResourceService.findByResourceId(resourceId, appId);
+    	PrivilegeResource pr= privilegeResourceService.findByResourceId(resourceId, appId);
     	if(pr!=null){
     		pr.setAppId(appId);
         	pr.setResourceName(resourceName);

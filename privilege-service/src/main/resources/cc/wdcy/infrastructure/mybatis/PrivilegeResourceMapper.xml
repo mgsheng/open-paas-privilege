@@ -147,7 +147,7 @@
         (#{id},#{resourceName},#{appId},#{createTime},#{createUser},#{createUserId},#{resourceRule},#{resourceLevel},#{menuId},#{baseUrl})
     </insert>
     <delete id="deleteByResourceId">
-        delete from privilege_resource where resource_id in
+        delete from privilege_resource where app_id=#{appId} AND resource_id in
         <foreach item="item" index="index" collection="resourceIds" open="(" separator="," close=")">  
           #{item}  
         </foreach>

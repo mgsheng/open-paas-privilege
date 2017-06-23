@@ -66,7 +66,7 @@ public class ResourceDelPrivilegeController extends BaseControllerUtil{
     	//if(pm!=null){
     		String resourceIds[]=resourceId.split(",");
     		if(resourceIds!=null&&resourceIds.length>0){
-    			Boolean df= privilegeResourceService.deleteByResourceId(resourceIds);
+    			Boolean df= privilegeResourceService.deleteByResourceId(resourceIds,appId);
         		if(df){
         			//更新缓存
         			PrivilegeAjaxMessage message=privilegeResourceService.updateAppResRedis(appId);
