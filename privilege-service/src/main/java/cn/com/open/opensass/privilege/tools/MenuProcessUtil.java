@@ -1,7 +1,6 @@
 package cn.com.open.opensass.privilege.tools;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
@@ -9,6 +8,8 @@ import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
 public class MenuProcessUtil {
 
 	public  static Set<PrivilegeMenuVo> processMenuCode(Set<PrivilegeMenuVo> set,String menuCode){
+		if(null==menuCode||menuCode.equals(""))
+		return set;
 		Set<PrivilegeMenuVo> set2=new HashSet<PrivilegeMenuVo>();
 		for(PrivilegeMenuVo menu:set)
 		{
@@ -111,7 +112,7 @@ public static void main(String[] args) {
 	menuSet.add(bo5);
 	menuSet.add(bo6);
 	MenuProcessUtil util=new MenuProcessUtil();
-	menuSet=	processMenuCode(menuSet,"1");
+	menuSet=	processMenuCode(menuSet,"");
 	System.out.println(menuSet.size());
 }
 }
