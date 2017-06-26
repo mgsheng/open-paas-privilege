@@ -1,16 +1,16 @@
 package cn.com.open.opensass.privilege.log;
 
 import cn.com.open.opensass.privilege.dev.PrivilegeServiceDev;
-import cn.com.open.opensass.privilege.tools.HttpTools;
-
-import java.util.Map;
+import org.springframework.http.*;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 public class SendLogToServerThread implements Runnable {
 
-    private Map<String, String> logMap;
+    private MultiValueMap<String, Object> logMap;
     private PrivilegeServiceDev privilegeServiceDev;
 
-    public SendLogToServerThread(Map<String, String> logMap, PrivilegeServiceDev privilegeServiceDev) {
+    public SendLogToServerThread(MultiValueMap<String, Object> logMap, PrivilegeServiceDev privilegeServiceDev) {
         this.logMap = logMap;
         this.privilegeServiceDev = privilegeServiceDev;
     }
@@ -18,8 +18,13 @@ public class SendLogToServerThread implements Runnable {
     @Override
     public void run() {
         try {
-            String result = HttpTools.doPost(privilegeServiceDev.getKong_log_url(), logMap, "UTF-8");
-            System.out.printf(result);
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            MediaType type = MediaType.parseMediaType("application/x-www-form-urlencoded; charset=UTF-8");
+            headers.setContentType(type);
+            HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<>(logMap, headers);
+            ResponseEntity<String> result = restTemplate.exchange(privilegeServiceDev.getKong_log_url(), HttpMethod.POST, entity, String.class);
+            System.out.println(result.getBody());
         } catch (Exception e) {
             e.printStackTrace();
         }

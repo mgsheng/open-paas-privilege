@@ -48,11 +48,10 @@ public class LogFilter implements Filter {
         }  finally {
             byte[] copy = responseCopier.getCopy();
             long endTime = System.currentTimeMillis();
+            PrivilegeServiceLog responseLog = getLogObject(parameterMap, interfaceName);
             if (copy.length > 0) { //出现异常则 copy数组长度为0
                 String result = new String(copy, response.getCharacterEncoding());
                 JSONObject jsonObject = JSONObject.parseObject(result);
-
-                PrivilegeServiceLog responseLog = getLogObject(parameterMap, interfaceName);
                 responseLog.setLogName(interfaceName.substring(interfaceName.lastIndexOf("/") +1) + "_end");
                 responseLog.setInvokeStatus(jsonObject.get("status") == null ? "1" : (String)jsonObject.get("status"));
                 responseLog.setErrorCode(jsonObject.get("error_code") == null ? null : String.valueOf(jsonObject.get("error_code")));
@@ -60,13 +59,12 @@ public class LogFilter implements Filter {
                 responseLog.setExecutionTime(endTime - startTime);
                 PrivilegeServiceLogUtil.log(responseLog, privilegeServiceDev); //记录响应日志
             } else { //处理出现异常
-                PrivilegeServiceLog errLog = getLogObject(parameterMap, interfaceName);
-                errLog.setLogName(interfaceName.substring(interfaceName.lastIndexOf("/") +1) + "_end");
-                errLog.setInvokeStatus("0");
-                errLog.setErrorCode(String.valueOf(10000));
-                errLog.setExecutionTime(endTime - startTime);
-                errLog.setErrorMessage("系统异常");
-                PrivilegeServiceLogUtil.log(errLog, privilegeServiceDev);
+                responseLog.setLogName(interfaceName.substring(interfaceName.lastIndexOf("/") +1) + "_end");
+                responseLog.setInvokeStatus("0");
+                responseLog.setErrorCode(String.valueOf(10000));
+                responseLog.setExecutionTime(endTime - startTime);
+                responseLog.setErrorMessage("系统异常");
+                PrivilegeServiceLogUtil.log(responseLog, privilegeServiceDev);
             }
         }
     }
