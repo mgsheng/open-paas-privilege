@@ -118,4 +118,11 @@ public interface PrivilegeMenuService {
 	PrivilegeAjaxMessage updateAppMenuRedis(String appId);
 	List<PrivilegeMenu> getMenuListByFunctionId(String[] functionIds,String appId);
 	List<PrivilegeMenu> findByParentId(String parentId, String appId);
+	/**
+	 * 批量更新 menu
+	 * @param privilegeMenus list
+	 * @param appId appId
+	 * @return
+	 */
+	Boolean updatePrivilegeMenuBatch(List<PrivilegeMenu> privilegeMenus, String appId);
 }

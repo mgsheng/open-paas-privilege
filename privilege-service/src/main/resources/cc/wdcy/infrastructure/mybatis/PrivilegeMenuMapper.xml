@@ -153,4 +153,15 @@
           #{item}  
         </foreach>
     </delete>
+	<update id="updatePrivilegeMenuBatch" flushCache="true">
+		<foreach collection="privilegeMenus" item="item" index="index" separator=";">
+		update privilege_menu set
+			<trim  suffixOverrides="," >
+				<if test="item.displayOrder != null" >
+					display_order = #{item.displayOrder},
+				</if>
+			</trim>
+		where id = #{item.menuId} and app_id = #{appId}
+		</foreach>
+	</update>
 </mapper>

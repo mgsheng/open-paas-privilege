@@ -43,4 +43,5 @@ public interface PrivilegeMenuRepository extends Repository {
 	List<PrivilegeMenu> getMenuListByResourceId2(@Param("resourceIds")String[] resourceIds,@Param("appId")String appId);
 	List<PrivilegeMenu> getMenuListByResourceId(@Param("resourceId")String resourceId,@Param("appId")String appId);
 	List<PrivilegeMenu> getMenuListByParentId(@Param("parentId")String parentId, @Param("appId")String appId);
+    void updatePrivilegeMenuBatch(@Param("privilegeMenus") List<PrivilegeMenu> privilegeMenus, @Param("appId") String appId);
 }

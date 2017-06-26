@@ -425,6 +425,16 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 	}
 
 	@Override
+	public Boolean updatePrivilegeMenuBatch(List<PrivilegeMenu> privilegeMenus, String appId) {
+		try {
+			privilegeMenuRepository.updatePrivilegeMenuBatch(privilegeMenus, appId);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	@Override
 	public List<PrivilegeMenu> getMenuListByAppId(String appId) {
 		return privilegeMenuRepository.getMenuListByAppId(appId);
 	}

@@ -53,8 +53,16 @@ public class LogFilter implements Filter {
                 String result = new String(copy, response.getCharacterEncoding());
                 JSONObject jsonObject = JSONObject.parseObject(result);
                 responseLog.setLogName(interfaceName.substring(interfaceName.lastIndexOf("/") +1) + "_end");
-                responseLog.setInvokeStatus(jsonObject.get("status") == null ? "1" : (String)jsonObject.get("status"));
-                responseLog.setErrorCode(jsonObject.get("error_code") == null ? null : String.valueOf(jsonObject.get("error_code")));
+                if (jsonObject.get("status") != null) {
+                    Object status = jsonObject.get("status");
+                    if (status instanceof Integer) responseLog.setInvokeStatus(String.valueOf(status));
+                    if (status instanceof String) responseLog.setInvokeStatus((String)status);
+                } else  responseLog.setInvokeStatus("1");
+                if (jsonObject.get("error_code") != null) {
+                    Object errorCode = jsonObject.get("error_code");
+                    if (errorCode instanceof Integer) responseLog.setErrorCode(String.valueOf(errorCode));
+                    if (errorCode instanceof String) responseLog.setErrorCode((String)errorCode);
+                }
                 responseLog.setErrorMessage((String)jsonObject.get("errMsg"));
                 responseLog.setExecutionTime(endTime - startTime);
                 PrivilegeServiceLogUtil.log(responseLog, privilegeServiceDev); //记录响应日志

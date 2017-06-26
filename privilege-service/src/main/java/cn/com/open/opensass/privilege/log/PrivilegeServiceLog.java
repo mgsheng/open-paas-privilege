@@ -12,7 +12,10 @@ public class PrivilegeServiceLog {
     private String logName; //日志名称
     private String createTime; //创建时间
     private String errorMessage;
-
+    private String appKey;
+    private String signature;
+    private String timestamp;
+    private String signatureNonce;
     /* 定制属性 */
     private String appId; //应用id
     private String createUser; //操作人用户名
@@ -55,6 +58,7 @@ public class PrivilegeServiceLog {
     private String privilegeRoleId; //角色id
     private String urladdr;
     private String appUserName;
+    private String businessData;
 
     public String getInterfaceName() {
         return interfaceName;
@@ -455,4 +459,45 @@ public class PrivilegeServiceLog {
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
     }
+
+    public String getBusinessData() {
+        return businessData;
+    }
+
+    public void setBusinessData(String businessData) {
+        this.businessData = businessData;
+    }
+
+    public String getAppKey() {
+        return appKey;
+    }
+
+    public void setAppKey(String appKey) {
+        this.appKey = appKey;
+    }
+
+    public String getSignature() {
+        return signature;
+    }
+
+    public void setSignature(String signature) {
+        this.signature = signature;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public String getSignatureNonce() {
+        return signatureNonce;
+    }
+
+    public void setSignatureNonce(String signatureNonce) {
+        this.signatureNonce = signatureNonce;
+    }
+
 }
