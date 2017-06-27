@@ -620,7 +620,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 //			privilegeUrl.setPrivilegeUrl(json);
 			/* 写入redis */
 			log.info("getMenu接口获取数据并写入redis数据开始");
-			 redisClientTemplate.setString(prefix+mapMenu.get("appId")+  SIGN+map.get("appUserId") ,menuJedis);
+			 redisClientTemplate.setString(prefix+map.get("appId")+  SIGN+map.get("appUserId") ,menuJedis);
 			//redisDao.putUrlRedis(prefix, privilegeUrl, appId, appUserId);
 			/* 读取redis */
 //			menuJedis = redisDao.getUrlRedis(prefix, appId, appUserId);
