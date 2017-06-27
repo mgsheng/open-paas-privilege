@@ -49,31 +49,29 @@ public class LogFilter implements Filter {
             byte[] copy = responseCopier.getCopy();
             long endTime = System.currentTimeMillis();
             PrivilegeServiceLog responseLog = getLogObject(parameterMap, interfaceName);
+            responseLog.setExecutionTime(endTime - startTime);
+            responseLog.setLogName(interfaceName.substring(interfaceName.lastIndexOf("/") +1) + "_end");
             if (copy.length > 0) { //出现异常则 copy数组长度为0
                 String result = new String(copy, response.getCharacterEncoding());
                 JSONObject jsonObject = JSONObject.parseObject(result);
-                responseLog.setLogName(interfaceName.substring(interfaceName.lastIndexOf("/") +1) + "_end");
+                //返回的status与请求的参数status重复 响应是否成功用invokeStatus替换   返回的status可能是Integer类型,也可能是String类型统一转换为String
                 if (jsonObject.get("status") != null) {
                     Object status = jsonObject.get("status");
                     if (status instanceof Integer) responseLog.setInvokeStatus(String.valueOf(status));
                     if (status instanceof String) responseLog.setInvokeStatus((String)status);
-                } else  responseLog.setInvokeStatus("1");
+                } else responseLog.setInvokeStatus("1");
                 if (jsonObject.get("error_code") != null) {
                     Object errorCode = jsonObject.get("error_code");
                     if (errorCode instanceof Integer) responseLog.setErrorCode(String.valueOf(errorCode));
                     if (errorCode instanceof String) responseLog.setErrorCode((String)errorCode);
                 }
                 responseLog.setErrorMessage((String)jsonObject.get("errMsg"));
-                responseLog.setExecutionTime(endTime - startTime);
-                PrivilegeServiceLogUtil.log(responseLog, privilegeServiceDev); //记录响应日志
             } else { //处理出现异常
-                responseLog.setLogName(interfaceName.substring(interfaceName.lastIndexOf("/") +1) + "_end");
                 responseLog.setInvokeStatus("0");
                 responseLog.setErrorCode(String.valueOf(10000));
-                responseLog.setExecutionTime(endTime - startTime);
                 responseLog.setErrorMessage("系统异常");
-                PrivilegeServiceLogUtil.log(responseLog, privilegeServiceDev);
             }
+            PrivilegeServiceLogUtil.log(responseLog, privilegeServiceDev); //记录响应日志
         }
     }
 
