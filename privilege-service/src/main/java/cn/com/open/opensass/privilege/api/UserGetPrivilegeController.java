@@ -181,7 +181,7 @@ public class UserGetPrivilegeController extends BaseControllerUtil {
 				//组织机构版本相同，则走缓存
 				JSONObject userData=JSONObject.fromObject(res);
 				Integer version=(Integer) userData.get("groupVersion");
-				if(version!=null||version==groupVersion)
+				if(version!=null&&version==groupVersion)
 				{
 					writeJsonString(response, res);
 					return;	
