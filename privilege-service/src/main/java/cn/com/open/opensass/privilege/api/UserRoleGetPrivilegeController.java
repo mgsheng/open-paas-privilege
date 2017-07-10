@@ -397,6 +397,7 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 		    menuSet=MenuProcessUtil.processMenuCode(menuSet, privilegeUserVo.getMenuCode());
 			menuMap.put("menuList", menuSet);
 			map.putAll(menuMap);
+			map.put("version", menuVersion);
 		if (map.get("status") == "0") {
 			writeErrorJson(response, map);
 		} else {

@@ -400,6 +400,7 @@ public class UserGetPrivilegeController extends BaseControllerUtil {
 		Set<UserMenuVo> menuVo=menuList.get_userMenuVos();
 		menuMap.put("menuList", menuVo);
 		map.putAll(menuMap);
+		map.put("version", menuVersion);
 		if (map.get("status") == "0") {
 			writeErrorJson(response, map);
 		} else {
