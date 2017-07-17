@@ -180,7 +180,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 			}
 			if (privilegeMenuList.size() <= 0) {
 				ajaxMessage.setCode("0");
-				ajaxMessage.setMessage("MENU-IS-NULL");
+				ajaxMessage.setMessage("{\"menuList\":[]}");
 				return ajaxMessage;
 			}
 			Set<PrivilegeMenuVo> privilegeMenuListReturn = new HashSet<PrivilegeMenuVo>();
@@ -200,7 +200,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 			}
 			if (privilegeMenuListData.size() <= 0) {
 				ajaxMessage.setCode("0");
-				ajaxMessage.setMessage("MENU-IS-NULL");
+				ajaxMessage.setMessage("{\"menuList\":[]}");
 				return ajaxMessage;
 			}
 
@@ -363,7 +363,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 		//List<PrivilegeMenu> menuList=getMenuListByAppId(appId);
 		if (menuList.size() <= 0) {
 			ajaxMessage.setCode("0");
-			ajaxMessage.setMessage("MENU-IS-NULL");
+			ajaxMessage.setMessage("{\"menuList\":[]}");
 			return ajaxMessage;
 		}
 		
@@ -469,7 +469,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 		List<PrivilegeMenuVo> menuList = getMenuVoListByAppId(appId);
 		if (menuList.size() <= 0) {
 			ajaxMessage.setCode("0");
-			ajaxMessage.setMessage("MENU-IS-NULL");
+			ajaxMessage.setMessage("{\"menuList\":[]}");
 			return ajaxMessage;
 		}
 		Set<PrivilegeMenuVo> menus=new HashSet<PrivilegeMenuVo>();
@@ -585,7 +585,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 			}
 			if (privilegeMenuList.size() <= 0) {
 				ajaxMessage.setCode("0");
-				ajaxMessage.setMessage("MENU-IS-NULL");
+				ajaxMessage.setMessage("{\"menuList\":[]}");
 				return ajaxMessage;
 			}
 			Set<PrivilegeMenuVo> privilegeMenuListReturn = new HashSet<PrivilegeMenuVo>();
@@ -605,7 +605,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 			}
 			if (privilegeMenuListData.size() <= 0) {
 				ajaxMessage.setCode("0");
-				ajaxMessage.setMessage("MENU-IS-NULL");
+				ajaxMessage.setMessage("{\"menuList\":[]}");
 				return ajaxMessage;
 			}
 
