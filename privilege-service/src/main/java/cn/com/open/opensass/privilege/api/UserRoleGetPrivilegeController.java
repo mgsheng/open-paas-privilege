@@ -128,10 +128,21 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 		// 缓存中是否存在菜单
 		if (null != menuJedis && menuJedis.length() > 0) {
 			processRedis=true;
-			//从缓存中获取应用菜单版本，与用户菜单缓存版本号对比，若版本号不相同，更新用户菜单缓存
-			if (menuVersion != null) {
-				JSONObject object = JSONObject.fromObject(menuJedis);
-				Integer userMenuCacheVersions = (Integer) object.get("version");
+		}
+		//用户资源大缓存
+				StringBuilder redisUserPrivilegeKey=new StringBuilder(RedisConstant.PUBLICSERVICE_CACHE);
+				redisUserPrivilegeKey.append(RedisConstant.USER_CACHE_INFO);
+				redisUserPrivilegeKey.append(user.getAppId());
+				redisUserPrivilegeKey.append(SIGN);
+				redisUserPrivilegeKey.append(user.getAppUserId());
+				
+				String redisUsermenuVersion=RedisConstant.APPMENUVERSIONCACHE+user.getAppId()+SIGN+user.getAppUserId();
+		//从缓存中获取应用菜单版本，与用户菜单缓存版本号对比，若版本号不相同，更新用户菜单缓存
+		if (menuVersion != null&&redisClient.existKey(redisUsermenuVersion)) {
+			String object = redisClient.getString(redisUsermenuVersion);
+			if(object!=null&&object.length()>0 )
+			{
+				Integer userMenuCacheVersions = Integer.parseInt(object);
 				if (userMenuCacheVersions == null||!menuVersion.equals(userMenuCacheVersions)) {
 					processRedis=false;
 				} 
@@ -161,12 +172,7 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 					}
 				}
 			}}
-		//用户资源大缓存
-		StringBuilder redisUserPrivilegeKey=new StringBuilder(RedisConstant.PUBLICSERVICE_CACHE);
-		redisUserPrivilegeKey.append(RedisConstant.USER_CACHE_INFO);
-		redisUserPrivilegeKey.append(user.getAppId());
-		redisUserPrivilegeKey.append(SIGN);
-		redisUserPrivilegeKey.append(user.getAppUserId());
+		
 	   //直接走缓存，返回数据
 		if(processRedis)
 		{
@@ -397,10 +403,13 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 		    menuSet=MenuProcessUtil.processMenuCode(menuSet, privilegeUserVo.getMenuCode());
 			menuMap.put("menuList", menuSet);
 			map.putAll(menuMap);
+			
 			map.put("version", menuVersion);
 		if (map.get("status") == "0") {
 			writeErrorJson(response, map);
 		} else {
+			
+			redisClient.setString(redisUsermenuVersion,String.valueOf(menuVersion) );
 			redisClient.setString(redisUserPrivilegeKey.toString(), JSONObject.fromObject(map).toString());
 			writeSuccessJson(response, map);
 		}

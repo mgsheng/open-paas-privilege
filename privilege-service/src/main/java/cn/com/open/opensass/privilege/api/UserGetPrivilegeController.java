@@ -123,18 +123,32 @@ public class UserGetPrivilegeController extends BaseControllerUtil {
 		}
 		Integer menuVersion = (Integer) redisClient.getObject(RedisConstant.APPMENUVERSIONCACHE+ user.getAppId());
 		String menuJedis = redisClient.getString(RedisConstant.USERMENU_CACHE+user.getAppId()+SIGN +user.getAppUserId());
+		
 		// 缓存中是否存在菜单
-		if (null != menuJedis && menuJedis.length() > 0) {
-			processRedis=true;
-			//从缓存中获取应用菜单版本，与用户菜单缓存版本号对比，若版本号不相同，更新用户菜单缓存
-			if (menuVersion != null) {
-				JSONObject object = JSONObject.fromObject(menuJedis);
-				Integer userMenuCacheVersions = (Integer) object.get("version");
-				if (userMenuCacheVersions == null||!menuVersion.equals(userMenuCacheVersions)) {
-					processRedis=false;
-				} 
-			}
-		}
+				if (null != menuJedis && menuJedis.length() > 0) {
+					processRedis=true;
+				}
+				//用户资源大缓存
+						StringBuilder redisUserPrivilegeKey=new StringBuilder(RedisConstant.PUBLICSERVICE_CACHE);
+						redisUserPrivilegeKey.append(RedisConstant.USER_CACHE_INFO);
+						redisUserPrivilegeKey.append(user.getAppId());
+						redisUserPrivilegeKey.append(SIGN);
+						redisUserPrivilegeKey.append(user.getAppUserId());
+						
+						String redisUsermenuVersion=RedisConstant.APPMENUVERSIONCACHE+user.getAppId()+SIGN+user.getAppUserId();
+				//从缓存中获取应用菜单版本，与用户菜单缓存版本号对比，若版本号不相同，更新用户菜单缓存
+				if (menuVersion != null&&redisClient.existKey(redisUsermenuVersion)) {
+					String object = redisClient.getString(redisUsermenuVersion);
+					if(object!=null&&object.length()>0 )
+					{
+						Integer userMenuCacheVersions = Integer.parseInt(object);
+						if (userMenuCacheVersions == null||!menuVersion.equals(userMenuCacheVersions)) {
+							processRedis=false;
+						} 
+					}
+				}
+		
+		
 		// 缓存中是否存在 角色以及url
 		String userUrlkey =  RedisConstant.USERPRIVILEGES_CACHE + user.getAppId() +SIGN +user.getAppUserId(); 
 		String urlJedis = redisClient.getString(userUrlkey);
@@ -159,12 +173,6 @@ public class UserGetPrivilegeController extends BaseControllerUtil {
 					}
 				}
 			}}
-		//用户资源大缓存
-		StringBuilder redisUserPrivilegeKey=new StringBuilder(RedisConstant.PUBLICSERVICE_CACHE);
-		redisUserPrivilegeKey.append(RedisConstant.USER_ALL_CACHE_INFO);
-		redisUserPrivilegeKey.append(user.getAppId());
-		redisUserPrivilegeKey.append(SIGN);
-		redisUserPrivilegeKey.append(user.getAppUserId());
 	   //直接走缓存，返回数据
 		if(processRedis)
 		{
@@ -404,6 +412,7 @@ public class UserGetPrivilegeController extends BaseControllerUtil {
 		if (map.get("status") == "0") {
 			writeErrorJson(response, map);
 		} else {
+			redisClient.setString(redisUsermenuVersion,String.valueOf(menuVersion) );
 			redisClient.setString(redisUserPrivilegeKey.toString(), JSONObject.fromObject(map).toString());
 			writeSuccessJson(response, map);
 		}
