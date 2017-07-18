@@ -140,7 +140,7 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 		//从缓存中获取应用菜单版本，与用户菜单缓存版本号对比，若版本号不相同，更新用户菜单缓存
 		if (menuVersion != null&&redisClient.existKey(redisUsermenuVersion)) {
 			String object = redisClient.getString(redisUsermenuVersion);
-			if(object!=null&&object.length()>0 )
+			if(object!=null&&object.length()>0 &&!object.equals("null"))
 			{
 				Integer userMenuCacheVersions = Integer.parseInt(object);
 				if (userMenuCacheVersions == null||!menuVersion.equals(userMenuCacheVersions)) {
