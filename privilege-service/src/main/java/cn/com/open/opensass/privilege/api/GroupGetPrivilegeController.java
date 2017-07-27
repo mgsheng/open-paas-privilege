@@ -99,7 +99,8 @@ public class GroupGetPrivilegeController extends BaseControllerUtil{
     		map.put("groupList", json);
     	}else{
     		map.put("status", "0");
-    		map.put("error_code", "10001");
+			map.put("count", 0);
+    		map.put("groupList", "");
     	}
     	if(map.get("status")=="0"){
     		writeErrorJson(response,map);
