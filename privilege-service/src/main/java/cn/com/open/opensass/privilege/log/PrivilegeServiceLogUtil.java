@@ -13,7 +13,7 @@ public class PrivilegeServiceLogUtil {
         logMap.add("logData", JSONObject.toJSONString(log));
         try {
             Thread thread = new Thread(new SendLogToServerThread(logMap, privilegeServiceDev));
-            thread.run();
+            thread.start();
         } catch (Exception e) {
             e.printStackTrace();
         }
