@@ -44,8 +44,8 @@ repositories {
         url "http://maven.open.com.cn/repository/maven-public/"
     }    
     /* maven { url "http://localhost:8088/repository/maven-center" }*/
-    // maven { url "https://repository.jboss.org/nexus/content/groups/public" }
-    // maven { url "http://repo.maven.apache.org/maven2" }
+    maven { url "https://repository.jboss.org/nexus/content/groups/public" }
+    maven { url "http://repo.maven.apache.org/maven2" }
 }
 dependencies {
     compile group: 'org.mybatis', name: 'mybatis', version:'3.2.1'
