@@ -1,6 +1,32 @@
+plugins {
+    id "org.sonarqube" version "2.5"
+}
+
+sonarqube {
+    properties {
+        property "sonar.sourceEncoding", "UTF-8"
+    }
+}
+
+sonarqube {
+    properties {
+        property "sonar.sources", "./src/main"
+        property "sonar.tests", "./src/test"
+
+        property "sonar.projectName", "权限服务:privilege-service"
+        property "sonar.projectKey", "privilege-service:project"
+    }
+}
+
+
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'war'
+
+apply plugin: "jacoco"
+test {
+       ignoreFailures = true
+}
 
 group = 'com.statistics'
 version = '1.0'
@@ -13,10 +39,13 @@ tasks.withType(JavaCompile) {
 
 
 repositories {
-        
+    maven {         
+        name 'open'
+        url "http://maven.open.com.cn/repository/maven-public/"
+    }    
     /* maven { url "http://localhost:8088/repository/maven-center" }*/
-     maven { url "https://repository.jboss.org/nexus/content/groups/public" }
-     maven { url "http://repo.maven.apache.org/maven2" }
+    // maven { url "https://repository.jboss.org/nexus/content/groups/public" }
+    // maven { url "http://repo.maven.apache.org/maven2" }
 }
 dependencies {
     compile group: 'org.mybatis', name: 'mybatis', version:'3.2.1'
