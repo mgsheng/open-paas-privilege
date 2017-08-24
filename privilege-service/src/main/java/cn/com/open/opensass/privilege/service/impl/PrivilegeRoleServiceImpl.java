@@ -49,8 +49,8 @@ public class PrivilegeRoleServiceImpl implements PrivilegeRoleService {
 	}
 
 	@Override
-	public PrivilegeRole findRoleById(String pararentRoleId) {
-		return privilegeRoleRepository.findByRoleId(pararentRoleId);
+	public PrivilegeRole findRoleById(String privilegeRoleId) {
+		return privilegeRoleRepository.findByRoleId(privilegeRoleId);
 	}
 
 	@Override

@@ -35,4 +35,6 @@ public interface PrivilegeUserRepository extends Repository {
 	int getUserCountByAppId(@Param("appId")String appId,@Param("groupId")String groupId);
 
 	void batchUpdateResourceIds(@Param("list")List<PrivilegeBatchUserVo> list);
+
+    List<String> findUserIdByPrivilegeRoleId(@Param("privilegeRoleId") String privilegeRoleId, @Param("appId") String appId);
 }

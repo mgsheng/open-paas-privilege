@@ -1,22 +1,17 @@
 package cn.com.open.opensass.privilege.service.impl;
 
+import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeUserRepository;
+import cn.com.open.opensass.privilege.model.PrivilegeUser;
+import cn.com.open.opensass.privilege.service.PrivilegeUserService;
+import cn.com.open.opensass.privilege.tools.CommonUtils;
+import cn.com.open.opensass.privilege.vo.PrivilegeBatchUserVo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import cn.com.open.opensass.privilege.service.*;
-import cn.com.open.opensass.privilege.tools.CommonUtils;
-import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
-import cn.com.open.opensass.privilege.vo.PrivilegeBatchUserVo;
-import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeRoleRepository;
-import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeUserRepository;
-import cn.com.open.opensass.privilege.model.PrivilegeRole;
-import cn.com.open.opensass.privilege.model.PrivilegeUser;
 
 /**
  * 
@@ -172,5 +167,10 @@ public class PrivilegeUserServiceImpl implements PrivilegeUserService {
 	@Override
 	public List<PrivilegeUser> findByGroupIdAndAppId(String appId, String[] groupId) {
 		return privilegeUserRepository.findByGroupIdAndAppId(appId,groupId);
+	}
+
+	@Override
+	public List<String> findUserIdByPrivilegeRoleId(String privilegeRoleId, String appId) {
+		return privilegeUserRepository.findUserIdByPrivilegeRoleId(privilegeRoleId, appId);
 	}
 }

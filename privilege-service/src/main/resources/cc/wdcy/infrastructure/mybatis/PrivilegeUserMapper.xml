@@ -107,4 +107,10 @@
             #{groupId}
         </foreach>
     </select>
+
+    <select id="findUserIdByPrivilegeRoleId" resultType="java.lang.String" flushCache="true">
+        select distinct u.app_userid  from privilege_user u, privilege_user_role ur
+        where ur.privilege_roleid = #{privilegeRoleId} and u.app_id = #{appId} and u.uid = ur.user_id
+    </select>
+
 </mapper>

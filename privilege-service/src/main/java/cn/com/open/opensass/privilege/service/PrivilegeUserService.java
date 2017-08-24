@@ -52,4 +52,5 @@ public interface PrivilegeUserService {
 	 */
 	List<PrivilegeUser> findByGroupIdAndAppId(String appId, String[] groupId);
 
+    List<String> findUserIdByPrivilegeRoleId(String privilegeRoleId, String appId);
 }
