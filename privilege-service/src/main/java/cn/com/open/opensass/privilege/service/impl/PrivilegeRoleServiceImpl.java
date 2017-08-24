@@ -81,13 +81,13 @@ public class PrivilegeRoleServiceImpl implements PrivilegeRoleService {
 	}
 
 	@Override
-	public List<PrivilegeRole> findRoleByPage(String privilegeRoleId,String appId, int start, int limit) {
-		return privilegeRoleRepository.findRoleByPage(privilegeRoleId,appId,start,limit);
+	public List<PrivilegeRole> findRoleByPage(String privilegeRoleId,String appId, String deptId, String groupId, int start, int limit) {
+		return privilegeRoleRepository.findRoleByPage(privilegeRoleId,appId, deptId, groupId, start,limit);
 	}
 
 	@Override
-	public int findRoleNoPage(String privilegeRoleId, String appId) {
-		List<PrivilegeRole> list = privilegeRoleRepository.findRoleNoPage(privilegeRoleId,appId);
+	public int findRoleNoPage(String privilegeRoleId, String appId, String deptId, String groupId) {
+		List<PrivilegeRole> list = privilegeRoleRepository.findRoleNoPage(privilegeRoleId,appId, deptId, groupId);
 		return list.size();
 	}
 

@@ -60,7 +60,7 @@ public class RoleGetPrivilegeController extends BaseControllerUtil{
     	String appId=request.getParameter("appId");
     	String start=request.getParameter("start");
     	String limit=request.getParameter("limit");
-    	String deptId=request.getParameter("depgId");
+    	String deptId=request.getParameter("deptId");
     	String groupId=request.getParameter("groupId");
     	String privilegeRoleId=request.getParameter("privilegeRoleId");
     	
@@ -83,8 +83,8 @@ public class RoleGetPrivilegeController extends BaseControllerUtil{
     	List<PrivilegeResourceVo> resources = new ArrayList<PrivilegeResourceVo>();
     	List<PrivilegeFunctionVo> functions = new ArrayList<PrivilegeFunctionVo>();
     	//取出角色List
-    	int count = privilegeRoleService.findRoleNoPage(privilegeRoleId,appId);
-    	List<PrivilegeRole> privilegeRoles = privilegeRoleService.findRoleByPage(privilegeRoleId,appId,Integer.parseInt(start),Integer.parseInt(limit));
+    	int count = privilegeRoleService.findRoleNoPage(privilegeRoleId,appId, deptId, groupId);
+    	List<PrivilegeRole> privilegeRoles = privilegeRoleService.findRoleByPage(privilegeRoleId,appId, deptId, groupId, Integer.parseInt(start),Integer.parseInt(limit));
     	for(PrivilegeRole privilegeRole : privilegeRoles){
 			List<PrivilegeRoleResource> privilegeRoleResources = privilegeRoleResourceService.findByPrivilegeRoleId(privilegeRole.getPrivilegeRoleId());
 

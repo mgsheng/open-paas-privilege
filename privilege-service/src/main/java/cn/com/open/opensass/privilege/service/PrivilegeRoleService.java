@@ -23,9 +23,9 @@ public interface PrivilegeRoleService {
 
 	List<String> findRoleByAppId(String appId);
 
-	List<PrivilegeRole> findRoleByPage(String privilegeRoleId, String appId, int start, int limit);
+	List<PrivilegeRole> findRoleByPage(String privilegeRoleId, String appId, String deptId, String groupId, int start, int limit);
 
-	int findRoleNoPage(String privilegeRoleId, String appId);
+	int findRoleNoPage(String privilegeRoleId, String appId, String deptId, String groupId);
 
 	List<Map<String, Object>> getRoleListByUserId(String appUserId, String appId);
 
