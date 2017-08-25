@@ -147,6 +147,66 @@ public class RoleGetPrivilegeController extends BaseControllerUtil{
     	}else{
     		writeSuccessJson(response,map);
     	}
-        return;
     }
+
+	/**
+	 * 角色权限查询接口
+	 */
+	@RequestMapping(value = "getRoleList")
+	public void getRoleList(HttpServletRequest request,HttpServletResponse response) {
+		Map<String, Object> map=new HashMap<String, Object>();
+		log.info("===================get rolePrivilege start======================");
+
+		String appId=request.getParameter("appId");
+		String start=request.getParameter("start");
+		String limit=request.getParameter("limit");
+		String deptId=request.getParameter("deptId");
+		String groupId=request.getParameter("groupId");
+		String privilegeRoleId=request.getParameter("privilegeRoleId");
+
+		if(!paraMandatoryCheck(Arrays.asList(appId,start,limit))){
+			paraMandaChkAndReturn(10000, response,"必传参数中有空值");
+			return;
+		}
+		App app = (App) redisClient.getObject(RedisConstant.APP_INFO+appId);
+		if(app==null)
+		{
+			app=appService.findById(Integer.parseInt(appId));
+			redisClient.setObject(RedisConstant.APP_INFO+appId, app);
+		}
+		Boolean f=OauthSignatureValidateHandler.validateSignature(request,app);
+		if(!f){
+			paraMandaChkAndReturn(10001, response,"认证失败");
+			return;
+		}
+		List<PrivilegeRoleVo> roles = new ArrayList<PrivilegeRoleVo>();
+		//取出角色List
+		int count = privilegeRoleService.findRoleNoPage(privilegeRoleId,appId, deptId, groupId);
+		List<PrivilegeRole> privilegeRoles = privilegeRoleService.findRoleByPage(privilegeRoleId,appId, deptId, groupId, Integer.parseInt(start),Integer.parseInt(limit));
+		for(PrivilegeRole privilegeRole : privilegeRoles){
+			PrivilegeRoleVo privilegeRoleVo = new PrivilegeRoleVo();
+			privilegeRoleVo.setAppId(privilegeRole.getAppId());
+			privilegeRoleVo.setDeptId(privilegeRole.getDeptId());
+			privilegeRoleVo.setDeptName(privilegeRole.getDeptName());
+			privilegeRoleVo.setGroupId(privilegeRole.getGroupId());
+			privilegeRoleVo.setGroupName(privilegeRole.getGroupName());
+			privilegeRoleVo.setPrivilegeRoleId(privilegeRole.getPrivilegeRoleId());
+			privilegeRoleVo.setRemark(privilegeRole.getRemark());
+			privilegeRoleVo.setRoleLevel(privilegeRole.getRoleLevel());
+			privilegeRoleVo.setRoleName(privilegeRole.getRoleName());
+			privilegeRoleVo.setStatus(privilegeRole.getStatus());
+			roles.add(privilegeRoleVo);//添加到角色List
+		}
+		map.put("roleList", roles);
+		map.put("count", count);
+		map.put("status", "1");
+
+		if(map.get("status")=="0"){
+			writeErrorJson(response,map);
+		}else{
+			writeSuccessJson(response,map);
+		}
+	}
+
+
 }
