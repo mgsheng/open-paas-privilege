@@ -6,21 +6,12 @@ import cn.com.open.opensass.privilege.tools.DateUtils;
 import cn.com.open.opensass.privilege.tools.HMacSha1;
 import cn.com.open.opensass.privilege.tools.StringTool;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 import java.util.Date;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({ "classpath*:/spring/*.xml","file:src/main/webapp/WEB-INF/soc-servlet.xml"})
-@TestExecutionListeners({DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class})
 public class RoleGetUserListControllerTest extends BaseTest {
 
     @Autowired
