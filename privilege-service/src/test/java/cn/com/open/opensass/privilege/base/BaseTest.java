@@ -12,7 +12,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({ "classpath*:/spring/*.xml","file:src/main/webapp/WEB-INF/soc-servlet.xml"})
+@ContextConfiguration({ "classpath*:/spring/*.xml", "file:src/main/webapp/WEB-INF/soc-servlet.xml"})
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class})
 public class BaseTest implements ApplicationContextAware {
 
