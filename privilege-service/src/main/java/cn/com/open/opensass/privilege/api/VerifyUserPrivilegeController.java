@@ -1,20 +1,5 @@
 package cn.com.open.opensass.privilege.api;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import cn.com.open.opensass.privilege.dao.PrivilegeUrl;
 import cn.com.open.opensass.privilege.model.App;
 import cn.com.open.opensass.privilege.model.PrivilegeRole;
 import cn.com.open.opensass.privilege.model.PrivilegeUser;
@@ -30,6 +15,18 @@ import cn.com.open.opensass.privilege.tools.WebUtils;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 用户权限认证接口
@@ -134,7 +131,7 @@ public class VerifyUserPrivilegeController extends BaseControllerUtil {
 				String.class);
 		// 验证是否有权限
 		for (String url : urlList) {
-			if (url.toLowerCase().indexOf(optUrl.toLowerCase()) > -1) {
+			if (url.toLowerCase().contains(optUrl.toLowerCase())) {
 				states = true;
 			}
 		}
@@ -150,7 +147,5 @@ public class VerifyUserPrivilegeController extends BaseControllerUtil {
 		} else {
 			writeSuccessJson(response, map);
 		}
-		return;
-
 	}
 }
