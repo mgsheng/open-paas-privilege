@@ -57,7 +57,7 @@ public class UserRoleModifyPrivilegeController extends BaseControllerUtil{
 	 */
 	@RequestMapping(value = "modifyPrivilege")
     public void modifyPrivilege(HttpServletRequest request,HttpServletResponse response,PrivilegeUserVo privilegeUserVo) {
-    	Map<String, Object> map=new HashMap<String, Object>();
+    	Map<String, Object> map=new HashMap<>();
     	log.info("====================modify user role start======================");    	
     	if(!paraMandatoryCheck(Arrays.asList(privilegeUserVo.getAppId(),privilegeUserVo.getAppUserId(),privilegeUserVo.getMethod()))){
     		  paraMandaChkAndReturn(10000, response,"必传参数中有空值");
@@ -194,6 +194,5 @@ public class UserRoleModifyPrivilegeController extends BaseControllerUtil{
 			}
     		writeSuccessJson(response,map);
     	}
-        return;
     }
 }

@@ -53,7 +53,7 @@ public class UserRoleAddPrivilegeController extends BaseControllerUtil {
 	 */
 	@RequestMapping(value = "addRole")
 	public void addRole(HttpServletRequest request, HttpServletResponse response, PrivilegeUserVo privilegeUserVo) {
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 		log.info("====================add user role start======================");
 		if (!paraMandatoryCheck(Arrays.asList(privilegeUserVo.getAppId(), privilegeUserVo.getAppUserId(),
 				privilegeUserVo.getAppUserName()))) {
@@ -161,6 +161,5 @@ public class UserRoleAddPrivilegeController extends BaseControllerUtil {
 		} else {
 			writeSuccessJson(response, map);
 		}
-		return;
 	}
 }

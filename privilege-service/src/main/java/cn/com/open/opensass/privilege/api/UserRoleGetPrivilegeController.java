@@ -1,49 +1,31 @@
 package cn.com.open.opensass.privilege.api;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import cn.com.open.opensass.privilege.dao.cache.RedisDao;
 import cn.com.open.opensass.privilege.model.App;
 import cn.com.open.opensass.privilege.model.PrivilegeMenu;
 import cn.com.open.opensass.privilege.model.PrivilegeRole;
 import cn.com.open.opensass.privilege.model.PrivilegeUser;
 import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
-import cn.com.open.opensass.privilege.service.AppService;
-import cn.com.open.opensass.privilege.service.PrivilegeGroupService;
-import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
-import cn.com.open.opensass.privilege.service.PrivilegeResourceService;
-import cn.com.open.opensass.privilege.service.PrivilegeRoleResourceService;
-import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
-import cn.com.open.opensass.privilege.service.PrivilegeUserRedisService;
-import cn.com.open.opensass.privilege.service.PrivilegeUserService;
+import cn.com.open.opensass.privilege.service.*;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.MenuProcessUtil;
-import cn.com.open.opensass.privilege.tools.MergeTreeset;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
 import cn.com.open.opensass.privilege.tools.StringTool;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
 import cn.com.open.opensass.privilege.vo.PrivilegeResourceVo;
 import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
-import cn.com.open.opensass.privilege.vo.UserMenuVo;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.*;
 
 @Controller
 @RequestMapping("/userRole/")
@@ -69,8 +51,6 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 	private RedisClientTemplate redisClient;
 	@Autowired
 	private PrivilegeGroupService privilegeGroupService;
-	@Autowired
-	private RedisDao redisDao;
 
 	/**
 	 * 用户角色权限获取接口
@@ -78,7 +58,7 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 	@RequestMapping(value = "getUserPrivilege")
 	public void getPrivilege(HttpServletRequest request, HttpServletResponse response,
 			PrivilegeUserVo privilegeUserVo) {
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 		log.info("====================get user privilege start======================");
 		if (!paraMandatoryCheck(Arrays.asList(privilegeUserVo.getAppId(), privilegeUserVo.getAppUserId(),privilegeUserVo.getMenuCode()))) {
 			paraMandaChkAndReturn(10000, response, "必传参数中有空值");
