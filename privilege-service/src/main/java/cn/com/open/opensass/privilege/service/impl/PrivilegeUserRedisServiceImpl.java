@@ -86,7 +86,6 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 		}
 		// redis key
 		String userCacheRoleKey = prefix + appId + SIGN + appUserId;
-		/* 缓存中是否存在 存在返回 */
 		/*	log.info("获取缓存");
 		String jsonString = redisClientTemplate.getString(userCacheRoleKey);
 
