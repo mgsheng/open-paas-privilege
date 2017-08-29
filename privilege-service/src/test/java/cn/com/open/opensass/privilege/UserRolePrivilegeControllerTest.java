@@ -1,9 +1,6 @@
 package cn.com.open.opensass.privilege;
 
-import cn.com.open.opensass.privilege.api.UserRoleAddPrivilegeController;
-import cn.com.open.opensass.privilege.api.UserRoleDelPrivilegeController;
-import cn.com.open.opensass.privilege.api.UserRoleGetPrivilegeController;
-import cn.com.open.opensass.privilege.api.UserRoleModifyPrivilegeController;
+import cn.com.open.opensass.privilege.api.*;
 import cn.com.open.opensass.privilege.base.BaseTest;
 import cn.com.open.opensass.privilege.signature.Signature;
 import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
@@ -24,6 +21,8 @@ public class UserRolePrivilegeControllerTest extends BaseTest {
 	private UserRoleGetPrivilegeController fixtureGet;
 	@Autowired
 	private UserRoleDelPrivilegeController fixtureDel;
+	@Autowired
+	private UserRoleBatchModifyPrivilegeController fixtureBatchModify;
 
 	@Test
 	public void addRole() throws UnsupportedEncodingException {
@@ -70,6 +69,35 @@ public class UserRolePrivilegeControllerTest extends BaseTest {
 
 		fixtureModify.modifyPrivilege(modifyRequest, modifyResponse, modifyPrivilegeUserVo);
 		log.info(modifyResponse.getContentAsString());
+
+		//批量增
+		MockHttpServletRequest batchModifyAddRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
+		MockHttpServletResponse batchModifyAddResponse = new MockHttpServletResponse();
+
+		PrivilegeUserVo batchModifyAddPrivilegeUserVo = new PrivilegeUserVo();
+		batchModifyAddPrivilegeUserVo.setAppId(appId);
+		batchModifyAddPrivilegeUserVo.setAppUserId(appUserId);
+		batchModifyAddPrivilegeUserVo.setFunctionId("1b5b0657f72ae81541808a70d9af3663");
+		batchModifyAddPrivilegeUserVo.setResourceId("13,14");
+		batchModifyAddPrivilegeUserVo.setOperationType("0");
+
+		fixtureBatchModify.modifyPrivilege(batchModifyAddRequest, batchModifyAddResponse, batchModifyAddPrivilegeUserVo);
+		log.info(batchModifyAddResponse.getContentAsString());
+
+		//批量删
+		MockHttpServletRequest batchModifyDelRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
+		MockHttpServletResponse batchModifyDelResponse = new MockHttpServletResponse();
+
+		PrivilegeUserVo batchModifyDelPrivilegeUserVo = new PrivilegeUserVo();
+		batchModifyDelPrivilegeUserVo.setAppId(appId);
+		batchModifyDelPrivilegeUserVo.setAppUserId(appUserId);
+		batchModifyDelPrivilegeUserVo.setAppUserName(appUserName);
+		batchModifyDelPrivilegeUserVo.setFunctionId("1b5b0657f72ae81541808a70d9af3663");
+		batchModifyDelPrivilegeUserVo.setResourceId("14");
+		batchModifyDelPrivilegeUserVo.setOperationType("1");
+
+		fixtureBatchModify.modifyPrivilege(batchModifyDelRequest, batchModifyDelResponse, batchModifyDelPrivilegeUserVo);
+		log.info(batchModifyDelResponse.getContentAsString());
 
 		//查
 		MockHttpServletRequest getRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
