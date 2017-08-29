@@ -14,7 +14,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Random;
 
 
-public class MenuAndResourcePrivilegeControllerTest extends BaseTest {
+public class MenuResourceFunctionPrivilegeTest extends BaseTest {
 
     @Autowired
     private MenuAddPrivilegeController fixtureAdd;
@@ -32,6 +32,12 @@ public class MenuAndResourcePrivilegeControllerTest extends BaseTest {
     private ResourceDelPrivilegeController fixtureResDel;
     @Autowired
     private ResourceGetPrivilegeController fixtureResGet;
+    @Autowired
+    private FunctionAddPrivilegeController fixtureFunAdd;
+    @Autowired
+    private FunctionModifyPrivilegeController fixtureFunModify;
+    @Autowired
+    private FunctionDelPrivilegeController fixtureFunDel;
 
     @Test
     public void addMenu() throws UnsupportedEncodingException {
@@ -120,6 +126,8 @@ public class MenuAndResourcePrivilegeControllerTest extends BaseTest {
         Assert.notNull(resourceId);
         log.info("resourceId: " + resourceId);
 
+        functionTest(appsecret, appId, appKey, random, resourceId);
+
         //改
         MockHttpServletRequest modifyRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
         modifyRequest.addParameter("resourceId", resourceId);
@@ -149,5 +157,41 @@ public class MenuAndResourcePrivilegeControllerTest extends BaseTest {
         log.info(delResponse.getContentAsString());
     }
 
+    private void functionTest(String appsecret, String appId, String appKey, Random random, String resourceId) throws UnsupportedEncodingException {
+
+        String operationId = "10000";
+        String optUrl = "http://www/google.com";
+        //增
+        MockHttpServletRequest addRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
+        addRequest.addParameter("resourceId", resourceId);
+        addRequest.addParameter("operationId", operationId);
+        addRequest.addParameter("optUrl", optUrl);
+        MockHttpServletResponse addResponse = new MockHttpServletResponse();
+        fixtureFunAdd.addFunction(addRequest, addResponse);
+        String json = addResponse.getContentAsString();
+        JSONObject jsonObject = JSONObject.parseObject(json);
+        String functionId = jsonObject.getString("functionId");
+        Assert.notNull(functionId);
+        log.info("functionId: " + functionId);
+
+        //改
+        MockHttpServletRequest modifyRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
+        modifyRequest.addParameter("functionId", functionId);
+        modifyRequest.addParameter("operationId", operationId);
+        modifyRequest.addParameter("optUrl", optUrl + random.nextInt(10));
+        MockHttpServletResponse modifyResponse = new MockHttpServletResponse();
+        fixtureFunModify.modifyFunction(modifyRequest, modifyResponse);
+        log.info(modifyResponse.getContentAsString());
+
+        //删
+        MockHttpServletRequest delRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
+        delRequest.addParameter("functionId", functionId);
+        MockHttpServletResponse delResponse = new MockHttpServletResponse();
+        fixtureFunDel.delFunction(delRequest, delResponse);
+        log.info(delResponse.getContentAsString());
+
+
+
+    }
 
 }

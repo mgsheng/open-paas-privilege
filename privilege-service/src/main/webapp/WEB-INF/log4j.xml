@@ -15,7 +15,7 @@
     
     <!-- spring页面异常只有DEBUG才会输出 -->
     <logger name="org.springframework.web.servlet" additivity="false">
-        <level value="DEBUG"/>
+        <level value="INFO"/>
     </logger>
 
     <!-- 输出日志到控制台  ConsoleAppender -->   
