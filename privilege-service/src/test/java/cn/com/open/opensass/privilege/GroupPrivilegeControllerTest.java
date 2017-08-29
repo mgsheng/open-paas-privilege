@@ -1,10 +1,7 @@
 package cn.com.open.opensass.privilege;
 
 
-import cn.com.open.opensass.privilege.api.GroupAddPrivilegeController;
-import cn.com.open.opensass.privilege.api.GroupDelPrivilegeController;
-import cn.com.open.opensass.privilege.api.GroupGetPrivilegeController;
-import cn.com.open.opensass.privilege.api.GroupModifyPrivilegeController;
+import cn.com.open.opensass.privilege.api.*;
 import cn.com.open.opensass.privilege.base.BaseTest;
 import cn.com.open.opensass.privilege.signature.Signature;
 import org.junit.Test;
@@ -23,11 +20,13 @@ public class GroupPrivilegeControllerTest extends BaseTest {
     @Autowired
     private GroupGetPrivilegeController fixtureGet;
     @Autowired
+    private GroupBatchModifyPrivilegeController fixtureBatchModify;
+    @Autowired
     private GroupModifyPrivilegeController fixtureModify;
     @Autowired
     private GroupDelPrivilegeController fixtureDel;
 
-    @Test //	/group/addPrivilege
+    @Test
     public void addPrivilege() throws UnsupportedEncodingException {
         String groupId = UUID.randomUUID().toString().replace("-", "").toUpperCase();
         String groupName = "单元测试group";
@@ -53,13 +52,21 @@ public class GroupPrivilegeControllerTest extends BaseTest {
         MockHttpServletRequest modifyRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
         modifyRequest.addParameter("groupId", groupId);
         modifyRequest.addParameter("groupName", groupName + random.nextInt(10));
-        modifyRequest.addParameter("groupPrivilege", groupPrivilege);
         modifyRequest.addParameter("status", "0");
         modifyRequest.addParameter("method", "0");
         modifyRequest.addParameter("groupPrivilege", "13,14");
         MockHttpServletResponse modifyResponse = new MockHttpServletResponse();
         fixtureModify.modifyPrivilege(modifyRequest, modifyResponse);
         log.info(modifyResponse.getContentAsString());
+
+        //批量修改(批量添加)
+        MockHttpServletRequest batchModifyRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
+        batchModifyRequest.addParameter("groupId", groupId);
+        batchModifyRequest.addParameter("status", "0");
+        batchModifyRequest.addParameter("resourceId", "15,14,16");
+        MockHttpServletResponse batchModifyResponse = new MockHttpServletResponse();
+        fixtureBatchModify.modifyPrivilege(batchModifyRequest, batchModifyResponse);
+        log.info(batchModifyResponse.getContentAsString());
 
         //查
         MockHttpServletRequest getRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
