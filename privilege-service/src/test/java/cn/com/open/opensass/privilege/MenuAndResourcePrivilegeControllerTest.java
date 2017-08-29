@@ -1,9 +1,6 @@
 package cn.com.open.opensass.privilege;
 
-import cn.com.open.opensass.privilege.api.MenuAddPrivilegeController;
-import cn.com.open.opensass.privilege.api.MenuDelPrivilegeController;
-import cn.com.open.opensass.privilege.api.MenuGetPrivilegeController;
-import cn.com.open.opensass.privilege.api.MenuModifyPrivilegeController;
+import cn.com.open.opensass.privilege.api.*;
 import cn.com.open.opensass.privilege.base.BaseTest;
 import cn.com.open.opensass.privilege.signature.Signature;
 import com.alibaba.fastjson.JSONObject;
@@ -17,7 +14,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Random;
 
 
-public class MenuPrivilegeControllerTest extends BaseTest {
+public class MenuAndResourcePrivilegeControllerTest extends BaseTest {
 
     @Autowired
     private MenuAddPrivilegeController fixtureAdd;
@@ -27,6 +24,14 @@ public class MenuPrivilegeControllerTest extends BaseTest {
     private MenuGetPrivilegeController fixtureGet;
     @Autowired
     private MenuDelPrivilegeController fixtureDel;
+    @Autowired
+    private ResourceAddPrivilegeController fixtureResAdd;
+    @Autowired
+    private ResourceModifyPrivilegeController fixtureResModify;
+    @Autowired
+    private ResourceDelPrivilegeController fixtureResDel;
+    @Autowired
+    private ResourceGetPrivilegeController fixtureResGet;
 
     @Test
     public void addMenu() throws UnsupportedEncodingException {
@@ -61,6 +66,9 @@ public class MenuPrivilegeControllerTest extends BaseTest {
         Assert.notNull(menuId);
         log.info("menuId: " + menuId);
 
+        //资源单元测试
+        resourceTest(appsecret, appId, appKey, menuId, random);
+
         //改
         MockHttpServletRequest modifyRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
         modifyRequest.addParameter("menuId", menuId);
@@ -92,7 +100,54 @@ public class MenuPrivilegeControllerTest extends BaseTest {
         log.info(delResponse.getContentAsString());
     }
 
+    private void resourceTest(String appsecret, String appId, String appKey, String menuId, Random random) throws UnsupportedEncodingException {
+        String resourceLevel = "0";
+        String resourceName = "单元测试资源";
+        String baseUrl = "http://www.baidu.com";
 
+        //增
+        MockHttpServletRequest addRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
+        addRequest.addParameter("resourceLevel", resourceLevel);
+        addRequest.addParameter("resourceName", resourceName);
+        addRequest.addParameter("baseUrl", baseUrl);
+        addRequest.addParameter("menuId", menuId);
+
+        MockHttpServletResponse addResponse = new MockHttpServletResponse();
+        fixtureResAdd.addMenu(addRequest, addResponse);
+        String json = addResponse.getContentAsString();
+        JSONObject jsonObject = JSONObject.parseObject(json);
+        String resourceId = jsonObject.getString("resourceId");
+        Assert.notNull(resourceId);
+        log.info("resourceId: " + resourceId);
+
+        //改
+        MockHttpServletRequest modifyRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
+        modifyRequest.addParameter("resourceId", resourceId);
+        modifyRequest.addParameter("resourceLevel", "1");
+        modifyRequest.addParameter("resourceName", resourceName + random.nextInt(10));
+        modifyRequest.addParameter("resourceRule", "rule");
+        modifyRequest.addParameter("baseUrl", baseUrl + random.nextInt(10));
+        MockHttpServletResponse modifyResponse = new MockHttpServletResponse();
+        fixtureResModify.modifyResource(modifyRequest, modifyResponse);
+        log.info(modifyResponse.getContentAsString());
+
+        //查
+        MockHttpServletRequest getRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
+        getRequest.addParameter("menuId", menuId);
+        getRequest.addParameter("start", "0");
+        getRequest.addParameter("Limit", "10");
+        MockHttpServletResponse getResponse = new MockHttpServletResponse();
+        fixtureResGet.getResPrivilege(getRequest, getResponse);
+        log.info(getResponse.getContentAsString());
+
+
+        //删
+        MockHttpServletRequest delRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
+        delRequest.addParameter("resourceId", resourceId);
+        MockHttpServletResponse delResponse = new MockHttpServletResponse();
+        fixtureResDel.delResource(delRequest, delResponse);
+        log.info(delResponse.getContentAsString());
+    }
 
 
 }
