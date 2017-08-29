@@ -87,7 +87,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 		// redis key
 		String userCacheRoleKey = prefix + appId + SIGN + appUserId;
 		/* 缓存中是否存在 存在返回 */
-		log.info("获取缓存");
+		/*	log.info("获取缓存");
 		String jsonString = redisClientTemplate.getString(userCacheRoleKey);
 
 		if (null != jsonString && jsonString.length() > 0) {
@@ -133,7 +133,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
 				ajaxMessage.setMessage(jsonString);
 				return ajaxMessage;
 			}
-		}
+		}*/
 		log.info("从数据库获取数据");
 		List<Map<String, Object>> roles = privilegeRoleService
 				.getRoleListByUserId(appUserId, appId);
