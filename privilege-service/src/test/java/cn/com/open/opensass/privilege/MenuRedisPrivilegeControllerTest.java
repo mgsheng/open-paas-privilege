@@ -2,8 +2,6 @@ package cn.com.open.opensass.privilege;
 
 import cn.com.open.opensass.privilege.api.MenuRedisPrivilegeController;
 import cn.com.open.opensass.privilege.base.BaseTest;
-import cn.com.open.opensass.privilege.signature.Signature;
-import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
