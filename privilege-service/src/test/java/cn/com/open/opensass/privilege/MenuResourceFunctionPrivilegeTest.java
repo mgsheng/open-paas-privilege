@@ -89,6 +89,16 @@ public class MenuResourceFunctionPrivilegeTest extends BaseTest {
         fixtureModify.modifyMenu(modifyRequest, modifyResponse);
         log.info(modifyResponse.getContentAsString());
 
+        //菜单排序
+        String businessData = "{\"menuList\":[{\"menuId\": \"" + menuId + "\",\"displayOrder\": 1}]}";
+        String appUserId = "3094776";
+        MockHttpServletRequest displayOrderRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
+        MockHttpServletResponse displayOrderResponse = new MockHttpServletResponse();
+        displayOrderRequest.addParameter("appUserId", appUserId);
+        displayOrderRequest.addParameter("businessData", businessData);
+        fixtureModify.displayOrder(displayOrderRequest, displayOrderResponse);
+        log.info(modifyResponse.getContentAsString());
+
         //查
         MockHttpServletRequest getRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
         getRequest.addParameter("menuId", menuId);
