@@ -31,7 +31,7 @@ import java.util.*;
 @RequestMapping("/userRole/")
 public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 	public static final String SIGN = RedisConstant.SIGN;
-
+	private static final String prefix = RedisConstant.USERMENU_CACHE;
 	private static final Logger log = LoggerFactory.getLogger(UserRoleGetPrivilegeController.class);
 	@Autowired
 	private PrivilegeUserService privilegeUserService;
@@ -178,13 +178,14 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 		
 		}
 		}
-		else
-		{
 			if(redisClient.existKey(redisUserPrivilegeKey.toString()))
 			{
 				redisClient.del(redisUserPrivilegeKey.toString());
 			}
-		}
+			if(redisClient.existKey(prefix+ user.getAppId() +SIGN +user.getAppUserId()))
+			{
+				redisClient.del(prefix+ user.getAppId() +SIGN +user.getAppUserId());
+			}
 		
 		//用户资源缓存
 		PrivilegeAjaxMessage roleMessage = privilegeUserRedisService.getRedisUserRole(privilegeUserVo.getAppId(),
