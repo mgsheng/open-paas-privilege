@@ -10,7 +10,7 @@ sonarqube {
 
 sonarqube {
     properties {
-        property "sonar.sources", "./src/main/java/cn/com/open/opensass/privilege"
+        property "sonar.sources", "./src/main/java/cn/com/open/opensass/privilege/api"
         property "sonar.tests", "./src/test/java/cn/com/open/opensass/privilege"
 
         property "sonar.projectName", "权限服务:privilege-service"
