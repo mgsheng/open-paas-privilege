@@ -46,7 +46,7 @@ public class GroupBatchDelPrivilegeControllerTest extends BaseTest {
         groupBatchDelPrivilegeController.modifyPrivilege(request, response);
         log.info(response.getContentAsString());
         System.out.println("nomarl:"+response.getContentAsString());
-        Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
+        Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
     /**
      * 未找到相关数据.
