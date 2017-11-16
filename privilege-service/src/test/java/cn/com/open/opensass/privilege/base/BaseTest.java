@@ -1,5 +1,6 @@
 package cn.com.open.opensass.privilege.base;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -17,7 +18,7 @@ public class BaseTest  {
 
     @Test
     public void demo() {
-       log.info("hehe");
+        Assert.assertEquals("1", "1");
     }
 
 }
