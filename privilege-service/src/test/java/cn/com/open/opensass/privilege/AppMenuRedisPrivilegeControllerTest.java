@@ -2,6 +2,9 @@ package cn.com.open.opensass.privilege;
 
 import cn.com.open.opensass.privilege.api.AppMenuRedisPrivilegeController;
 import cn.com.open.opensass.privilege.base.BaseTest;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -22,7 +25,9 @@ public class AppMenuRedisPrivilegeControllerTest extends BaseTest {
 		request.addParameter("appId", "28");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		fixture.getAppMenuRedisPrivilege(request, response);
-		log.info(response.getContentAsString());
+		JSONObject json = JSON.parseObject(response.getContentAsString());
+		String status = json.getString("status");
+		Assert.assertEquals("0", status);
 	}
 
 	@Test // 	/AppMenu/delAppMenuRedis
@@ -31,7 +36,8 @@ public class AppMenuRedisPrivilegeControllerTest extends BaseTest {
 		request.addParameter("appId", "28");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		fixture.delAppMenuRedisPrivilege(request, response);
-		log.info(response.getContentAsString());
+		String str = response.getContentAsString();
+		Assert.assertEquals("Failed", str);
 	}
 
 	@Test //	/AppMenu/updateAppMenuRedis
@@ -40,7 +46,9 @@ public class AppMenuRedisPrivilegeControllerTest extends BaseTest {
 		request.addParameter("appId", "28");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		fixture.updateAppMenuRedisPrivilege(request, response);
-		log.info(response.getContentAsString());
+		JSONObject json = JSON.parseObject(response.getContentAsString());
+		String status = json.getString("status");
+		Assert.assertEquals("0", status);
 	}
 
 }
