@@ -2,6 +2,9 @@ package cn.com.open.opensass.privilege;
 
 import cn.com.open.opensass.privilege.api.ApiCommonController;
 import cn.com.open.opensass.privilege.base.BaseTest;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -20,6 +23,8 @@ public class ApiCommonControllerTest extends BaseTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
         fixture.status(request, response);
-        log.info(response.getContentAsString());
+        JSONObject jsonObject = JSON.parseObject(response.getContentAsString());
+        boolean running = jsonObject.getBoolean("running");
+        Assert.assertEquals(running, true);
     }
 }
