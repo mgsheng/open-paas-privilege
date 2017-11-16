@@ -4,6 +4,9 @@ import cn.com.open.opensass.privilege.api.*;
 import cn.com.open.opensass.privilege.base.BaseTest;
 import cn.com.open.opensass.privilege.signature.Signature;
 import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -52,6 +55,7 @@ public class UserRolePrivilegeControllerTest extends BaseTest {
 
 		fixtureAdd.addRole(addRequest, addResponse, addPrivilegeUserVo);
 		log.info(addResponse.getContentAsString());
+		Assert.assertEquals("1", JSONObject.parseObject(addResponse.getContentAsString()).getString("status"));
 
 		//改
 		MockHttpServletRequest modifyRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
@@ -69,6 +73,7 @@ public class UserRolePrivilegeControllerTest extends BaseTest {
 
 		fixtureModify.modifyPrivilege(modifyRequest, modifyResponse, modifyPrivilegeUserVo);
 		log.info(modifyResponse.getContentAsString());
+		Assert.assertEquals("1", JSONObject.parseObject(modifyResponse.getContentAsString()).getString("status"));
 
 		//批量增
 		MockHttpServletRequest batchModifyAddRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
@@ -83,6 +88,7 @@ public class UserRolePrivilegeControllerTest extends BaseTest {
 
 		fixtureBatchModify.modifyPrivilege(batchModifyAddRequest, batchModifyAddResponse, batchModifyAddPrivilegeUserVo);
 		log.info(batchModifyAddResponse.getContentAsString());
+		Assert.assertEquals("1", JSONObject.parseObject(batchModifyAddResponse.getContentAsString()).getString("status"));
 
 		//批量删
 		MockHttpServletRequest batchModifyDelRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
@@ -98,6 +104,7 @@ public class UserRolePrivilegeControllerTest extends BaseTest {
 
 		fixtureBatchModify.modifyPrivilege(batchModifyDelRequest, batchModifyDelResponse, batchModifyDelPrivilegeUserVo);
 		log.info(batchModifyDelResponse.getContentAsString());
+		Assert.assertEquals("1", JSONObject.parseObject(batchModifyDelResponse.getContentAsString()).getString("status"));
 
 		//查
 		MockHttpServletRequest getRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
@@ -107,6 +114,7 @@ public class UserRolePrivilegeControllerTest extends BaseTest {
 		getPrivilegeUserVo.setAppUserId(appUserId);
 		fixtureGet.getPrivilege(getRequest, getResponse, getPrivilegeUserVo);
 		log.info(getResponse.getContentAsString());
+		Assert.assertEquals("0", JSON.parseObject(getResponse.getContentAsString()).getString("status"));
 
 		//删
 		MockHttpServletRequest delRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
@@ -118,6 +126,8 @@ public class UserRolePrivilegeControllerTest extends BaseTest {
 
 		fixtureDel.delRole(delRequest, delResponse, delPrivilegeUserVo);
 		log.info(delResponse.getContentAsString());
+		Assert.assertEquals("1", JSONObject.parseObject(delResponse.getContentAsString()).getString("status"));
+
 	}
 
 }

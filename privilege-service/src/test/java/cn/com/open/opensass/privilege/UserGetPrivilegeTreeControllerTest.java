@@ -4,6 +4,8 @@ import cn.com.open.opensass.privilege.api.UserGetPrivilegeTreeController;
 import cn.com.open.opensass.privilege.base.BaseTest;
 import cn.com.open.opensass.privilege.signature.Signature;
 import cn.com.open.opensass.privilege.vo.PrivilegeUserVo;
+import com.alibaba.fastjson.JSONObject;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -30,6 +32,7 @@ public class UserGetPrivilegeTreeControllerTest extends BaseTest {
         privilegeUserVo.setAppUserId(appUserId);
         fixtureTree.getPrivilege(request, response, privilegeUserVo);
         log.info(response.getContentAsString());
-	}
+        Assert.assertEquals("1", JSONObject.parseObject(response.getContentAsString()).getString("status"));
+    }
 
 }

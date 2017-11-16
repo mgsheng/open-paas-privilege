@@ -6,11 +6,11 @@ import cn.com.open.opensass.privilege.api.RoleModifyPrivilegeController;
 import cn.com.open.opensass.privilege.base.BaseTest;
 import cn.com.open.opensass.privilege.signature.Signature;
 import com.alibaba.fastjson.JSONObject;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.util.Assert;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Random;
@@ -55,7 +55,7 @@ public class RolePrivilegeControllerTest extends BaseTest {
         JSONObject jsonObject = JSONObject.parseObject(json);
         String privilegeRoleid = jsonObject.getString("privilegeRoleid");
 
-        Assert.notNull(privilegeRoleid);
+        Assert.assertNotNull(privilegeRoleid);
 
         log.info("privilegeRoleid: " + privilegeRoleid);
 
@@ -72,6 +72,7 @@ public class RolePrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse modifyResponse = new MockHttpServletResponse();
         fixtureModify.modifyPrivilege(modifyRequest, modifyResponse);
         log.info(modifyResponse.getContentAsString());
+        Assert.assertEquals("1", JSONObject.parseObject(modifyResponse.getContentAsString()).getString("status"));
 
         //删
         MockHttpServletRequest delRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
@@ -79,6 +80,8 @@ public class RolePrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse delResponse = new MockHttpServletResponse();
         fixtureDel.delRole(delRequest, delResponse);
         log.info(delResponse.getContentAsString());
+        Assert.assertEquals("1", JSONObject.parseObject(delResponse.getContentAsString()).getString("status"));
+
     }
 
 }

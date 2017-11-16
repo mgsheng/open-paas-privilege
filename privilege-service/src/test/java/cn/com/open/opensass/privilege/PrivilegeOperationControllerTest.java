@@ -2,6 +2,8 @@ package cn.com.open.opensass.privilege;
 
 import cn.com.open.opensass.privilege.api.PrivilegeOperationController;
 import cn.com.open.opensass.privilege.base.BaseTest;
+import com.alibaba.fastjson.JSON;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -22,6 +24,7 @@ public class PrivilegeOperationControllerTest extends BaseTest {
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		fixture.getOperationName(request, response);
 		log.info(response.getContentAsString());
+		Assert.assertEquals("修改", JSON.parseObject(response.getContentAsString()).getString("optName"));
 	}
 	@Test //	/operation/getAllOperation
 	public void getAllOperation() throws UnsupportedEncodingException {
@@ -29,5 +32,6 @@ public class PrivilegeOperationControllerTest extends BaseTest {
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		fixture.getAllOperation(request, response);
 		log.info(response.getContentAsString());
+		Assert.assertTrue(response.getContentAsString().contains("operationList"));
 	}
 }
