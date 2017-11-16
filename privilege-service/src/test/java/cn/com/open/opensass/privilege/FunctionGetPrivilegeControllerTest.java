@@ -3,6 +3,9 @@ package cn.com.open.opensass.privilege;
 import cn.com.open.opensass.privilege.api.FunctionGetPrivilegeController;
 import cn.com.open.opensass.privilege.base.BaseTest;
 import cn.com.open.opensass.privilege.signature.Signature;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -25,6 +28,7 @@ public class FunctionGetPrivilegeControllerTest extends BaseTest {
         request.addParameter("resourceId", "151,185");
         MockHttpServletResponse response = new MockHttpServletResponse();
         fixture.modifyFunction(request, response);
-        log.info(response.getContentAsString());
+        JSONObject json = JSON.parseObject(response.getContentAsString());
+        Assert.assertEquals("0", json.getString("status"));
     }
 }

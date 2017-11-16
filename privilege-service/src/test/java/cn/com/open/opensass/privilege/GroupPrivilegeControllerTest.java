@@ -4,6 +4,8 @@ package cn.com.open.opensass.privilege;
 import cn.com.open.opensass.privilege.api.*;
 import cn.com.open.opensass.privilege.base.BaseTest;
 import cn.com.open.opensass.privilege.signature.Signature;
+import com.alibaba.fastjson.JSON;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -47,6 +49,8 @@ public class GroupPrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse addResponse = new MockHttpServletResponse();
         fixtureAdd.addPrivilege(addRequest, addResponse);
         log.info(addResponse.getContentAsString());
+        Assert.assertEquals("1", JSON.parseObject(addResponse.getContentAsString()).getString("status"));
+
 
         //改
         MockHttpServletRequest modifyRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
@@ -58,6 +62,7 @@ public class GroupPrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse modifyResponse = new MockHttpServletResponse();
         fixtureModify.modifyPrivilege(modifyRequest, modifyResponse);
         log.info(modifyResponse.getContentAsString());
+        Assert.assertEquals("1", JSON.parseObject(addResponse.getContentAsString()).getString("status"));
 
         //批量修改(批量添加)
         MockHttpServletRequest batchModifyRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
@@ -67,6 +72,7 @@ public class GroupPrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse batchModifyResponse = new MockHttpServletResponse();
         fixtureBatchModify.modifyPrivilege(batchModifyRequest, batchModifyResponse);
         log.info(batchModifyResponse.getContentAsString());
+        Assert.assertEquals("1", JSON.parseObject(addResponse.getContentAsString()).getString("status"));
 
         //查
         MockHttpServletRequest getRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
@@ -76,13 +82,14 @@ public class GroupPrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse getResponse = new MockHttpServletResponse();
         fixtureGet.getGroupPrivilege(getRequest, getResponse);
         log.info(getResponse.getContentAsString());
-
+        Assert.assertTrue(getResponse.getContentAsString().contains("groupList"));
         //删
         MockHttpServletRequest delRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
         delRequest.addParameter("groupId", groupId);
         MockHttpServletResponse delResponse = new MockHttpServletResponse();
         fixtureDel.delPrivilege(delRequest, delResponse);
         log.info(delResponse.getContentAsString());
+        Assert.assertEquals("1", JSON.parseObject(addResponse.getContentAsString()).getString("status"));
     }
 
 }

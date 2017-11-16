@@ -3,6 +3,7 @@ package cn.com.open.opensass.privilege;
 
 import cn.com.open.opensass.privilege.api.AppRoleRedisPrivilegeController;
 import cn.com.open.opensass.privilege.base.BaseTest;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -21,7 +22,7 @@ public class AppRoleRedisPrivilegeControllerTest extends BaseTest{
 		request.addParameter("appId", "28");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		fixture.getAppRoleRedisPrivilege(request, response);
-		log.info(response.getContentAsString());
+		Assert.assertTrue(response.getContentAsString().contains("roleList"));
 	}
 
 	@Test //	/AppRole/delAppRoleRedis
@@ -30,7 +31,7 @@ public class AppRoleRedisPrivilegeControllerTest extends BaseTest{
 		request.addParameter("appId", "28");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		fixture.delAppRoleRedisPrivilege(request, response);
-		log.info(response.getContentAsString());
+		Assert.assertEquals("Success", response.getContentAsString());
 	}
 	@Test //	/AppRole/updateAppRoleRedis
 	public void updateAppRoleRedisPrivilege() throws UnsupportedEncodingException {
@@ -38,7 +39,7 @@ public class AppRoleRedisPrivilegeControllerTest extends BaseTest{
 		request.addParameter("appId", "28");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		fixture.updateAppRoleRedisPrivilege(request, response);
-		log.info(response.getContentAsString());
+		Assert.assertTrue(response.getContentAsString().contains("roleList"));
 	}
 
 }
