@@ -4,11 +4,11 @@ import cn.com.open.opensass.privilege.api.*;
 import cn.com.open.opensass.privilege.base.BaseTest;
 import cn.com.open.opensass.privilege.signature.Signature;
 import com.alibaba.fastjson.JSONObject;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.util.Assert;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Random;
@@ -69,7 +69,7 @@ public class MenuResourceFunctionPrivilegeTest extends BaseTest {
         String json = addResponse.getContentAsString();
         JSONObject jsonObject = JSONObject.parseObject(json);
         String menuId = jsonObject.getString("menuId");
-        Assert.notNull(menuId);
+        Assert.assertNotNull(menuId);
         log.info("menuId: " + menuId);
 
         //资源单元测试
@@ -88,6 +88,7 @@ public class MenuResourceFunctionPrivilegeTest extends BaseTest {
         MockHttpServletResponse modifyResponse = new MockHttpServletResponse();
         fixtureModify.modifyMenu(modifyRequest, modifyResponse);
         log.info(modifyResponse.getContentAsString());
+        Assert.assertEquals("1", JSONObject.parseObject(modifyResponse.getContentAsString()).getString("status"));
 
         //菜单排序
         String businessData = "{\"menuList\":[{\"menuId\": \"" + menuId + "\",\"displayOrder\": 1}]}";
@@ -98,6 +99,7 @@ public class MenuResourceFunctionPrivilegeTest extends BaseTest {
         displayOrderRequest.addParameter("businessData", businessData);
         fixtureModify.displayOrder(displayOrderRequest, displayOrderResponse);
         log.info(modifyResponse.getContentAsString());
+        Assert.assertEquals("1", JSONObject.parseObject(modifyResponse.getContentAsString()).getString("status"));
 
         //查
         MockHttpServletRequest getRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
@@ -107,6 +109,7 @@ public class MenuResourceFunctionPrivilegeTest extends BaseTest {
         MockHttpServletResponse getResponse = new MockHttpServletResponse();
         fixtureGet.getMenus(getRequest, getResponse);
         log.info(getResponse.getContentAsString());
+        Assert.assertEquals("1", JSONObject.parseObject(modifyResponse.getContentAsString()).getString("status"));
 
         //删
         MockHttpServletRequest delRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
@@ -114,6 +117,7 @@ public class MenuResourceFunctionPrivilegeTest extends BaseTest {
         MockHttpServletResponse delResponse = new MockHttpServletResponse();
         fixtureDel.delMenu(delRequest, delResponse);
         log.info(delResponse.getContentAsString());
+        Assert.assertEquals("1", JSONObject.parseObject(modifyResponse.getContentAsString()).getString("status"));
     }
 
     private void resourceTest(String appsecret, String appId, String appKey, String menuId, Random random) throws UnsupportedEncodingException {
@@ -133,7 +137,7 @@ public class MenuResourceFunctionPrivilegeTest extends BaseTest {
         String json = addResponse.getContentAsString();
         JSONObject jsonObject = JSONObject.parseObject(json);
         String resourceId = jsonObject.getString("resourceId");
-        Assert.notNull(resourceId);
+        Assert.assertNotNull(resourceId);
         log.info("resourceId: " + resourceId);
 
         functionTest(appsecret, appId, appKey, random, resourceId);
@@ -148,6 +152,7 @@ public class MenuResourceFunctionPrivilegeTest extends BaseTest {
         MockHttpServletResponse modifyResponse = new MockHttpServletResponse();
         fixtureResModify.modifyResource(modifyRequest, modifyResponse);
         log.info(modifyResponse.getContentAsString());
+        Assert.assertEquals("1", JSONObject.parseObject(modifyResponse.getContentAsString()).getString("status"));
 
         //查
         MockHttpServletRequest getRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
@@ -157,6 +162,7 @@ public class MenuResourceFunctionPrivilegeTest extends BaseTest {
         MockHttpServletResponse getResponse = new MockHttpServletResponse();
         fixtureResGet.getResPrivilege(getRequest, getResponse);
         log.info(getResponse.getContentAsString());
+        Assert.assertEquals("1", JSONObject.parseObject(modifyResponse.getContentAsString()).getString("status"));
 
 
         //删
@@ -165,6 +171,7 @@ public class MenuResourceFunctionPrivilegeTest extends BaseTest {
         MockHttpServletResponse delResponse = new MockHttpServletResponse();
         fixtureResDel.delResource(delRequest, delResponse);
         log.info(delResponse.getContentAsString());
+        Assert.assertEquals("1", JSONObject.parseObject(modifyResponse.getContentAsString()).getString("status"));
     }
 
     private void functionTest(String appsecret, String appId, String appKey, Random random, String resourceId) throws UnsupportedEncodingException {
@@ -181,7 +188,7 @@ public class MenuResourceFunctionPrivilegeTest extends BaseTest {
         String json = addResponse.getContentAsString();
         JSONObject jsonObject = JSONObject.parseObject(json);
         String functionId = jsonObject.getString("functionId");
-        Assert.notNull(functionId);
+        Assert.assertNotNull(functionId);
         log.info("functionId: " + functionId);
 
         //改
@@ -192,6 +199,7 @@ public class MenuResourceFunctionPrivilegeTest extends BaseTest {
         MockHttpServletResponse modifyResponse = new MockHttpServletResponse();
         fixtureFunModify.modifyFunction(modifyRequest, modifyResponse);
         log.info(modifyResponse.getContentAsString());
+        Assert.assertEquals("1", JSONObject.parseObject(modifyResponse.getContentAsString()).getString("status"));
 
         //删
         MockHttpServletRequest delRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
@@ -199,7 +207,7 @@ public class MenuResourceFunctionPrivilegeTest extends BaseTest {
         MockHttpServletResponse delResponse = new MockHttpServletResponse();
         fixtureFunDel.delFunction(delRequest, delResponse);
         log.info(delResponse.getContentAsString());
-
+        Assert.assertEquals("1", JSONObject.parseObject(modifyResponse.getContentAsString()).getString("status"));
 
 
     }

@@ -5,6 +5,8 @@ import cn.com.open.opensass.privilege.base.BaseTest;
 import cn.com.open.opensass.privilege.tools.DateUtils;
 import cn.com.open.opensass.privilege.tools.HMacSha1;
 import cn.com.open.opensass.privilege.tools.StringTool;
+import com.alibaba.fastjson.JSONObject;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -39,6 +41,8 @@ public class RoleGetUserListControllerTest extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         fixture.getUserlist(request, response);
         log.info(response.getContentAsString());
+        Assert.assertEquals("1", JSONObject.parseObject(response.getContentAsString()).getString("status"));
+
     }
 
 }

@@ -2,6 +2,7 @@ package cn.com.open.opensass.privilege;
 
 import cn.com.open.opensass.privilege.api.MenuRedisPrivilegeController;
 import cn.com.open.opensass.privilege.base.BaseTest;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -26,6 +27,7 @@ public class MenuRedisPrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         fixture.putRedisData(request, response);
         log.info(response.getContentAsString());
+        Assert.assertTrue(response.getContentAsString().contains("menuList"));
     }
 
     @Test //    /menu/updateMenu
@@ -39,6 +41,7 @@ public class MenuRedisPrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         fixture.updateRedisMenu(request, response);
         log.info(response.getContentAsString());
+        Assert.assertTrue(response.getContentAsString().contains("menuList"));
     }
 
     @Test //    /menu/deleteMenu
@@ -51,7 +54,7 @@ public class MenuRedisPrivilegeControllerTest extends BaseTest {
         request.addParameter("appId", appId);
         MockHttpServletResponse response = new MockHttpServletResponse();
         fixture.delRedisMenu(request, response);
-        log.info(response.getContentAsString());
+        Assert.assertEquals("Success", response.getContentAsString());
     }
 
     @Test //    /menu/existMenuKey
@@ -65,5 +68,6 @@ public class MenuRedisPrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         fixture.existMenuKeyRedis(request, response);
         log.info(response.getContentAsString());
+        Assert.assertEquals("TRUE", response.getContentAsString());
     }
 }

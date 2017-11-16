@@ -3,6 +3,8 @@ package cn.com.open.opensass.privilege;
 import cn.com.open.opensass.privilege.api.VerifyUserPrivilegeController;
 import cn.com.open.opensass.privilege.base.BaseTest;
 import cn.com.open.opensass.privilege.signature.Signature;
+import com.alibaba.fastjson.JSONObject;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -30,5 +32,6 @@ public class VerifyUserPrivilegeControllerTest extends BaseTest {
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		fixture.verifyUserPrivilege(request, response);
 		log.info(response.getContentAsString());
+		Assert.assertEquals("1", JSONObject.parseObject(response.getContentAsString()).getString("status"));
 	}
 }

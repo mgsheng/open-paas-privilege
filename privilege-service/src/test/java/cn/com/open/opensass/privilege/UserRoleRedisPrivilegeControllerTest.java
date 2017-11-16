@@ -2,6 +2,7 @@ package cn.com.open.opensass.privilege;
 
 import cn.com.open.opensass.privilege.api.UserRoleRedisPrivilegeController;
 import cn.com.open.opensass.privilege.base.BaseTest;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -23,6 +24,7 @@ public class UserRoleRedisPrivilegeControllerTest extends BaseTest {
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		fixture.getUserPrivilege(request, response);
 		log.info(response.getContentAsString());
+		Assert.assertTrue(response.getContentAsString().contains("functionList"));
 	}
 
 	@Test  	//	/userRole/updateUserRoleRedis
@@ -33,6 +35,7 @@ public class UserRoleRedisPrivilegeControllerTest extends BaseTest {
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		fixture.updateUserRoleRedis(request, response);
 		log.info(response.getContentAsString());
+		Assert.assertTrue(response.getContentAsString().contains("functionList"));
 	}
 	
 	@Test //	/userRole/deleteUserRoleRedis
@@ -43,6 +46,7 @@ public class UserRoleRedisPrivilegeControllerTest extends BaseTest {
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		fixture.delUserRoleRedis(request, response);
 		log.info(response.getContentAsString());
+		Assert.assertEquals("Success", response.getContentAsString());
 	}
 
 

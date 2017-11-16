@@ -2,6 +2,7 @@ package cn.com.open.opensass.privilege;
 
 import cn.com.open.opensass.privilege.api.PrivilegeRoleController;
 import cn.com.open.opensass.privilege.base.BaseTest;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -23,5 +24,6 @@ public class PrivilegeRoleControllerTest extends BaseTest {
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		fixture.getRole(request, response);
 		log.info(response.getContentAsString());
+		Assert.assertTrue(response.getContentAsString().contains("roleList"));
 	}
 }

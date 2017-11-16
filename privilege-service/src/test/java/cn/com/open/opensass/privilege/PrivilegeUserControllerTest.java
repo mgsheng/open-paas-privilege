@@ -2,6 +2,8 @@ package cn.com.open.opensass.privilege;
 
 import cn.com.open.opensass.privilege.api.PrivilegeUserController;
 import cn.com.open.opensass.privilege.base.BaseTest;
+import com.alibaba.fastjson.JSONObject;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -24,7 +26,9 @@ public class PrivilegeUserControllerTest extends BaseTest{
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		fixture.getUserList(request, response);
 		log.info(response.getContentAsString());
+		Assert.assertTrue(response.getContentAsString().contains("rows"));
 	}
+
 	@Test //	/user/findUser
 	public void findUser() throws UnsupportedEncodingException {
 		MockHttpServletRequest request = new MockHttpServletRequest();
@@ -33,6 +37,7 @@ public class PrivilegeUserControllerTest extends BaseTest{
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		fixture.findUser(request, response);
 		log.info(response.getContentAsString());
+		Assert.assertEquals("1", JSONObject.parseObject(response.getContentAsString()).getString("status"));
 	}
 	
 }
