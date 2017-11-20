@@ -36,21 +36,22 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
 
     /**
      * 新增redis缓存
+     *
      * @param request
      * @param response
      */
     @RequestMapping(value = "getUrl", method = RequestMethod.POST)
     public void putdata(HttpServletRequest request, HttpServletResponse response) {
         /*参数接收*/
-        String appUserId=request.getParameter("appUserId").trim();
-        String appId=request.getParameter("appId").trim();
+        String appUserId = request.getParameter("appUserId").trim();
+        String appId = request.getParameter("appId").trim();
         Map<Object, Object> map = new HashMap<Object, Object>();
         log.info("===================get getDataPrivilege start======================");
         if (!paraMandatoryCheck(Arrays.asList(appUserId, appId))) {
             paraMandaChkAndReturn(10000, response, "必传参数中有空值");
             return;
         }
-        PrivilegeAjaxMessage ajaxMessage =privilegeUrlService.getRedisUrl(appId,appUserId);
+        PrivilegeAjaxMessage ajaxMessage = privilegeUrlService.getRedisUrl(appId, appUserId);
         if (ajaxMessage.getCode().equals("1")) {
             WebUtils.writeJson(response, ajaxMessage.getMessage());
         } else {
@@ -60,6 +61,7 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
         }
         return;
     }
+
     /**
      * 更新jedis
      *
@@ -69,8 +71,8 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
     @RequestMapping(value = "updateUrl", method = RequestMethod.POST)
     public void updateData(HttpServletRequest request, HttpServletResponse response) {
         /*参数接收*/
-        String appUserId=request.getParameter("appUserId").trim();
-        String appId=request.getParameter("appId").trim();
+        String appUserId = request.getParameter("appUserId").trim();
+        String appId = request.getParameter("appId").trim();
         Map<Object, Object> map = new HashMap<Object, Object>();
         String data = "";
         log.info("===================get updateDataPrivilege start======================");
@@ -78,7 +80,7 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
             paraMandaChkAndReturn(10000, response, "必传参数中有空值");
             return;
         }
-        PrivilegeAjaxMessage ajaxMessage =privilegeUrlService.updateRedisUrl(appId,appUserId);
+        PrivilegeAjaxMessage ajaxMessage = privilegeUrlService.updateRedisUrl(appId, appUserId);
         if (ajaxMessage.getCode().equals("1")) {
             WebUtils.writeJson(response, ajaxMessage.getMessage());
         } else {
@@ -98,8 +100,8 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
     @RequestMapping(value = "delUrl", method = RequestMethod.POST)
     public void deleteData(HttpServletRequest request, HttpServletResponse response) {
         /*参数接收*/
-        String appUserId=request.getParameter("appUserId").trim();
-        String appId=request.getParameter("appId").trim();
+        String appUserId = request.getParameter("appUserId").trim();
+        String appId = request.getParameter("appId").trim();
         Map<Object, Object> map = new HashMap<Object, Object>();
         log.info("===================get deleteDataPrivilege start======================");
         if (!paraMandatoryCheck(Arrays.asList(appId, appUserId))) {
@@ -107,7 +109,7 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
             return;
         }
 
-        PrivilegeAjaxMessage ajaxMessage =privilegeUrlService.deleteRedisUrl(appId,appUserId);
+        PrivilegeAjaxMessage ajaxMessage = privilegeUrlService.deleteRedisUrl(appId, appUserId);
         if (ajaxMessage.getCode().equals("1")) {
             WebUtils.writeJson(response, ajaxMessage.getMessage());
         } else {
@@ -129,16 +131,16 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
     @RequestMapping(value = "existUrl", method = RequestMethod.POST)
     public void existUrlData(HttpServletRequest request, HttpServletResponse response) {
         /*参数接收*/
-        String appUserId=request.getParameter("appUserId").trim();
-        String appId=request.getParameter("appId").trim();
-        String durl=request.getParameter("urladdr").trim();
+        String appUserId = request.getParameter("appUserId").trim();
+        String appId = request.getParameter("appId").trim();
+        String durl = request.getParameter("urladdr").trim();
         Map<Object, Object> map = new HashMap<Object, Object>();
         log.info("===================get existUrlPrivilege start======================");
         if (!paraMandatoryCheck(Arrays.asList(appUserId, appId, durl))) {
             paraMandaChkAndReturn(10000, response, "必传参数中有空值");
             return;
         }
-        PrivilegeAjaxMessage ajaxMessage =privilegeUrlService.existRedisUrl(appId,appUserId,durl);
+        PrivilegeAjaxMessage ajaxMessage = privilegeUrlService.existRedisUrl(appId, appUserId, durl);
         if (ajaxMessage.getCode().equals("1")) {
             WebUtils.writeJson(response, ajaxMessage.getMessage());
         } else {
@@ -151,21 +153,22 @@ public class UrlRedisPrivilegeController extends BaseControllerUtil {
 
     /**
      * 判断key是否存在
+     *
      * @param request
      * @param response
      */
     @RequestMapping(value = "existKey", method = RequestMethod.POST)
     public void existkeyData(HttpServletRequest request, HttpServletResponse response) {
         /*参数接收*/
-        String appUserId=request.getParameter("appUserId").trim();
-        String appId=request.getParameter("appId").trim();
+        String appUserId = request.getParameter("appUserId").trim();
+        String appId = request.getParameter("appId").trim();
         Map<Object, Object> map = new HashMap<Object, Object>();
         log.info("===================get existKeyPrivilege start======================");
         if (!paraMandatoryCheck(Arrays.asList(appUserId, appId))) {
             paraMandaChkAndReturn(10000, response, "必传参数中有空值");
             return;
         }
-        PrivilegeAjaxMessage ajaxMessage =privilegeUrlService.existRedisKey(appId,appUserId);
+        PrivilegeAjaxMessage ajaxMessage = privilegeUrlService.existRedisKey(appId, appUserId);
         if (ajaxMessage.getCode().equals("1")) {
             WebUtils.writeJson(response, ajaxMessage.getMessage());
         } else {

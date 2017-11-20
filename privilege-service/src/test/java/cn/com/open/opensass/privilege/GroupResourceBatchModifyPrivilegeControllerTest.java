@@ -102,7 +102,7 @@ public class GroupResourceBatchModifyPrivilegeControllerTest extends BaseTest {
     }
 
     /**
-     * App为空.
+     * 验证失败.
      * @throws UnsupportedEncodingException
      */
     @Test
