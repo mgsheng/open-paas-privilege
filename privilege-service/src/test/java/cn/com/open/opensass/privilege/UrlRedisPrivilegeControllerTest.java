@@ -152,6 +152,21 @@ public class UrlRedisPrivilegeControllerTest  extends BaseTest {
      * 删除正常操作.
      * @throws UnsupportedEncodingException
      */
+    @Test
+    public void delDataFailed() throws UnsupportedEncodingException {
+        MockHttpServletRequest request = Signature.getSignatureRequest(CommonEnum.APP_SECRET.getDisplay(), CommonEnum.APP_ID.getDisplay(), CommonEnum.APP_KEY.getDisplay());
+        request.addParameter("appId",CommonEnum.APP_ID.getDisplay());
+        request.addParameter("appUserId","test_test_1");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        urlRedisPrivilegeController.deleteData(request, response);
+        log.info(response.getContentAsString());
+        System.out.println("delDataFailed:"+response.getContentAsString());
+        Assert.assertTrue(response.getContentAsString().equals("Failed"));
+    }
+    /**
+     * 删除正常操作.
+     * @throws UnsupportedEncodingException
+     */
     /*@Test
     public void existUrlDataNomarl() throws UnsupportedEncodingException {
         MockHttpServletRequest request = Signature.getSignatureRequest(CommonEnum.APP_SECRET.getDisplay(), CommonEnum.APP_ID.getDisplay(), CommonEnum.APP_KEY.getDisplay());
@@ -172,7 +187,7 @@ public class UrlRedisPrivilegeControllerTest  extends BaseTest {
     public void existUrlDataNomarlFailed() throws UnsupportedEncodingException {
         MockHttpServletRequest request = Signature.getSignatureRequest(CommonEnum.APP_SECRET.getDisplay(), CommonEnum.APP_ID.getDisplay(), CommonEnum.APP_KEY.getDisplay());
         request.addParameter("appId",CommonEnum.APP_ID.getDisplay());
-        request.addParameter("appUserId",appUserId);
+        request.addParameter("appUserId","test_Test_1");
         request.addParameter("urladdr","http://open.com.cn");
         MockHttpServletResponse response = new MockHttpServletResponse();
         urlRedisPrivilegeController.existUrlData(request, response);
