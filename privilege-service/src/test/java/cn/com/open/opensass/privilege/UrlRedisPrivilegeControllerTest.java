@@ -239,7 +239,7 @@ public class UrlRedisPrivilegeControllerTest  extends BaseTest {
         urlRedisPrivilegeController.existkeyData(request, response);
         log.info(response.getContentAsString());
         System.out.println("existkeyDataNomarl:"+response.getContentAsString());
-        Assert.assertTrue(response.getContentAsString().equals("FALSE"));
+        Assert.assertTrue(response.getContentAsString().equals("TRUE"));
     }
     /**
      * 参数为空.
