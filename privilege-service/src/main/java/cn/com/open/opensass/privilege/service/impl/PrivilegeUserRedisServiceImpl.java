@@ -444,6 +444,15 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
             if (redisClientTemplate.existKey(redisUserRoleCachePrivilegeKey.toString())) {
                 redisClientTemplate.del(redisUserRoleCachePrivilegeKey.toString());
             }
+            //清空用户菜单缓存
+            //privilegeService_userCacheMenus_appid_appuserid
+            StringBuilder redisUseMenuCachePrivilegeKey = new StringBuilder(RedisConstant.APPMENUVERSIONCACHE);
+            redisUseMenuCachePrivilegeKey.append(appId);
+            redisUseMenuCachePrivilegeKey.append(SIGN);
+            redisUseMenuCachePrivilegeKey.append(appUserId);
+            if (redisClientTemplate.existKey(redisUseMenuCachePrivilegeKey.toString())) {
+                redisClientTemplate.del(redisUseMenuCachePrivilegeKey.toString());
+            }
             return true;
         } catch (Exception e) {
             e.printStackTrace();
