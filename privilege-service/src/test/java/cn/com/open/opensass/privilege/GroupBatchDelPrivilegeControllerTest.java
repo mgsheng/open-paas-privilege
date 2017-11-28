@@ -30,13 +30,29 @@ public class GroupBatchDelPrivilegeControllerTest extends BaseTest {
     String groupId = "5016EF92A96DF65AE0535088640A081A";
     String resourceId = "42";
     String functionId = "2a2aaa4e24d8b7d984565f18e99d0502,3ffc5b25a963b015e5a4426bebef24c5";
-
     /**
-     * 正常操作.
+     * 正常操作，无数据.
      * @throws UnsupportedEncodingException
      */
     @Test
     public void modifyDelPrivilegeNomarl() throws UnsupportedEncodingException {
+        MockHttpServletRequest request = Signature.getSignatureRequest(CommonEnum.APP_SECRET.getDisplay(), CommonEnum.APP_ID.getDisplay(), CommonEnum.APP_KEY.getDisplay());
+        request.addParameter("appId",CommonEnum.APP_ID.getDisplay());
+        request.addParameter("groupId","488A74408834169DE053BD86640A49F5");
+        request.addParameter("resourceId","12");
+        request.addParameter("functionId","2a2aaa4e24d8b7d984565f18e99d0502,3ffc5b25a963b015e5a4426bebef24c5");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        groupBatchDelPrivilegeController.modifyPrivilege(request, response);
+        log.info(response.getContentAsString());
+        System.out.println("nomarl:"+response.getContentAsString());
+        Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
+    }
+    /**
+     * 正常操作，无数据.
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void modifyDelPrivilegeNomarlNoData() throws UnsupportedEncodingException {
         MockHttpServletRequest request = Signature.getSignatureRequest(CommonEnum.APP_SECRET.getDisplay(), CommonEnum.APP_ID.getDisplay(), CommonEnum.APP_KEY.getDisplay());
         request.addParameter("appId",CommonEnum.APP_ID.getDisplay());
         request.addParameter("groupId",groupId);
