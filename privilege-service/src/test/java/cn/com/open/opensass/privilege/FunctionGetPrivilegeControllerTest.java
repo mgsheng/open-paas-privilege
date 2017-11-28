@@ -16,7 +16,7 @@ import java.io.UnsupportedEncodingException;
 public class FunctionGetPrivilegeControllerTest extends BaseTest {
 
     @Autowired
-    private FunctionGetPrivilegeController fixture;
+    private FunctionGetPrivilegeController functionGetPrivilegeController;
 
     @Test //  /function/getFunctionIdList")
     public void modifyFunction() throws UnsupportedEncodingException {
@@ -27,7 +27,7 @@ public class FunctionGetPrivilegeControllerTest extends BaseTest {
         request.addParameter("appUserId", "3094776");
         request.addParameter("resourceId", "151,185");
         MockHttpServletResponse response = new MockHttpServletResponse();
-        fixture.modifyFunction(request, response);
+        functionGetPrivilegeController.modifyFunction(request, response);
         JSONObject json = JSON.parseObject(response.getContentAsString());
         Assert.assertEquals("0", json.getString("status"));
     }
