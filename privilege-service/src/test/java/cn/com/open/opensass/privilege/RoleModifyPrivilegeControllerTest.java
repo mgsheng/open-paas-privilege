@@ -98,4 +98,54 @@ public class RoleModifyPrivilegeControllerTest extends BaseTest{
         System.out.println("AppNull:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
+    /**
+     * 角色更新,删除成功！.
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void roleModifyDeleteErr() throws UnsupportedEncodingException {
+        String roleName = "单元测试role";
+        String groupId = "50C935EB5239532AE0533312640A8C66";
+        String groupName = "四川遂宁应用技术职业学校奥鹏学习中心[17]VIP";
+        Random random = new Random();
+        MockHttpServletRequest request = Signature.getSignatureRequest(CommonEnum.APP_SECRET.getDisplay(), CommonEnum.APP_ID.getDisplay(), CommonEnum.APP_KEY.getDisplay());
+        request.addParameter("appId",CommonEnum.APP_ID.getDisplay());
+        request.addParameter("privilegeRoleId","7a5568b9c98247f397810104e13c085a");
+        request.addParameter("method", "1");
+        request.addParameter("rolePrivilege", "8e26270b43ea45b89fd3d8937983d49e");
+        request.addParameter("roleName", roleName + random.nextInt(10));
+        request.addParameter("groupId", groupId);
+        request.addParameter("groupName", groupName + random.nextInt(10));
+        request.addParameter("status", "0");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        roleModifyPrivilegeController.modifyPrivilege(request, response);
+        log.info(response.getContentAsString());
+        System.out.println("delete:"+response.getContentAsString());
+        Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
+    }
+    /**
+     * 角色更新,此权限不存在，请核实！.
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void roleModifyDeleteOk() throws UnsupportedEncodingException {
+        String roleName = "单元测试role";
+        String groupId = "50C935EB5239532AE0533312640A8C66";
+        String groupName = "四川遂宁应用技术职业学校奥鹏学习中心[17]VIP";
+        Random random = new Random();
+        MockHttpServletRequest request = Signature.getSignatureRequest(CommonEnum.APP_SECRET.getDisplay(), CommonEnum.APP_ID.getDisplay(), CommonEnum.APP_KEY.getDisplay());
+        request.addParameter("appId",CommonEnum.APP_ID.getDisplay());
+        request.addParameter("privilegeRoleId","c55a18ec18534e1585846d0aebaf95ba");
+        request.addParameter("method", "1");
+        request.addParameter("rolePrivilege", "13,14");
+        request.addParameter("roleName", roleName + random.nextInt(10));
+        request.addParameter("groupId", groupId);
+        request.addParameter("groupName", groupName + random.nextInt(10));
+        request.addParameter("status", "0");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        roleModifyPrivilegeController.modifyPrivilege(request, response);
+        log.info(response.getContentAsString());
+        System.out.println("delete:"+response.getContentAsString());
+        Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
+    }
 }
