@@ -10,6 +10,7 @@ sonarqube {
 
 sonarqube {
     properties {
+        property "sonar.exclusions","src/main/java/cn/com/open/opensass/privilege/api/UserMenuRedisPrivilegeController.java"
         property "sonar.sources", "./src/main/java/cn/com/open/opensass/privilege/api"
         property "sonar.tests", "./src/test/java/cn/com/open/opensass/privilege"
 
