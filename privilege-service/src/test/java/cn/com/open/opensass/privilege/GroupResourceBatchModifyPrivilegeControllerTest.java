@@ -48,6 +48,24 @@ public class GroupResourceBatchModifyPrivilegeControllerTest extends BaseTest {
         System.out.println("nomarl:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
+
+    /**
+     * 正常操作删除.
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void modifyPrivilegeNomarlDel() throws UnsupportedEncodingException {
+        MockHttpServletRequest request = Signature.getSignatureRequest(CommonEnum.APP_SECRET.getDisplay(), CommonEnum.APP_ID.getDisplay(), CommonEnum.APP_KEY.getDisplay());
+        request.addParameter("appId",CommonEnum.APP_ID.getDisplay());
+        request.addParameter("groupId",groupId);
+        request.addParameter("resourceId",resourceId);
+        request.addParameter("operationType","0");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        groupResourceBatchModifyPrivilegeController.modifyPrivilege(request, response);
+        log.info(response.getContentAsString());
+        System.out.println("nomarl:"+response.getContentAsString());
+        Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
+    }
     /**
      * 操作数据失败.
      * @throws UnsupportedEncodingException
