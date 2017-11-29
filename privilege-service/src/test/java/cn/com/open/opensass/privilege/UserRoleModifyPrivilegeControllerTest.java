@@ -74,7 +74,8 @@ public class UserRoleModifyPrivilegeControllerTest extends BaseTest{
         privilegeUserVo.setAppId(CommonEnum.APP_ID.getDisplay());
         privilegeUserVo.setAppUserId("1000478");
         privilegeUserVo.setMethod("0");
-        redisClientTemplate.del(RedisConstant.APP_INFO+CommonEnum.APP_ID.getDisplay());
+        request.removeParameter("appKey");
+        request.addParameter("appKey","test");
         MockHttpServletResponse response = new MockHttpServletResponse();
         userRoleModifyPrivilegeController.modifyPrivilege(request, response,privilegeUserVo);
         log.info(response.getContentAsString());

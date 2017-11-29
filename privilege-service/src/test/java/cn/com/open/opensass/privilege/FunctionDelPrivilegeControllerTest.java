@@ -85,11 +85,11 @@ public class FunctionDelPrivilegeControllerTest extends BaseTest {
     public void delFunctionFunctionIdsNull() throws UnsupportedEncodingException {
         MockHttpServletRequest request = Signature.getSignatureRequest(CommonEnum.APP_SECRET.getDisplay(), CommonEnum.APP_ID.getDisplay(), CommonEnum.APP_KEY.getDisplay());
         request.addParameter("appId",CommonEnum.APP_ID.getDisplay());
-        request.addParameter("functionId", (String) null);
+        request.addParameter("functionId", ",");
         MockHttpServletResponse response = new MockHttpServletResponse();
         functionDelPrivilegeController.delFunction(request, response);
         log.info(response.getContentAsString());
         System.out.println("delFunctionFunctionIdsNull:"+response.getContentAsString());
-        Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
+        Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
 }
