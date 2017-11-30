@@ -80,7 +80,7 @@ public class UserRoleModifyPrivilegeControllerTest extends BaseTest{
         userRoleModifyPrivilegeController.modifyPrivilege(request, response,privilegeUserVo);
         log.info(response.getContentAsString());
         System.out.println("userRoleModifyAppNull:"+response.getContentAsString());
-        Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
+        Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
     /**
      * app为空，角色不为空，添加角色.

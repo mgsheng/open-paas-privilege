@@ -89,7 +89,7 @@ public class GroupAddPrivilegeControllerTest extends BaseTest {
         groupAddPrivilegeController.addPrivilege(request, response);
         log.info(response.getContentAsString());
         System.out.println("addPrivilegeAppNull:"+response.getContentAsString());
-        Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
+        Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
     /**
      * app为空,数据已存在.
