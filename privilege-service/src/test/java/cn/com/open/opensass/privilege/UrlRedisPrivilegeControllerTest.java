@@ -42,8 +42,9 @@ public class UrlRedisPrivilegeControllerTest  extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         urlRedisPrivilegeController.putdata(request, response);
         log.info(response.getContentAsString());
-        System.out.println("nomarl:"+response.getContentAsString());
-        Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("groupVersion").equals(6));
+        System.out.println("putDataNomarl:"+response.getContentAsString());
+        Object object = JSONObject.fromObject(response.getContentAsString()).get("urlList");
+        Assert.assertTrue(object.toString().indexOf("http://")>0);
     }
     /**
      * 新增参数为空.
@@ -87,7 +88,7 @@ public class UrlRedisPrivilegeControllerTest  extends BaseTest {
         urlRedisPrivilegeController.updateData(request, response);
         log.info(response.getContentAsString());
         System.out.println("updateData:"+response.getContentAsString());
-        Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("groupVersion").equals(6));
+        Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("groupVersion").equals(7));
     }
     /**
      * 修改参数为空.
