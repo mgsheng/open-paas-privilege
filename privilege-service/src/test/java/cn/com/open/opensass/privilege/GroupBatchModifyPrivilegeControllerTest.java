@@ -69,7 +69,7 @@ public class GroupBatchModifyPrivilegeControllerTest extends BaseTest{
     @Test
     public void groupBatchModifyParamNull()throws UnsupportedEncodingException {
         MockHttpServletRequest request = Signature.getSignatureRequest(CommonEnum.APP_SECRET.getDisplay(), CommonEnum.APP_ID.getDisplay(), CommonEnum.APP_KEY.getDisplay());
-        request.addParameter("groupId","50C935EB5A4F532AE0533312640A8C66");
+        request.addParameter("groupId","");
         request.addParameter("resourceId","416");
         request.addParameter("createUser","TEST");
         request.addParameter("createUserid","TEST");
