@@ -69,11 +69,28 @@ public class GroupBatchModifyPrivilegeControllerTest extends BaseTest{
     @Test
     public void groupBatchModifyParamNull()throws UnsupportedEncodingException {
         MockHttpServletRequest request = Signature.getSignatureRequest(CommonEnum.APP_SECRET.getDisplay(), CommonEnum.APP_ID.getDisplay(), CommonEnum.APP_KEY.getDisplay());
-        request.addParameter("groupId","");
-        request.addParameter("resourceId","");
-        request.addParameter("createUser","");
+        request.addParameter("groupId","50C935EB5A4F532AE0533312640A8C66");
+        request.addParameter("resourceId","416");
+        request.addParameter("createUser","TEST");
+        request.addParameter("createUserid","TEST");
+        request.addParameter("status","1");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        groupBatchModifyPrivilegeController.modifyPrivilege(request, response);
+        log.info(response.getContentAsString());
+        Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
+    }
+    /**
+     * 无可更新数据.
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void groupBatchModifyUpdateFailed()throws UnsupportedEncodingException {
+        MockHttpServletRequest request = Signature.getSignatureRequest(CommonEnum.APP_SECRET.getDisplay(), CommonEnum.APP_ID.getDisplay(), CommonEnum.APP_KEY.getDisplay());
+        request.addParameter("groupId",",");
+        request.addParameter("resourceId",",");
+        request.addParameter("createUser","1657c18383a5a7500370c355128f469f");
         request.addParameter("createUserid","");
-        request.addParameter("status","");
+        request.addParameter("status","0");
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupBatchModifyPrivilegeController.modifyPrivilege(request, response);
         log.info(response.getContentAsString());
