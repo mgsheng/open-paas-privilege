@@ -43,7 +43,7 @@ public class RoleGetPrivilegeControllerTest extends BaseTest {
         request.addParameter("signatureNonce", signatureNonce);
         MockHttpServletResponse response = new MockHttpServletResponse();
         fixture.getRolePrivilege(request, response);
-        log.info(response.getContentAsString());
+
         Assert.assertTrue(response.getContentAsString().contains("roleList"));
     }
 
@@ -70,7 +70,7 @@ public class RoleGetPrivilegeControllerTest extends BaseTest {
         request.addParameter("signatureNonce", signatureNonce);
         MockHttpServletResponse response = new MockHttpServletResponse();
         fixture.getRoleList(request, response);
-        log.info(response.getContentAsString());
+
         Assert.assertEquals("1", JSONObject.parseObject(response.getContentAsString()).getString("status"));
 
     }

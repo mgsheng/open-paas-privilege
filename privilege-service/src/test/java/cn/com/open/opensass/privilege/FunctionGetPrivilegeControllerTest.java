@@ -49,7 +49,7 @@ public class FunctionGetPrivilegeControllerTest extends BaseTest {
         redisClientTemplate.del(RedisConstant.APP_INFO+CommonEnum.APP_ID.getDisplay());
         MockHttpServletResponse response = new MockHttpServletResponse();
         functionGetPrivilegeController.modifyFunction(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("modifyFunctionParamNull:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
@@ -66,7 +66,7 @@ public class FunctionGetPrivilegeControllerTest extends BaseTest {
         redisClientTemplate.del(RedisConstant.APP_INFO+CommonEnum.APP_ID.getDisplay());
         MockHttpServletResponse response = new MockHttpServletResponse();
         functionGetPrivilegeController.modifyFunction(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("modifyFunctionAppNull:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
@@ -83,7 +83,7 @@ public class FunctionGetPrivilegeControllerTest extends BaseTest {
         redisClientTemplate.del(RedisConstant.APP_INFO+CommonEnum.APP_ID.getDisplay());
         MockHttpServletResponse response = new MockHttpServletResponse();
         functionGetPrivilegeController.modifyFunction(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("modifyFunctionSuccess:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
@@ -101,7 +101,7 @@ public class FunctionGetPrivilegeControllerTest extends BaseTest {
         request.addParameter("appKey","test");
         MockHttpServletResponse response = new MockHttpServletResponse();
         functionGetPrivilegeController.modifyFunction(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("modifyFunctionValidFailed:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }

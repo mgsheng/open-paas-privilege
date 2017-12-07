@@ -42,7 +42,7 @@ public class PrivilegeUserCacheDelControllerTest  extends BaseTest {
         privilegeUserVo.setAppId(CommonEnum.APP_ID.getDisplay());
         privilegeUserVo.setAppUserId("test");
         privilegeUserCacheDelController.delUserRedisCache(request, response,privilegeUserVo);
-        log.info(response.getContentAsString());
+
         System.out.println("normal:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
@@ -59,7 +59,7 @@ public class PrivilegeUserCacheDelControllerTest  extends BaseTest {
         privilegeUserVo.setAppUserId("test");
         redisClient.del(RedisConstant.APP_INFO+CommonEnum.APP_ID.getDisplay());
         privilegeUserCacheDelController.delUserRedisCache(request, response,privilegeUserVo);
-        log.info(response.getContentAsString());
+
         System.out.println("AppNull:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
@@ -75,7 +75,7 @@ public class PrivilegeUserCacheDelControllerTest  extends BaseTest {
         privilegeUserVo.setAppId(CommonEnum.APP_ID.getDisplay());
         privilegeUserVo.setAppUserId("");
         privilegeUserCacheDelController.delUserRedisCache(request, response,privilegeUserVo);
-        log.info(response.getContentAsString());
+
         System.out.println("ParamNull:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
@@ -93,7 +93,7 @@ public class PrivilegeUserCacheDelControllerTest  extends BaseTest {
         request.removeParameter("appKey");
         request.addParameter("appKey","test");
         privilegeUserCacheDelController.delUserRedisCache(request, response,privilegeUserVo);
-        log.info(response.getContentAsString());
+
         System.out.println("ValidFailed:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
@@ -150,7 +150,7 @@ public class PrivilegeUserCacheDelControllerTest  extends BaseTest {
         redisClient.setObject(redisUserRoleCachePrivilegeKey.toString(),"test data：redisUserRoleCachePrivilegeKey");
         //删除操作开始
         privilegeUserCacheDelController.delUserRedisCache(request, response,privilegeUserVo);
-        log.info(response.getContentAsString());
+
         System.out.println("AppNull:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }

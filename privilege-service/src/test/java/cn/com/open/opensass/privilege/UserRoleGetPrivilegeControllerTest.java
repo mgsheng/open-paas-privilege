@@ -43,7 +43,7 @@ public class UserRoleGetPrivilegeControllerTest  extends BaseTest {
         privilegeUserVo.setMenuCode("");
         MockHttpServletResponse response = new MockHttpServletResponse();
         userRoleGetPrivilegeController.getPrivilege(request, response,privilegeUserVo);
-        log.info(response.getContentAsString());
+
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
 
@@ -61,7 +61,6 @@ public class UserRoleGetPrivilegeControllerTest  extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         redisClient.del(RedisConstant.APP_INFO + privilegeUserVo.getAppId());
         userRoleGetPrivilegeController.getPrivilege(request, response,privilegeUserVo);
-        log.info(response.getContentAsString());
         System.out.println("nomarl:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
@@ -79,7 +78,7 @@ public class UserRoleGetPrivilegeControllerTest  extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         redisClient.del(RedisConstant.APP_INFO + privilegeUserVo.getAppId());
         userRoleGetPrivilegeController.getPrivilege(request, response,privilegeUserVo);
-        log.info(response.getContentAsString());
+
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
     /**
@@ -97,7 +96,7 @@ public class UserRoleGetPrivilegeControllerTest  extends BaseTest {
         request.addParameter("appKey", "test");//应用id（必传）
         MockHttpServletResponse response = new MockHttpServletResponse();
         userRoleGetPrivilegeController.getPrivilege(request, response,privilegeUserVo);
-        log.info(response.getContentAsString());
+
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
 
@@ -114,7 +113,7 @@ public class UserRoleGetPrivilegeControllerTest  extends BaseTest {
         privilegeUserVo.setMenuCode("2");
         MockHttpServletResponse response = new MockHttpServletResponse();
         userRoleGetPrivilegeController.getPrivilege(request, response,privilegeUserVo);
-        log.info(response.getContentAsString());
+
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
 }

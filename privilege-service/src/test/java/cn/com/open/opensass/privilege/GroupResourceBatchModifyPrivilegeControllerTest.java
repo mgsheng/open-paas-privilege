@@ -44,7 +44,7 @@ public class GroupResourceBatchModifyPrivilegeControllerTest extends BaseTest {
         request.addParameter("operationType",operationType);
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupResourceBatchModifyPrivilegeController.modifyPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("nomarl:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
@@ -62,7 +62,7 @@ public class GroupResourceBatchModifyPrivilegeControllerTest extends BaseTest {
         request.addParameter("operationType","0");
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupResourceBatchModifyPrivilegeController.modifyPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("nomarl:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
@@ -79,7 +79,7 @@ public class GroupResourceBatchModifyPrivilegeControllerTest extends BaseTest {
         request.addParameter("operationType","3");
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupResourceBatchModifyPrivilegeController.modifyPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("OprationFailed:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
@@ -96,7 +96,7 @@ public class GroupResourceBatchModifyPrivilegeControllerTest extends BaseTest {
         request.addParameter("operationType",operationType);
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupResourceBatchModifyPrivilegeController.modifyPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("ParamNull:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
@@ -114,7 +114,7 @@ public class GroupResourceBatchModifyPrivilegeControllerTest extends BaseTest {
         redisClient.del(RedisConstant.APP_INFO + CommonEnum.APP_ID.getDisplay());
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupResourceBatchModifyPrivilegeController.modifyPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("AppNull:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
@@ -134,7 +134,7 @@ public class GroupResourceBatchModifyPrivilegeControllerTest extends BaseTest {
         request.addParameter("appKey", "test");//应用id（必传）
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupResourceBatchModifyPrivilegeController.modifyPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("ValidFailed:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }

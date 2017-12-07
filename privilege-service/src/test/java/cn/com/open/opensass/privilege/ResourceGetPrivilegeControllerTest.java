@@ -42,7 +42,7 @@ public class ResourceGetPrivilegeControllerTest extends BaseTest {
         request.addParameter("resourceLevel","");
         MockHttpServletResponse response = new MockHttpServletResponse();
         resourceGetPrivilegeController.getResPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("getResPrivilegeParamNull:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
@@ -61,7 +61,7 @@ public class ResourceGetPrivilegeControllerTest extends BaseTest {
         redisClientTemplate.del(RedisConstant.APP_INFO+CommonEnum.APP_ID.getDisplay());
         MockHttpServletResponse response = new MockHttpServletResponse();
         resourceGetPrivilegeController.getResPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("getResPrivilegeAppNull:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
@@ -80,7 +80,7 @@ public class ResourceGetPrivilegeControllerTest extends BaseTest {
         redisClientTemplate.del(RedisConstant.APP_INFO+CommonEnum.APP_ID.getDisplay());
         MockHttpServletResponse response = new MockHttpServletResponse();
         resourceGetPrivilegeController.getResPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("getResPrivilegeListNull:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }

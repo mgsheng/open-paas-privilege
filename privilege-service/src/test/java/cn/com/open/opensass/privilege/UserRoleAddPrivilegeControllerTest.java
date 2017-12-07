@@ -55,7 +55,7 @@ public class UserRoleAddPrivilegeControllerTest extends BaseTest{
         privilegeUserVo.setPrivilegeFunId("test");
         MockHttpServletResponse response = new MockHttpServletResponse();
         userRoleAddPrivilegeController.addRole(request, response,privilegeUserVo);
-        log.info(response.getContentAsString());
+
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
     /**
@@ -76,7 +76,7 @@ public class UserRoleAddPrivilegeControllerTest extends BaseTest{
         privilegeUserVo.setPrivilegeFunId("test");
         MockHttpServletResponse response = new MockHttpServletResponse();
         userRoleAddPrivilegeController.addRole(request, response,privilegeUserVo);
-        log.info(response.getContentAsString());
+
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
     /**
@@ -100,7 +100,7 @@ public class UserRoleAddPrivilegeControllerTest extends BaseTest{
         redisClientTemplate.del(RedisConstant.APP_INFO + privilegeUserVo.getAppId());
         MockHttpServletResponse response = new MockHttpServletResponse();
         userRoleAddPrivilegeController.addRole(request, response,privilegeUserVo);
-        log.info(response.getContentAsString());
+
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
     /**
@@ -121,7 +121,7 @@ public class UserRoleAddPrivilegeControllerTest extends BaseTest{
         privilegeUserVo.setPrivilegeFunId("test");
         MockHttpServletResponse response = new MockHttpServletResponse();
         userRoleAddPrivilegeController.addRole(request, response,privilegeUserVo);
-        log.info(response.getContentAsString());
+
         System.out.println("userRoleAddExistUser:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
@@ -156,7 +156,7 @@ public class UserRoleAddPrivilegeControllerTest extends BaseTest{
         redisClientTemplate.setObject(redisUserAllPrivilegeKey.toString(),"test");
         MockHttpServletResponse response = new MockHttpServletResponse();
         userRoleAddPrivilegeController.addRole(request, response,privilegeUserVo);
-        log.info(response.getContentAsString());
+
         System.out.println("userRoleAddRedisDel:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
@@ -179,7 +179,7 @@ public class UserRoleAddPrivilegeControllerTest extends BaseTest{
 
         MockHttpServletResponse response = new MockHttpServletResponse();
         userRoleAddPrivilegeController.addRole(request, response,privilegeUserVo);
-        log.info(response.getContentAsString());
+
         System.out.println("userRoleAddFailed:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }

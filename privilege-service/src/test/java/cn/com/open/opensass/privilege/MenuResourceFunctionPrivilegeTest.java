@@ -70,7 +70,6 @@ public class MenuResourceFunctionPrivilegeTest extends BaseTest {
         JSONObject jsonObject = JSONObject.parseObject(json);
         String menuId = jsonObject.getString("menuId");
         Assert.assertNotNull(menuId);
-        log.info("menuId: " + menuId);
 
         //资源单元测试
         resourceTest(appsecret, appId, appKey, menuId, random);
@@ -87,7 +86,6 @@ public class MenuResourceFunctionPrivilegeTest extends BaseTest {
         modifyRequest.addParameter("status", status);
         MockHttpServletResponse modifyResponse = new MockHttpServletResponse();
         fixtureModify.modifyMenu(modifyRequest, modifyResponse);
-        log.info(modifyResponse.getContentAsString());
         Assert.assertEquals("1", JSONObject.parseObject(modifyResponse.getContentAsString()).getString("status"));
 
         //菜单排序
@@ -98,7 +96,6 @@ public class MenuResourceFunctionPrivilegeTest extends BaseTest {
         displayOrderRequest.addParameter("appUserId", appUserId);
         displayOrderRequest.addParameter("businessData", businessData);
         fixtureModify.displayOrder(displayOrderRequest, displayOrderResponse);
-        log.info(modifyResponse.getContentAsString());
         Assert.assertEquals("1", JSONObject.parseObject(modifyResponse.getContentAsString()).getString("status"));
 
         //查
@@ -108,7 +105,6 @@ public class MenuResourceFunctionPrivilegeTest extends BaseTest {
         getRequest.addParameter("Limit", "10");
         MockHttpServletResponse getResponse = new MockHttpServletResponse();
         fixtureGet.getMenus(getRequest, getResponse);
-        log.info(getResponse.getContentAsString());
         Assert.assertEquals("1", JSONObject.parseObject(modifyResponse.getContentAsString()).getString("status"));
 
         //删
@@ -116,7 +112,6 @@ public class MenuResourceFunctionPrivilegeTest extends BaseTest {
         delRequest.addParameter("menuId", menuId);
         MockHttpServletResponse delResponse = new MockHttpServletResponse();
         fixtureDel.delMenu(delRequest, delResponse);
-        log.info(delResponse.getContentAsString());
         Assert.assertEquals("1", JSONObject.parseObject(modifyResponse.getContentAsString()).getString("status"));
     }
 
@@ -138,7 +133,6 @@ public class MenuResourceFunctionPrivilegeTest extends BaseTest {
         JSONObject jsonObject = JSONObject.parseObject(json);
         String resourceId = jsonObject.getString("resourceId");
         Assert.assertNotNull(resourceId);
-        log.info("resourceId: " + resourceId);
 
         functionTest(appsecret, appId, appKey, random, resourceId);
 
@@ -151,7 +145,6 @@ public class MenuResourceFunctionPrivilegeTest extends BaseTest {
         modifyRequest.addParameter("baseUrl", baseUrl + random.nextInt(10));
         MockHttpServletResponse modifyResponse = new MockHttpServletResponse();
         fixtureResModify.modifyResource(modifyRequest, modifyResponse);
-        log.info(modifyResponse.getContentAsString());
         Assert.assertEquals("1", JSONObject.parseObject(modifyResponse.getContentAsString()).getString("status"));
 
         //查
@@ -161,7 +154,6 @@ public class MenuResourceFunctionPrivilegeTest extends BaseTest {
         getRequest.addParameter("Limit", "10");
         MockHttpServletResponse getResponse = new MockHttpServletResponse();
         fixtureResGet.getResPrivilege(getRequest, getResponse);
-        log.info(getResponse.getContentAsString());
         Assert.assertEquals("1", JSONObject.parseObject(modifyResponse.getContentAsString()).getString("status"));
 
 
@@ -170,7 +162,6 @@ public class MenuResourceFunctionPrivilegeTest extends BaseTest {
         delRequest.addParameter("resourceId", resourceId);
         MockHttpServletResponse delResponse = new MockHttpServletResponse();
         fixtureResDel.delResource(delRequest, delResponse);
-        log.info(delResponse.getContentAsString());
         Assert.assertEquals("1", JSONObject.parseObject(modifyResponse.getContentAsString()).getString("status"));
     }
 
@@ -189,7 +180,6 @@ public class MenuResourceFunctionPrivilegeTest extends BaseTest {
         JSONObject jsonObject = JSONObject.parseObject(json);
         String functionId = jsonObject.getString("functionId");
         Assert.assertNotNull(functionId);
-        log.info("functionId: " + functionId);
 
         //改
         MockHttpServletRequest modifyRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
@@ -198,7 +188,6 @@ public class MenuResourceFunctionPrivilegeTest extends BaseTest {
         modifyRequest.addParameter("optUrl", optUrl + random.nextInt(10));
         MockHttpServletResponse modifyResponse = new MockHttpServletResponse();
         fixtureFunModify.modifyFunction(modifyRequest, modifyResponse);
-        log.info(modifyResponse.getContentAsString());
         Assert.assertEquals("1", JSONObject.parseObject(modifyResponse.getContentAsString()).getString("status"));
 
         //删
@@ -206,7 +195,6 @@ public class MenuResourceFunctionPrivilegeTest extends BaseTest {
         delRequest.addParameter("functionId", functionId);
         MockHttpServletResponse delResponse = new MockHttpServletResponse();
         fixtureFunDel.delFunction(delRequest, delResponse);
-        log.info(delResponse.getContentAsString());
         Assert.assertEquals("1", JSONObject.parseObject(modifyResponse.getContentAsString()).getString("status"));
 
 

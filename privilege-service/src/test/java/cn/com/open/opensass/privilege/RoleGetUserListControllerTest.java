@@ -40,7 +40,7 @@ public class RoleGetUserListControllerTest extends BaseTest {
         request.addParameter("signatureNonce", signatureNonce);
         MockHttpServletResponse response = new MockHttpServletResponse();
         fixture.getUserlist(request, response);
-        log.info(response.getContentAsString());
+
         Assert.assertEquals("1", JSONObject.parseObject(response.getContentAsString()).getString("status"));
 
     }

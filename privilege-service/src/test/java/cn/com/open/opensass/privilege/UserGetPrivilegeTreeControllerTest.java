@@ -31,7 +31,7 @@ public class UserGetPrivilegeTreeControllerTest extends BaseTest {
         privilegeUserVo.setAppId(appId);
         privilegeUserVo.setAppUserId(appUserId);
         fixtureTree.getPrivilege(request, response, privilegeUserVo);
-        log.info(response.getContentAsString());
+
         Assert.assertEquals("1", JSONObject.parseObject(response.getContentAsString()).getString("status"));
     }
 

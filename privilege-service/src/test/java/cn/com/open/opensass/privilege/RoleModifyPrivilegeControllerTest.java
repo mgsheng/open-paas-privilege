@@ -40,7 +40,7 @@ public class RoleModifyPrivilegeControllerTest extends BaseTest{
         request.addParameter("privilegeRoleId","");
         MockHttpServletResponse response = new MockHttpServletResponse();
         roleModifyPrivilegeController.modifyPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("ParamNull:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
@@ -67,7 +67,7 @@ public class RoleModifyPrivilegeControllerTest extends BaseTest{
         redisClient.del(RedisConstant.APP_INFO+CommonEnum.APP_ID.getDisplay());
         MockHttpServletResponse response = new MockHttpServletResponse();
         roleModifyPrivilegeController.modifyPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("AppNull:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
@@ -94,7 +94,7 @@ public class RoleModifyPrivilegeControllerTest extends BaseTest{
         request.addParameter("appKey", "test");
         MockHttpServletResponse response = new MockHttpServletResponse();
         roleModifyPrivilegeController.modifyPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("AppNull:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
@@ -119,7 +119,7 @@ public class RoleModifyPrivilegeControllerTest extends BaseTest{
         request.addParameter("status", "0");
         MockHttpServletResponse response = new MockHttpServletResponse();
         roleModifyPrivilegeController.modifyPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("delete:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
@@ -144,7 +144,7 @@ public class RoleModifyPrivilegeControllerTest extends BaseTest{
         request.addParameter("status", "0");
         MockHttpServletResponse response = new MockHttpServletResponse();
         roleModifyPrivilegeController.modifyPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("delete:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }

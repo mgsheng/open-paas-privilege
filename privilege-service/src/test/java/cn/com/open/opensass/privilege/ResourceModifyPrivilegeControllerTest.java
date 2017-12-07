@@ -46,7 +46,7 @@ public class ResourceModifyPrivilegeControllerTest extends BaseTest {
         request.addParameter("resourceId","1001f7b1fb524ff3b7e565a3159b3bb8");
         MockHttpServletResponse response = new MockHttpServletResponse();
         resourceModifyPrivilegeController.modifyResource(request, response);
-        log.info(response.getContentAsString());
+
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
 
@@ -71,7 +71,7 @@ public class ResourceModifyPrivilegeControllerTest extends BaseTest {
         redisClientTemplate.del(RedisConstant.APP_INFO+CommonEnum.APP_ID.getDisplay());
         MockHttpServletResponse response = new MockHttpServletResponse();
         resourceModifyPrivilegeController.modifyResource(request, response);
-        log.info(response.getContentAsString());
+
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
     /**
@@ -92,7 +92,7 @@ public class ResourceModifyPrivilegeControllerTest extends BaseTest {
         request.addParameter("resourceId","1001f7b1fb524ff3b7e565a3159b3bb82222222222");
         MockHttpServletResponse response = new MockHttpServletResponse();
         resourceModifyPrivilegeController.modifyResource(request, response);
-        log.info(response.getContentAsString());
+
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
 }

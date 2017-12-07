@@ -41,7 +41,7 @@ public class UrlRedisPrivilegeControllerTest  extends BaseTest {
         request.addParameter("appUserId",appUserId);
         MockHttpServletResponse response = new MockHttpServletResponse();
         urlRedisPrivilegeController.putdata(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("putDataNomarl:"+response.getContentAsString());
         Object object = JSONObject.fromObject(response.getContentAsString()).get("urlList");
         Assert.assertTrue(object.toString().indexOf("http://")>0);
@@ -57,7 +57,7 @@ public class UrlRedisPrivilegeControllerTest  extends BaseTest {
         request.addParameter("appUserId","");
         MockHttpServletResponse response = new MockHttpServletResponse();
         urlRedisPrivilegeController.putdata(request, response);
-        log.info(response.getContentAsString());
+
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
     /**
@@ -71,7 +71,7 @@ public class UrlRedisPrivilegeControllerTest  extends BaseTest {
         request.addParameter("appUserId","0");
         MockHttpServletResponse response = new MockHttpServletResponse();
         urlRedisPrivilegeController.putdata(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("Error:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
@@ -86,7 +86,7 @@ public class UrlRedisPrivilegeControllerTest  extends BaseTest {
         request.addParameter("appUserId",appUserId);
         MockHttpServletResponse response = new MockHttpServletResponse();
         urlRedisPrivilegeController.updateData(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("updateData:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("groupVersion").equals(7));
     }
@@ -101,7 +101,7 @@ public class UrlRedisPrivilegeControllerTest  extends BaseTest {
         request.addParameter("appUserId","");
         MockHttpServletResponse response = new MockHttpServletResponse();
         urlRedisPrivilegeController.updateData(request, response);
-        log.info(response.getContentAsString());
+
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
 
@@ -116,7 +116,7 @@ public class UrlRedisPrivilegeControllerTest  extends BaseTest {
         request.addParameter("appUserId","0");
         MockHttpServletResponse response = new MockHttpServletResponse();
         urlRedisPrivilegeController.updateData(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("Error:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
@@ -131,7 +131,7 @@ public class UrlRedisPrivilegeControllerTest  extends BaseTest {
         request.addParameter("appUserId",appUserId);
         MockHttpServletResponse response = new MockHttpServletResponse();
         urlRedisPrivilegeController.deleteData(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("delData:"+response.getContentAsString());
         Assert.assertTrue(response.getContentAsString().equals("Success"));
     }
@@ -146,7 +146,7 @@ public class UrlRedisPrivilegeControllerTest  extends BaseTest {
         request.addParameter("appUserId","");
         MockHttpServletResponse response = new MockHttpServletResponse();
         urlRedisPrivilegeController.deleteData(request, response);
-        log.info(response.getContentAsString());
+
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
     /**
@@ -160,7 +160,7 @@ public class UrlRedisPrivilegeControllerTest  extends BaseTest {
         request.addParameter("appUserId","test_test_1");
         MockHttpServletResponse response = new MockHttpServletResponse();
         urlRedisPrivilegeController.deleteData(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("delDataFailed:"+response.getContentAsString());
         Assert.assertTrue(response.getContentAsString().equals("Failed"));
     }
@@ -176,7 +176,7 @@ public class UrlRedisPrivilegeControllerTest  extends BaseTest {
         request.addParameter("urladdr","http://open.com.cn");
         MockHttpServletResponse response = new MockHttpServletResponse();
         urlRedisPrivilegeController.existUrlData(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("existUrlDataNomarl:"+response.getContentAsString());
         Assert.assertTrue(response.getContentAsString().equals("Success"));
     }*/
@@ -192,7 +192,7 @@ public class UrlRedisPrivilegeControllerTest  extends BaseTest {
         request.addParameter("urladdr","http://open.com.cn");
         MockHttpServletResponse response = new MockHttpServletResponse();
         urlRedisPrivilegeController.existUrlData(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("existUrlDataNomarlFailed:"+response.getContentAsString());
         Assert.assertTrue(response.getContentAsString().equals("FALSE"));
     }
@@ -209,7 +209,7 @@ public class UrlRedisPrivilegeControllerTest  extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         urlRedisPrivilegeController.existUrlData(request, response);
         System.out.println("existUrlDataParamNull:"+response.getContentAsString());
-        log.info(response.getContentAsString());
+
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
     /**
@@ -223,7 +223,7 @@ public class UrlRedisPrivilegeControllerTest  extends BaseTest {
         request.addParameter("appUserId",appUserId);
         MockHttpServletResponse response = new MockHttpServletResponse();
         urlRedisPrivilegeController.existkeyData(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("existkeyDataNomarl:"+response.getContentAsString());
         Assert.assertTrue(response.getContentAsString().equals("Success"));
     }*/
@@ -238,7 +238,7 @@ public class UrlRedisPrivilegeControllerTest  extends BaseTest {
         request.addParameter("appUserId",appUserId);
         MockHttpServletResponse response = new MockHttpServletResponse();
         urlRedisPrivilegeController.existkeyData(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("existkeyDataNomarl:"+response.getContentAsString());
         Assert.assertTrue(response.getContentAsString().equals("TRUE"));
     }
@@ -254,7 +254,7 @@ public class UrlRedisPrivilegeControllerTest  extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         urlRedisPrivilegeController.existkeyData(request, response);
         System.out.println("existkeyDataParamNull:"+response.getContentAsString());
-        log.info(response.getContentAsString());
+
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
 }

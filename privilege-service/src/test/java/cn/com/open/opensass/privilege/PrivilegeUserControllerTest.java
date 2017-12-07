@@ -25,7 +25,7 @@ public class PrivilegeUserControllerTest extends BaseTest{
 		request.addParameter("limit", "10");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		fixture.getUserList(request, response);
-		log.info(response.getContentAsString());
+
 		Assert.assertTrue(response.getContentAsString().contains("rows"));
 	}
 
@@ -36,7 +36,7 @@ public class PrivilegeUserControllerTest extends BaseTest{
 		request.addParameter("appUserId", "3094776");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		fixture.findUser(request, response);
-		log.info(response.getContentAsString());
+
 		Assert.assertEquals("1", JSONObject.parseObject(response.getContentAsString()).getString("status"));
 	}
 	

@@ -26,7 +26,7 @@ public class MenuRedisPrivilegeControllerTest extends BaseTest {
         request.addParameter("appId", appId);
         MockHttpServletResponse response = new MockHttpServletResponse();
         fixture.putRedisData(request, response);
-        log.info(response.getContentAsString());
+
         Assert.assertTrue(response.getContentAsString().contains("menuList"));
     }
 
@@ -40,7 +40,7 @@ public class MenuRedisPrivilegeControllerTest extends BaseTest {
         request.addParameter("appId", appId);
         MockHttpServletResponse response = new MockHttpServletResponse();
         fixture.updateRedisMenu(request, response);
-        log.info(response.getContentAsString());
+
         Assert.assertTrue(response.getContentAsString().contains("menuList"));
     }
 
@@ -67,7 +67,7 @@ public class MenuRedisPrivilegeControllerTest extends BaseTest {
         request.addParameter("appId", appId);
         MockHttpServletResponse response = new MockHttpServletResponse();
         fixture.existMenuKeyRedis(request, response);
-        log.info(response.getContentAsString());
+
         Assert.assertEquals("TRUE", response.getContentAsString());
     }
 }

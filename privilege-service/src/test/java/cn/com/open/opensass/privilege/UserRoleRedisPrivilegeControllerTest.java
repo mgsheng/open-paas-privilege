@@ -30,7 +30,7 @@ public class UserRoleRedisPrivilegeControllerTest extends BaseTest {
 		request.addParameter("appUserId", "3094776");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		userRoleRedisPrivilegeController.getUserPrivilege(request, response);
-		log.info(response.getContentAsString());
+
 		Assert.assertTrue(response.getContentAsString().contains("functionList"));
 	}
 
@@ -41,7 +41,7 @@ public class UserRoleRedisPrivilegeControllerTest extends BaseTest {
 		request.addParameter("appUserId", "3094776");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		userRoleRedisPrivilegeController.updateUserRoleRedis(request, response);
-		log.info(response.getContentAsString());
+
 		Assert.assertTrue(response.getContentAsString().contains("functionList"));
 	}
 	
@@ -52,7 +52,7 @@ public class UserRoleRedisPrivilegeControllerTest extends BaseTest {
 		request.addParameter("appUserId", "3094776");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		userRoleRedisPrivilegeController.delUserRoleRedis(request, response);
-		log.info(response.getContentAsString());
+
 		Assert.assertEquals("Success", response.getContentAsString());
 	}
 
@@ -69,7 +69,7 @@ public class UserRoleRedisPrivilegeControllerTest extends BaseTest {
 		redisClientTemplate.del(RedisConstant.APP_INFO+CommonEnum.APP_ID.getDisplay());
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		userRoleRedisPrivilegeController.getUserPrivilege(request, response);
-		log.info(response.getContentAsString());
+
 		System.out.println("getUserPrivilegeParamNull:"+response.getContentAsString());
 		Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
 	}
@@ -85,7 +85,7 @@ public class UserRoleRedisPrivilegeControllerTest extends BaseTest {
 		redisClientTemplate.del(RedisConstant.APP_INFO+CommonEnum.APP_ID.getDisplay());
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		userRoleRedisPrivilegeController.getUserPrivilege(request, response);
-		log.info(response.getContentAsString());
+
 		System.out.println("getUserPrivilegeUserNoExist:"+response.getContentAsString());
 		Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
 	}
@@ -102,7 +102,7 @@ public class UserRoleRedisPrivilegeControllerTest extends BaseTest {
 		redisClientTemplate.del(RedisConstant.APP_INFO+CommonEnum.APP_ID.getDisplay());
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		userRoleRedisPrivilegeController.updateUserRoleRedis(request, response);
-		log.info(response.getContentAsString());
+
 		System.out.println("updateUserRoleRedisParamNull:"+response.getContentAsString());
 		Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
 	}
@@ -130,7 +130,7 @@ public class UserRoleRedisPrivilegeControllerTest extends BaseTest {
 		redisClientTemplate.setObject(String.valueOf(redisUserAllPrivilegeKey),"test");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		userRoleRedisPrivilegeController.updateUserRoleRedis(request, response);
-		log.info(response.getContentAsString());
+
 		System.out.println("updateUserRoleRedisDelRedis:"+response.getContentAsString());
 		Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
 	}

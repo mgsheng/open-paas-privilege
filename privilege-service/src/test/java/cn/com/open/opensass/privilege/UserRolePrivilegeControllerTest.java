@@ -54,7 +54,6 @@ public class UserRolePrivilegeControllerTest extends BaseTest {
 		addPrivilegeUserVo.setPrivilegeRoleId(privilegeRoleId);
 
 		fixtureAdd.addRole(addRequest, addResponse, addPrivilegeUserVo);
-		log.info(addResponse.getContentAsString());
 		Assert.assertEquals("1", JSONObject.parseObject(addResponse.getContentAsString()).getString("status"));
 
 		//改
@@ -72,7 +71,6 @@ public class UserRolePrivilegeControllerTest extends BaseTest {
 		modifyPrivilegeUserVo.setPrivilegeRoleId("37cab4fe42364bc7affbec5f6358d01e"); //教材管理员
 
 		fixtureModify.modifyPrivilege(modifyRequest, modifyResponse, modifyPrivilegeUserVo);
-		log.info(modifyResponse.getContentAsString());
 		Assert.assertEquals("1", JSONObject.parseObject(modifyResponse.getContentAsString()).getString("status"));
 
 		//批量增
@@ -87,7 +85,6 @@ public class UserRolePrivilegeControllerTest extends BaseTest {
 		batchModifyAddPrivilegeUserVo.setOperationType("0");
 
 		fixtureBatchModify.modifyPrivilege(batchModifyAddRequest, batchModifyAddResponse, batchModifyAddPrivilegeUserVo);
-		log.info(batchModifyAddResponse.getContentAsString());
 		Assert.assertEquals("1", JSONObject.parseObject(batchModifyAddResponse.getContentAsString()).getString("status"));
 
 		//批量删
@@ -103,7 +100,6 @@ public class UserRolePrivilegeControllerTest extends BaseTest {
 		batchModifyDelPrivilegeUserVo.setOperationType("1");
 
 		fixtureBatchModify.modifyPrivilege(batchModifyDelRequest, batchModifyDelResponse, batchModifyDelPrivilegeUserVo);
-		log.info(batchModifyDelResponse.getContentAsString());
 		Assert.assertEquals("1", JSONObject.parseObject(batchModifyDelResponse.getContentAsString()).getString("status"));
 
 		//查
@@ -113,7 +109,6 @@ public class UserRolePrivilegeControllerTest extends BaseTest {
 		getPrivilegeUserVo.setAppId(appId);
 		getPrivilegeUserVo.setAppUserId(appUserId);
 		fixtureGet.getPrivilege(getRequest, getResponse, getPrivilegeUserVo);
-		log.info(getResponse.getContentAsString());
 		Assert.assertEquals("0", JSON.parseObject(getResponse.getContentAsString()).getString("status"));
 
 		//删
@@ -125,7 +120,6 @@ public class UserRolePrivilegeControllerTest extends BaseTest {
 		delPrivilegeUserVo.setAppUserId(appUserId);
 
 		fixtureDel.delRole(delRequest, delResponse, delPrivilegeUserVo);
-		log.info(delResponse.getContentAsString());
 		Assert.assertEquals("1", JSONObject.parseObject(delResponse.getContentAsString()).getString("status"));
 
 	}

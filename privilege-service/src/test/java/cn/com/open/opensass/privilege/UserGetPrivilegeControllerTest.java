@@ -32,7 +32,7 @@ public class UserGetPrivilegeControllerTest extends BaseTest {
 		modifyPrivilegeUserVo.setAppId(appId);
 		modifyPrivilegeUserVo.setAppUserId(appUserId);
 		fixture.getPrivilege(request, response, modifyPrivilegeUserVo);
-		log.info(response.getContentAsString());
+
 		Assert.assertEquals("1", JSONObject.parseObject(response.getContentAsString()).getString("status"));
 	}
 }

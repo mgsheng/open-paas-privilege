@@ -22,7 +22,7 @@ public class GroupGetPrivilegeControllerTestTest extends BaseTest {
 		request.addParameter("groupId", "50C935EB614F532AE0533312640A8C66");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		fixture.getGroupPrivilege(request, response);
-		log.info(response.getContentAsString());
+
 		Assert.assertTrue(response.getContentAsString().contains("menuList"));
 	}
 
@@ -33,7 +33,7 @@ public class GroupGetPrivilegeControllerTestTest extends BaseTest {
 		request.addParameter("groupId", "50C935EB614F532AE0533312640A8C66");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		fixture.delGroupPrivilege(request, response);
-		log.info(response.getContentAsString());
+
 		Assert.assertEquals("Success", response.getContentAsString());
 	}
 	@Test //	/groupTest/updateGroupPrivilegeRedis
@@ -43,7 +43,7 @@ public class GroupGetPrivilegeControllerTestTest extends BaseTest {
 		request.addParameter("groupId", "50C935EB614F532AE0533312640A8C66");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		fixture.updateGroupPrivilege(request, response);
-		log.info(response.getContentAsString());
+
 		Assert.assertTrue(response.getContentAsString().contains("menuList"));
 	}
 

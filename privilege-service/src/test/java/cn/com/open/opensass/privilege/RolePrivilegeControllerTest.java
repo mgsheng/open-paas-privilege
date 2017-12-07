@@ -57,7 +57,6 @@ public class RolePrivilegeControllerTest extends BaseTest {
 
         Assert.assertNotNull(privilegeRoleid);
 
-        log.info("privilegeRoleid: " + privilegeRoleid);
 
         //改
         MockHttpServletRequest modifyRequest = Signature.getSignatureRequest(appsecret, appId, appKey);
@@ -71,7 +70,6 @@ public class RolePrivilegeControllerTest extends BaseTest {
 
         MockHttpServletResponse modifyResponse = new MockHttpServletResponse();
         fixtureModify.modifyPrivilege(modifyRequest, modifyResponse);
-        log.info(modifyResponse.getContentAsString());
         Assert.assertEquals("1", JSONObject.parseObject(modifyResponse.getContentAsString()).getString("status"));
 
         //删
@@ -79,7 +77,6 @@ public class RolePrivilegeControllerTest extends BaseTest {
         delRequest.addParameter("privilegeRoleId", privilegeRoleid);
         MockHttpServletResponse delResponse = new MockHttpServletResponse();
         fixtureDel.delRole(delRequest, delResponse);
-        log.info(delResponse.getContentAsString());
         Assert.assertEquals("1", JSONObject.parseObject(delResponse.getContentAsString()).getString("status"));
 
     }

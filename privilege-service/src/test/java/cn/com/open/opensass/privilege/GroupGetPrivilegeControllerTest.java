@@ -40,7 +40,7 @@ public class GroupGetPrivilegeControllerTest extends BaseTest {
         request.addParameter("limit","10");
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupGetPrivilegeController.getGroupPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("getGroupPrivilegeParamNull:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
@@ -58,7 +58,7 @@ public class GroupGetPrivilegeControllerTest extends BaseTest {
         redisClientTemplate.del(RedisConstant.APP_INFO+CommonEnum.APP_ID.getDisplay());
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupGetPrivilegeController.getGroupPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("getGroupPrivilegeAppNull:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
@@ -77,7 +77,7 @@ public class GroupGetPrivilegeControllerTest extends BaseTest {
         request.addParameter("appKey","test");
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupGetPrivilegeController.getGroupPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("getGroupPrivilegeValidFailed:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
@@ -95,7 +95,7 @@ public class GroupGetPrivilegeControllerTest extends BaseTest {
         redisClientTemplate.del(RedisConstant.APP_INFO+CommonEnum.APP_ID.getDisplay());
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupGetPrivilegeController.getGroupPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("getGroupPrivilegeDataNull:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }

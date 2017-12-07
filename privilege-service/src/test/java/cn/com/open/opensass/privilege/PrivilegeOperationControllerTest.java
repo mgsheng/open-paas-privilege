@@ -23,7 +23,7 @@ public class PrivilegeOperationControllerTest extends BaseTest {
 		request.addParameter("optId", "10000");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		fixture.getOperationName(request, response);
-		log.info(response.getContentAsString());
+
 		Assert.assertEquals("修改", JSON.parseObject(response.getContentAsString()).getString("optName"));
 	}
 	@Test //	/operation/getAllOperation
@@ -31,7 +31,7 @@ public class PrivilegeOperationControllerTest extends BaseTest {
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		fixture.getAllOperation(request, response);
-		log.info(response.getContentAsString());
+
 		Assert.assertTrue(response.getContentAsString().contains("operationList"));
 	}
 }

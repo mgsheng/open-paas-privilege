@@ -29,7 +29,7 @@ public class PrivilegeRoleControllerTest extends BaseTest {
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		privilegeRoleController.getRole(request, response);
 		System.out.println("getRole:"+response.getContentAsString());
-		log.info(response.getContentAsString());
+
 		Assert.assertTrue(response.getContentAsString().contains("roleList"));
 	}
 	/**
@@ -46,7 +46,7 @@ public class PrivilegeRoleControllerTest extends BaseTest {
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		privilegeRoleController.getRole(request, response);
 		System.out.println("getRole:"+response.getContentAsString());
-		log.info(response.getContentAsString());
+
 		Assert.assertTrue(response.getContentAsString().contains("roleList"));
 	}
 	/**
@@ -62,7 +62,7 @@ public class PrivilegeRoleControllerTest extends BaseTest {
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		privilegeRoleController.getRole(request, response);
 		System.out.println("getRoleParam:"+response.getContentAsString());
-		log.info(response.getContentAsString());
+
 		Assert.assertEquals("0", JSONObject.parseObject(response.getContentAsString()).getString("status"));
 	}
 }

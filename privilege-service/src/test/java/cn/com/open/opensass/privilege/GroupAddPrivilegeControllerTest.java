@@ -44,7 +44,7 @@ public class GroupAddPrivilegeControllerTest extends BaseTest {
         request.addParameter("status","");
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupAddPrivilegeController.addPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("addPrivilegeParamNull:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
@@ -66,7 +66,7 @@ public class GroupAddPrivilegeControllerTest extends BaseTest {
         request.addParameter("appKey","test");
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupAddPrivilegeController.addPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("userRoleModifyUserValidFailed:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
@@ -87,7 +87,7 @@ public class GroupAddPrivilegeControllerTest extends BaseTest {
         redisClientTemplate.del(RedisConstant.APP_INFO+CommonEnum.APP_ID.getDisplay());
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupAddPrivilegeController.addPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("addPrivilegeAppNull:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
@@ -107,7 +107,7 @@ public class GroupAddPrivilegeControllerTest extends BaseTest {
         request.addParameter("status","");
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupAddPrivilegeController.addPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("addPrivilegeAppNullNotExistData:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
@@ -128,7 +128,7 @@ public class GroupAddPrivilegeControllerTest extends BaseTest {
         request.addParameter("status","");
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupAddPrivilegeController.addPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("addPrivilegeGroupPrivilegeNull:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }

@@ -41,7 +41,7 @@ public class VerifyUserPrivilegeControllerTest extends BaseTest {
 		request.addParameter("optUrl", optUrl);
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		verifyUserPrivilegeController.verifyUserPrivilege(request, response);
-		log.info(response.getContentAsString());
+
 		Assert.assertEquals("1", JSONObject.parseObject(response.getContentAsString()).getString("status"));
 	}/**
 	 * 判断是否是管理员.
@@ -61,7 +61,7 @@ public class VerifyUserPrivilegeControllerTest extends BaseTest {
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		verifyUserPrivilegeController.verifyUserPrivilege(request, response);
 		System.out.println("verifyAdminUserPrivilege:"+response.getContentAsString());
-		log.info(response.getContentAsString());
+
 		Assert.assertEquals("0", JSONObject.parseObject(response.getContentAsString()).getString("status"));
 	}
 	/**
@@ -75,7 +75,7 @@ public class VerifyUserPrivilegeControllerTest extends BaseTest {
 		request.addParameter("optUrl", "/Query/condition/lcenter_8.aspx?Stat=_MatricTestStu");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		verifyUserPrivilegeController.verifyUserPrivilege(request, response);
-		log.info(response.getContentAsString());
+
 		System.out.println("verifyUserPrivilegeParamNull:"+response.getContentAsString());
 		Assert.assertEquals("1", JSONObject.parseObject(response.getContentAsString()).getString("status"));
 	}
@@ -91,7 +91,7 @@ public class VerifyUserPrivilegeControllerTest extends BaseTest {
 		redisClient.del(RedisConstant.APP_INFO +  CommonEnum.APP_ID.getDisplay());
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		verifyUserPrivilegeController.verifyUserPrivilege(request, response);
-		log.info(response.getContentAsString());
+
 		System.out.println("verifyUserPrivilegeAppNull:"+response.getContentAsString());
 		Assert.assertEquals("0", JSONObject.parseObject(response.getContentAsString()).getString("status"));
 	}
@@ -109,7 +109,7 @@ public class VerifyUserPrivilegeControllerTest extends BaseTest {
 		redisClient.del(RedisConstant.APP_INFO +  CommonEnum.APP_ID.getDisplay());
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		verifyUserPrivilegeController.verifyUserPrivilege(request, response);
-		log.info(response.getContentAsString());
+
 		System.out.println("verifyUserPrivilegeValidFailed:"+response.getContentAsString());
 		Assert.assertEquals("0", JSONObject.parseObject(response.getContentAsString()).getString("status"));
 	}
@@ -125,7 +125,7 @@ public class VerifyUserPrivilegeControllerTest extends BaseTest {
 		redisClient.del(RedisConstant.APP_INFO +  CommonEnum.APP_ID.getDisplay());
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		verifyUserPrivilegeController.verifyUserPrivilege(request, response);
-		log.info(response.getContentAsString());
+
 		System.out.println("verifyUserPrivilegeNoUserId:"+response.getContentAsString());
 		Assert.assertEquals("0", JSONObject.parseObject(response.getContentAsString()).getString("status"));
 	}
@@ -153,7 +153,7 @@ public class VerifyUserPrivilegeControllerTest extends BaseTest {
 		redisClient.setObject(String.valueOf(redisUserAllPrivilegeKey),"test");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		verifyUserPrivilegeController.verifyUserPrivilege(request, response);
-		log.info(response.getContentAsString());
+
 		System.out.println("verifyUserPrivilegeNoUserId:"+response.getContentAsString());
 		Assert.assertEquals("1", JSONObject.parseObject(response.getContentAsString()).getString("status"));
 	}

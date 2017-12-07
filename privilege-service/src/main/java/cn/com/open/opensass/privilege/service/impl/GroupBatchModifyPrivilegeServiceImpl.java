@@ -112,7 +112,6 @@ public class GroupBatchModifyPrivilegeServiceImpl  extends BaseControllerUtil im
                     public void run() {
                         synchronized (threadPool) {
                             if (groupId != null && groupId != "") {
-                                log.debug("Thread Name is" + Thread.currentThread().getName() + ",groupId:" + groupId);
                                 //更新缓存
                                 message[0] = privilegeGroupService.updateGroupPrivilegeCache(groupId, appId);
                                 //更新机构版本号

@@ -38,7 +38,7 @@ public class GroupBatchModifyPrivilegeControllerTest extends BaseTest{
         request.addParameter("status","1");
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupBatchModifyPrivilegeController.modifyPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
 
@@ -59,7 +59,7 @@ public class GroupBatchModifyPrivilegeControllerTest extends BaseTest{
         request.addParameter("appKey","test");
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupBatchModifyPrivilegeController.modifyPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
     /**
@@ -76,7 +76,7 @@ public class GroupBatchModifyPrivilegeControllerTest extends BaseTest{
         request.addParameter("status","1");
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupBatchModifyPrivilegeController.modifyPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
     /**
@@ -93,7 +93,7 @@ public class GroupBatchModifyPrivilegeControllerTest extends BaseTest{
         request.addParameter("status","0");
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupBatchModifyPrivilegeController.modifyPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
 }

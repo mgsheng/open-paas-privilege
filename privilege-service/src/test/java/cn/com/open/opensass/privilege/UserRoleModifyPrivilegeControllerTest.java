@@ -42,7 +42,7 @@ public class UserRoleModifyPrivilegeControllerTest extends BaseTest{
         privilegeUserVo.setMethod("");
         MockHttpServletResponse response = new MockHttpServletResponse();
         userRoleModifyPrivilegeController.modifyPrivilege(request, response,privilegeUserVo);
-        log.info(response.getContentAsString());
+
         System.out.println("userRoleModifyParamNull:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
@@ -59,7 +59,7 @@ public class UserRoleModifyPrivilegeControllerTest extends BaseTest{
         privilegeUserVo.setMethod("0");
         MockHttpServletResponse response = new MockHttpServletResponse();
         userRoleModifyPrivilegeController.modifyPrivilege(request, response,privilegeUserVo);
-        log.info(response.getContentAsString());
+
         System.out.println("userRoleModifyUserValidFailed:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
@@ -78,7 +78,7 @@ public class UserRoleModifyPrivilegeControllerTest extends BaseTest{
         request.addParameter("appKey","test");
         MockHttpServletResponse response = new MockHttpServletResponse();
         userRoleModifyPrivilegeController.modifyPrivilege(request, response,privilegeUserVo);
-        log.info(response.getContentAsString());
+
         System.out.println("userRoleModifyAppNull:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
@@ -97,7 +97,7 @@ public class UserRoleModifyPrivilegeControllerTest extends BaseTest{
         redisClientTemplate.del(RedisConstant.APP_INFO+CommonEnum.APP_ID.getDisplay());
         MockHttpServletResponse response = new MockHttpServletResponse();
         userRoleModifyPrivilegeController.modifyPrivilege(request, response,privilegeUserVo);
-        log.info(response.getContentAsString());
+
         System.out.println("userRoleModifyAppNullAddRoleNotNull:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
@@ -129,7 +129,7 @@ public class UserRoleModifyPrivilegeControllerTest extends BaseTest{
 
         MockHttpServletResponse response = new MockHttpServletResponse();
         userRoleModifyPrivilegeController.modifyPrivilege(request, response,privilegeUserVo);
-        log.info(response.getContentAsString());
+
         System.out.println("userRoleModifyAppNullDelRoleNotNull:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
@@ -148,7 +148,7 @@ public class UserRoleModifyPrivilegeControllerTest extends BaseTest{
         request.addParameter("appKey","test");
         MockHttpServletResponse response = new MockHttpServletResponse();
         userRoleModifyPrivilegeController.modifyPrivilege(request, response,privilegeUserVo);
-        log.info(response.getContentAsString());
+
         System.out.println("userRoleModifyValidFailed:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }

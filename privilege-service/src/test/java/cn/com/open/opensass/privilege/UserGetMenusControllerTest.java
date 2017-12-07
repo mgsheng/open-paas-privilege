@@ -41,7 +41,7 @@ public class UserGetMenusControllerTest extends BaseTest {
 		modifyPrivilegeUserVo.setAppId(appId);
 		modifyPrivilegeUserVo.setAppUserId(appUserId);
 		userGetMenusController.getPrivilege(request, response, modifyPrivilegeUserVo);
-		log.info(response.getContentAsString());
+
 		Assert.assertEquals("1", JSONObject.parseObject(response.getContentAsString()).getString("status"));
 	}
 	/**
@@ -56,7 +56,7 @@ public class UserGetMenusControllerTest extends BaseTest {
 		modifyPrivilegeUserVo.setAppUserId("");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		userGetMenusController.getPrivilege(request, response,modifyPrivilegeUserVo);
-		log.info(response.getContentAsString());
+
 		System.out.println("ParamNull:"+response.getContentAsString());
 		Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
 	}
@@ -73,7 +73,7 @@ public class UserGetMenusControllerTest extends BaseTest {
 		redisClientTemplate.del(RedisConstant.APP_INFO +CommonEnum.APP_ID.getDisplay());
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		userGetMenusController.getPrivilege(request, response,modifyPrivilegeUserVo);
-		log.info(response.getContentAsString());
+
 		System.out.println("AppNull:"+response.getContentAsString());
 		Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
 	}
@@ -91,7 +91,7 @@ public class UserGetMenusControllerTest extends BaseTest {
 		request.addParameter("appKey","test");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		userGetMenusController.getPrivilege(request, response,modifyPrivilegeUserVo);
-		log.info(response.getContentAsString());
+
 		System.out.println("getPrivilegeValidFailed:"+response.getContentAsString());
 		Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
 	}
@@ -107,7 +107,7 @@ public class UserGetMenusControllerTest extends BaseTest {
 		modifyPrivilegeUserVo.setAppUserId("test_Test1");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		userGetMenusController.getPrivilege(request, response,modifyPrivilegeUserVo);
-		log.info(response.getContentAsString());
+
 		System.out.println("getPrivilegeUserNotExist:"+response.getContentAsString());
 		Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
 	}
@@ -123,7 +123,7 @@ public class UserGetMenusControllerTest extends BaseTest {
 		modifyPrivilegeUserVo.setAppUserId("1000478");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		userGetMenusController.getPrivilege(request, response,modifyPrivilegeUserVo);
-		log.info(response.getContentAsString());
+
 		System.out.println("getPrivilegeAdminUserExist:"+response.getContentAsString());
 		Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
 	}
@@ -140,7 +140,7 @@ public class UserGetMenusControllerTest extends BaseTest {
 		modifyPrivilegeUserVo.setAppUserId("1004098");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		userGetMenusController.getPrivilege(request, response,modifyPrivilegeUserVo);
-		log.info(response.getContentAsString());
+
 		System.out.println("getPrivilegeNormalUserExist:"+response.getContentAsString());
 		Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
 	}

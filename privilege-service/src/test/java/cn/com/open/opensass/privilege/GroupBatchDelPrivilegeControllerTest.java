@@ -43,7 +43,7 @@ public class GroupBatchDelPrivilegeControllerTest extends BaseTest {
         request.addParameter("functionId","2a2aaa4e24d8b7d984565f18e99d0502,3ffc5b25a963b015e5a4426bebef24c5");
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupBatchDelPrivilegeController.modifyPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("nomarl:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
@@ -60,7 +60,7 @@ public class GroupBatchDelPrivilegeControllerTest extends BaseTest {
         request.addParameter("functionId",functionId);
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupBatchDelPrivilegeController.modifyPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("nomarl:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
@@ -77,7 +77,7 @@ public class GroupBatchDelPrivilegeControllerTest extends BaseTest {
         request.addParameter("functionId",functionId);
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupBatchDelPrivilegeController.modifyPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("NoData:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
@@ -94,7 +94,7 @@ public class GroupBatchDelPrivilegeControllerTest extends BaseTest {
         request.addParameter("functionId",functionId);
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupBatchDelPrivilegeController.modifyPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("ParamNull:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
@@ -112,7 +112,7 @@ public class GroupBatchDelPrivilegeControllerTest extends BaseTest {
         redisClient.del(RedisConstant.APP_INFO + CommonEnum.APP_ID.getDisplay());
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupBatchDelPrivilegeController.modifyPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("AppNull:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
@@ -132,7 +132,7 @@ public class GroupBatchDelPrivilegeControllerTest extends BaseTest {
         request.addParameter("appKey", "test");//应用id（必传）
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupBatchDelPrivilegeController.modifyPrivilege(request, response);
-        log.info(response.getContentAsString());
+
         System.out.println("ValidFailed:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
