@@ -76,7 +76,6 @@ public class PrivilegeUserCacheDelControllerTest  extends BaseTest {
         privilegeUserVo.setAppUserId("");
         privilegeUserCacheDelController.delUserRedisCache(request, response,privilegeUserVo);
 
-        System.out.println("ParamNull:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
     /**
@@ -94,7 +93,6 @@ public class PrivilegeUserCacheDelControllerTest  extends BaseTest {
         request.addParameter("appKey","test");
         privilegeUserCacheDelController.delUserRedisCache(request, response,privilegeUserVo);
 
-        System.out.println("ValidFailed:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
     /**
@@ -151,7 +149,6 @@ public class PrivilegeUserCacheDelControllerTest  extends BaseTest {
         //删除操作开始
         privilegeUserCacheDelController.delUserRedisCache(request, response,privilegeUserVo);
 
-        System.out.println("AppNull:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
 }

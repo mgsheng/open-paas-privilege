@@ -122,7 +122,6 @@ public class UserRoleAddPrivilegeControllerTest extends BaseTest{
         MockHttpServletResponse response = new MockHttpServletResponse();
         userRoleAddPrivilegeController.addRole(request, response,privilegeUserVo);
 
-        System.out.println("userRoleAddExistUser:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
     /**
@@ -157,7 +156,6 @@ public class UserRoleAddPrivilegeControllerTest extends BaseTest{
         MockHttpServletResponse response = new MockHttpServletResponse();
         userRoleAddPrivilegeController.addRole(request, response,privilegeUserVo);
 
-        System.out.println("userRoleAddRedisDel:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
     /**
@@ -180,7 +178,6 @@ public class UserRoleAddPrivilegeControllerTest extends BaseTest{
         MockHttpServletResponse response = new MockHttpServletResponse();
         userRoleAddPrivilegeController.addRole(request, response,privilegeUserVo);
 
-        System.out.println("userRoleAddFailed:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
 }

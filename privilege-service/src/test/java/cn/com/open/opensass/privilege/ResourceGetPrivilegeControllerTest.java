@@ -43,7 +43,6 @@ public class ResourceGetPrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         resourceGetPrivilegeController.getResPrivilege(request, response);
 
-        System.out.println("getResPrivilegeParamNull:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
     /**
@@ -62,7 +61,6 @@ public class ResourceGetPrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         resourceGetPrivilegeController.getResPrivilege(request, response);
 
-        System.out.println("getResPrivilegeAppNull:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
     /**

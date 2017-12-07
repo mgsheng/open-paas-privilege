@@ -40,7 +40,6 @@ public class FunctionDelPrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         functionDelPrivilegeController.delFunction(request, response);
 
-        System.out.println("delFunctionParamNull:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
     /**
@@ -56,7 +55,6 @@ public class FunctionDelPrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         functionDelPrivilegeController.delFunction(request, response);
 
-        System.out.println("delFunctionAppNull:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
 
@@ -74,7 +72,6 @@ public class FunctionDelPrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         functionDelPrivilegeController.delFunction(request, response);
 
-        System.out.println("delFunctionValidFailed:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
     /**
@@ -89,7 +86,6 @@ public class FunctionDelPrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         functionDelPrivilegeController.delFunction(request, response);
 
-        System.out.println("delFunctionFunctionIdsNull:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
 }

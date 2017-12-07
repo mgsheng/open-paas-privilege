@@ -46,7 +46,6 @@ public class ResourceAddPrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         resourceAddPrivilegeController.addMenu(request, response);
 
-        System.out.println("addMenuParamNull:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
     /**
@@ -70,7 +69,6 @@ public class ResourceAddPrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         resourceAddPrivilegeController.addMenu(request, response);
 
-        System.out.println("addMenuValidFailed:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
 
@@ -92,7 +90,6 @@ public class ResourceAddPrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         resourceAddPrivilegeController.addMenu(request, response);
 
-        System.out.println("addMenuNomal:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
 }

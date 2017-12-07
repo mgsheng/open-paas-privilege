@@ -67,7 +67,6 @@ public class FunctionGetPrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         functionGetPrivilegeController.modifyFunction(request, response);
 
-        System.out.println("modifyFunctionAppNull:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
     /**
@@ -84,7 +83,6 @@ public class FunctionGetPrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         functionGetPrivilegeController.modifyFunction(request, response);
 
-        System.out.println("modifyFunctionSuccess:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
     /**
@@ -102,7 +100,6 @@ public class FunctionGetPrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         functionGetPrivilegeController.modifyFunction(request, response);
 
-        System.out.println("modifyFunctionValidFailed:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
 }

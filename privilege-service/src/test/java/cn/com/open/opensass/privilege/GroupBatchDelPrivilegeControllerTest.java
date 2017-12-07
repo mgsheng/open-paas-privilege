@@ -44,7 +44,6 @@ public class GroupBatchDelPrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupBatchDelPrivilegeController.modifyPrivilege(request, response);
 
-        System.out.println("nomarl:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
     /**
@@ -61,7 +60,6 @@ public class GroupBatchDelPrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupBatchDelPrivilegeController.modifyPrivilege(request, response);
 
-        System.out.println("nomarl:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
     /**
@@ -78,7 +76,6 @@ public class GroupBatchDelPrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupBatchDelPrivilegeController.modifyPrivilege(request, response);
 
-        System.out.println("NoData:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
     /**
@@ -95,7 +92,6 @@ public class GroupBatchDelPrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupBatchDelPrivilegeController.modifyPrivilege(request, response);
 
-        System.out.println("ParamNull:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
     /**
@@ -113,7 +109,6 @@ public class GroupBatchDelPrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupBatchDelPrivilegeController.modifyPrivilege(request, response);
 
-        System.out.println("AppNull:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
 
@@ -133,7 +128,6 @@ public class GroupBatchDelPrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupBatchDelPrivilegeController.modifyPrivilege(request, response);
 
-        System.out.println("ValidFailed:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
 }

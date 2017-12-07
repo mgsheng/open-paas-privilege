@@ -41,7 +41,6 @@ public class GroupGetPrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupGetPrivilegeController.getGroupPrivilege(request, response);
 
-        System.out.println("getGroupPrivilegeParamNull:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
     /**
@@ -59,7 +58,6 @@ public class GroupGetPrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupGetPrivilegeController.getGroupPrivilege(request, response);
 
-        System.out.println("getGroupPrivilegeAppNull:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
     /**
@@ -78,7 +76,6 @@ public class GroupGetPrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupGetPrivilegeController.getGroupPrivilege(request, response);
 
-        System.out.println("getGroupPrivilegeValidFailed:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
     /**
@@ -96,7 +93,6 @@ public class GroupGetPrivilegeControllerTest extends BaseTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupGetPrivilegeController.getGroupPrivilege(request, response);
 
-        System.out.println("getGroupPrivilegeDataNull:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
 }
