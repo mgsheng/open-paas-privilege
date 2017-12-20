@@ -101,7 +101,6 @@ public class MenuGetPrivilegeController extends BaseControllerUtil{
     	}else{
     		writeSuccessJson(response,map);
     	}
-    	//OauthControllerLog.log(startTime, guid, source_id, app, map,userserviceDev);
         return;
     	
     }
