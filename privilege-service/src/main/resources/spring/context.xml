@@ -63,7 +63,7 @@
 		<!-- 1800秒，也就是30分钟 -->
 		<property name="removeAbandonedTimeout" value="300" />
 		<!-- 关闭abanded连接时输出错误日志 -->
-		<property name="logAbandoned" value="true" />
+		<property name="logAbandoned" value="false" />
 
 		<!-- 监控数据库 -->
 		<!-- <property name="filters" value="stat" /> -->
