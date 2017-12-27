@@ -33,38 +33,24 @@ public class AppRoleRedisPrivilegeController extends BaseControllerUtil{
 	public void getAppRoleRedisPrivilege(HttpServletRequest request,HttpServletResponse response){
 		String appId=request.getParameter("appId").trim();
 		Map<String, Object> map = new HashMap<String, Object>();
-		log.info("====================redis app role start======================");
 		if (!paraMandatoryCheck(Arrays.asList(appId))) {
 			paraMandaChkAndReturn(10000, response, "必传参数中有空值");
 			return;
 		}
 		PrivilegeAjaxMessage message=privilegeRoleService.getAppRoleRedis(appId);
-		if (message.getCode().equals("1")) {
-			WebUtils.writeJson(response, message.getMessage());
-		} else {
-			map.put("status", message.getCode());
-			map.put("error_code", message.getMessage());/* 数据不存在 */
-			writeErrorJson(response, map);
-		}
+		WebUtils.writeJson(response, message.getMessage());
 		return;
 	}
 	@RequestMapping("delAppRoleRedis")
 	public void delAppRoleRedisPrivilege(HttpServletRequest request,HttpServletResponse response){
 		String appId=request.getParameter("appId").trim();
 		Map<String, Object> map = new HashMap<String, Object>();
-		log.info("====================redis app role start======================");
 		if (!paraMandatoryCheck(Arrays.asList(appId))) {
 			paraMandaChkAndReturn(10000, response, "必传参数中有空值");
 			return;
 		}
 		PrivilegeAjaxMessage message=privilegeRoleService.delAppRoleRedis(appId);
-		if (message.getCode().equals("1")) {
-			WebUtils.writeJson(response, message.getMessage());
-		} else {
-			map.put("status", message.getCode());
-			map.put("error_code", message.getMessage());/* 数据不存在 */
-			writeErrorJson(response, map);
-		}
+		WebUtils.writeJson(response, message.getMessage());
 		return;
 	}
 	@RequestMapping("updateAppRoleRedis")
@@ -77,13 +63,7 @@ public class AppRoleRedisPrivilegeController extends BaseControllerUtil{
 			return;
 		}
 		PrivilegeAjaxMessage message=privilegeRoleService.updateAppRoleRedis(appId);
-		if (message.getCode().equals("1")) {
-			WebUtils.writeJson(response, message.getMessage());
-		} else {
-			map.put("status", message.getCode());
-			map.put("error_code", message.getMessage());/* 数据不存在 */
-			writeErrorJson(response, map);
-		}
+		WebUtils.writeJson(response, message.getMessage());
 		return;
 		
 	}

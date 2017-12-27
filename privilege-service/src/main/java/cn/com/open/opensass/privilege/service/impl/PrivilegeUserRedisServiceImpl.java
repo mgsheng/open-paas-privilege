@@ -53,8 +53,6 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
     @Autowired
     private PrivilegeRoleResourceService privilegeRoleResourceService;
     @Autowired
-    private RedisDao redisDao;
-    @Autowired
     private PrivilegeGroupService privilegeGroupService;
 
     @Override
@@ -385,8 +383,10 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
     @Override
     public PrivilegeAjaxMessage updateUserRoleRedis(String appId,
                                                     String appUserId) {
-        boolean RedisKeyExist = redisDao
-                .existKeyRedis(prefix, appId, appUserId);
+        /*boolean RedisKeyExist = redisDao
+                .existKeyRedis(prefix, appId, appUserId);*/
+        boolean RedisKeyExist = redisClientTemplate
+                .existKey(prefix+appId+RedisConstant.SIGN+appUserId);
         if (RedisKeyExist) {
             delUserRoleRedis(appId, appUserId);
         }

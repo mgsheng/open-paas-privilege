@@ -117,7 +117,7 @@ public class RoleModifyPrivilegeControllerTest extends BaseTest{
         MockHttpServletResponse response = new MockHttpServletResponse();
         roleModifyPrivilegeController.modifyPrivilege(request, response);
 
-        Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
+        Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
     /**
      * 角色更新,此权限不存在，请核实！.

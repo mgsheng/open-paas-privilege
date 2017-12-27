@@ -109,7 +109,7 @@ public class GroupAddPrivilegeControllerTest extends BaseTest {
         groupAddPrivilegeController.addPrivilege(request, response);
 
         System.out.println("addPrivilegeAppNullNotExistData:"+response.getContentAsString());
-        Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
+        Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
 
     /**
@@ -130,6 +130,6 @@ public class GroupAddPrivilegeControllerTest extends BaseTest {
         groupAddPrivilegeController.addPrivilege(request, response);
 
         System.out.println("addPrivilegeGroupPrivilegeNull:"+response.getContentAsString());
-        Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
+        Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
 }

@@ -56,7 +56,7 @@ public class UserRoleAddPrivilegeControllerTest extends BaseTest{
         MockHttpServletResponse response = new MockHttpServletResponse();
         userRoleAddPrivilegeController.addRole(request, response,privilegeUserVo);
 
-        Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
+        Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
     /**
      * 参数为空.
@@ -168,7 +168,7 @@ public class UserRoleAddPrivilegeControllerTest extends BaseTest{
         PrivilegeUserVo privilegeUserVo = new PrivilegeUserVo();
         privilegeUserVo.setAppId(CommonEnum.APP_ID.getDisplay());
         privilegeUserVo.setAppUserId("test");
-        privilegeUserVo.setPrivilegeRoleId(",t");
+        privilegeUserVo.setPrivilegeRoleId(",te");
         privilegeUserVo.setAppUserName("testname");
         privilegeUserVo.setDeptId("test");
         privilegeUserVo.setGroupId("test");
@@ -178,6 +178,6 @@ public class UserRoleAddPrivilegeControllerTest extends BaseTest{
         MockHttpServletResponse response = new MockHttpServletResponse();
         userRoleAddPrivilegeController.addRole(request, response,privilegeUserVo);
 
-        Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
+        Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
 }

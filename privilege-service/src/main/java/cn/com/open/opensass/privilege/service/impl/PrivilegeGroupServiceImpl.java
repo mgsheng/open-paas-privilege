@@ -41,8 +41,8 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 	private RedisClientTemplate redisClientTemplate;
 	@Autowired
 	private PrivilegeMenuService privilegeMenuService;
-	@Autowired
-	private RedisDao redisDao;
+	/*@Autowired
+	private RedisDao redisDao;*/
 	@Autowired
 	private PrivilegeGroupResourceService privilegeGroupResourceService;
 	// 缓存前缀
@@ -182,7 +182,8 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 	@Override
 	public PrivilegeAjaxMessage delGroupPrivilegeCache(String groupId, String appId) {
 		PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
-		Boolean KeyExist = redisDao.deleteRedisKey(groupCachePrefix, appId, groupId);
+//		Boolean KeyExist = redisDao.deleteRedisKey(groupCachePrefix, appId, groupId);
+		Boolean KeyExist = redisClientTemplate.del(groupCachePrefix+appId+SIGN+groupId);
 		ajaxMessage.setCode("1");
 		ajaxMessage.setMessage(KeyExist ? "Success" : "Failed");
 		log.info("缓存接口删除：" + KeyExist);
@@ -194,7 +195,8 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 	 */
 	@Override
 	public PrivilegeAjaxMessage updateGroupPrivilegeCache(String groupId, String appId) {
-		boolean RedisKeyExist = redisDao.existKeyRedis(groupCachePrefix, appId, groupId);
+//		boolean RedisKeyExist = redisDao.existKeyRedis(groupCachePrefix, appId, groupId);
+		boolean RedisKeyExist = redisClientTemplate.existKey(groupCachePrefix+appId+SIGN+groupId);
 		if (RedisKeyExist) {
 			delGroupPrivilegeCache(groupId, appId);
 		}

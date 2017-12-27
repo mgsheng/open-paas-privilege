@@ -35,8 +35,8 @@ public class PrivilegeRoleServiceImpl implements PrivilegeRoleService {
     private PrivilegeRoleRepository privilegeRoleRepository;
     @Autowired
     private RedisClientTemplate redisClientTemplate;
-    @Autowired
-    private RedisDao redisDao;
+    /*@Autowired
+    private RedisDao redisDao;*/
 	@Override
 	public Boolean savePrivilegeRole(PrivilegeRole privilegeRole) {
 		try{
@@ -146,7 +146,8 @@ public class PrivilegeRoleServiceImpl implements PrivilegeRoleService {
 	@Override
 	public PrivilegeAjaxMessage delAppRoleRedis(String appId) {
 		PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
-		Boolean RoleKeyExist = redisDao.deleteRedisKey(AppRoleRedisPrefix, appId);
+//		Boolean RoleKeyExist = redisDao.deleteRedisKey(AppRoleRedisPrefix, appId);
+		Boolean RoleKeyExist = redisClientTemplate.del(AppRoleRedisPrefix+appId);
 		ajaxMessage.setCode("1");
 		ajaxMessage.setMessage(RoleKeyExist ? "Success" : "Failed");
 		log.info("delMenuRedis接口删除：" + RoleKeyExist);
@@ -155,7 +156,8 @@ public class PrivilegeRoleServiceImpl implements PrivilegeRoleService {
 
 	@Override
 	public PrivilegeAjaxMessage updateAppRoleRedis(String appId) {
-		boolean RedisKeyExist = redisDao.existKeyRedis(AppRoleRedisPrefix, appId);
+//		boolean RedisKeyExist = redisDao.existKeyRedis(AppRoleRedisPrefix, appId);
+		boolean RedisKeyExist = redisClientTemplate.existKey(AppRoleRedisPrefix+appId);
 		if (RedisKeyExist) {
 			delAppRoleRedis(appId);
 		}

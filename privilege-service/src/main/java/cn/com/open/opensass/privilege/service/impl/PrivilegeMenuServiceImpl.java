@@ -1,31 +1,23 @@
 package cn.com.open.opensass.privilege.service.impl;
 
-import java.util.*;
-
-import cn.com.open.opensass.privilege.dao.PrivilegeUrl;
-import cn.com.open.opensass.privilege.dao.cache.RedisDao;
-import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
-import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
-import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
-import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeMenuRepository;
 import cn.com.open.opensass.privilege.model.PrivilegeMenu;
 import cn.com.open.opensass.privilege.model.PrivilegeRole;
 import cn.com.open.opensass.privilege.model.PrivilegeRoleResource;
 import cn.com.open.opensass.privilege.model.PrivilegeUser;
-import cn.com.open.opensass.privilege.service.PrivilegeGroupService;
-import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
-import cn.com.open.opensass.privilege.service.PrivilegeRoleResourceService;
-import cn.com.open.opensass.privilege.service.PrivilegeRoleService;
-import cn.com.open.opensass.privilege.service.PrivilegeUserService;
+import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
+import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
+import cn.com.open.opensass.privilege.service.*;
+import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
+import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 /**
  * 
@@ -41,8 +33,6 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 	private RedisClientTemplate redisClientTemplate;
 	@Autowired
 	private PrivilegeMenuRepository privilegeMenuRepository;
-	@Autowired
-	private RedisDao redisDao;
 	@Autowired  
 	private PrivilegeRoleService privilegeRoleService;
 	@Autowired
@@ -51,6 +41,8 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 	private PrivilegeRoleResourceService privilegeRoleResourceService;
 	@Autowired
 	private PrivilegeGroupService privilegeGroupService;
+	/*@Autowired
+	RedisDao redisDao;*/
 	
 	@Override
 	public Boolean savePrivilegeMenu(PrivilegeMenu privilegeMenu) {
@@ -250,9 +242,11 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 
 	@Override
 	public PrivilegeAjaxMessage updateMenuRedis(String appId, String appUserId) {
-		boolean menuKeyExist = redisDao.existKeyRedis(prefix, appId, appUserId);
+		/*boolean menuKeyExist = redisDao.existKeyRedis(prefix, appId, appUserId);*/
+		boolean menuKeyExist = redisClientTemplate.existKey(prefix+appId+SIGN+appUserId);
 		if (menuKeyExist) {
-			redisDao.deleteRedisKey(prefix, appId, appUserId);
+			redisClientTemplate.del(prefix+appId+SIGN+appUserId);
+			/*redisDao.deleteRedisKey(prefix, appId, appUserId);*/
 		}
 		return getMenuRedis(appId, appUserId);
 	}
@@ -260,7 +254,8 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 	@Override
 	public PrivilegeAjaxMessage delMenuRedis(String appId, String appUserId) {
 		PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
-		boolean menuKeyExist = redisDao.deleteRedisKey(prefix, appId, appUserId);
+		/*boolean menuKeyExist = redisDao.deleteRedisKey(prefix, appId, appUserId);*/
+		boolean menuKeyExist = redisClientTemplate.del(prefix+appId+SIGN+appUserId);
 		ajaxMessage.setCode("1");
 		ajaxMessage.setMessage(menuKeyExist ? "Success" : "Failed");
 		log.info("delMenuRedis接口删除key：" + menuKeyExist);
@@ -273,7 +268,8 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 		PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
 		/* 获取用户UID */
 		log.info("existMenuKey是否存在redis数据");
-		boolean exist = redisDao.existKeyRedis(prefix, appId, appUserId);
+//		boolean exist = redisDao.existKeyRedis(prefix, appId, appUserId);
+		boolean exist = redisClientTemplate.existKey(prefix+appId+SIGN+appUserId);
 		ajaxMessage.setCode("1");
 		ajaxMessage.setMessage(exist ? "TRUE" : "FALSE");
 		return ajaxMessage;
@@ -379,7 +375,8 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 	@Override
 	public PrivilegeAjaxMessage delAppMenuRedis(String appId) {
 		PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
-		Boolean RoleKeyExist = redisDao.deleteRedisKey(AppMenuRedisPrefix, appId);
+//		Boolean RoleKeyExist = redisDao.deleteRedisKey(AppMenuRedisPrefix, appId);
+		Boolean RoleKeyExist = redisClientTemplate.del(AppMenuRedisPrefix+appId);
 		ajaxMessage.setCode("1");
 		ajaxMessage.setMessage(RoleKeyExist ? "Success" : "Failed");
 		log.info("delMenuRedis接口删除：" + RoleKeyExist);
@@ -396,7 +393,8 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 			version += 1;
 		}
 		redisClientTemplate.setObject(appMenuVersionCache+appId,version);
-		boolean RedisKeyExist = redisDao.existKeyRedis(AppMenuRedisPrefix, appId);
+//		boolean RedisKeyExist = redisDao.existKeyRedis(AppMenuRedisPrefix, appId);
+		boolean RedisKeyExist = redisClientTemplate.existKey(AppMenuRedisPrefix+appId);
 		if (RedisKeyExist) {
 			delAppMenuRedis(appId);
 		}

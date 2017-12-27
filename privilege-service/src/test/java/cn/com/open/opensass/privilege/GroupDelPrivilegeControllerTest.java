@@ -74,6 +74,6 @@ public class GroupDelPrivilegeControllerTest extends BaseTest {
         request.addParameter("appKey", "test");
         MockHttpServletResponse response = new MockHttpServletResponse();
         groupDelPrivilegeController.delPrivilege(request, response);
-        Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
+        Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
 }
