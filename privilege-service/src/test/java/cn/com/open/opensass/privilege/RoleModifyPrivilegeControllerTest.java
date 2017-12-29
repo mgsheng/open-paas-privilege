@@ -196,4 +196,31 @@ public class RoleModifyPrivilegeControllerTest extends BaseTest{
         System.out.println("Test:"+response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
+
+    /**
+     * 角色更新,此权限不存在，请核实！.
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void roleModifyDeleteOkM2() throws UnsupportedEncodingException {
+        String roleName = "JIAOSEMINGCHENG";
+        String groupId = "50C935EB5239532AE0533312640A8C66";
+        String groupName = "四川遂宁应用技术职业学校奥鹏学习中心[17]VIP";
+        Random random = new Random();
+        MockHttpServletRequest request = Signature.getSignatureRequest(CommonEnum.APP_SECRET.getDisplay(), CommonEnum.APP_ID.getDisplay(), CommonEnum.APP_KEY.getDisplay());
+        request.addParameter("appId",CommonEnum.APP_ID.getDisplay());
+        request.addParameter("privilegeRoleId","e3cf39a506fa4c17a8da3ba047e2f0fb");
+        request.addParameter("method", "0");
+        request.addParameter("rolePrivilege", "9368");
+        request.addParameter("privilegeFunId", "4a5682a19ce7b4b09858cf28448dd96c,17f5e6db87929fb55cebeb7fd58c1d41,10a409f7044f0c29cda1e2e2930fa6ef,709b6839d764651ee36ecdefdb0c486e,a17c66baf7ecfb46712b81a5d64dcf21,625a61cc569767faf06e83d43d9d5257,986934ffbe7c548efeaa7945a26b0393,fb8062d98de2413ae3bb5953582ba9b3,cd6b73b67c77edeaff94e24b961119dd");
+        request.addParameter("roleName", roleName + random.nextInt(10));
+        request.addParameter("groupId", groupId);
+        request.addParameter("groupName", groupName + random.nextInt(10));
+        request.addParameter("status", "0");
+        request.addParameter("deptId", "100");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        roleModifyPrivilegeController.modifyPrivilege(request, response);
+        System.out.println("Test:"+response.getContentAsString());
+        Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
+    }
 }
