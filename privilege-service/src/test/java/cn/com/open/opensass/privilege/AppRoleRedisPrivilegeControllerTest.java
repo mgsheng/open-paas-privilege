@@ -56,7 +56,7 @@ public class AppRoleRedisPrivilegeControllerTest extends BaseTest{
 	@Test
 	public void delAppRoleRedisPrivilege() throws UnsupportedEncodingException {
 		MockHttpServletRequest request = new MockHttpServletRequest();
-		request.addParameter("appId", "28");
+		request.addParameter("appId", "288");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		fixture.delAppRoleRedisPrivilege(request, response);
 		Assert.assertEquals("Failed", response.getContentAsString());
