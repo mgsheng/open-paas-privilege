@@ -64,6 +64,24 @@ public class UserRoleGetPrivilegeControllerTest  extends BaseTest {
         System.out.println("nomarl:"+response.getContentAsString());
         Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
+
+    /**
+     * 正常操作管理员.
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void getPrivilegeNomarlAdmin() throws UnsupportedEncodingException {
+        MockHttpServletRequest request = Signature.getSignatureRequest(CommonEnum.APP_SECRET.getDisplay(), CommonEnum.APP_ID.getDisplay(), CommonEnum.APP_KEY.getDisplay());
+        PrivilegeUserVo privilegeUserVo = new PrivilegeUserVo();
+        privilegeUserVo.setAppId(CommonEnum.APP_ID.getDisplay());
+        privilegeUserVo.setAppUserId("1475");
+        privilegeUserVo.setMenuCode("6");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        redisClient.del(RedisConstant.APP_INFO + privilegeUserVo.getAppId());
+        userRoleGetPrivilegeController.getPrivilege(request, response,privilegeUserVo);
+        System.out.println("nomarl:"+response.getContentAsString());
+        Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
+    }
     /**
      * App为空.
      * @throws UnsupportedEncodingException

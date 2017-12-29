@@ -155,8 +155,7 @@ public class UserRoleAddPrivilegeControllerTest extends BaseTest{
         redisClientTemplate.setObject(redisUserAllPrivilegeKey.toString(),"test");
         MockHttpServletResponse response = new MockHttpServletResponse();
         userRoleAddPrivilegeController.addRole(request, response,privilegeUserVo);
-
-        Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
+        Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("status").equals("0"));
     }
     /**
      * 用户角色关系添加失败.
