@@ -100,8 +100,8 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
         String groupVersion = "0";
         if (redisClient.existKey(RedisConstant.GROUPVERSIONCACHE + user.getAppId() + SIGN + user.getGroupId())) {
             groupVersion = String.valueOf(redisClient.getObject(RedisConstant.GROUPVERSIONCACHE + user.getAppId() + SIGN + user.getGroupId()));
-            map.put("groupVersion", groupVersion);
         }
+        map.put("groupVersion", groupVersion);
         Integer menuVersion = (Integer) redisClient.getObject(RedisConstant.APPMENUVERSIONCACHE + user.getAppId());
         String menuJedis = redisClient.getString(RedisConstant.USERMENU_CACHE + user.getAppId() + SIGN + user.getAppUserId());
         // 缓存中是否存在菜单
