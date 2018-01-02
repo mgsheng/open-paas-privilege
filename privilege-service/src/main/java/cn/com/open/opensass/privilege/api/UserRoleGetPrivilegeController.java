@@ -97,9 +97,9 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 
         //	redisDao.getUrlRedis(RedisConstant.USERMENU_CACHE,  user.getAppId(), user.getAppUserId());
         boolean processRedis = false;
-        Integer groupVersion = 0;
+        String groupVersion = "0";
         if (redisClient.existKey(RedisConstant.GROUPVERSIONCACHE + user.getAppId() + SIGN + user.getGroupId())) {
-            groupVersion = (Integer) redisClient.getObject(RedisConstant.GROUPVERSIONCACHE + user.getAppId() + SIGN + user.getGroupId());
+            groupVersion = String.valueOf(redisClient.getObject(RedisConstant.GROUPVERSIONCACHE + user.getAppId() + SIGN + user.getGroupId()));
             map.put("groupVersion", groupVersion);
         }
         Integer menuVersion = (Integer) redisClient.getObject(RedisConstant.APPMENUVERSIONCACHE + user.getAppId());
@@ -156,14 +156,14 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
         if (processRedis) {
             String res = redisClient.getString(redisUserPrivilegeKey.toString());
             if (res != null && res.length() > 0) {
-                if (groupVersion == 0) {
+                if (groupVersion.equals("0")) {
                     writeJsonString(response, res);
                     return;
                 } else {
                     //组织机构版本相同，则走缓存
                     JSONObject userData = JSONObject.fromObject(res);
-                    Integer version = (Integer) userData.get("groupVersion");
-                    if (version != null && version.intValue() == groupVersion.intValue()) {
+                    String version = String.valueOf(userData.get("groupVersion"));
+                    if (version != null && version.equals(groupVersion)) {
                         writeJsonString(response, res);
                         return;
                     }

@@ -84,8 +84,7 @@ public class UrlRedisPrivilegeControllerTest  extends BaseTest {
         request.addParameter("appUserId",appUserId);
         MockHttpServletResponse response = new MockHttpServletResponse();
         urlRedisPrivilegeController.updateData(request, response);
-
-        Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("groupVersion").equals(7));
+        Assert.assertTrue(JSONObject.fromObject(response.getContentAsString()).get("urlList")!= "");
     }
     /**
      * 修改参数为空.
