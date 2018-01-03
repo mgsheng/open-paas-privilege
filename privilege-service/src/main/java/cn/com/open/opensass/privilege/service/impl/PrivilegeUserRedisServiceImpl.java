@@ -75,7 +75,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
         // 组织机构版本号
         Integer groupVersion = null;
         if (groupId != null && !groupId.isEmpty()) {
-            groupVersion = (Integer) redisClientTemplate.getObject(groupVersionCachePerfix + appId + SIGN + groupId);
+            groupVersion = (Integer.valueOf(String.valueOf(redisClientTemplate.getObject(groupVersionCachePerfix + appId + SIGN + groupId))));
         }
         // redis key
         String userCacheRoleKey = prefix + appId + SIGN + appUserId;
