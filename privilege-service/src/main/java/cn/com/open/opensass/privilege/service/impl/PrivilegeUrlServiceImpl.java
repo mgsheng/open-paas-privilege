@@ -64,9 +64,9 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 		//用户组织机构Id
 		String groupId = privilegeUser.getGroupId();
 		//组织机构版本号
-		String groupVersion = null;
+		Integer groupVersion = null;
 		if (groupId != null && !groupId.isEmpty()){
-			groupVersion = (String) redisClientTemplate.getObject(groupVersionCachePerfix + appId + SIGN
+			groupVersion = (Integer) redisClientTemplate.getObject(groupVersionCachePerfix + appId + SIGN
 					+ groupId);
 		}
 	

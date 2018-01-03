@@ -97,11 +97,12 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
 
         //	redisDao.getUrlRedis(RedisConstant.USERMENU_CACHE,  user.getAppId(), user.getAppUserId());
         boolean processRedis = false;
-        String groupVersion = "0";
+        //String groupVersion = "0";
+        Integer groupVersion = 0;
         if (redisClient.existKey(RedisConstant.GROUPVERSIONCACHE + user.getAppId() + SIGN + user.getGroupId())) {
-            groupVersion = String.valueOf(redisClient.getObject(RedisConstant.GROUPVERSIONCACHE + user.getAppId() + SIGN + user.getGroupId()));
+            groupVersion = (Integer) redisClient.getObject(RedisConstant.GROUPVERSIONCACHE + user.getAppId() + SIGN + user.getGroupId());
         }
-        map.put("groupVersion", groupVersion);
+        map.put("groupVersion", String.valueOf(groupVersion));
         Integer menuVersion = (Integer) redisClient.getObject(RedisConstant.APPMENUVERSIONCACHE + user.getAppId());
         String menuJedis = redisClient.getString(RedisConstant.USERMENU_CACHE + user.getAppId() + SIGN + user.getAppUserId());
         // 缓存中是否存在菜单
@@ -156,14 +157,14 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
         if (processRedis) {
             String res = redisClient.getString(redisUserPrivilegeKey.toString());
             if (res != null && res.length() > 0) {
-                if (groupVersion.equals("0")) {
+                if (groupVersion == 0) {
                     writeJsonString(response, res);
                     return;
                 } else {
                     //组织机构版本相同，则走缓存
                     JSONObject userData = JSONObject.fromObject(res);
-                    String version = String.valueOf(userData.get("groupVersion"));
-                    if (version != null && version.equals(groupVersion)) {
+                    Integer version = (Integer) userData.get("groupVersion");
+                    if (version != null && version.intValue() == groupVersion.intValue()) {
                         writeJsonString(response, res);
                         return;
                     }

@@ -73,9 +73,9 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
         // 用户组织机构Id
         String groupId = privilegeUser.getGroupId();
         // 组织机构版本号
-        String groupVersion = null;
+        Integer groupVersion = null;
         if (groupId != null && !groupId.isEmpty()) {
-            groupVersion = String.valueOf(redisClientTemplate.getObject(groupVersionCachePerfix + appId + SIGN + groupId));
+            groupVersion = (Integer) redisClientTemplate.getObject(groupVersionCachePerfix + appId + SIGN + groupId);
         }
         // redis key
         String userCacheRoleKey = prefix + appId + SIGN + appUserId;
@@ -142,7 +142,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
         }
         // 如果用户所在的组织机构版本号不为null,加入用户组织机构版本号
         if (groupVersion != null) {
-            roleMap.put("groupVersion", groupVersion);
+            roleMap.put("groupVersion", String.valueOf(groupVersion));
         }
         roleMap.put("roleList", roles);
         List<PrivilegeRole> roleList = privilegeRoleService
