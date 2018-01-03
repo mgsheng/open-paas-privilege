@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.opensass.privilege.model.App;
@@ -92,57 +93,59 @@ public class GroupModifyPrivilegeController extends BaseControllerUtil{
             return;	
   	     }
     	//添加 privilege_group_resource
-    	String [] groupPrivileges=groupPrivilege.split(",");
-    	String resourceId="";
-    	for(int i=0;i<groupPrivileges.length;i++){
-    		resourceId=groupPrivileges[i];
-    			PrivilegeGroupResource pgr=privilegeGroupResourceService.getPrivilegeGroupResource(groupId, resourceId, appId);
-    			if(method.equals("0")){
-    			if(pgr!=null){
-    				pgr.setGroupId(groupId);
-    	    		pgr.setResourceId(resourceId);
-    	    		pgr.setCreateUser(createUser);
-    	    		pgr.setCreateUserId(createUserid);
-    	    		pgr.setCreateTime(new Date());
-    	    		pgr.setAppId(appId);
-    	    		if(!nullEmptyBlankJudge(status)){
-    	    			pgr.setStatus(Integer.parseInt(status));	
-    	    		}else{
-    	    			pgr.setStatus(1);	
-    	    		}
-    	    	 Boolean uf=	privilegeGroupResourceService.updatePrivilegeGroupResource(pgr);
-    	    	 if (!uf){
-    	    		 paraMandaChkAndReturn(10002, response,"更新失败");
-    	    		 return;
-    	    	 }
-    	    	}else{
-    	    			pgr=new PrivilegeGroupResource();
-        	    		pgr.setGroupId(groupId);
-        	    		pgr.setResourceId(resourceId);
-        	    		pgr.setCreateUser(createUser);
-        	    		pgr.setCreateUserId(createUserid);
-        	    		pgr.setCreateTime(new Date());
-        	    		pgr.setAppId(appId);
-        	    		if(!nullEmptyBlankJudge(status)){
-        	    			pgr.setStatus(Integer.parseInt(status));	
-        	    		}else{
-        	    			pgr.setStatus(1);	
-        	    		}
-        	    		Boolean sf=privilegeGroupResourceService.saveprivilegeGroupResource(pgr);
-        	    		 if (!sf){
-            	    		 paraMandaChkAndReturn(10003, response,"保存失败");
-            	    		 return;
-            	    	 }
-        	    		
-    	    	    }
-    			}else if(method.equals("1")&&pgr!=null){
-    				Boolean df=privilegeGroupResourceService.deleteResource(groupId, resourceId, appId);
-    				 if (!df){
-        	    		 paraMandaChkAndReturn(10004, response,"删除失败");
-        	    		 return;
-        	    	 }
-    			}
-    	}
+        if (groupPrivilege != null) {
+            String[] groupPrivileges = groupPrivilege.split(",");
+            String resourceId = "";
+            for (int i = 0; i < groupPrivileges.length; i++) {
+                resourceId = groupPrivileges[i];
+                PrivilegeGroupResource pgr = privilegeGroupResourceService.getPrivilegeGroupResource(groupId, resourceId, appId);
+                if (method.equals("0")) {
+                    if (pgr != null) {
+                        pgr.setGroupId(groupId);
+                        pgr.setResourceId(resourceId);
+                        pgr.setCreateUser(createUser);
+                        pgr.setCreateUserId(createUserid);
+                        pgr.setCreateTime(new Date());
+                        pgr.setAppId(appId);
+                        if (!nullEmptyBlankJudge(status)) {
+                            pgr.setStatus(Integer.parseInt(status));
+                        } else {
+                            pgr.setStatus(1);
+                        }
+                        Boolean uf = privilegeGroupResourceService.updatePrivilegeGroupResource(pgr);
+                        if (!uf) {
+                            paraMandaChkAndReturn(10002, response, "更新失败");
+                            return;
+                        }
+                    } else {
+                        pgr = new PrivilegeGroupResource();
+                        pgr.setGroupId(groupId);
+                        pgr.setResourceId(resourceId);
+                        pgr.setCreateUser(createUser);
+                        pgr.setCreateUserId(createUserid);
+                        pgr.setCreateTime(new Date());
+                        pgr.setAppId(appId);
+                        if (!nullEmptyBlankJudge(status)) {
+                            pgr.setStatus(Integer.parseInt(status));
+                        } else {
+                            pgr.setStatus(1);
+                        }
+                        Boolean sf = privilegeGroupResourceService.saveprivilegeGroupResource(pgr);
+                        if (!sf) {
+                            paraMandaChkAndReturn(10003, response, "保存失败");
+                            return;
+                        }
+
+                    }
+                } else if (method.equals("1") && pgr != null) {
+                    Boolean df = privilegeGroupResourceService.deleteResource(groupId, resourceId, appId);
+                    if (!df) {
+                        paraMandaChkAndReturn(10004, response, "删除失败");
+                        return;
+                    }
+                }
+            }
+        }
     	//更新缓存
 		PrivilegeAjaxMessage message=privilegeGroupService.updateGroupPrivilegeCache(groupId, appId);
 		//更新机构版本号

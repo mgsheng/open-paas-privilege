@@ -95,12 +95,13 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
         }
 
 
-        //	redisDao.getUrlRedis(RedisConstant.USERMENU_CACHE,  user.getAppId(), user.getAppUserId());
         boolean processRedis = false;
-        //String groupVersion = "0";
         Integer groupVersion = 0;
         if (redisClient.existKey(RedisConstant.GROUPVERSIONCACHE + user.getAppId() + SIGN + user.getGroupId())) {
-            groupVersion = Integer.valueOf(String.valueOf(redisClient.getObject(RedisConstant.GROUPVERSIONCACHE + user.getAppId() + SIGN + user.getGroupId())));
+            String gv = redisClient.getString(RedisConstant.GROUPVERSIONCACHE + user.getAppId() + SIGN + user.getGroupId());
+            if (gv != null && gv != "") {
+                groupVersion = Integer.valueOf(String.valueOf(gv));
+            }
         }
         map.put("groupVersion", String.valueOf(groupVersion));
         Integer menuVersion = (Integer) redisClient.getObject(RedisConstant.APPMENUVERSIONCACHE + user.getAppId());
@@ -163,7 +164,7 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
                 } else {
                     //组织机构版本相同，则走缓存
                     JSONObject userData = JSONObject.fromObject(res);
-                    Integer version = (Integer) userData.get("groupVersion");
+                    Integer version = Integer.parseInt(String.valueOf(userData.get("groupVersion")));
                     if (version != null && version.intValue() == groupVersion.intValue()) {
                         writeJsonString(response, res);
                         return;

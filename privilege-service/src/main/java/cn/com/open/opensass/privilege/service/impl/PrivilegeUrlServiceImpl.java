@@ -66,8 +66,8 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 		//组织机构版本号
 		Integer groupVersion = null;
 		if (groupId != null && !groupId.isEmpty()){
-			groupVersion = (Integer.valueOf(String.valueOf(redisClientTemplate.getObject(groupVersionCachePerfix + appId + SIGN
-					+ groupId))));
+			groupVersion = (Integer.valueOf(redisClientTemplate.getString(groupVersionCachePerfix + appId + SIGN
+					+ groupId)));
 		}
 	
 		/* 缓存中是否存在 */

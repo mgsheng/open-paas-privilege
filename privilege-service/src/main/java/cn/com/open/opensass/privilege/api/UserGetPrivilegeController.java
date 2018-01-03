@@ -117,7 +117,7 @@ public class UserGetPrivilegeController extends BaseControllerUtil {
         boolean processRedis = false;
         Integer groupVersion = 0;
         if (redisClient.existKey(RedisConstant.GROUPVERSIONCACHE + user.getAppId() + SIGN + user.getGroupId())) {
-            groupVersion = (Integer.valueOf(String.valueOf(redisClient.getObject(RedisConstant.GROUPVERSIONCACHE + user.getAppId() + SIGN + user.getGroupId()))));
+            groupVersion = (Integer.valueOf(redisClient.getString(RedisConstant.GROUPVERSIONCACHE + user.getAppId() + SIGN + user.getGroupId())));
         }
         map.put("groupVersion", String.valueOf(groupVersion));
         Integer menuVersion = (Integer) redisClient.getObject(RedisConstant.APPMENUVERSIONCACHE + user.getAppId());
