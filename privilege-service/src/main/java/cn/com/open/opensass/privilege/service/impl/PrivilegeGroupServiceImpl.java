@@ -231,8 +231,13 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 		Integer groupVersion = 0;
 		if (redisClientTemplate.existKey(groupVersionCachePerfix + appId + SIGN
 				+ groupId)) {
-			groupVersion = (Integer.valueOf(redisClientTemplate.getString(groupVersionCachePerfix + appId + SIGN
-					+ groupId)));
+			String v = redisClientTemplate.getString(groupVersionCachePerfix + appId + SIGN
+					+ groupId);
+			if (v != null && v != "") {
+				groupVersion = (Integer.valueOf(v));
+			} else {
+				groupVersion = null;
+			}
 			if (groupVersion == null) {
 				groupVersion = 1;
 			} else {
