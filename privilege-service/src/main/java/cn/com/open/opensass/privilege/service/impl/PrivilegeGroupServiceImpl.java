@@ -228,14 +228,23 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 	public PrivilegeAjaxMessage updateGroupVersion(String groupId, String appId) {
 		log.info("----------updateGroupVersion start------");
 		PrivilegeAjaxMessage message = new PrivilegeAjaxMessage();
-		Integer groupVersion = (Integer) redisClientTemplate.getObject(groupVersionCachePerfix + appId + SIGN
-				+ groupId);
-		if (groupVersion == null) {
-			groupVersion = 1;
-		} else {
-			groupVersion += 1;
+		Integer groupVersion = 0;
+		if (redisClientTemplate.existKey(groupVersionCachePerfix + appId + SIGN
+				+ groupId)) {
+			String v = redisClientTemplate.getString(groupVersionCachePerfix + appId + SIGN
+					+ groupId);
+			if (v != null && v != "") {
+				groupVersion = (Integer.valueOf(v));
+			} else {
+				groupVersion = null;
+			}
+			if (groupVersion == null) {
+				groupVersion = 1;
+			} else {
+				groupVersion += 1;
+			}
 		}
-		String result = redisClientTemplate.setObject(groupVersionCachePerfix + appId + SIGN + groupId, groupVersion);
+		String result = redisClientTemplate.setString(groupVersionCachePerfix + appId + SIGN + groupId, String.valueOf(groupVersion));
 		if ("OK".equals(result)) {
 			message.setCode("1");
 		} else {

@@ -25,6 +25,7 @@ import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 import cn.com.open.opensass.privilege.vo.PrivilegeResourceVo;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.springframework.util.StringUtils;
 
 @Repository("privilegeUserRedisService")
 public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService {
@@ -73,59 +74,17 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
         // 用户组织机构Id
         String groupId = privilegeUser.getGroupId();
         // 组织机构版本号
-        Integer groupVersion = null;
+        Integer groupVersion = 0;
         if (groupId != null && !groupId.isEmpty()) {
-            groupVersion = (Integer) redisClientTemplate.getObject(groupVersionCachePerfix + appId + SIGN + groupId);
+            if (redisClientTemplate.existKey(groupVersionCachePerfix + appId + SIGN + groupId)) {
+                String gv = redisClientTemplate.getString(groupVersionCachePerfix + appId + SIGN + groupId);
+                if (gv != null && gv != "") {
+                    groupVersion = (Integer.valueOf(String.valueOf(gv)));
+                }
+            }
         }
         // redis key
         String userCacheRoleKey = prefix + appId + SIGN + appUserId;
-        /*	log.info("获取缓存");
-        String jsonString = redisClientTemplate.getString(userCacheRoleKey);
-
-		if (null != jsonString && jsonString.length() > 0) {
-			JSONObject object = JSONObject.fromObject(jsonString);
-			List<Map<String, Object>> roles = JSONArray.toList(object.getJSONArray("roleList"), Map.class);
-			// 如果用户拥有角色，获取该角色的版本号，与用户缓存的版本号对比，若不相同则更新用户缓存
-			if (roles.size() > 0) {
-				for (Map<String, Object> map : roles) {
-					String roleId = (String) map.get("privilegeRoleId");
-					Integer roleVersion = (Integer) redisClientTemplate.getObject(roleVersionRedisPrefix + appId + SIGN
-									+ roleId);
-					if (roleVersion != null) {
-						Integer userRoleVersion = (Integer) map.get("version");
-						if (userRoleVersion == null) {
-							privilegeMenuService.updateMenuRedis(appId,
-									appUserId);
-							return updateUserRoleRedis(appId, appUserId);
-						} else {
-							if (!roleVersion.equals(userRoleVersion)) {
-								privilegeMenuService.updateMenuRedis(appId,
-										appUserId);
-								return updateUserRoleRedis(appId, appUserId);
-							}
-						}
-					}
-				}
-				// 获取组织机构的版本号，与用户缓存的组织机构版本号对比，若不相同则更新用户缓存
-				if (groupVersion != null) {
-					Integer userGroupVersion = (Integer) object
-							.get("groupVersion");
-					if (userGroupVersion == null) {
-						privilegeMenuService.updateMenuRedis(appId, appUserId);
-						return updateUserRoleRedis(appId, appUserId);
-					} else {
-						if (!userGroupVersion.equals(groupVersion)) {
-							privilegeMenuService.updateMenuRedis(appId,
-									appUserId);
-							return updateUserRoleRedis(appId, appUserId);
-						}
-					}
-				}
-				ajaxMessage.setCode("1");
-				ajaxMessage.setMessage(jsonString);
-				return ajaxMessage;
-			}
-		}*/
         log.info("从数据库获取数据");
         List<Map<String, Object>> roles = privilegeRoleService
                 .getRoleListByUserId(appUserId, appId);
@@ -142,7 +101,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
         }
         // 如果用户所在的组织机构版本号不为null,加入用户组织机构版本号
         if (groupVersion != null) {
-            roleMap.put("groupVersion", groupVersion);
+            roleMap.put("groupVersion", String.valueOf(groupVersion));
         }
         roleMap.put("roleList", roles);
         List<PrivilegeRole> roleList = privilegeRoleService

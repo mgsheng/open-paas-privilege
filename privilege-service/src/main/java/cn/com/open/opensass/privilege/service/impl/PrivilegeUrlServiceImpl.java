@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 
@@ -66,8 +67,14 @@ public class PrivilegeUrlServiceImpl implements PrivilegeUrlService {
 		//组织机构版本号
 		Integer groupVersion = null;
 		if (groupId != null && !groupId.isEmpty()){
-			groupVersion = (Integer) redisClientTemplate.getObject(groupVersionCachePerfix + appId + SIGN
-					+ groupId);
+			if (redisClientTemplate.existKey(groupVersionCachePerfix + appId + SIGN
+					+ groupId)) {
+				String v = redisClientTemplate.getString(groupVersionCachePerfix + appId + SIGN
+						+ groupId);
+				if (v != null && v != "") {
+					groupVersion = (Integer.valueOf(v));
+				}
+			}
 		}
 	
 		/* 缓存中是否存在 */
