@@ -64,7 +64,7 @@ public class GroupBatchDelPrivilegeController extends BaseControllerUtil {
         String resourceId = request.getParameter("resourceId");
         String functionId = request.getParameter("functionId");
         log.info("====================batch delete user  resource  functionIds  by groupids start======================");
-        if (!paraMandatoryCheck(Arrays.asList(groupId, resourceId, appId,functionId))) {
+        if (!paraMandatoryCheck(Arrays.asList(groupId, resourceId, appId))) {
             paraMandaChkAndReturn(10000, response, "必传参数中有空值");
             return;
         }
