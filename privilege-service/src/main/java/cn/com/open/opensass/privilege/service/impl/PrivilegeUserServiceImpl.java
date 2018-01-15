@@ -7,6 +7,7 @@ import cn.com.open.opensass.privilege.tools.CommonUtils;
 import cn.com.open.opensass.privilege.vo.PrivilegeBatchUserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -142,15 +143,19 @@ public class PrivilegeUserServiceImpl implements PrivilegeUserService {
 
         /*执行批量操作*/
 		if (privilegeBatchUserVoList.size() > 0) {
-			String[] userIds = null;
+			/*String[] userIds = null;
 			if(userIdList != null && userIdList.length()>1){
 				userIds = userIdList.toString().substring(0,userIdList.length()-1).split(",");
-			}
+			}*/
 			Boolean batchDel =batchUpdateResourceIds(privilegeBatchUserVoList);
 			if(batchDel){
 				map.put("status", "1");
 				map.put("message", "批量删除成功!");
-				map.put("userIdList", userIds);
+				if (userIdList != null && userIdList.length() > 1) {
+					map.put("userIdList", userIdList.toString().substring(0, userIdList.length() - 1));
+				} else {
+					map.put("userIdList", "");
+				}
 			} else {
 				map.put("status", "0");
 				map.put("error_code", "10003");
