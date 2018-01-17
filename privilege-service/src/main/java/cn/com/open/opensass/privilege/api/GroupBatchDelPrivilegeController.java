@@ -118,6 +118,7 @@ public class GroupBatchDelPrivilegeController extends BaseControllerUtil {
                     @Override
                     public void run() {
                             if (userId != null && userId != "") {
+                                privilegeUserService.updatePrivilegeUserResourceId(userId); //清空用户本身resourceId
                                 log.info("====================batch modify big cache start======================");
                                 StringBuilder redisUserPrivilegeKey=new StringBuilder(RedisConstant.PUBLICSERVICE_CACHE);
                                 redisUserPrivilegeKey.append(RedisConstant.USER_CACHE_INFO);
@@ -128,9 +129,6 @@ public class GroupBatchDelPrivilegeController extends BaseControllerUtil {
                                 {
                                     redisClient.del(redisUserPrivilegeKey.toString());
                                 }
-                                message[0] = privilegeUserRedisService.updateUserRoleRedis(appId, userId);
-                                privilegeMenuService.updateMenuRedis(appId, userId);
-                                privilegeUrlService.updateRedisUrl(appId, userId);
                                 StringBuilder redisUserAllPrivilegeKey = new StringBuilder(RedisConstant.PUBLICSERVICE_CACHE);
                                 redisUserAllPrivilegeKey.append(RedisConstant.USER_ALL_CACHE_INFO);
                                 redisUserAllPrivilegeKey.append(appId);
@@ -139,6 +137,9 @@ public class GroupBatchDelPrivilegeController extends BaseControllerUtil {
                                 if (redisClient.existKey(redisUserAllPrivilegeKey.toString())) {
                                     redisClient.del(redisUserAllPrivilegeKey.toString());
                                 }
+                                message[0] = privilegeUserRedisService.updateUserRoleRedis(appId, userId);
+                                privilegeMenuService.updateMenuRedis(appId, userId);
+                                privilegeUrlService.updateRedisUrl(appId, userId);
                         }
                     }
                 });

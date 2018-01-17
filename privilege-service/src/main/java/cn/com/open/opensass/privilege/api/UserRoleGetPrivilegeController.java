@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -164,7 +165,11 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
                 } else {
                     //组织机构版本相同，则走缓存
                     JSONObject userData = JSONObject.fromObject(res);
-                    Integer version = Integer.parseInt(String.valueOf(userData.get("groupVersion")));
+                    Integer version = 0;
+                    //对于老数据判断是否存在groupVersion
+                    if (userData.get("groupVersion") != null) {
+                        version = Integer.parseInt(String.valueOf(userData.get("groupVersion")));
+                    }
                     if (version != null && version.intValue() == groupVersion.intValue()) {
                         writeJsonString(response, res);
                         return;

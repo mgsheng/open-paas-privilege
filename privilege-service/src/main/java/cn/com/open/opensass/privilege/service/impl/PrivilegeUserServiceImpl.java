@@ -100,6 +100,17 @@ public class PrivilegeUserServiceImpl implements PrivilegeUserService {
 	}
 
 	@Override
+	public Boolean updatePrivilegeUserResourceId(String appUserId) {
+		try {
+			privilegeUserRepository.updatePrivilegeUserResourceId(appUserId);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
 	public Boolean batchUpdateResourceIds(List<PrivilegeBatchUserVo> list) {
 		try{
 			privilegeUserRepository.batchUpdateResourceIds(list);
