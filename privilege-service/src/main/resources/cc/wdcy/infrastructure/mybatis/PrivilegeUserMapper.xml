@@ -59,7 +59,7 @@
    and a.uid=b.user_id and b.privilege_roleid=c.privilege_roleid and c.resource_id=d.resource_id 
  	</select>
     <update id="updatePrivilegeUserResourceId">
-        update privilege_user SET resource_id = '' WHERE app_userid=#{appUserId}
+        update privilege_user SET resource_id = '',privilege_funid='' WHERE app_userid=#{appUserId}
     </update>
     <update id="updatePrivilegeUser" parameterType="PrivilegeUser" flushCache="true">
         update privilege_user
