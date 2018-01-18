@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /*
- * 文件名：清空用户权限资源Id和functionId
+ * 文件名：临时接口清空用户权限资源Id和functionId
  * 版权： 奥鹏教育
  * 描述： 教育平台
  */
