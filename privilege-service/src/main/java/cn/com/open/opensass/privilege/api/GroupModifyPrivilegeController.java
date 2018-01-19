@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.com.open.opensass.privilege.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,6 @@ import cn.com.open.opensass.privilege.model.App;
 import cn.com.open.opensass.privilege.model.PrivilegeGroupResource;
 import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
-import cn.com.open.opensass.privilege.service.AppService;
-import cn.com.open.opensass.privilege.service.PrivilegeGroupResourceService;
-import cn.com.open.opensass.privilege.service.PrivilegeGroupService;
-import cn.com.open.opensass.privilege.service.PrivilegeResourceService;
 import cn.com.open.opensass.privilege.tools.BaseControllerUtil;
 import cn.com.open.opensass.privilege.tools.OauthSignatureValidateHandler;
 import cn.com.open.opensass.privilege.tools.WebUtils;
@@ -44,6 +41,8 @@ public class GroupModifyPrivilegeController extends BaseControllerUtil{
 	private RedisClientTemplate redisClient;
 	@Autowired
 	private PrivilegeGroupService privilegeGroupService;
+    @Autowired
+    private PrivilegeUserService privilegeUserService;
     /**
      * 权限资源修改接口
      * @return Json
@@ -92,6 +91,8 @@ public class GroupModifyPrivilegeController extends BaseControllerUtil{
   		  paraMandaChkAndReturn(10001, response,"非法操作");
             return;	
   	     }
+        //新增清空处理，授权不刷新缓存问题
+        privilegeUserService.updatePrivilegeUserResourceIdByGroupId(groupId, appId); //清空用户本身resourceId
     	//添加 privilege_group_resource
         if (groupPrivilege != null) {
             String[] groupPrivileges = groupPrivilege.split(",");

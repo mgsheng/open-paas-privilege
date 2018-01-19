@@ -34,6 +34,8 @@ public interface PrivilegeUserService {
 
 	Boolean updatePrivilegeUserResourceId(String appUserId);
 
+    Boolean updatePrivilegeUserResourceIdByGroupId(String groupId, String appId);
+
 	Boolean batchUpdateResourceIds(List<PrivilegeBatchUserVo> list);
 
 	/**

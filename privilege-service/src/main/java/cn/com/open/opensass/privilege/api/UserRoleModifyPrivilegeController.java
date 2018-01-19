@@ -134,10 +134,6 @@ public class UserRoleModifyPrivilegeController extends BaseControllerUtil {
             user.setPrivilegeFunId(privilegeUserVo.getPrivilegeFunId());
             //更新用户信息
             boolean uf = privilegeUserService.updatePrivilegeUser(user);
-
-
-            //新增清空处理，授权不刷新缓存问题
-            privilegeUserService.updatePrivilegeUserResourceId(user.getAppUserId()); //清空用户本身resourceId
             if (uf) {
                 //更新缓存
                 PrivilegeAjaxMessage message = privilegeUserRedisService.updateUserRoleRedis(privilegeUserVo.getAppId(), privilegeUserVo.getAppUserId());
@@ -157,10 +153,6 @@ public class UserRoleModifyPrivilegeController extends BaseControllerUtil {
             user.setResourceId(privilegeUserVo.getResourceId());
             user.setPrivilegeFunId(privilegeUserVo.getPrivilegeFunId());
             boolean uf = privilegeUserService.updatePrivilegeUser(user);
-
-
-            //新增清空处理，授权不刷新缓存问题
-            privilegeUserService.updatePrivilegeUserResourceId(user.getAppUserId()); //清空用户本身resourceId
             if (uf) {
                 //更新缓存
 
