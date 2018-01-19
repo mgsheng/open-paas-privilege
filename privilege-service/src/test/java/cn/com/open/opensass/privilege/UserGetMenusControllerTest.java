@@ -23,7 +23,7 @@ public class UserGetMenusControllerTest extends BaseTest {
 	private UserGetMenusController userGetMenusController;
 	@Autowired
 	private RedisClientTemplate redisClientTemplate;
-	String appUserId = "3094776";
+    String appUserId = "1149350";//3094776
 
 	/**
 	 * 正常处理
@@ -129,7 +129,7 @@ public class UserGetMenusControllerTest extends BaseTest {
 	}
 
 	/**
-	 * 用户存在-管理员.
+     * 用户存在-系统管理员.
 	 * @throws UnsupportedEncodingException
 	 */
 	@Test
@@ -137,7 +137,26 @@ public class UserGetMenusControllerTest extends BaseTest {
 		MockHttpServletRequest request = Signature.getSignatureRequest(CommonEnum.APP_SECRET.getDisplay(), CommonEnum.APP_ID.getDisplay(), CommonEnum.APP_KEY.getDisplay());
 		PrivilegeUserVo modifyPrivilegeUserVo = new PrivilegeUserVo();
 		modifyPrivilegeUserVo.setAppId(CommonEnum.APP_ID.getDisplay());
-		modifyPrivilegeUserVo.setAppUserId("1004098");
+        modifyPrivilegeUserVo.setAppUserId("8653");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        userGetMenusController.getPrivilege(request, response, modifyPrivilegeUserVo);
+
+        System.out.println("getPrivilegeNormalUserExist:" + response.getContentAsString());
+        Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
+    }
+
+
+    /**
+     * 用户存在-组织机构管理员.
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void getPrivilegeNormalOrgUserExist() throws UnsupportedEncodingException {
+        MockHttpServletRequest request = Signature.getSignatureRequest(CommonEnum.APP_SECRET.getDisplay(), CommonEnum.APP_ID.getDisplay(), CommonEnum.APP_KEY.getDisplay());
+        PrivilegeUserVo modifyPrivilegeUserVo = new PrivilegeUserVo();
+        modifyPrivilegeUserVo.setAppId(CommonEnum.APP_ID.getDisplay());
+        modifyPrivilegeUserVo.setAppUserId("1475");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		userGetMenusController.getPrivilege(request, response,modifyPrivilegeUserVo);
 
