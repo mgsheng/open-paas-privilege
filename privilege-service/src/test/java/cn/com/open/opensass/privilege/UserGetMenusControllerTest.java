@@ -144,23 +144,4 @@ public class UserGetMenusControllerTest extends BaseTest {
         System.out.println("getPrivilegeNormalUserExist:" + response.getContentAsString());
         Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
     }
-
-
-    /**
-     * 用户存在-组织机构管理员.
-     *
-     * @throws UnsupportedEncodingException
-     */
-    @Test
-    public void getPrivilegeNormalOrgUserExist() throws UnsupportedEncodingException {
-        MockHttpServletRequest request = Signature.getSignatureRequest(CommonEnum.APP_SECRET.getDisplay(), CommonEnum.APP_ID.getDisplay(), CommonEnum.APP_KEY.getDisplay());
-        PrivilegeUserVo modifyPrivilegeUserVo = new PrivilegeUserVo();
-        modifyPrivilegeUserVo.setAppId(CommonEnum.APP_ID.getDisplay());
-        modifyPrivilegeUserVo.setAppUserId("1475");
-		MockHttpServletResponse response = new MockHttpServletResponse();
-		userGetMenusController.getPrivilege(request, response,modifyPrivilegeUserVo);
-
-		System.out.println("getPrivilegeNormalUserExist:"+response.getContentAsString());
-		Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
-	}
 }
