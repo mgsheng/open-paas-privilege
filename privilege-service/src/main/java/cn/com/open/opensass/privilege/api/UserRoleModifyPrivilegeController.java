@@ -81,6 +81,10 @@ public class UserRoleModifyPrivilegeController extends BaseControllerUtil {
             paraMandaChkAndReturn(10001, response, "该用户不存在");
             return;
         }
+
+        //新增清空处理，授权不刷新缓存问题
+        privilegeUserService.updatePrivilegeUserResourceId(user.getAppUserId()); //清空用户本身resourceId
+
         String privilegeRoleIds = user.getPrivilegeRoleId();
         String privilegeRoleId = "";//最终更新到 user privilegeRoleId 字段
 
