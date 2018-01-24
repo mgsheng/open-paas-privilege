@@ -27,4 +27,5 @@ public interface PrivilegeGroupService {
 	 * @return
 	 */
 	PrivilegeAjaxMessage updateGroupVersion(String groupId,String appId);
+	PrivilegeAjaxMessage findGroupPrivileges(String groupId, String appId);
 }

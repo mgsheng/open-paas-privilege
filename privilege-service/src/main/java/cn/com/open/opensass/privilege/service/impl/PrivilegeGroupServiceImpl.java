@@ -25,6 +25,7 @@ import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
 import cn.com.open.opensass.privilege.service.PrivilegeResourceService;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
+import cn.com.open.opensass.privilege.vo.PrivilegeMenusVo;
 import net.sf.json.JSONObject;
 
 /**
@@ -252,6 +253,106 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 		}
 		message.setMessage(result);
 		return message;
+	}
+	
+	
+	
+	
+	
+	
+
+	// 查询组织机构权限
+	@Override
+	public PrivilegeAjaxMessage findGroupPrivileges(String groupId, String appId) {
+		PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
+		List<PrivilegeGroupResource> group =privilegeGroupResourceService.findByGroupIdAndAppId(groupId, appId); 
+		/*if (group.size()==0) {
+			ajaxMessage.setCode("0");
+			ajaxMessage.setMessage("GroupResource Is Null");
+			return ajaxMessage;
+		}*/
+
+		String PRIVILEGESERVICE_GROUPCACHE_APPID_GROUPID = groupCachePrefix + appId + SIGN + groupId;
+		//应用菜单版本号
+		Integer version = (Integer) redisClientTemplate.getObject(appMenuVersionCache + appId);
+		/* 缓存中是否存在 存在返回 */
+		String jsonString = redisClientTemplate.getString(PRIVILEGESERVICE_GROUPCACHE_APPID_GROUPID);
+		if (null != jsonString && jsonString.length() > 0) {
+			//从缓存中获取应用菜单版本，与组织机构缓存版本号对比，若版本号不相同，更新组织机构缓存
+			if (version != null) {
+				JSONObject object = JSONObject.fromObject(jsonString);
+				Integer groupMenuCacheVersions = (Integer) object.get("version");
+				if (groupMenuCacheVersions == null) {
+					 ajaxMessage = updateGroupPrivilegeCache(groupId, appId);
+				} else {
+					if (version.equals(groupMenuCacheVersions)) {
+						ajaxMessage.setCode("1");
+						ajaxMessage.setMessage(jsonString);
+					} else {
+						ajaxMessage = updateGroupPrivilegeCache(groupId, appId);
+					}
+				}
+				return ajaxMessage;
+			}
+			log.info("获取到缓存");
+			ajaxMessage.setCode("1");
+			ajaxMessage.setMessage(jsonString);
+			return ajaxMessage;
+		}
+		log.info("从数据库获取数据");
+		Map<String, Object> redisMap = new HashMap<String, Object>();
+		// 根据遍历应用资源缓存，获取该组织机构拥有的资源
+		PrivilegeAjaxMessage message=privilegeResourceService.getAppResRediss(appId);
+		String appRedis=message.getMessage();
+		JSONObject Resobject=JSONObject.fromObject(appRedis);
+		List<Map<String, Object>> resourceVos=(List<Map<String, Object>>) Resobject.get("resourceList");
+		List<Map<String, Object>> resourceList=new ArrayList<Map<String, Object>>();
+		for(PrivilegeGroupResource privilegeGroupResource:group){
+			for(Map<String, Object> resourceVo:resourceVos){
+				if (privilegeGroupResource.getResourceId().equals(resourceVo.get("resourceId"))) {
+					resourceList.add(resourceVo);
+				}
+			}
+		}
+		redisMap.put("resourceList", resourceList);
+		// 根据遍历应用菜单缓存，查找组织机构拥有的菜单
+		message=privilegeMenuService.getAppMenuRediss(appId);
+		appRedis=message.getMessage();
+		JSONObject menuObject=JSONObject.fromObject(appRedis);
+		List<Map<String, Object>> menus=(List<Map<String, Object>>) menuObject.get("menuList");
+		List<PrivilegeMenu> menuList=new ArrayList<PrivilegeMenu>();
+		for (Map<String, Object> resource : resourceList) {
+			for (Map<String, Object> privilegeMenu : menus) {
+				if (privilegeMenu.get("menuId").equals(resource.get("menuId"))) {
+					PrivilegeMenu menu=new PrivilegeMenu();
+					menu.id((String) privilegeMenu.get("menuId"));
+					menu.setAppId((String)privilegeMenu.get("appId"));
+					menu.setMenuName((String)privilegeMenu.get("menuName"));
+					menu.setParentId((String)privilegeMenu.get("parentId"));
+					menu.setMenuRule((String)privilegeMenu.get("menuRule"));
+					menu.setMenuCode((String)privilegeMenu.get("menuCode"));
+					menu.setDisplayOrder((Integer)privilegeMenu.get("displayOrder"));
+					menu.setMenuLevel((Integer)privilegeMenu.get("menuLevel"));
+					menuList.add(menu);
+				}
+			}
+		}
+		Set<PrivilegeMenusVo> privilegeMenuVoSet = new HashSet<PrivilegeMenusVo>();
+		// 获取所有父菜单
+		Set<PrivilegeMenusVo> allMenu = privilegeMenuService.getAllMenuByUserIds(menuList, privilegeMenuVoSet);
+		redisMap.put("menuList", allMenu);
+		//应用菜单版本号不为null,则加入组织机构缓存版本号
+		if (version != null) {
+			redisMap.put("version", version);
+		}
+		// 向redis中添加组织机构的缓存
+		redisClientTemplate.setString(PRIVILEGESERVICE_GROUPCACHE_APPID_GROUPID,
+				JSONObject.fromObject(redisMap).toString());
+
+		ajaxMessage.setCode("1");
+		ajaxMessage.setMessage(JSONObject.fromObject(redisMap).toString());
+		return ajaxMessage;
+
 	}
 
 }

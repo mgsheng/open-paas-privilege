@@ -7,6 +7,7 @@ import java.util.Set;
 import cn.com.open.opensass.privilege.model.PrivilegeMenu;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
+import cn.com.open.opensass.privilege.vo.PrivilegeMenusVo;
 
 /**
  * 
@@ -125,4 +126,11 @@ public interface PrivilegeMenuService {
 	 * @return
 	 */
 	Boolean updatePrivilegeMenuBatch(List<PrivilegeMenu> privilegeMenus, String appId);
+	
+	Set<PrivilegeMenusVo> getAllMenuByUserIds(List<PrivilegeMenu> privilegeMenuList,
+			Set<PrivilegeMenusVo> privilegeMenuListReturn);
+	PrivilegeAjaxMessage getMenusRedis(String appId, String appUserId);
+	PrivilegeAjaxMessage getAppMenusRedis(String appId);
+	List<PrivilegeMenusVo> getMenuVoListByAppIds(String appId);
+	PrivilegeAjaxMessage getAppMenuRediss(String appId);
 }

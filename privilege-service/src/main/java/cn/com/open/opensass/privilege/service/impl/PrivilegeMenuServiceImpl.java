@@ -10,6 +10,7 @@ import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
 import cn.com.open.opensass.privilege.service.*;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
+import cn.com.open.opensass.privilege.vo.PrivilegeMenusVo;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
@@ -652,6 +653,279 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 	
 	}
 	
+
+	
+	
+	
+
+	@Override
+	public PrivilegeAjaxMessage getMenusRedis(String appId, String appUserId) {
+		PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
+		/* 验证用户是否存在 */
+		PrivilegeUser user = privilegeUserService.findByAppIdAndUserId(appId, appUserId);
+		if (null == user) {
+			ajaxMessage.setCode("0");
+			ajaxMessage.setMessage("User Is Null");
+			return ajaxMessage;
+		}
+		Integer version = (Integer) redisClientTemplate.getObject(appMenuVersionCache+appId);
+		int Type=1; // 角色类型，1-普通用户，2-系统管理员，3-组织机构管理员
+		//判断用户角色是否是系统管理员  
+		List<PrivilegeRole> roles = privilegeRoleService.getRoleListByUserIdAndAppId(appUserId, appId);
+		for (PrivilegeRole role : roles) {
+			if(role.getRoleType()!=null){
+				if (role.getRoleType() == 2) {//若角色为系统管理员  
+					if (role.getGroupId()!=null&&!role.getGroupId().isEmpty()) {//若该管理员为组织机构管理员
+						Type =3;
+					}else{
+						PrivilegeAjaxMessage message = getAppMenusRedis(appId);
+						if ("1".equals(message.getCode())) {
+							String redisJson = message.getMessage();
+							JSONObject json=	JSONObject.fromObject(redisJson);
+							json.put("version", version);
+							redisClientTemplate.setString(prefix + appId + SIGN + appUserId, json.toString());
+						}
+						return message;
+					}
+				}
+			}
+			
+		}
+		//应用菜单版本号
+		
+//		String menuJedis = redisDao.getUrlRedis(prefix, appId, appUserId);
+		String menuJedis = redisClientTemplate.getString(prefix+appId+  SIGN+appUserId);
+		if (null == menuJedis || menuJedis.length() <= 0)
+
+		{	
+			List<PrivilegeMenu> privilegeMenuList = getMenuListByUserId(appUserId, appId);
+			//通过查找RoleResource  查找相应的菜单
+			List<String> FunIds=new ArrayList<String>();
+			List<PrivilegeRoleResource> rivilegeRoleResources=privilegeRoleResourceService.findUserRoleResources(appId, appUserId);
+			for(PrivilegeRoleResource roleResource:rivilegeRoleResources){
+				if (roleResource.getPrivilegeFunId()==null||("").equals(roleResource.getPrivilegeFunId())) {
+					List<PrivilegeMenu> menus=getMenuListByResourceId(roleResource.getResourceId(),appId);
+					privilegeMenuList.addAll(menus);
+				}else{
+					//RoleResource 中functionId
+					FunIds.add(roleResource.getPrivilegeFunId());
+				}
+			}
+			
+			//根据user表中functionId resourceId 查询菜单
+			String functionIds = user.getPrivilegeFunId();
+			String resourceIds = user.getResourceId();
+			if (functionIds != null && !("").equals(functionIds)) {
+				FunIds.add(functionIds);
+			}
+			
+			if (FunIds != null&&FunIds.size()>0) {
+				for (String funIds : FunIds) {
+					String[] functIds = funIds.split(",");
+					List<PrivilegeMenu> menus = getMenuListByFunctionId(functIds,appId);
+					privilegeMenuList.addAll(menus);
+				}
+			}
+			
+			if (resourceIds != null && !("").equals(resourceIds)) {
+				String[] resIds = resourceIds.split(",");
+//				for (String id : resIds) {
+//					List<PrivilegeMenu> menus = getMenuListByResourceId(id,appId);
+//					privilegeMenuList.addAll(menus);
+//					System.out.println(menus.size());
+//				}
+				List<PrivilegeMenu> menus = getMenuListByResourceId2(resIds,appId);
+				privilegeMenuList.addAll(menus);
+				//System.out.println(menus.size());
+			}
+			if (privilegeMenuList.size() <= 0) {
+				ajaxMessage.setCode("0");
+				ajaxMessage.setMessage("{\"menuList\":[]}");
+				return ajaxMessage;
+			}
+			Set<PrivilegeMenusVo> privilegeMenuListReturn = new HashSet<PrivilegeMenusVo>();
+
+			Set<PrivilegeMenusVo> privilegeMenuListData = getAllMenuByUserIds(privilegeMenuList,
+					privilegeMenuListReturn); /* 缓存中是否存在 */
+			
+			if (Type == 3) {//如果用户角色为组织机构管理员
+				//把该组织机构拥有的菜单放入缓存
+				PrivilegeAjaxMessage message = privilegeGroupService.findGroupPrivilege(user.getGroupId(), appId);
+				if (message.getCode().equals("1")) {
+					JSONObject object=JSONObject.fromObject(message.getMessage());
+					JSONArray array=object.getJSONArray("menuList");
+					List<PrivilegeMenusVo> groupMenuList=JSONArray.toList(array, PrivilegeMenuVo.class);
+					privilegeMenuListData.addAll(groupMenuList);
+				}
+			}
+			if (privilegeMenuListData.size() <= 0) {
+				ajaxMessage.setCode("0");
+				ajaxMessage.setMessage("{\"menuList\":[]}");
+				return ajaxMessage;
+			}
+
+//			PrivilegeUrl privilegeUrl = new PrivilegeUrl();
+			Map<Object, Object> map = new HashMap<Object, Object>();
+			map.put("menuList", privilegeMenuListData);
+			if (version != null) {
+				map.put("version", version);
+			}
+			menuJedis = new JSONObject().fromObject(map).toString();
+
+//			privilegeUrl.setPrivilegeUrl(json);
+			/* 写入redis */
+			log.info("getMenu接口获取数据并写入redis数据开始");
+			 redisClientTemplate.setString(prefix+appId+  SIGN+appUserId,menuJedis);
+			//redisDao.putUrlRedis(prefix, privilegeUrl, appId, appUserId);
+			/* 读取redis */
+//			menuJedis = redisDao.getUrlRedis(prefix, appId, appUserId);
+			log.info("getMenu接口获取数据并写入，读取redis数据开始：" + menuJedis);
+		}
+		if (null != menuJedis && menuJedis.length() > 0) {
+			//从缓存中获取应用菜单版本，与用户菜单缓存版本号对比，若版本号不相同，更新用户菜单缓存
+			if (version != null) {
+				JSONObject object = JSONObject.fromObject(menuJedis);
+				Integer userMenuCacheVersions = (Integer) object.get("version");
+				if (userMenuCacheVersions == null) {
+					 ajaxMessage = updateMenuRedis(appId, appUserId);
+				} else {
+					if (version.equals(userMenuCacheVersions)) {
+						ajaxMessage.setCode("1");
+						ajaxMessage.setMessage(menuJedis);
+					} else {
+						ajaxMessage = updateMenuRedis(appId, appUserId);
+					}
+				}
+				return ajaxMessage;
+			}
+			ajaxMessage.setCode("1");
+			ajaxMessage.setMessage(menuJedis);
+			return ajaxMessage;
+		} else {
+			ajaxMessage.setCode("0");
+			ajaxMessage.setMessage("NULL");
+			return ajaxMessage;
+		}
+	}
+
+
+	
+	@Override
+	public PrivilegeAjaxMessage getAppMenusRedis(String appId) {
+		PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
+		Map<String, Object> MenuMap = new HashMap<String, Object>();
+
+		// redis key
+		String AppMenuRedisKey = AppMenuRedisPrefix + appId;
+		/* 缓存中是否存在 存在返回 */
+		log.info("获取缓存");
+		String jsonString = redisClientTemplate.getString(AppMenuRedisKey);
+		if (null != jsonString && jsonString.length() > 0) {
+			ajaxMessage.setCode("1");
+			ajaxMessage.setMessage(jsonString);
+			return ajaxMessage;
+		}
+
+		log.info("从数据库获取数据");
+		List<PrivilegeMenusVo> menuList = getMenuVoListByAppIds(appId);
+		if (menuList.size() <= 0) {
+			ajaxMessage.setCode("0");
+			ajaxMessage.setMessage("{\"menuList\":[]}");
+			return ajaxMessage;
+		}
+		
+		Set<PrivilegeMenusVo> menus=new HashSet<PrivilegeMenusVo>();
+		menus.addAll(menuList);
+		MenuMap.put("menuList", menus);
+		redisClientTemplate.setString(AppMenuRedisKey, JSONObject.fromObject(MenuMap).toString());
+		ajaxMessage.setCode("1");
+		ajaxMessage.setMessage(JSONObject.fromObject(MenuMap).toString());
+		return ajaxMessage;
+	}
+	
+	
+	@Override
+	public List<PrivilegeMenusVo> getMenuVoListByAppIds(String appId) {
+		List<PrivilegeMenu> privilegeMenus=privilegeMenuRepository.getMenuListByAppId(appId);
+		List<PrivilegeMenusVo> privilegeMenuVos=new ArrayList<PrivilegeMenusVo>();
+		for(PrivilegeMenu privilegeMenu:privilegeMenus){
+			if (privilegeMenu!=null) {
+				PrivilegeMenusVo privilegeMenuVo=new PrivilegeMenusVo();
+				privilegeMenuVo.setMenuId(privilegeMenu.id());
+				privilegeMenuVo.setParentId(privilegeMenu.getParentId());
+				privilegeMenuVo.setMenuName(privilegeMenu.getMenuName());
+				privilegeMenuVo.setMenuCode(privilegeMenu.getMenuCode());
+				privilegeMenuVo.setDisplayOrder(privilegeMenu.getDisplayOrder());
+				privilegeMenuVo.setStatus(privilegeMenu.getStatus());
+				privilegeMenuVos.add(privilegeMenuVo);
+			}
+		}
+		return privilegeMenuVos;
+	}
+	
+	
+	@Override
+	public Set<PrivilegeMenusVo> getAllMenuByUserIds(List<PrivilegeMenu> privilegeMenuList,
+			Set<PrivilegeMenusVo> privilegeMenuVoSet) {
+		for (PrivilegeMenu privilegeMenu : privilegeMenuList) {
+			if (privilegeMenu!=null&&null != privilegeMenu.getParentId() && !("").equals(privilegeMenu.getParentId())) {
+				PrivilegeMenusVo privilegeMenuVo = new PrivilegeMenusVo();
+				privilegeMenuVo.setMenuId(privilegeMenu.id());
+				privilegeMenuVo.setParentId(privilegeMenu.getParentId());
+				privilegeMenuVo.setMenuName(privilegeMenu.getMenuName());
+				privilegeMenuVo.setDisplayOrder(privilegeMenu.getDisplayOrder());
+				privilegeMenuVo.setMenuCode(privilegeMenu.getMenuCode());
+				/* 如果是最父级目录，则添加到返回列表中，否则递归获取数据 */
+				if (privilegeMenu.getParentId().equals("0")) {
+					privilegeMenuVoSet.add(privilegeMenuVo);
+				} else {
+					privilegeMenuVoSet.add(privilegeMenuVo);
+					PrivilegeMenu privilegeMenuListParents = getMenuById(privilegeMenu.getParentId(),privilegeMenu.getAppId());
+					if(privilegeMenuListParents!=null){
+						getAllMenuByUserIds(Arrays.asList(privilegeMenuListParents), privilegeMenuVoSet);
+					}
+				}
+			}
+
+		}
+		return privilegeMenuVoSet;
+	}
+	 
+	
+	
+	@Override
+	public PrivilegeAjaxMessage getAppMenuRediss(String appId) {
+		PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
+		Map<String, Object> MenuMap = new HashMap<String, Object>();
+
+		// redis key
+		String AppMenuRedisKey = AppMenuRedisPrefix + appId;
+		/* 缓存中是否存在 存在返回 */
+		log.info("获取缓存");
+		String jsonString = redisClientTemplate.getString(AppMenuRedisKey);
+		if (null != jsonString && jsonString.length() > 0) {
+			ajaxMessage.setCode("1");
+			ajaxMessage.setMessage(jsonString);
+			return ajaxMessage;
+		}
+
+		log.info("从数据库获取数据");
+		List<PrivilegeMenusVo> menuList = getMenuVoListByAppIds(appId);
+		//List<PrivilegeMenu> menuList=getMenuListByAppId(appId);
+		if (menuList.size() <= 0) {
+			ajaxMessage.setCode("0");
+			ajaxMessage.setMessage("{\"menuList\":[]}");
+			return ajaxMessage;
+		}
+		
+		Set<PrivilegeMenusVo> menus=new HashSet<PrivilegeMenusVo>();
+		menus.addAll(menuList);
+		MenuMap.put("menuList", menus);
+		redisClientTemplate.setString(AppMenuRedisKey, JSONObject.fromObject(MenuMap).toString());
+		ajaxMessage.setCode("1");
+		ajaxMessage.setMessage(JSONObject.fromObject(MenuMap).toString());
+		return ajaxMessage;
+	}
 
 
 }

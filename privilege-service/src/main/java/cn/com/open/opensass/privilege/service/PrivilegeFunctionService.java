@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import cn.com.open.opensass.privilege.model.PrivilegeFunction;
 import cn.com.open.opensass.privilege.vo.PrivilegeFunctionVo;
+import cn.com.open.opensass.privilege.vo.PrivilegeFunctionsVo;
 
 /**
  * Created by jh on 2016/12/15.
@@ -33,4 +34,8 @@ public interface PrivilegeFunctionService {
 	List<PrivilegeFunctionVo> getFunctionListByAppId(String appId);
 	List<Map<String, Object>> getFunctionListByFunctionIds(String[] functionIds,String appId); 
 	List<String> findAppFunction(String appId);
+
+	List<PrivilegeFunctionsVo> getFunctionListByAppIds(String appId);
+	List<Map<String, Object>> getFunctionByRIds(String resourceId, String appId);
+	List<Map<String, Object>> getFunctionMaps(String resourceId, String appId);
 }
