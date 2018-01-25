@@ -80,19 +80,22 @@ public class RoleGetPrivilegeController extends BaseControllerUtil{
 			return;
 		}
     	List<PrivilegeRoleVo> roles = new ArrayList<PrivilegeRoleVo>();
-    	List<PrivilegeResourceVo> resources = new ArrayList<PrivilegeResourceVo>();
-    	List<PrivilegeFunctionVo> functions = new ArrayList<PrivilegeFunctionVo>();
+		List<PrivilegeResourceVo> resources = null;
+		List<PrivilegeFunctionVo> functions = null;
     	//取出角色List
     	int count = privilegeRoleService.findRoleNoPage(privilegeRoleId,appId, deptId, groupId);
     	List<PrivilegeRole> privilegeRoles = privilegeRoleService.findRoleByPage(privilegeRoleId,appId, deptId, groupId, Integer.parseInt(start),Integer.parseInt(limit));
     	for(PrivilegeRole privilegeRole : privilegeRoles){
+			resources = new ArrayList<PrivilegeResourceVo>();
+			functions = new ArrayList<PrivilegeFunctionVo>();
 			List<PrivilegeRoleResource> privilegeRoleResources = privilegeRoleResourceService.findByPrivilegeRoleId(privilegeRole.getPrivilegeRoleId());
 
 			List<String> funcIdList = new ArrayList<String>();
 			for(PrivilegeRoleResource privilegeRoleResource : privilegeRoleResources){
 				PrivilegeResource privilegeResource = privilegeResourceService.findByResourceId(privilegeRoleResource.getResourceId(), appId);
-				PrivilegeResourceVo privilegeResourceVo = new PrivilegeResourceVo();
+				PrivilegeResourceVo privilegeResourceVo;
 				if(privilegeResource!=null){
+					privilegeResourceVo = new PrivilegeResourceVo();
 					privilegeResourceVo.setAppId(privilegeResource.getAppId());
 					privilegeResourceVo.setResourceId(privilegeResource.getResourceId());
 					privilegeResourceVo.setResourceLevel(privilegeResource.getResourceLevel()+"");
