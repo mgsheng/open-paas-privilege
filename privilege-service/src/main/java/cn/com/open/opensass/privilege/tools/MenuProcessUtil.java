@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
+import cn.com.open.opensass.privilege.vo.PrivilegeMenusVo;
 
 public class MenuProcessUtil {
 
@@ -18,6 +19,19 @@ public class MenuProcessUtil {
 		}
 		return set2;
 	}
+	
+	public  static Set<PrivilegeMenusVo> processMenuCodes(Set<PrivilegeMenusVo> set,String menuCode){
+		if(null==menuCode||menuCode.equals(""))
+		return set;
+		Set<PrivilegeMenusVo> set2=new HashSet<PrivilegeMenusVo>();
+		for(PrivilegeMenusVo menu:set)
+		{
+			if(menu.getMenuCode()!=null&&menu.getMenuCode().equals(menuCode))
+				set2.add(menu);
+		}
+		return set2;
+	}
+	
 public static void main(String[] args) {
 	
 	Set<PrivilegeMenuVo> menuSet=	new HashSet<>();

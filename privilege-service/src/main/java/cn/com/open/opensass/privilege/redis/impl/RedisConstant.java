@@ -58,4 +58,13 @@ public class RedisConstant {
   * 组织机构缓存版本key
   */
  public static final String GROUPVERSIONCACHE = "privilegeService_groupVersions_";
+ /**
+  * appResCaches_appid
+  */
+ public static final String APPRES_CACHES=PUBLICSERVICE_CACHE+"appResCaches_";
+
+ /**
+  * userCacheRole_appid_userid
+  */
+ public static final String USERROLE_CACHES=PUBLICSERVICE_CACHE+"userCacheRoles_";
 }

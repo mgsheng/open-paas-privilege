@@ -14,4 +14,6 @@ public interface PrivilegeUserRedisService {
 	 * @return 清空缓存成功true还是失败false.
 	 */
 	Boolean delUserCaches(String appId, String appUserId);
+	
+	PrivilegeAjaxMessage getRedisUsersRole(String appId,String appUserId);
 }
