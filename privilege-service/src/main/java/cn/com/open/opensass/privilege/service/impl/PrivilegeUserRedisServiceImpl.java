@@ -106,8 +106,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
             roleMap.put("groupVersion", String.valueOf(groupVersion));
         }
         roleMap.put("roleList", roles);
-        List<PrivilegeRole> roleList = privilegeRoleService
-                .getRoleListByUserIdAndAppId(appUserId, appId);
+        List<PrivilegeRole> roleList = privilegeRoleService.getRoleListByUserIdAndAppId(appUserId, appId);
         List resourceList = null;
         int Type = 1;// 角色类型，1-普通用户，2-系统管理员，3-组织机构管理员
         for (PrivilegeRole role : roleList) {
@@ -129,18 +128,15 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
         Set resourceSet = new HashSet();
         if (Type != 2) {
             // roleResource 中functionId
-            List<String> FunIds = privilegeRoleResourceService
-                    .findUserResourcesFunId(appId, appUserId);
+            List<String> FunIds = privilegeRoleResourceService.findUserResourcesFunId(appId, appUserId);
             // 加入 user表中functionIds
             if (privilegeFunctionIds != null
                     && !("").equals(privilegeFunctionIds)) {
                 FunIds.add(privilegeFunctionIds);
             }
-            resourceList = privilegeResourceService.getResourceListByUserId(
-                    appUserId, appId);
+            resourceList = privilegeResourceService.getResourceListByUserId(appUserId, appId);
 
-            if (FunIds != null && !("").equals(FunIds)
-                    && !("null").equals(FunIds)) {
+            if (FunIds != null && !("").equals(FunIds) && !("null").equals(FunIds)) {
                 for (String string : FunIds) {
                     if (string != null && !("").equals(string)
                             && !("null").equals(string)) {
@@ -167,11 +163,11 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
                     if (res.getResourceId() != null
                             && !("").equals(res.getResourceId())) {
                         Map<String, Object> map2 = new HashMap<String, Object>();
-                        map2.put("appId", res.getAppId());
+                 //       map2.put("appId", res.getAppId());
                         map2.put("resourceId", res.getResourceId());
-                        map2.put("resourceLevel", res.getResourceLevel());
+                 //       map2.put("resourceLevel", res.getResourceLevel());
                         map2.put("resourceName", res.getResourceName());
-                        map2.put("resourceRule", res.getResourceRule());
+                 //       map2.put("resourceRule", res.getResourceRule());
                         map2.put("dislayOrder ", res.getDisplayOrder());
                         map2.put("menuId", res.getMenuId());
                         map2.put("baseUrl", res.getBaseUrl());
@@ -236,7 +232,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
         }
 		/* functionList 判断是否为管理员， */
         // 如果为管理员，返回应用功能缓存
-        if (Type == 2) {
+       /* if (Type == 2) {
             PrivilegeAjaxMessage message = privilegeResourceService
                     .getAppResRedis(appId);
             JSONObject obj1 = JSONObject.fromObject(message.getMessage());// 将json字符串转换为json对象
@@ -271,8 +267,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
             if (FunIds != null && FunIds.size() > 0) {
                 for (String funIds : FunIds) {
                     String[] functionIds = funIds.split(",");
-                    List<Map<String, Object>> functions = privilegeFunctionService
-                            .getFunctionListByFunctionIds(functionIds, appId);
+                    List<Map<String, Object>> functions = privilegeFunctionService.getFunctionListByFunctionIds(functionIds, appId);
                     privilegeFunctions.addAll(functions);
                 }
             }
@@ -318,8 +313,9 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
                 }
             }
             roleMap.put("functionList", functionSet);
-        }
-
+        }*/
+        Set<Map<String, Object>> functionSet = new HashSet<Map<String, Object>>();
+        roleMap.put("functionList", functionSet);
         // 放入缓存
         redisClientTemplate.setString(userCacheRoleKey,
                 JSONObject.fromObject(roleMap).toString());
@@ -432,8 +428,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
     public PrivilegeAjaxMessage getRedisUsersRole(String appId, String appUserId) {
         PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
         /* 验证用户是否存在 */
-        PrivilegeUser privilegeUser = privilegeUserService
-                .findByAppIdAndUserId(appId, appUserId);
+        PrivilegeUser privilegeUser = privilegeUserService.findByAppIdAndUserId(appId, appUserId);
         if (null == privilegeUser) {
             ajaxMessage.setCode("0");
             ajaxMessage.setMessage("User Is Null");
@@ -457,8 +452,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
         // redis key
         String userCacheRoleKeys = prefixs + appId + SIGN + appUserId;
         log.info("从数据库获取数据");
-        List<Map<String, Object>> roles = privilegeRoleService
-                .getRoleListByUserId(appUserId, appId);
+        List<Map<String, Object>> roles = privilegeRoleService.getRoleListByUserId(appUserId, appId);
         if (roles.size() > 0) {
             for (Map<String, Object> map : roles) {
                 String roleId = (String) map.get("privilegeRoleId");
@@ -474,8 +468,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
             roleMap.put("groupVersion", String.valueOf(groupVersion));
         }
         roleMap.put("roleList", roles);
-        List<PrivilegeRole> roleList = privilegeRoleService
-                .getRoleListByUserIdAndAppId(appUserId, appId);
+        List<PrivilegeRole> roleList = privilegeRoleService.getRoleListByUserIdAndAppId(appUserId, appId);
         List resourceList = null;
         int Type = 1;// 角色类型，1-普通用户，2-系统管理员，3-组织机构管理员
         for (PrivilegeRole role : roleList) {
@@ -497,25 +490,21 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
         Set resourceSet = new HashSet();
         if (Type != 2) {
             // roleResource 中functionId
-            List<String> FunIds = privilegeRoleResourceService
-                    .findUserResourcesFunId(appId, appUserId);
+            List<String> FunIds = privilegeRoleResourceService.findUserResourcesFunId(appId, appUserId);
             // 加入 user表中functionIds
             if (privilegeFunctionIds != null
                     && !("").equals(privilegeFunctionIds)) {
                 FunIds.add(privilegeFunctionIds);
             }
-            resourceList = privilegeResourceService.getResourceListByUserId(
-                    appUserId, appId);
+            resourceList = privilegeResourceService.getResourceListByUserIds(appUserId, appId);
 
-            if (FunIds != null && !("").equals(FunIds)
-                    && !("null").equals(FunIds)) {
+            if (FunIds != null && !("").equals(FunIds)&& !("null").equals(FunIds)) {
                 for (String string : FunIds) {
                     if (string != null && !("").equals(string)
                             && !("null").equals(string)) {
                         String[] FunctionIds = string.split(",");
                         if (FunctionIds != null && FunctionIds.length > 0) {
-                            List<Map<String, Object>> resources = privilegeResourceService
-                                    .getResourceListByFunIds(FunctionIds, appId);
+                            List<Map<String, Object>> resources = privilegeResourceService.getResourceListByFunIdss(FunctionIds, appId);
                             resourceList.addAll(resources);
                         }
                     }
@@ -660,6 +649,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
         ajaxMessage.setMessage(JSONObject.fromObject(roleMap).toString());
         return ajaxMessage;
     }
-    
+
+
 
 }

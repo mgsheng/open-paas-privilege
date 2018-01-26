@@ -193,14 +193,14 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 		for (PrivilegeResource resource : privilegeResources) {
 			if (resource!=null&&resource.getResourceId()!=null&&!("").equals(resource.getResourceId())) {
 				PrivilegeResourceVo privilegeResourceVo = new PrivilegeResourceVo();
-				privilegeResourceVo.setAppId(resource.getAppId());
+			//	privilegeResourceVo.setAppId(resource.getAppId());
 				privilegeResourceVo.setBaseUrl(resource.getBaseUrl());
 				privilegeResourceVo.setDisplayOrder(resource.getDisplayOrder());
 				privilegeResourceVo.setMenuId(resource.getMenuId());
 				privilegeResourceVo.setResourceId(resource.getResourceId());
-				privilegeResourceVo.setResourceLevel(String.valueOf(resource.getResourceLevel()));
+			//	privilegeResourceVo.setResourceLevel(String.valueOf(resource.getResourceLevel()));
 				privilegeResourceVo.setResourceName(resource.getResourceName());
-				privilegeResourceVo.setResourceRule(resource.getResourceRule());
+			//	privilegeResourceVo.setResourceRule(resource.getResourceRule());
 				privilegeResourceVo.setStatus(resource.getStatus());
 				privilegeResourceVos.add(privilegeResourceVo);
 			}
@@ -360,6 +360,56 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 			}
 		}
 		return privilegeResourceVos;
+	}
+
+
+
+	@Override
+	public List<Map<String, Object>> getResourceListByUserIds(String appUserId, String appId) {
+		List<PrivilegeResource> resources = privilegeResourceRepository.getResourceListByUserId(appUserId, appId);
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		for (PrivilegeResource resource : resources) {
+			if (resource!=null&&resource.getResourceId()!=null&&!("").equals(resource.getResourceId())) {
+				Map<String, Object> map = new HashMap<String, Object>();
+		//		map.put("appId", resource.getAppId());
+				map.put("resourceId", resource.getResourceId());
+		//		map.put("resourceLevel", resource.getResourceLevel() + "");
+				map.put("resourceName", resource.getResourceName());
+		//		map.put("resourceRule", resource.getResourceRule());
+		//		map.put("dislayOrder ", resource.getDisplayOrder());
+				map.put("menuId", resource.getMenuId());
+		//		map.put("baseUrl", resource.getBaseUrl());
+				map.put("status", resource.getStatus());
+				list.add(map);
+			}
+
+		}
+		return list;
+	}
+
+
+
+	@Override
+	public List<Map<String, Object>> getResourceListByFunIdss(String[] functionIds,String appId) {
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		List<PrivilegeResource> resources = privilegeResourceRepository.getResourceListByFunIds(functionIds,appId);
+		for (PrivilegeResource resource : resources) {
+			if (resource!=null&&resource.getResourceId() != null && !("").equals(resource.getResourceId())) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				//		map.put("appId", resource.getAppId());
+				map.put("resourceId", resource.getResourceId());
+				//		map.put("resourceLevel", resource.getResourceLevel() + "");
+				map.put("resourceName", resource.getResourceName());
+				//		map.put("resourceRule", resource.getResourceRule());
+				//		map.put("dislayOrder ", resource.getDisplayOrder());
+				map.put("menuId", resource.getMenuId());
+				//		map.put("baseUrl", resource.getBaseUrl());
+				map.put("status", resource.getStatus());
+				list.add(map);
+			}
+
+		}
+		return list;
 	}
 
 

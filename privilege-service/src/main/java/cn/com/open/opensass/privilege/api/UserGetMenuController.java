@@ -134,8 +134,7 @@ public class UserGetMenuController extends BaseControllerUtil {
 		String privilegeResourceIds = user.getResourceId();
 		String privilegeFunctionIds = user.getPrivilegeFunId();
 
-		List<PrivilegeRole> roleList = privilegeRoleService.getRoleListByUserIdAndAppId(user.getAppUserId(),
-				user.getAppId());
+		List<PrivilegeRole> roleList = privilegeRoleService.getRoleListByUserIdAndAppId(user.getAppUserId(),user.getAppId());
 		for (PrivilegeRole role : roleList) {
 			if (role.getRoleType() != null) {
 				if (role.getRoleType() == 2) {// 若角色为系统管理员 则把app拥有的所有资源放入缓存

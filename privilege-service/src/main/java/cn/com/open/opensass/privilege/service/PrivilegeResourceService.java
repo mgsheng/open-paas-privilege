@@ -38,4 +38,7 @@ public interface PrivilegeResourceService {
 	PrivilegeResource getResourceListByFunId(String functionId,String appId);
 	PrivilegeAjaxMessage getAppResRediss(String appId);
 	List<PrivilegeResourcesVo> getResourceListByAppIds(String appId);
+
+	List<Map<String, Object>> getResourceListByUserIds(String appUserId,String appId);
+	List<Map<String, Object>> getResourceListByFunIdss(String[] functionIds,String appId);
 }
