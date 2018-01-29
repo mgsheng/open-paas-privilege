@@ -99,27 +99,6 @@ public class PrivilegeUserServiceImpl implements PrivilegeUserService {
 		return privilegeUserRepository.getUserCountByAppId(appId,groupId);
 	}
 
-	@Override
-	public Boolean updatePrivilegeUserResourceId(String appUserId) {
-		try {
-			privilegeUserRepository.updatePrivilegeUserResourceId(appUserId);
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-    @Override
-    public Boolean updatePrivilegeUserResourceIdByGroupId(String groupId, String appId) {
-        try {
-            privilegeUserRepository.updatePrivilegeUserResourceIdByGroupId(groupId, appId);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 
 	@Override
 	public Boolean batchUpdateResourceIds(List<PrivilegeBatchUserVo> list) {

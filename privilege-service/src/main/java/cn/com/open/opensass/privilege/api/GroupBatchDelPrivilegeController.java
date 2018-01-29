@@ -118,7 +118,6 @@ public class GroupBatchDelPrivilegeController extends BaseControllerUtil {
                     @Override
                     public void run() {
                             if (userId != null && userId != "") {
-//                                privilegeUserService.updatePrivilegeUserResourceId(userId); //清空用户本身resourceId
                                 log.info("====================batch modify big cache start======================");
                                 StringBuilder redisUserPrivilegeKey=new StringBuilder(RedisConstant.PUBLICSERVICE_CACHE);
                                 redisUserPrivilegeKey.append(RedisConstant.USER_CACHE_INFO);

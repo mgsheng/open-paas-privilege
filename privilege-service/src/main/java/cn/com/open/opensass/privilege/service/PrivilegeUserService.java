@@ -32,10 +32,6 @@ public interface PrivilegeUserService {
 	List<PrivilegeUser> findUserListByPage(String appId, int start, int limit,String groupId);
 	int getUserCountByAppId(String appId,String groupId);
 
-	Boolean updatePrivilegeUserResourceId(String appUserId);
-
-    Boolean updatePrivilegeUserResourceIdByGroupId(String groupId, String appId);
-
 	Boolean batchUpdateResourceIds(List<PrivilegeBatchUserVo> list);
 
 	/**

@@ -91,8 +91,6 @@ public class GroupModifyPrivilegeController extends BaseControllerUtil{
   		  paraMandaChkAndReturn(10001, response,"非法操作");
             return;	
   	     }
-        //新增清空处理，授权不刷新缓存问题
-        //privilegeUserService.updatePrivilegeUserResourceIdByGroupId(groupId, appId); //清空用户本身resourceId
     	//添加 privilege_group_resource
         if (groupPrivilege != null) {
             String[] groupPrivileges = groupPrivilege.split(",");
