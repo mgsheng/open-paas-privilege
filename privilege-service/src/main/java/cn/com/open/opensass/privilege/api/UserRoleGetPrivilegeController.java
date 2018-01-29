@@ -57,8 +57,7 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
      * 用户角色权限获取接口
      */
     @RequestMapping(value = "getUserPrivilege")
-    public void getPrivilege(HttpServletRequest request, HttpServletResponse response,
-                             PrivilegeUserVo privilegeUserVo) {
+    public void getPrivilege(HttpServletRequest request, HttpServletResponse response,PrivilegeUserVo privilegeUserVo) {
         Map<String, Object> map = new HashMap<>();
         log.info("====================get user privilege start======================");
         if (!paraMandatoryCheck(Arrays.asList(privilegeUserVo.getAppId(), privilegeUserVo.getAppUserId(), privilegeUserVo.getMenuCode()))) {
@@ -90,7 +89,7 @@ public class UserRoleGetPrivilegeController extends BaseControllerUtil {
             map.put("appUserName", user.getAppUserName());
             map.put("deptId", user.getDeptId());
             map.put("groupId", user.getGroupId());
-            map.put("privilegeFunId", user.getPrivilegeFunId());
+      //    map.put("privilegeFunId", user.getPrivilegeFunId());
             map.put("resourceId", user.getResourceId());
 
         }
