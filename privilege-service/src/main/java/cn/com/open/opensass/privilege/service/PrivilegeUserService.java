@@ -34,6 +34,10 @@ public interface PrivilegeUserService {
 
 	Boolean batchUpdateResourceIds(List<PrivilegeBatchUserVo> list);
 
+	Boolean updatePrivilegeUserResourceId(String appUserId);
+
+	Boolean updatePrivilegeUserResourceIdByGroupId(String groupId, String appId);
+
 	/**
 	 * 根据groupid列表更新resourceid, functionid数据
 	 * @param appId

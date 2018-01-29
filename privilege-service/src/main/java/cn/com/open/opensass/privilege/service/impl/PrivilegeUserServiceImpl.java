@@ -112,6 +112,28 @@ public class PrivilegeUserServiceImpl implements PrivilegeUserService {
 	}
 
 	@Override
+	public Boolean updatePrivilegeUserResourceId(String appUserId) {
+		try {
+			privilegeUserRepository.updatePrivilegeUserResourceId(appUserId);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
+	public Boolean updatePrivilegeUserResourceIdByGroupId(String groupId, String appId) {
+		try {
+			privilegeUserRepository.updatePrivilegeUserResourceIdByGroupId(groupId, appId);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
 	public Map<String, Object> batchUpdateGroupResourceFunction(String appId, String groupId, String resourceId, String functionId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		String[] groupIds = groupId.split(",");
