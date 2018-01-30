@@ -328,6 +328,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 			if (privilegeMenu!=null) {
 				PrivilegeMenuVo privilegeMenuVo=new PrivilegeMenuVo();
 				privilegeMenuVo.setMenuId(privilegeMenu.id());
+				privilegeMenuVo.setAppId(privilegeMenu.getAppId());
 				privilegeMenuVo.setParentId(privilegeMenu.getParentId());
 				privilegeMenuVo.setMenuName(privilegeMenu.getMenuName());
 			//	privilegeMenuVo.setMenuRule(privilegeMenu.getMenuRule());
