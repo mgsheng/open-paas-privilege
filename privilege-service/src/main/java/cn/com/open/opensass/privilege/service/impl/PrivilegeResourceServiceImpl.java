@@ -193,7 +193,7 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 		for (PrivilegeResource resource : privilegeResources) {
 			if (resource!=null&&resource.getResourceId()!=null&&!("").equals(resource.getResourceId())) {
 				PrivilegeResourceVo privilegeResourceVo = new PrivilegeResourceVo();
-			//	privilegeResourceVo.setAppId(resource.getAppId());
+				privilegeResourceVo.setAppId(resource.getAppId());
 				privilegeResourceVo.setBaseUrl(resource.getBaseUrl());
 				privilegeResourceVo.setDisplayOrder(resource.getDisplayOrder());
 				privilegeResourceVo.setMenuId(resource.getMenuId());
