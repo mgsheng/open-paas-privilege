@@ -99,6 +99,18 @@ public class PrivilegeUserServiceImpl implements PrivilegeUserService {
 		return privilegeUserRepository.getUserCountByAppId(appId,groupId);
 	}
 
+
+	@Override
+	public Boolean batchUpdateResourceIds(List<PrivilegeBatchUserVo> list) {
+		try{
+			privilegeUserRepository.batchUpdateResourceIds(list);
+			return true;
+		}catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 	@Override
 	public Boolean updatePrivilegeUserResourceId(String appUserId) {
 		try {
@@ -110,23 +122,12 @@ public class PrivilegeUserServiceImpl implements PrivilegeUserService {
 		}
 	}
 
-    @Override
-    public Boolean updatePrivilegeUserResourceIdByGroupId(String groupId, String appId) {
-        try {
-            privilegeUserRepository.updatePrivilegeUserResourceIdByGroupId(groupId, appId);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
 	@Override
-	public Boolean batchUpdateResourceIds(List<PrivilegeBatchUserVo> list) {
-		try{
-			privilegeUserRepository.batchUpdateResourceIds(list);
+	public Boolean updatePrivilegeUserResourceIdByGroupId(String groupId, String appId) {
+		try {
+			privilegeUserRepository.updatePrivilegeUserResourceIdByGroupId(groupId, appId);
 			return true;
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}

@@ -110,6 +110,9 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 				if (role.getRoleType() == 2) {//若角色为系统管理员  
 					if (role.getGroupId()!=null&&!role.getGroupId().isEmpty()) {//若该管理员为组织机构管理员
 						Type =3;
+                        //机构管理员继承权限
+                        user.setResourceId("");
+                        user.setPrivilegeFunId("");
 					}else{
 						PrivilegeAjaxMessage message = getAppMenuRedis(appId);
 						if ("1".equals(message.getCode())) {
@@ -325,6 +328,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 			if (privilegeMenu!=null) {
 				PrivilegeMenuVo privilegeMenuVo=new PrivilegeMenuVo();
 				privilegeMenuVo.setMenuId(privilegeMenu.id());
+				privilegeMenuVo.setAppId(privilegeMenu.getAppId());
 				privilegeMenuVo.setParentId(privilegeMenu.getParentId());
 				privilegeMenuVo.setMenuName(privilegeMenu.getMenuName());
 			//	privilegeMenuVo.setMenuRule(privilegeMenu.getMenuRule());

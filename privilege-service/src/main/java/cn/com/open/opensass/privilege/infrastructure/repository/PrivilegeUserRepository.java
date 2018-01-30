@@ -23,8 +23,9 @@ public interface PrivilegeUserRepository extends Repository {
 
 	void updatePrivilegeUserResourceId(String appUserId);
 
-    //根据groupId清空resourceid functionid
-    void updatePrivilegeUserResourceIdByGroupId(@Param("groupId") String groupId, @Param("appId") String appId);
+	//根据groupId清空resourceid functionid
+	void updatePrivilegeUserResourceIdByGroupId(@Param("groupId") String groupId, @Param("appId") String appId);
+
 
 	PrivilegeUser findByAppIdAndAppUserId(@Param("appId") String appId, @Param("appUserId") String appUserId);
 
