@@ -70,6 +70,24 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
             ajaxMessage.setMessage("User Is Null");
             return ajaxMessage;
         }
+        List<PrivilegeRole> roleList = privilegeRoleService.getRoleListByUserIdAndAppId(appUserId, appId);
+        List resourceList = null;
+        int Type = 1;// 角色类型，1-普通用户，2-系统管理员，3-组织机构管理员
+        for (PrivilegeRole role : roleList) {
+            if (role.getRoleType() != null) {
+                if (role.getRoleType() == 2) {// 若角色为系统管理员 则把app拥有的所有资源放入缓存
+                    if (role.getGroupId() != null
+                            && !role.getGroupId().isEmpty()) {// 若该管理员为组织机构管理员
+                        Type = 3;
+                        privilegeUser.setResourceId("");
+                        privilegeUser.setPrivilegeFunId("");
+                    } else {
+                        Type = 2;
+                    }
+                    break;
+                }
+            }
+        }
         String privilegeResourceIds = privilegeUser.getResourceId();
         String privilegeFunctionIds = privilegeUser.getPrivilegeFunId();
         Map<String, Object> roleMap = new HashMap<String, Object>();
@@ -106,22 +124,7 @@ public class PrivilegeUserRedisServiceImpl implements PrivilegeUserRedisService 
             roleMap.put("groupVersion", String.valueOf(groupVersion));
         }
         roleMap.put("roleList", roles);
-        List<PrivilegeRole> roleList = privilegeRoleService.getRoleListByUserIdAndAppId(appUserId, appId);
-        List resourceList = null;
-        int Type = 1;// 角色类型，1-普通用户，2-系统管理员，3-组织机构管理员
-        for (PrivilegeRole role : roleList) {
-            if (role.getRoleType() != null) {
-                if (role.getRoleType() == 2) {// 若角色为系统管理员 则把app拥有的所有资源放入缓存
-                    if (role.getGroupId() != null
-                            && !role.getGroupId().isEmpty()) {// 若该管理员为组织机构管理员
-                        Type = 3;
-                    } else {
-                        Type = 2;
-                    }
-                    break;
-                }
-            }
-        }
+
         // user表多余的resourceId
         List<String> resourceIds = new ArrayList<String>();
         // resourceList

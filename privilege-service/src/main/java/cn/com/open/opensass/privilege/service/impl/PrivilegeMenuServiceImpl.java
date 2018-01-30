@@ -524,6 +524,8 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 				if (role.getRoleType() == 2) {//若角色为系统管理员  
 					if (role.getGroupId()!=null&&!role.getGroupId().isEmpty()) {//若该管理员为组织机构管理员
 						Type =3;
+						user.setResourceId("");
+						user.setPrivilegeFunId("");
 					}else{
 						PrivilegeAjaxMessage message = getManagerMenuRedis(map);
 						if ("1".equals(message.getCode())) {
