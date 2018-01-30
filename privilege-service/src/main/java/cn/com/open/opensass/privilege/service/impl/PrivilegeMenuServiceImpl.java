@@ -332,7 +332,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 				privilegeMenuVo.setMenuCode(privilegeMenu.getMenuCode());
 				privilegeMenuVo.setDisplayOrder(privilegeMenu.getDisplayOrder());
 				privilegeMenuVo.setStatus(privilegeMenu.getStatus());
-			//	privilegeMenuVo.setAppId(privilegeMenu.getAppId());
+				privilegeMenuVo.setAppId(privilegeMenu.getAppId());
 				privilegeMenuVos.add(privilegeMenuVo);
 			}
 		}
@@ -494,7 +494,7 @@ public class PrivilegeMenuServiceImpl implements PrivilegeMenuService {
 				privilegeMenuVo.setMenuCode(privilegeMenu.getMenuCode());
 				privilegeMenuVo.setDisplayOrder(privilegeMenu.getDisplayOrder());
 				privilegeMenuVo.setStatus(privilegeMenu.getStatus());
-			//	privilegeMenuVo.setAppId(privilegeMenu.getAppId());
+				privilegeMenuVo.setAppId(privilegeMenu.getAppId());
 				privilegeMenuVos.add(privilegeMenuVo);
 			}
 		}
