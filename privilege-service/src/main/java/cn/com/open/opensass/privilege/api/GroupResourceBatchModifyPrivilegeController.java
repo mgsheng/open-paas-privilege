@@ -160,7 +160,7 @@ public class GroupResourceBatchModifyPrivilegeController extends BaseControllerU
                                 //更新缓存
                                 message[0] = privilegeGroupService.updateGroupPrivilegeCache(groupId, appId);
                                 //更新机构版本号
-//                                privilegeGroupService.updateGroupVersion(groupId, appId);
+                                privilegeGroupService.updateGroupVersion(groupId, appId);
                             }
                         }
                     }
