@@ -159,6 +159,8 @@ public class GroupResourceBatchModifyPrivilegeController extends BaseControllerU
                                 log.debug("Thread Name is" + Thread.currentThread().getName() + ",groupId:" + groupId);
                                 //更新缓存
                                 message[0] = privilegeGroupService.updateGroupPrivilegeCache(groupId, appId);
+                                //删除groupId下的用户缓存
+                                privilegeGroupService.deleteByGroupId(groupId, appId);
                                 //更新机构版本号
                                 privilegeGroupService.updateGroupVersion(groupId, appId);
                             }

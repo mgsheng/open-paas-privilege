@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import cn.com.open.opensass.privilege.model.PrivilegeUser;
+import cn.com.open.opensass.privilege.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +21,6 @@ import cn.com.open.opensass.privilege.model.PrivilegeGroupResource;
 import cn.com.open.opensass.privilege.model.PrivilegeMenu;
 import cn.com.open.opensass.privilege.redis.impl.RedisClientTemplate;
 import cn.com.open.opensass.privilege.redis.impl.RedisConstant;
-import cn.com.open.opensass.privilege.service.PrivilegeGroupResourceService;
-import cn.com.open.opensass.privilege.service.PrivilegeGroupService;
-import cn.com.open.opensass.privilege.service.PrivilegeMenuService;
-import cn.com.open.opensass.privilege.service.PrivilegeResourceService;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 import cn.com.open.opensass.privilege.vo.PrivilegeMenuVo;
 import cn.com.open.opensass.privilege.vo.PrivilegeMenusVo;
@@ -42,6 +40,8 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 	private RedisClientTemplate redisClientTemplate;
 	@Autowired
 	private PrivilegeMenuService privilegeMenuService;
+	@Autowired
+	private PrivilegeUserService privilegeUserService;
 	/*@Autowired
 	private RedisDao redisDao;*/
 	@Autowired
@@ -219,6 +219,28 @@ public class PrivilegeGroupServiceImpl implements PrivilegeGroupService {
 			return false;
 		}
 	}
+
+	@Override
+	public Boolean deleteUserRedisByGroupId(String groupId, String appId) {
+		try {
+			//通过groupId查找出用户Id，删除用户id
+			String[] groupIds = groupId.split(",");
+			List<PrivilegeUser> privilegeUserList = privilegeUserService.findByGroupIdAndAppId(appId, groupIds);
+			String key = null;
+			for (PrivilegeUser privilegeUser : privilegeUserList) {
+				//privilegeService_userCacheInfo_8_2764888
+				key = RedisConstant.PUBLICSERVICE_CACHE + RedisConstant.USER_CACHE_INFO + appId + "_" + privilegeUser.getAppUserId();
+				if (redisClientTemplate.existKey(key)) {
+					redisClientTemplate.del(key);
+				}
+			}
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 	/**
 	    *	更新组织机构版本号
 	    * @param groupId 机构Id
