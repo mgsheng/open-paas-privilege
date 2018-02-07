@@ -157,10 +157,10 @@ public class GroupResourceBatchModifyPrivilegeController extends BaseControllerU
                         synchronized (threadPool) {
                             if (groupId != null && groupId != "") {
                                 log.debug("Thread Name is" + Thread.currentThread().getName() + ",groupId:" + groupId);
-                                //更新机构版本号
-                                privilegeGroupService.updateGroupVersion(groupId, appId);
                                 //更新缓存
                                 message[0] = privilegeGroupService.updateGroupPrivilegeCache(groupId, appId);
+                                //更新机构版本号
+//                                privilegeGroupService.updateGroupVersion(groupId, appId);
                             }
                         }
                     }
