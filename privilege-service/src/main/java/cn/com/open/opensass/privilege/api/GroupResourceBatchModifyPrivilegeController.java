@@ -14,7 +14,6 @@ import cn.com.open.opensass.privilege.vo.PrivilegeBatchUserVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -124,7 +123,6 @@ public class GroupResourceBatchModifyPrivilegeController extends BaseControllerU
                 }
                 if (success) {
                     /*更新缓存*/
-//                    redisClient.del(RedisConstant.APPRES_CACHE+appId);
                     updateRedisCache(appId,groupIdList);
                     map.put("status", "1");
                     map.put("message", "操作成功:!");
@@ -147,28 +145,32 @@ public class GroupResourceBatchModifyPrivilegeController extends BaseControllerU
         return map;
     }
     /*更新redis缓存*/
-    @Async
-    PrivilegeAjaxMessage updateRedisCache(String appId, String[] groupIdList) {
+    PrivilegeAjaxMessage updateRedisCache(final String appId, final String[] groupIdList) {
+        final PrivilegeAjaxMessage[] message = {null};
         try{
-//            final ExecutorService threadPool = Executors.newCachedThreadPool();//线程池里面的线程数会动态变化
+            final ExecutorService threadPool = Executors.newCachedThreadPool();//线程池里面的线程数会动态变化
 
-            for (String groupId : groupIdList) {
-                if (groupId != null && groupId != "") {    //更新缓存
-                    privilegeGroupService.updateGroupPrivilegeCache(groupId, appId);
-                    //更新机构版本号
-                    privilegeGroupService.updateGroupVersion(groupId, appId);
-                    //删除groupId下的用户缓存
-//                                privilegeGroupService.deleteByGroupId(groupId, appId);
-                    //更新缓存
-//                                message[0] = privilegeGroupService.updateGroupPrivilegeCache(groupId, appId);
-//                                //更新机构版本号
-//                                privilegeGroupService.updateGroupVersion(groupId, appId);
-                }
+            for (final String groupId : groupIdList) {
+                threadPool.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        synchronized (threadPool) {
+                            if (groupId != null && groupId != "") {
+                                log.debug("Thread Name is" + Thread.currentThread().getName() + ",groupId:" + groupId);
+                                //更新缓存
+                                message[0] = privilegeGroupService.updateGroupPrivilegeCache(groupId, appId);
+                                //更新机构版本号
+                                privilegeGroupService.updateGroupVersion(groupId, appId);
+                            }
+                        }
+                    }
+                });
             }
         }
         catch (Exception e){
+            message[0] = null;
             e.printStackTrace();
         }
-        return null;
+        return message[0];
     }
 }
