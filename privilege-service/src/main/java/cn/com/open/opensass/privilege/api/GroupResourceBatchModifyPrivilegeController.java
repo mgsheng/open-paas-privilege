@@ -146,7 +146,6 @@ public class GroupResourceBatchModifyPrivilegeController extends BaseControllerU
     }
     /*更新redis缓存*/
     PrivilegeAjaxMessage updateRedisCache(final String appId, final String[] groupIdList){
-        final PrivilegeAjaxMessage[] message = {null};
         try{
             final ExecutorService threadPool = Executors.newCachedThreadPool();//线程池里面的线程数会动态变化
 
@@ -155,14 +154,16 @@ public class GroupResourceBatchModifyPrivilegeController extends BaseControllerU
                     @Override
                     public void run() {
                         synchronized (threadPool) {
-                            if (groupId != null && groupId != "") {
-                                log.debug("Thread Name is" + Thread.currentThread().getName() + ",groupId:" + groupId);
+                            if (groupId != null && groupId != "") {    //更新缓存
+                                PrivilegeAjaxMessage message = privilegeGroupService.updateGroupPrivilegeCache(groupId, appId);
+                                //更新机构版本号
+                                privilegeGroupService.updateGroupVersion(groupId, appId);
                                 //删除groupId下的用户缓存
 //                                privilegeGroupService.deleteByGroupId(groupId, appId);
                                 //更新缓存
-                                message[0] = privilegeGroupService.updateGroupPrivilegeCache(groupId, appId);
-                                //更新机构版本号
-                                privilegeGroupService.updateGroupVersion(groupId, appId);
+//                                message[0] = privilegeGroupService.updateGroupPrivilegeCache(groupId, appId);
+//                                //更新机构版本号
+//                                privilegeGroupService.updateGroupVersion(groupId, appId);
                             }
                         }
                     }
@@ -170,9 +171,8 @@ public class GroupResourceBatchModifyPrivilegeController extends BaseControllerU
             }
         }
         catch (Exception e){
-            message[0] = null;
             e.printStackTrace();
         }
-        return message[0];
+        return null;
     }
 }
