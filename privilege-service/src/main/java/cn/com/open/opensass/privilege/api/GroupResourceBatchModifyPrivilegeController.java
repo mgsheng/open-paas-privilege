@@ -148,11 +148,11 @@ public class GroupResourceBatchModifyPrivilegeController extends BaseControllerU
     }
     /*更新redis缓存*/
     @Async
-    PrivilegeAjaxMessage updateRedisCache(final String appId, final String[] groupIdList){
+    PrivilegeAjaxMessage updateRedisCache(String appId, String[] groupIdList) {
         try{
 //            final ExecutorService threadPool = Executors.newCachedThreadPool();//线程池里面的线程数会动态变化
 
-            for (final String groupId : groupIdList) {
+            for (String groupId : groupIdList) {
                 if (groupId != null && groupId != "") {    //更新缓存
                     privilegeGroupService.updateGroupPrivilegeCache(groupId, appId);
                     //更新机构版本号
