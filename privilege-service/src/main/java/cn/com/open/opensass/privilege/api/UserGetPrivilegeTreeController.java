@@ -133,9 +133,6 @@ public class UserGetPrivilegeTreeController extends BaseControllerUtil {
 		
 		Boolean boo = false;// 存放是否有管理员角色标志 true-有，false-没有
 		int Type = 1;// 角色类型标识，1-普通用户，2-管理员（应用资源级别），3-组织机构管理员（组织机构资源）
-		String privilegeResourceIds = user.getResourceId();
-		String privilegeFunctionIds = user.getPrivilegeFunId();
-
 		List<PrivilegeRole> roleList = privilegeRoleService.getRoleListByUserIdAndAppId(user.getAppUserId(),
 				user.getAppId());
 		for (PrivilegeRole role : roleList) {
@@ -143,6 +140,9 @@ public class UserGetPrivilegeTreeController extends BaseControllerUtil {
 				if (role.getRoleType() == 2) {// 若角色为系统管理员 则把app拥有的所有资源放入缓存
 					if (role.getGroupId() != null && !role.getGroupId().isEmpty()) {
 						Type = 3;
+						//机构管理员继承权限
+						user.setResourceId("");
+						user.setPrivilegeFunId("");
 					} else {
 						Type = 2;
 					}
@@ -151,6 +151,9 @@ public class UserGetPrivilegeTreeController extends BaseControllerUtil {
 				}
 			}
 		}
+		String privilegeResourceIds = user.getResourceId();
+		String privilegeFunctionIds = user.getPrivilegeFunId();
+
 		map.put("isManager", boo);
 		map.put("Type", Type);
 		// redis中没有roleMap，从数据库中查询并存入redis
