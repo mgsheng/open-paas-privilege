@@ -155,7 +155,7 @@ public class GroupResourceBatchModifyPrivilegeController extends BaseControllerU
                     public void run() {
                         synchronized (threadPool) {
                             if (groupId != null && groupId != "") {    //更新缓存
-                                PrivilegeAjaxMessage message = privilegeGroupService.updateGroupPrivilegeCache(groupId, appId);
+                                privilegeGroupService.updateGroupPrivilegeCache(groupId, appId);
                                 //更新机构版本号
                                 privilegeGroupService.updateGroupVersion(groupId, appId);
                                 //删除groupId下的用户缓存
