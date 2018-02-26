@@ -145,7 +145,7 @@ public class GroupResourceBatchModifyPrivilegeController extends BaseControllerU
         return map;
     }
     /*更新redis缓存*/
-    PrivilegeAjaxMessage updateRedisCache(final String appId, final String[] groupIdList){
+    PrivilegeAjaxMessage updateRedisCache(final String appId, final String[] groupIdList) {
         final PrivilegeAjaxMessage[] message = {null};
         try{
             final ExecutorService threadPool = Executors.newCachedThreadPool();//线程池里面的线程数会动态变化

@@ -81,6 +81,8 @@ public class UserRoleModifyPrivilegeController extends BaseControllerUtil {
             paraMandaChkAndReturn(10001, response, "该用户不存在");
             return;
         }
+
+
         String privilegeRoleIds = user.getPrivilegeRoleId();
         String privilegeRoleId = "";//最终更新到 user privilegeRoleId 字段
 
@@ -132,8 +134,6 @@ public class UserRoleModifyPrivilegeController extends BaseControllerUtil {
             user.setPrivilegeFunId(privilegeUserVo.getPrivilegeFunId());
             //更新用户信息
             boolean uf = privilegeUserService.updatePrivilegeUser(user);
-
-
             if (uf) {
                 //更新缓存
                 PrivilegeAjaxMessage message = privilegeUserRedisService.updateUserRoleRedis(privilegeUserVo.getAppId(), privilegeUserVo.getAppUserId());

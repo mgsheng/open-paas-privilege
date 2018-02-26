@@ -19,7 +19,9 @@ import cn.com.open.opensass.privilege.service.PrivilegeFunctionService;
 import cn.com.open.opensass.privilege.service.PrivilegeResourceService;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 import cn.com.open.opensass.privilege.vo.PrivilegeFunctionVo;
+import cn.com.open.opensass.privilege.vo.PrivilegeFunctionsVo;
 import cn.com.open.opensass.privilege.vo.PrivilegeResourceVo;
+import cn.com.open.opensass.privilege.vo.PrivilegeResourcesVo;
 import net.sf.json.JSONObject;
 
 /**
@@ -28,6 +30,7 @@ import net.sf.json.JSONObject;
 @Service("privilegeResourceService")
 public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 	private static final String AppResRedisPrefix = RedisConstant.APPRES_CACHE;
+	private static final String AppResRedisPrefixs = RedisConstant.APPRES_CACHES;
 	private static final Logger log = LoggerFactory.getLogger(PrivilegeResourceServiceImpl.class);
 	@Autowired
 	private RedisClientTemplate redisClientTemplate;
@@ -195,9 +198,9 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 				privilegeResourceVo.setDisplayOrder(resource.getDisplayOrder());
 				privilegeResourceVo.setMenuId(resource.getMenuId());
 				privilegeResourceVo.setResourceId(resource.getResourceId());
-				privilegeResourceVo.setResourceLevel(String.valueOf(resource.getResourceLevel()));
+			//	privilegeResourceVo.setResourceLevel(String.valueOf(resource.getResourceLevel()));
 				privilegeResourceVo.setResourceName(resource.getResourceName());
-				privilegeResourceVo.setResourceRule(resource.getResourceRule());
+			//	privilegeResourceVo.setResourceRule(resource.getResourceRule());
 				privilegeResourceVo.setStatus(resource.getStatus());
 				privilegeResourceVos.add(privilegeResourceVo);
 			}
@@ -310,5 +313,104 @@ public class PrivilegeResourceServiceImpl implements PrivilegeResourceService {
 	public List<PrivilegeResource> findByResourceIds(String[] resourceId, String appId) {
 		return privilegeResourceRepository.findByResourceIds(resourceId, appId);
 	}
+	
+	
+	
+
+	
+	@Override
+	public PrivilegeAjaxMessage getAppResRediss(String appId) {
+		PrivilegeAjaxMessage ajaxMessage = new PrivilegeAjaxMessage();
+		// redis key
+		String AppResRedisKeys = AppResRedisPrefixs + appId;
+		String jsonString = redisClientTemplate.getString(AppResRedisKeys);
+		// 取缓存
+		if (null != jsonString && jsonString.length() > 0) {
+			ajaxMessage.setCode("1");
+			ajaxMessage.setMessage(jsonString);
+			return ajaxMessage;
+		}
+		Map<String, Object> redisMap = new HashMap<String, Object>();
+		log.info("从数据库获取数据");
+		// resourceList
+		List<PrivilegeResourcesVo> resourceList = getResourceListByAppIds(appId);
+		redisMap.put("resourceList", resourceList);
+		// functionList
+		List<PrivilegeFunctionsVo> functionList = privilegeFunctionService.getFunctionListByAppIds(appId);
+		redisMap.put("functionList", functionList);
+		redisClientTemplate.setString(AppResRedisKeys, JSONObject.fromObject(redisMap).toString());
+		ajaxMessage.setCode("1");
+		ajaxMessage.setMessage(JSONObject.fromObject(redisMap).toString());
+		return ajaxMessage;
+	}
+	
+	
+	@Override
+	public List<PrivilegeResourcesVo> getResourceListByAppIds(String appId) {
+		List<PrivilegeResourcesVo> privilegeResourceVos = new ArrayList<PrivilegeResourcesVo>();
+		List<PrivilegeResource> privilegeResources = privilegeResourceRepository.getResourceListByAppId(appId);
+		for (PrivilegeResource resource : privilegeResources) {
+			if (resource!=null&&resource.getResourceId()!=null&&!("").equals(resource.getResourceId())) {
+				PrivilegeResourcesVo privilegeResourceVo = new PrivilegeResourcesVo();
+				privilegeResourceVo.setMenuId(resource.getMenuId());
+				privilegeResourceVo.setResourceId(resource.getResourceId());
+				privilegeResourceVo.setResourceName(resource.getResourceName());
+				privilegeResourceVo.setStatus(resource.getStatus());
+				privilegeResourceVos.add(privilegeResourceVo);
+			}
+		}
+		return privilegeResourceVos;
+	}
+
+
+
+	@Override
+	public List<Map<String, Object>> getResourceListByUserIds(String appUserId, String appId) {
+		List<PrivilegeResource> resources = privilegeResourceRepository.getResourceListByUserId(appUserId, appId);
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		for (PrivilegeResource resource : resources) {
+			if (resource!=null&&resource.getResourceId()!=null&&!("").equals(resource.getResourceId())) {
+				Map<String, Object> map = new HashMap<String, Object>();
+		//		map.put("appId", resource.getAppId());
+				map.put("resourceId", resource.getResourceId());
+		//		map.put("resourceLevel", resource.getResourceLevel() + "");
+				map.put("resourceName", resource.getResourceName());
+		//		map.put("resourceRule", resource.getResourceRule());
+		//		map.put("dislayOrder ", resource.getDisplayOrder());
+				map.put("menuId", resource.getMenuId());
+		//		map.put("baseUrl", resource.getBaseUrl());
+				map.put("status", resource.getStatus());
+				list.add(map);
+			}
+
+		}
+		return list;
+	}
+
+
+
+	@Override
+	public List<Map<String, Object>> getResourceListByFunIdss(String[] functionIds,String appId) {
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		List<PrivilegeResource> resources = privilegeResourceRepository.getResourceListByFunIds(functionIds,appId);
+		for (PrivilegeResource resource : resources) {
+			if (resource!=null&&resource.getResourceId() != null && !("").equals(resource.getResourceId())) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				//		map.put("appId", resource.getAppId());
+				map.put("resourceId", resource.getResourceId());
+				//		map.put("resourceLevel", resource.getResourceLevel() + "");
+				map.put("resourceName", resource.getResourceName());
+				//		map.put("resourceRule", resource.getResourceRule());
+				//		map.put("dislayOrder ", resource.getDisplayOrder());
+				map.put("menuId", resource.getMenuId());
+				//		map.put("baseUrl", resource.getBaseUrl());
+				map.put("status", resource.getStatus());
+				list.add(map);
+			}
+
+		}
+		return list;
+	}
+
 
 }

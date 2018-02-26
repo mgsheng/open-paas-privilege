@@ -64,7 +64,7 @@ public class GroupBatchDelPrivilegeController extends BaseControllerUtil {
         String resourceId = request.getParameter("resourceId");
         String functionId = request.getParameter("functionId");
         log.info("====================batch delete user  resource  functionIds  by groupids start======================");
-        if (!paraMandatoryCheck(Arrays.asList(groupId, resourceId, appId,functionId))) {
+        if (!paraMandatoryCheck(Arrays.asList(groupId, resourceId, appId))) {
             paraMandaChkAndReturn(10000, response, "必传参数中有空值");
             return;
         }
@@ -118,6 +118,8 @@ public class GroupBatchDelPrivilegeController extends BaseControllerUtil {
                     @Override
                     public void run() {
                             if (userId != null && userId != "") {
+                                //清空用户本身resourceId
+                                privilegeUserService.updatePrivilegeUserResourceId(userId);
                                 log.info("====================batch modify big cache start======================");
                                 StringBuilder redisUserPrivilegeKey=new StringBuilder(RedisConstant.PUBLICSERVICE_CACHE);
                                 redisUserPrivilegeKey.append(RedisConstant.USER_CACHE_INFO);
@@ -128,15 +130,14 @@ public class GroupBatchDelPrivilegeController extends BaseControllerUtil {
                                 {
                                     redisClient.del(redisUserPrivilegeKey.toString());
                                 }
-                                StringBuilder redisUserAllPrivilegeKey=new StringBuilder(RedisConstant.PUBLICSERVICE_CACHE);
-                    			redisUserAllPrivilegeKey.append(RedisConstant.USER_ALL_CACHE_INFO);
-                    			redisUserAllPrivilegeKey.append(appId);
-                    			redisUserAllPrivilegeKey.append(SIGN);
-                    			redisUserAllPrivilegeKey.append(userId);
-                    			if(redisClient.existKey(redisUserAllPrivilegeKey.toString()))
-                    			{
-                    				redisClient.del(redisUserAllPrivilegeKey.toString());
-                    			}
+                                StringBuilder redisUserAllPrivilegeKey = new StringBuilder(RedisConstant.PUBLICSERVICE_CACHE);
+                                redisUserAllPrivilegeKey.append(RedisConstant.USER_ALL_CACHE_INFO);
+                                redisUserAllPrivilegeKey.append(appId);
+                                redisUserAllPrivilegeKey.append(SIGN);
+                                redisUserAllPrivilegeKey.append(userId);
+                                if (redisClient.existKey(redisUserAllPrivilegeKey.toString())) {
+                                    redisClient.del(redisUserAllPrivilegeKey.toString());
+                                }
                                 message[0] = privilegeUserRedisService.updateUserRoleRedis(appId, userId);
                                 privilegeMenuService.updateMenuRedis(appId, userId);
                                 privilegeUrlService.updateRedisUrl(appId, userId);

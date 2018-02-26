@@ -23,7 +23,7 @@ public class UserGetMenusControllerTest extends BaseTest {
 	private UserGetMenusController userGetMenusController;
 	@Autowired
 	private RedisClientTemplate redisClientTemplate;
-	String appUserId = "3094776";
+    String appUserId = "1149350";//3094776
 
 	/**
 	 * 正常处理
@@ -125,23 +125,6 @@ public class UserGetMenusControllerTest extends BaseTest {
 		userGetMenusController.getPrivilege(request, response,modifyPrivilegeUserVo);
 
 		System.out.println("getPrivilegeAdminUserExist:"+response.getContentAsString());
-		Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
-	}
-
-	/**
-	 * 用户存在-管理员.
-	 * @throws UnsupportedEncodingException
-	 */
-	@Test
-	public void getPrivilegeNormalUserExist() throws UnsupportedEncodingException {
-		MockHttpServletRequest request = Signature.getSignatureRequest(CommonEnum.APP_SECRET.getDisplay(), CommonEnum.APP_ID.getDisplay(), CommonEnum.APP_KEY.getDisplay());
-		PrivilegeUserVo modifyPrivilegeUserVo = new PrivilegeUserVo();
-		modifyPrivilegeUserVo.setAppId(CommonEnum.APP_ID.getDisplay());
-		modifyPrivilegeUserVo.setAppUserId("1004098");
-		MockHttpServletResponse response = new MockHttpServletResponse();
-		userGetMenusController.getPrivilege(request, response,modifyPrivilegeUserVo);
-
-		System.out.println("getPrivilegeNormalUserExist:"+response.getContentAsString());
 		Assert.assertTrue(net.sf.json.JSONObject.fromObject(response.getContentAsString()).get("status").equals("1"));
 	}
 }

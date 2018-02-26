@@ -135,7 +135,6 @@ public class UserGetPrivilegeTreeController extends BaseControllerUtil {
 		int Type = 1;// 角色类型标识，1-普通用户，2-管理员（应用资源级别），3-组织机构管理员（组织机构资源）
 		String privilegeResourceIds = user.getResourceId();
 		String privilegeFunctionIds = user.getPrivilegeFunId();
-
 		List<PrivilegeRole> roleList = privilegeRoleService.getRoleListByUserIdAndAppId(user.getAppUserId(),
 				user.getAppId());
 		for (PrivilegeRole role : roleList) {
@@ -151,6 +150,7 @@ public class UserGetPrivilegeTreeController extends BaseControllerUtil {
 				}
 			}
 		}
+
 		map.put("isManager", boo);
 		map.put("Type", Type);
 		// redis中没有roleMap，从数据库中查询并存入redis

@@ -9,6 +9,7 @@ import cn.com.open.opensass.privilege.model.PrivilegeMenu;
 import cn.com.open.opensass.privilege.model.PrivilegeResource;
 import cn.com.open.opensass.privilege.vo.PrivilegeAjaxMessage;
 import cn.com.open.opensass.privilege.vo.PrivilegeResourceVo;
+import cn.com.open.opensass.privilege.vo.PrivilegeResourcesVo;
 
 /**
  * 
@@ -35,4 +36,9 @@ public interface PrivilegeResourceService {
 	PrivilegeResourceVo getResourceListByMenuId(String menuId);
 	List<String> findAppResources(String appId);
 	PrivilegeResource getResourceListByFunId(String functionId,String appId);
+	PrivilegeAjaxMessage getAppResRediss(String appId);
+	List<PrivilegeResourcesVo> getResourceListByAppIds(String appId);
+
+	List<Map<String, Object>> getResourceListByUserIds(String appUserId,String appId);
+	List<Map<String, Object>> getResourceListByFunIdss(String[] functionIds,String appId);
 }

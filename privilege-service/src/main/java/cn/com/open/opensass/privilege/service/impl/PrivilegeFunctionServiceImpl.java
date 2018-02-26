@@ -13,6 +13,7 @@ import cn.com.open.opensass.privilege.infrastructure.repository.PrivilegeFunctio
 import cn.com.open.opensass.privilege.model.PrivilegeFunction;
 import cn.com.open.opensass.privilege.service.PrivilegeFunctionService;
 import cn.com.open.opensass.privilege.vo.PrivilegeFunctionVo;
+import cn.com.open.opensass.privilege.vo.PrivilegeFunctionsVo;
 
 /**
  * Created by jh on 2016/12/15.
@@ -160,6 +161,57 @@ public class PrivilegeFunctionServiceImpl implements PrivilegeFunctionService {
 	@Override
 	public List<String> findAppFunction(String appId) {
 		return privilegeFunctionRepository.findAppFunction(appId);
+	}
+	
+	
+	
+
+	@Override
+	public List<PrivilegeFunctionsVo> getFunctionListByAppIds(String appId) {
+		List<PrivilegeFunctionsVo> privilegeFunctionVos=new ArrayList<PrivilegeFunctionsVo>();
+		List<PrivilegeFunction> privilegeFunctions=privilegeFunctionRepository.getFunctionListByAppId(appId);
+		for(PrivilegeFunction function:privilegeFunctions){
+			if (function!=null&&function.id()!=null&&!("").equals(function.id())) {
+				PrivilegeFunctionsVo functionVo=new PrivilegeFunctionsVo();
+				functionVo.setFunctionId(function.id());
+				functionVo.setOptId(function.getOperationId());
+				functionVo.setResourceId(function.getResourceId());
+				privilegeFunctionVos.add(functionVo);
+			}
+		}
+		return privilegeFunctionVos;
+	}
+	
+	@Override
+	public List<Map<String, Object>> getFunctionByRIds(String resourceId,String appId) {
+		List<PrivilegeFunction> privilegeFunctions=privilegeFunctionRepository.getFunctionByRId(resourceId,appId);
+		List<Map<String, Object>> list=new ArrayList<Map<String,Object>>();
+		for(PrivilegeFunction function:privilegeFunctions){
+			if (function!=null&&function.id()!=null&&!("").equals(function.id())) {
+				Map<String, Object> map=new HashMap<String, Object>();
+				map.put("resourceId", function.getResourceId());
+				map.put("functionId", function.id());
+				map.put("optId", function.getOperationId());
+				list.add(map);
+			}
+		}
+		return list;
+	}
+	
+	@Override
+	public List<Map<String, Object>> getFunctionMaps(String resourceId,String appId) {
+		List<Map<String, Object>> list=new ArrayList<Map<String, Object>>();
+		List<PrivilegeFunction> functions=privilegeFunctionRepository.getFunctionMap(resourceId,appId);
+		for(PrivilegeFunction function:functions){
+			if (function!=null&&function.id()!=null&&!("").equals(function.id())) {
+				Map<String, Object> map=new HashMap<String, Object>();
+				map.put("resourceId", function.getResourceId());
+				map.put("functionId", function.id());
+				map.put("optId", function.getOperationId());
+				list.add(map);
+			}
+		}
+		return list;
 	}
 	
 	
